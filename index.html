@@ -1,0 +1,1935 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Michele Di Nardo — Production &amp; Publishing Consultancy</title>
+<meta name="description" content="Michele Di Nardo, games producer with 9+ years across QA, live production, and indie publishing. Production, platform, and publishing support for studios that need a seasoned hand." />
+<meta name="color-scheme" content="dark light" />
+<meta property="og:title" content="Michele Di Nardo — Production & Publishing Consultancy" />
+<meta property="og:description" content="Turning game ideas into shipped titles. Production, platform, and publishing support for studios." />
+<meta property="og:type" content="website" />
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%230A0B0E"/><path d="M14 46 L14 18 L32 38 L50 18 L50 46" fill="none" stroke="%23ECEFF6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="52" r="4.5" fill="%23E5B415"/></svg>' />
+<meta property="og:image" content='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="%230A0B0E"/><path d="M120 470 L120 170 L300 350 L480 170 L480 470" fill="none" stroke="%23ECEFF6" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/><circle cx="480" cy="508" r="20" fill="%23E5B415"/><text x="580" y="310" font-family="serif" font-size="72" fill="%23ECEFF6" font-weight="500">Michele Di Nardo</text><text x="580" y="370" font-family="monospace" font-size="26" fill="%238E95A4" letter-spacing="2">PRODUCTION &amp; PUBLISHING CONSULTANCY</text></svg>' />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+<script>
+  (function(){
+    try {
+      var saved = localStorage.getItem('mdn-theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+:root{
+  /* Type + easing (theme-invariant) */
+  --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Bebas Neue", "Impact", "Haettenschweiler", "Arial Narrow", sans-serif;
+  --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Dark theme (default) — mustard on near-black */
+  --paper:#0A0B0E;
+  --paper-2:#12141A;
+  --paper-3:#1A1D25;
+  --ink:#ECEFF6;
+  --ink-2:#8E95A4;
+  --ink-3:#5C6272;
+  --rule:#262A33;
+  --rule-soft:#1C1F27;
+  --clay:#E5B415;        /* mustard, matches portrait backdrop */
+  --clay-deep:#C4970A;   /* hover */
+  --clay-soft:#2A1F05;   /* accent wash */
+  --accent-2:#FF2EC8;    /* magenta highlight, used sparingly */
+  --err-bg:#2A1020;
+  --grain-blend: screen;
+  --grain-opacity: 0.05;
+  --shadow-sm: 0 1px 0 rgba(0,0,0,0.55), 0 2px 8px -2px rgba(229,180,21,0.22);
+  --shadow-md: 0 1px 0 rgba(0,0,0,0.55), 0 20px 50px -20px rgba(229,180,21,0.26);
+}
+
+html[data-theme="light"]{
+  --paper:#F4F3ED;
+  --paper-2:#E9E7DE;
+  --paper-3:#FBFAF4;
+  --ink:#0A0B0E;
+  --ink-2:#4A4E58;
+  --ink-3:#797C85;
+  --rule:#CFCDC2;
+  --rule-soft:#DCDAD0;
+  --clay:#8A6600;        /* deep mustard, legible on cream */
+  --clay-deep:#6B5000;
+  --clay-soft:#F3E4A8;
+  --accent-2:#BE1383;
+  --err-bg:#FFE7F3;
+  --grain-blend: multiply;
+  --grain-opacity: 0.05;
+  --shadow-sm: 0 1px 0 rgba(10,11,14,0.07), 0 2px 6px -2px rgba(138,102,0,0.12);
+  --shadow-md: 0 1px 0 rgba(10,11,14,0.07), 0 18px 40px -20px rgba(138,102,0,0.22);
+}
+
+html{ transition: background-color .4s var(--ease); }
+body{ transition: background-color .4s var(--ease), color .4s var(--ease); }
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family: var(--sans);
+  font-size: 17px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  isolation: isolate;
+}
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; text-decoration: none; }
+button{ font: inherit; color: inherit; background:none; border:0; cursor:pointer; }
+
+::selection{ background: var(--clay); color: var(--paper); }
+
+/* Scrollbar — accent-tinted thumb */
+html{
+  scrollbar-color: var(--clay) var(--paper-2);
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar{ width: 12px; height: 12px; }
+::-webkit-scrollbar-track{ background: var(--paper-2); }
+::-webkit-scrollbar-thumb{
+  background: var(--clay);
+  border: 3px solid var(--paper-2);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover{ background: var(--clay-deep); }
+::-webkit-scrollbar-corner{ background: var(--paper-2); }
+
+/* Focus */
+:focus{ outline: 0; }
+:focus-visible{
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Skip link */
+.skip{
+  position: absolute; left: -9999px; top: 12px;
+  background: var(--ink); color: var(--paper);
+  padding: 10px 14px; border-radius: 6px;
+  font: 500 13px/1 var(--sans); letter-spacing: 0.02em;
+  z-index: 100;
+}
+.skip:focus{ left: 12px; }
+
+/* Grain overlay */
+.grain{
+  position: fixed; inset: -10%; pointer-events: none; z-index: 1;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.70  0 0 0 0 0.66  0 0 0 0 0.58  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation: grain-drift 22s linear infinite;
+  will-change: background-position;
+}
+@keyframes grain-drift{
+  from { background-position: 0 0; }
+  to   { background-position: 140px 140px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .grain{ animation: none; }
+}
+
+/* Aurora — drifting lime washes behind content */
+.bg-aurora{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-aurora .blob{
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  opacity: 0.55;
+}
+.bg-aurora .blob-1{
+  width: 82vmax; height: 52vmax;
+  left: -24vmax; top: -22vmax;
+  background: radial-gradient(ellipse 60% 50% at center, color-mix(in srgb, var(--clay) 65%, transparent), transparent 68%);
+  animation: aurora-1 34s ease-in-out infinite alternate;
+}
+.bg-aurora .blob-2{
+  width: 50vmax; height: 72vmax;
+  right: -18vmax; bottom: -20vmax;
+  background: radial-gradient(ellipse 50% 60% at center, color-mix(in srgb, var(--clay) 48%, transparent), transparent 70%);
+  animation: aurora-2 44s ease-in-out infinite alternate;
+  opacity: 0.45;
+}
+.bg-aurora .blob-3{
+  width: 64vmax; height: 38vmax;
+  left: calc(50% - 32vmax); top: calc(50% - 10vmax);
+  background: radial-gradient(ellipse 55% 55% at center, color-mix(in srgb, var(--accent-2) 40%, transparent), transparent 70%);
+  animation: aurora-3 54s ease-in-out infinite alternate;
+  opacity: 0.18;
+}
+html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
+html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
+@keyframes aurora-1{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(28vw, 18vh) rotate(32deg) scale(1.15); }
+}
+@keyframes aurora-2{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(-22vw, -14vh) rotate(-40deg) scale(1.2); }
+}
+@keyframes aurora-3{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(18vw, -20vh) rotate(55deg) scale(0.9); }
+}
+@media (prefers-reduced-motion: reduce){
+  .bg-aurora .blob{ animation: none; }
+}
+
+/* Container */
+.wrap{
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 4vw, 56px);
+  position: relative;
+}
+
+/* Header */
+.site-header{
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.site-header.is-scrolled{
+  border-bottom-color: var(--rule-soft);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+}
+.site-header .bar{
+  display: flex; align-items: center; justify-content: space-between;
+  padding-block: 18px;
+  gap: 18px;
+}
+.bar-right{
+  display: flex; align-items: center; gap: clamp(10px, 1.4vw, 18px);
+}
+.wordmark{
+  display: inline-flex; align-items: baseline; gap: 10px;
+  font-family: var(--serif);
+  font-weight: 500; font-size: 20px;
+  font-variation-settings: "opsz" 24;
+  letter-spacing: -0.01em;
+}
+.wordmark .dot{
+  width: 7px; height: 7px; border-radius: 999px;
+  background: var(--clay);
+  display: inline-block; transform: translateY(-2px);
+}
+.wordmark .role{
+  font-family: var(--mono);
+  font-size: 13.5px; font-weight: 400;
+  color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase;
+  padding-left: 12px; margin-left: 2px;
+  border-left: 1px solid var(--rule);
+}
+.nav{
+  display: flex; align-items: center; gap: clamp(18px, 2.4vw, 34px);
+}
+.nav a{
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: 8px 0;
+  position: relative;
+  transition: color .2s var(--ease);
+}
+.nav a::after{
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 2px;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--ease);
+}
+.nav a:hover{ color: var(--ink); }
+.nav a:hover::after,
+.nav a.is-active::after{ transform: scaleX(0.75); }
+.nav a.is-active{ color: var(--clay); }
+.nav a .num{ color: var(--clay); margin-right: 6px; }
+
+.menu-toggle{
+  display: none;
+  width: 40px; height: 40px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  align-items: center; justify-content: center;
+  background: var(--paper-3);
+}
+.menu-toggle svg{ width: 18px; height: 18px; stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; }
+
+/* Theme toggle — segmented pill */
+.theme-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  border-radius: 999px;
+  position: relative;
+}
+.theme-toggle button{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-radius: 999px;
+  transition: color .25s var(--ease), background .25s var(--ease);
+  white-space: nowrap;
+}
+.theme-toggle button svg{
+  width: 12px; height: 12px;
+  stroke: currentColor; stroke-width: 1.5;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.theme-toggle button[aria-pressed="true"]{
+  background: var(--ink);
+  color: var(--paper);
+}
+.theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
+
+/* Language toggle — segmented pill (mirrors theme-toggle) */
+.lang-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  border-radius: 999px;
+}
+.lang-toggle button{
+  padding: 6px 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-radius: 999px;
+  transition: color .25s var(--ease), background .25s var(--ease);
+  white-space: nowrap;
+}
+.lang-toggle button[aria-pressed="true"]{
+  background: var(--ink);
+  color: var(--paper);
+}
+.lang-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
+
+/* Footer settings row — groups theme + language toggles */
+.footer-settings{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 640px){
+  .footer-settings{ width: 100%; justify-content: flex-start; }
+}
+
+/* Mobile menu overlay */
+.mobile-menu{
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--paper);
+  padding: 24px clamp(20px, 4vw, 56px);
+  display: none;
+  flex-direction: column;
+}
+.mobile-menu[data-open="true"]{ display: flex; }
+.mobile-menu .top{
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 48px;
+}
+.mobile-menu nav{
+  display: flex; flex-direction: column; gap: 24px;
+  font-family: var(--serif);
+  font-size: 36px; font-variation-settings: "opsz" 60;
+  letter-spacing: -0.02em; line-height: 1;
+}
+.mobile-menu nav a{ display: flex; align-items: baseline; gap: 16px; }
+.mobile-menu nav a .num{ font-family: var(--mono); font-size: 13px; color: var(--clay); letter-spacing: 0.06em; }
+.mobile-menu .foot{
+  margin-top: auto;
+  font-family: var(--mono); font-size: 14px; color: var(--ink-2);
+  letter-spacing: 0.04em; text-transform: uppercase;
+  display: flex; justify-content: space-between; padding-top: 32px;
+  border-top: 1px solid var(--rule);
+}
+
+/* Section heading system */
+.section{
+  padding-top: clamp(80px, 12vw, 160px);
+  padding-bottom: clamp(96px, 14vw, 184px);
+  position: relative;
+}
+.kicker{
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+.kicker .bar{
+  width: 28px; height: 1px; background: var(--clay);
+}
+.kicker .num{ color: var(--clay); font-weight: 500; }
+
+/* Hero */
+.hero{
+  padding-top: clamp(56px, 10vw, 120px);
+  padding-bottom: clamp(76px, 12vw, 148px);
+  min-height: calc(100dvh - 72px);
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+}
+.hero-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: end;
+}
+.hero-left > * + * { margin-top: 28px; }
+.hero-h1{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 7.4vw, 112px);
+  font-variation-settings: "opsz" 96;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  text-wrap: balance;
+  margin: 16px 0 0;
+}
+.hero-h1 em{
+  font-style: italic;
+  font-variation-settings: "opsz" 96;
+  color: var(--clay);
+}
+.hero-intro{
+  max-width: 54ch;
+  font-size: clamp(16px, 1.25vw, 18px);
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.cta-row{
+  display: flex; flex-wrap: wrap; gap: 12px;
+  margin-top: 8px;
+}
+.btn{
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 14.5px;
+  letter-spacing: 0.01em;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: transform .2s var(--ease), background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+  will-change: transform;
+}
+.btn .arrow{ transition: transform .3s var(--ease); }
+.btn:hover .arrow{ transform: translateX(3px); }
+.btn:active{ transform: translateY(1px); }
+.btn-primary{
+  background: var(--clay);
+  color: var(--paper);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover{ background: var(--clay-deep); color: var(--paper); }
+.btn-ghost{
+  border-color: var(--rule);
+  color: var(--ink);
+  background: transparent;
+}
+.btn-ghost:hover{ border-color: var(--clay); color: var(--clay); }
+
+.hero-right{
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  display: grid; gap: 22px;
+  align-self: end;
+  position: relative;
+}
+.hero-right::before{
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.portrait{
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  background: #E5B415; /* matches portrait's mustard backdrop */
+  box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 20px 50px -18px color-mix(in srgb, var(--clay) 40%, transparent);
+  animation: portrait-float 8s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes portrait-float{
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@media (prefers-reduced-motion: reduce){
+  .portrait{ animation: none; }
+}
+.portrait img{
+  width: 100%; height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Speech bubble — comic-style, pop-in then idle bob */
+.speech-bubble{
+  position: absolute;
+  right: -4%;
+  bottom: -5%;
+  z-index: 3;
+  max-width: 260px;
+  opacity: 0;
+  transform: scale(0.18) rotate(-10deg);
+  transform-origin: 20% 0%;
+  animation: bubble-pop .55s cubic-bezier(0.34, 1.56, 0.64, 1) .75s forwards;
+  filter: drop-shadow(4px 4px 0 var(--clay));
+}
+.bubble-body{
+  position: relative;
+  z-index: 1;
+  background: var(--paper-3);
+  color: var(--ink);
+  border: 2.5px solid var(--ink);
+  border-radius: 16px;
+  padding: 12px 16px 13px;
+  font-family: var(--sans);
+  line-height: 1.3;
+  animation: bubble-bob 3.6s ease-in-out 1.45s infinite;
+}
+.bubble-title{
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  letter-spacing: -0.005em;
+}
+.bubble-title .hola{
+  color: var(--clay);
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 36;
+  font-weight: 500;
+  font-size: 18px;
+  margin-right: 2px;
+  letter-spacing: -0.015em;
+}
+.bubble-sub{
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.bubble-tail{
+  position: absolute;
+  top: -18px;
+  left: 22px;
+  width: 30px;
+  height: 22px;
+  overflow: visible;
+  z-index: 2;
+  animation: bubble-bob 3.6s ease-in-out 1.45s infinite;
+}
+.bubble-tail path{
+  fill: var(--paper-3);
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@keyframes bubble-pop{
+  0%   { opacity: 0; transform: scale(0.18) rotate(-10deg); }
+  55%  { opacity: 1; transform: scale(1.1) rotate(2deg); }
+  80%  { transform: scale(0.96) rotate(-1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes bubble-bob{
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@media (prefers-reduced-motion: reduce){
+  .speech-bubble{ animation: none; opacity: 1; transform: none; }
+  .bubble-body, .bubble-tail{ animation: none; }
+}
+@media (max-width: 420px){
+  .speech-bubble{ right: -2%; bottom: 3%; max-width: 220px; }
+  .bubble-title{ font-size: 13.5px; }
+  .bubble-title .hola{ font-size: 16px; }
+  .bubble-sub{ font-size: 11.5px; }
+}
+.capsule-meta{
+  display: grid; gap: 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+.meta-row{
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px; align-items: baseline;
+  font-size: 14px;
+}
+.meta-row dt{
+  font-family: var(--mono);
+  font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.meta-row dd{ margin: 0; color: var(--ink); }
+.meta-row dd em{ font-style: normal; color: var(--clay); font-weight: 500; }
+
+/* Marquee */
+.marquee{
+  padding-block: clamp(32px, 4vw, 56px);
+  border-block: 1px solid var(--rule);
+  background: var(--paper-2);
+  overflow: hidden;
+  position: relative;
+}
+.marquee::before, .marquee::after{
+  content:""; position: absolute; top:0; bottom:0; width: 120px; z-index: 2;
+  pointer-events:none;
+}
+.marquee::before{ left: 0;  background: linear-gradient(to right, var(--paper-2), transparent); }
+.marquee::after{  right: 0; background: linear-gradient(to left,  var(--paper-2), transparent); }
+.marquee-kicker{
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 13.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-2);
+  padding-bottom: 20px;
+}
+.marquee-track{
+  display: flex; gap: 18px;
+  width: max-content;
+  animation: scroll 58s linear infinite;
+}
+.logo-tile{
+  flex: 0 0 auto;
+  height: 104px;
+  min-width: 184px;
+  display: grid; place-items: center;
+  padding: 18px 28px;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  transition: transform .3s var(--ease), border-color .3s var(--ease);
+}
+.logo-tile:hover{ border-color: var(--clay); transform: translateY(-2px); }
+.logo-tile img{
+  max-height: 60px;
+  max-width: 150px;
+  width: auto; height: auto;
+  object-fit: contain;
+  display: block;
+}
+@keyframes scroll{
+  from{ transform: translateX(0); }
+  to{   transform: translateX(calc(-50% - 9px)); } /* -9px = -(gap / 2), offsets the seam-gap */
+}
+@media (prefers-reduced-motion: reduce){
+  .marquee-track{ animation: none; }
+}
+
+/* About */
+.about-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: start;
+}
+.about-title{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(32px, 4.4vw, 58px);
+  font-variation-settings: "opsz" 96;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 18px 0 0;
+  text-wrap: balance;
+}
+.about-copy{
+  max-width: 62ch;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.about-copy > p + p{ margin-top: 8px; }
+.about-copy strong{ color: var(--ink); font-weight: 500; }
+
+/* Services */
+.services-intro{
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: end;
+}
+.services-title{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 72px);
+  font-variation-settings: "opsz" 96;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 18px 0 0;
+  text-wrap: balance;
+}
+.services-title em{
+  font-style: italic;
+  color: var(--clay);
+  font-variation-settings: "opsz" 96;
+}
+.services-intro p{
+  max-width: 52ch;
+  color: var(--ink-2);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.service{
+  display: grid;
+  grid-template-columns: 80px minmax(0, 4fr) minmax(0, 6fr);
+  gap: clamp(18px, 3vw, 48px);
+  padding: 56px 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+}
+.services .service:first-of-type{ margin-top: 72px; }
+.service:last-child{ border-bottom: 1px solid var(--rule); }
+.service-num{
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.1em;
+  color: var(--clay);
+}
+.service-icon{
+  width: 36px; height: 36px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  display: grid; place-items: center;
+  background: var(--paper-3);
+  margin-top: 12px;
+}
+.service-icon svg{ width: 18px; height: 18px; stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.service-icon--lead{ width: 64px; height: 64px; border-radius: 14px; margin-top: 0; }
+.service-icon--lead svg{ width: 32px; height: 32px; }
+.service--icon-lead .service-head{ margin-top: -6px; }
+.service-head h3{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-variation-settings: "opsz" 72;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+.service-head p{
+  margin-top: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-width: 36ch;
+}
+.service ul{
+  list-style: none; margin: 0; padding: 0;
+  columns: 2; column-gap: 28px;
+}
+.service ul li{
+  break-inside: avoid;
+  padding: 10px 0 10px 22px;
+  position: relative;
+  font-size: 15.5px;
+  color: var(--ink);
+  border-top: 1px solid var(--rule-soft);
+}
+.service ul li:first-child,
+.service ul li:nth-child(4){
+  border-top: 0;
+}
+.service ul li::before{
+  content: "";
+  position: absolute; left: 0; top: 18px;
+  width: 10px; height: 1px; background: var(--clay);
+}
+
+/* Process */
+.process-head{
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: end;
+}
+.process-head h2{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 64px);
+  font-variation-settings: "opsz" 96;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 18px 0 0;
+}
+.process-head p{
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+.process-rail{
+  margin-top: 64px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.step{
+  background: var(--paper-3);
+  padding: 28px 26px 32px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 18px;
+  min-height: 260px;
+  position: relative;
+}
+.step:hover{ background: var(--paper); }
+.step-n{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 72px;
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+  color: var(--clay);
+  font-variant-numeric: tabular-nums;
+}
+.step h3{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  font-variation-settings: "opsz" 36;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.step p{
+  color: var(--ink-2);
+  font-size: 14.5px;
+  line-height: 1.55;
+  margin: 0;
+}
+.step-tag{
+  font-family: var(--mono);
+  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3);
+  align-self: end;
+}
+
+/* Contact */
+.contact{ background: var(--paper-2); border-top: 1px solid var(--rule); }
+.contact-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 96px);
+  align-items: start;
+}
+.contact-copy h2{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 64px);
+  font-variation-settings: "opsz" 96;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 18px 0 0;
+  text-wrap: balance;
+}
+.contact-copy p{
+  color: var(--ink-2);
+  margin-top: 24px;
+  max-width: 44ch;
+  line-height: 1.65;
+}
+.contact-note{
+  margin-top: 44px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-2);
+  letter-spacing: 0;
+  line-height: 1.6;
+}
+
+.form{
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: clamp(22px, 2.4vw, 32px);
+  box-shadow: var(--shadow-md);
+}
+.form-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 16px;
+}
+.field{ display: grid; gap: 6px; }
+.field.wide{ grid-column: 1 / -1; }
+.field label{
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.field label .req{ color: var(--clay); margin-left: 2px; }
+.field input, .field textarea{
+  font: 400 15.5px/1.4 var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 12px 14px;
+  width: 100%;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
+}
+.field input::placeholder, .field textarea::placeholder{ color: var(--ink-3); }
+.field input:focus, .field textarea:focus{
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--clay) 25%, transparent);
+  background: var(--paper-3);
+  outline: 0;
+}
+.field textarea{ resize: vertical; min-height: 130px; }
+.field[data-error="true"] input,
+.field[data-error="true"] textarea{
+  border-color: var(--clay);
+  background: var(--err-bg);
+}
+.field .err{
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--clay);
+  min-height: 14px;
+}
+.form-foot{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.form-foot small{
+  font-family: var(--mono);
+  font-size: 14.5px; color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.form-success{
+  display: none;
+  font-family: var(--mono);
+  font-size: 14.5px; color: #3E8B59;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.form-success[data-visible="true"]{ display: inline; }
+
+/* Footer */
+.site-footer{
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+  padding-block: 64px 36px;
+}
+.footer-grid{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: clamp(24px, 4vw, 72px);
+  align-items: start;
+}
+.say-hi{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 5.2vw, 96px);
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  margin: 0;
+  grid-column: 1 / -1;
+  color: var(--ink);
+}
+.say-hi em{ font-style: italic; color: var(--clay); font-variation-settings: "opsz" 96; }
+
+.footer-meta{ margin-top: 72px; border-top: 1px solid var(--rule); padding-top: 28px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }
+.footer-meta .links{ display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-meta a{
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: color .2s var(--ease);
+}
+.footer-meta a:hover{ color: var(--clay); }
+.footer-meta a .arrow{ transition: transform .3s var(--ease); }
+.footer-meta a:hover .arrow{ transform: translate(2px, -2px); }
+.footer-meta .copy{
+  font-family: var(--mono);
+  font-size: 14.5px; color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Reveal animation */
+[data-reveal]{
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+  will-change: opacity, transform;
+}
+[data-reveal].is-in{
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce){
+  [data-reveal]{ opacity: 1; transform: none; transition: none; }
+  html{ scroll-behavior: auto; }
+}
+
+/* Responsive */
+@media (max-width: 1024px){
+  .process-rail{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .service{ grid-template-columns: 60px minmax(0, 4fr) minmax(0, 6fr); }
+}
+@media (max-width: 900px){
+  .hero-grid,
+  .about-grid,
+  .services-intro,
+  .process-head,
+  .contact-grid,
+  .footer-grid{ grid-template-columns: 1fr; }
+  .hero-right{ order: -1; }
+  .service{ grid-template-columns: 1fr; gap: 20px; }
+  .service-icon{ margin-top: 0; }
+  .service ul{ columns: 1; }
+}
+@media (max-width: 760px){
+  .nav{ display: none; }
+  .menu-toggle{ display: inline-flex; }
+  .wordmark .role{ display: none; }
+  .process-rail{ grid-template-columns: 1fr; }
+  .form-grid{ grid-template-columns: 1fr; }
+  .hero{ min-height: auto; padding-top: 44px; padding-bottom: 64px; }
+  .hero-right{ padding: 22px; }
+  .monogram{ font-size: 76px; }
+  body{ font-size: 16px; }
+}
+
+/* Cursor-aware hover effects */
+.service, .step{
+  --mx: 50%;
+  --my: 50%;
+}
+.service{ position: relative; }
+.service::before, .step::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(340px circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--clay) 22%, transparent) 0%,
+    transparent 60%);
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+  border-radius: inherit;
+  z-index: 0;
+}
+.service:hover::before, .step:hover::before{ opacity: 1; }
+.service > *, .step > *{ position: relative; z-index: 1; }
+
+.btn{
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+}
+.btn:active{
+  transform: translate(var(--mx, 0px), calc(var(--my, 0px) + 1px));
+}
+
+@media (prefers-reduced-motion: reduce){
+  .service::before, .step::before{ display: none; }
+  .btn{ transform: none !important; }
+}
+
+/* Heading variable-weight shift on hover */
+.hero-h1, .about-title, .services-title,
+.process-head h2, .contact-copy h2, .say-hi{
+  transition: font-variation-settings .4s var(--ease);
+}
+.hero-h1:hover, .about-title:hover, .services-title:hover,
+.process-head h2:hover, .contact-copy h2:hover, .say-hi:hover{
+  font-variation-settings: "opsz" 96, "wght" 600;
+}
+
+/* Italic-accent em pulse on parent hover */
+.hero-h1 em, .services-title em, .say-hi em{
+  display: inline-block;
+  transform-origin: center;
+  transition: transform .45s var(--ease), text-shadow .4s var(--ease);
+}
+.hero-h1:hover em, .services-title:hover em, .say-hi:hover em{
+  transform: scale(1.06);
+  text-shadow: 0 0 30px color-mix(in srgb, var(--clay) 50%, transparent);
+}
+
+/* Portrait 3D tilt */
+.portrait-tilt{
+  display: block;
+  transition: transform .4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-h1, .about-title, .services-title,
+  .process-head h2, .contact-copy h2, .say-hi,
+  .hero-h1 em, .services-title em, .say-hi em,
+  .portrait-tilt{
+    transition: none !important;
+  }
+  .hero-h1:hover, .about-title:hover, .services-title:hover,
+  .process-head h2:hover, .contact-copy h2:hover, .say-hi:hover{
+    font-variation-settings: "opsz" 96;
+  }
+  .hero-h1:hover em, .services-title:hover em, .say-hi:hover em{
+    transform: none;
+    text-shadow: none;
+  }
+  .portrait-tilt{ transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="bg-aurora" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="site-header" id="site-header">
+  <div class="wrap bar">
+    <a href="#top" class="wordmark" aria-label="Michele Di Nardo — home">
+      <span>michele<span class="dot" aria-hidden="true"></span>di nardo</span>
+      <span class="role"></span>
+    </a>
+    <div class="bar-right">
+      <nav class="nav" aria-label="Primary">
+        <a href="#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">Consultancy</span></a>
+        <a href="#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
+        <a href="#process"><span class="num">03</span><span data-i18n="nav.process">Process</span></a>
+        <a href="#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
+      </nav>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" data-open="false" aria-hidden="true">
+  <div class="top">
+    <span class="wordmark"><span>michele<span class="dot" aria-hidden="true"></span> di nardo</span></span>
+    <button class="menu-toggle" id="menu-close" data-i18n-aria="menu.close" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <nav aria-label="Mobile">
+    <a href="#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">Consultancy</span></a>
+    <a href="#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
+    <a href="#process" data-menu-link><span class="num">03</span> <span data-i18n="nav.process">Process</span></a>
+    <a href="#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
+  </nav>
+  <div class="foot">
+    <span data-i18n="mobile.foot.role">Producer · Turin</span>
+    <span data-i18n="mobile.foot.avail">Available Q3 &#39;26</span>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero wrap" id="top" aria-labelledby="hero-h1">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <span class="kicker" data-reveal><span class="bar"></span><span data-i18n="hero.kicker">Production &amp; Publishing Consultancy</span></span>
+        <h1 class="hero-h1" id="hero-h1" data-reveal data-i18n="hero.h1" data-i18n-html>
+          Turning game ideas<br />
+          into <em>shipped</em> titles.
+        </h1>
+        <p class="hero-intro" data-reveal data-i18n="hero.intro">
+          I&rsquo;m Michele. Nine years as a Game Producer, across QA, live production, and indie publishing. I help studios move faster, ship cleaner, and handle everything that sits between a promising pitch and a finished game.
+        </p>
+        <div class="cta-row" data-reveal>
+          <a class="btn btn-primary" href="#contact">
+            <span data-i18n="cta.book">Book a discovery call</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#services">
+            <span data-i18n="cta.services">See services</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <aside class="hero-right" data-reveal aria-label="Current status">
+        <div class="portrait-tilt">
+          <figure class="portrait">
+            <img src="assets/miki-portrait.png" data-i18n-alt="portrait.alt" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="720" height="720" />
+            <div class="speech-bubble" role="note" data-i18n-aria="bubble.aria" aria-label="A greeting from Michele">
+              <div class="bubble-body">
+                <span class="bubble-title" data-i18n="bubble.title" data-i18n-html><span class="hola">Ciao! </span>I&rsquo;m Michele</span>
+                <span class="bubble-sub" data-i18n="bubble.sub">(or Miki for short)</span>
+              </div>
+              <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 2 20 L 10 2 L 28 20" />
+              </svg>
+            </div>
+          </figure>
+        </div>
+        <dl class="capsule-meta">
+          <div class="meta-row">
+            <dt data-i18n="meta.now.dt">Now</dt>
+            <dd data-i18n="meta.now.dd">Independent producer &amp; consultancy</dd>
+          </div>
+          <div class="meta-row">
+            <dt data-i18n="meta.also.dt">Also</dt>
+            <dd data-i18n="meta.also.dd">Co-founder at Scuola Nash · Juror at Indie Arena Booth</dd>
+          </div>
+          <div class="meta-row">
+            <dt data-i18n="meta.recent.dt">Recent</dt>
+            <dd data-i18n="meta.recent.dd" data-i18n-html>Producer, Untold Games &mdash; <em>City&nbsp;20</em></dd>
+          </div>
+          <div class="meta-row">
+            <dt data-i18n="meta.based.dt">Based</dt>
+            <dd data-i18n="meta.based.dd">Turin, Italy · Remote first</dd>
+          </div>
+          <div class="meta-row">
+            <dt data-i18n="meta.engage.dt">Engage</dt>
+            <dd data-i18n="meta.engage.dd">Project · Retainer · Audit</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Marquee / Studios -->
+  <section class="marquee" aria-labelledby="marquee-h">
+    <div class="wrap marquee-kicker">
+      <span id="marquee-h" data-i18n="marquee.h">Studios &amp; organisations I&rsquo;ve worked with</span>
+      <span data-i18n="marquee.range">2015 &mdash; now</span>
+    </div>
+    <div class="marquee-track">
+      <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-rebellion.png" alt="Rebellion" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-rawfury.png" alt="Raw Fury" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-untoldgames.png" alt="Untold Games" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-scuolanash.png" alt="Scuola Nash" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-indiearenabooth.png" alt="Indie Arena Booth" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-bippinbits.png" alt="Bippinbits" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-clifftop.png" alt="Clifftop Games" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-supersoft.png" alt="Supersoft" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-milestone.png" alt="Milestone" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-firstplayable.png" alt="First Playable" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-indiedevday.png" alt="Indie DevDay" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-babyrobot.png" alt="Baby Robot Games" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-34bigthings.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rebellion.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rawfury.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-untoldgames.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-scuolanash.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiearenabooth.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-bippinbits.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-clifftop.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-supersoft.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-milestone.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-firstplayable.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiedevday.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-babyrobot.png" alt="" loading="lazy" /></div>
+    </div>
+  </section>
+
+  <!-- About / Consultancy -->
+  <section class="section wrap" id="consultancy" aria-labelledby="about-h">
+    <div class="about-grid">
+      <div>
+        <span class="kicker" data-reveal data-i18n="about.kicker" data-i18n-html><span class="num">01</span> Consultancy</span>
+        <h2 class="about-title" id="about-h" data-reveal data-i18n="about.h">
+          Nine years inside game development, at every angle.
+        </h2>
+      </div>
+      <div class="about-copy" data-reveal>
+        <p data-i18n="about.p1" data-i18n-html>
+          My first job was at <strong>34BigThings</strong>, first as a QA Tester and then as QA Manager, on titles like <em>Redout</em> for PlayStation and Xbox. After that I joined <strong>Rebellion</strong> as QA Project Lead on <em>Sniper Elite 4</em>, <em>Strange Brigade</em>, and <em>Zombie Army 4</em> for Stadia, and built the QA pipeline there from scratch.
+        </p>
+        <p data-i18n="about.p2" data-i18n-html>
+          Next was <strong>Raw Fury</strong>, a few years there as Line and Publishing Producer on titles like <em>Kathy Rain 2</em>, <em>Moonstone Island</em>, and <em>Dome Keeper</em>. Every project was different. The constant was making sure each one actually shipped.
+        </p>
+        <p data-i18n="about.p3" data-i18n-html>
+          Today I&rsquo;m a co-founder of <strong>Scuola Nash</strong>, a game dev school in Turin, a juror for the <strong>Indie Arena Booth</strong> at Gamescom, and I work independently as a producer and consultant. My most recent in-house role was Producer at <strong>Untold Games</strong> on <em>City&nbsp;20</em>. Consultancy is how I bring that experience to teams that need an experienced hand for a stretch, not a full-time hire.
+        </p>
+        <p data-i18n="about.p4">
+          After all that, I&rsquo;ve noticed a pattern. What breaks projects is rarely the code or the creative vision. It&rsquo;s usually the structure around them: internal communication, scope creep, mishandled certifications, unclear pitches. That&rsquo;s the part I help with.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Services -->
+  <section class="section wrap services" id="services" aria-labelledby="services-h">
+    <div class="services-intro">
+      <div>
+        <span class="kicker" data-reveal data-i18n="services.kicker" data-i18n-html><span class="num">02</span> Services</span>
+        <h2 class="services-title" id="services-h" data-reveal data-i18n="services.h" data-i18n-html>
+          Three ways I help,<br />
+          with one aim: <em>less friction,</em><br />
+          better decisions.
+        </h2>
+      </div>
+      <p data-reveal data-i18n="services.intro">
+        I work project by project, on retainer, or with ad hoc engagements. A few common shapes: a focused sprint to unblock one specific problem, a rolling retainer as fractional producer, or an audit with written recommendations. Pick whatever fits your studio best.
+      </p>
+    </div>
+
+    <article class="service service--icon-lead" data-reveal>
+      <div class="service-icon service-icon--lead" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M3 6h12"/><path d="M3 12h18"/><path d="M3 18h9"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+      </div>
+      <div class="service-head">
+        <h3 data-i18n="svc1.h">Production &amp; Project Operations</h3>
+        <p data-i18n="svc1.p">The right things at the right time. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
+      </div>
+      <ul>
+        <li data-i18n="svc1.b1">End-to-end project management</li>
+        <li data-i18n="svc1.b2">GDD review &amp; knowledge management</li>
+        <li data-i18n="svc1.b3">Workflow audits &amp; pipeline optimisation</li>
+        <li data-i18n="svc1.b4">Scope &amp; risk assessment</li>
+        <li data-i18n="svc1.b5">Project financial planning</li>
+        <li data-i18n="svc1.b6">Ad hoc consultations &amp; peer review</li>
+      </ul>
+    </article>
+
+    <article class="service service--icon-lead" data-reveal>
+      <div class="service-icon service-icon--lead" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="3" y="8" width="14" height="10" rx="1.5"/><path d="M17 11h3l1 3v4h-4"/><circle cx="7" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg>
+      </div>
+      <div class="service-head">
+        <h3 data-i18n="svc2.h">Platform &amp; Release Management</h3>
+        <p data-i18n="svc2.p">Clean releases, every platform, every market. Certifications, stores, launch logistics, external QA, and localisation.</p>
+      </div>
+      <ul>
+        <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
+        <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
+        <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
+        <li data-i18n="svc2.b4">External QA &amp; localisation coordination</li>
+        <li data-i18n="svc2.b5">Steamworks, PlayStation Partner, MS Partner Center</li>
+        <li data-i18n="svc2.b6">Globally consistent release execution</li>
+      </ul>
+    </article>
+
+    <article class="service service--icon-lead" data-reveal>
+      <div class="service-icon service-icon--lead" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8 16 3-7 5-3-3 7z"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div class="service-head">
+        <h3 data-i18n="svc3.h">Strategic Publishing Support</h3>
+        <p data-i18n="svc3.p">Not a publisher myself, but I worked inside one of the best. I can share a network, the experience, and an honest view on how to reach the market.</p>
+      </div>
+      <ul>
+        <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
+        <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
+        <li data-i18n="svc3.b3">Pitch deck review for funding &amp; deals</li>
+        <li data-i18n="svc3.b4">Post-launch support: DLC, seasons, post-mortems</li>
+        <li data-i18n="svc3.b5">Developer relations &amp; community strategy</li>
+        <li data-i18n="svc3.b6">Gamescom Indie Arena Booth juror</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- Process -->
+  <section class="section wrap" id="process" aria-labelledby="process-h">
+    <div class="process-head">
+      <div>
+        <span class="kicker" data-reveal data-i18n="process.kicker" data-i18n-html><span class="num">03</span> How we work together</span>
+        <h2 id="process-h" data-reveal data-i18n="process.h">How we work, in four steps.</h2>
+      </div>
+      <p data-reveal data-i18n="process.intro">
+        No gimmicks, no oversized decks. We chat, we agree on the scope, I work as part of your team, and when I leave you have what you need to keep going on your own.
+      </p>
+    </div>
+
+    <div class="process-rail" data-reveal>
+      <div class="step">
+        <div class="step-n">01</div>
+        <div>
+          <h3 data-i18n="step1.h">Discovery call</h3>
+          <p data-i18n="step1.p">A free half-hour to talk through the project, its current state, and the real needs. No pitch, no pressure.</p>
+        </div>
+        <span class="step-tag" data-i18n="step1.tag">30 min · free</span>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <div>
+          <h3 data-i18n="step2.h">Scope &amp; proposal</h3>
+          <p data-i18n="step2.p">A practical proposal covering areas of work, deliverables, timeline, and how we&rsquo;d work together.</p>
+        </div>
+        <span class="step-tag" data-i18n="step2.tag">3 &ndash; 5 working days</span>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <div>
+          <h3 data-i18n="step3.h">Execution</h3>
+          <p data-i18n="step3.p">Working as part of the team, on your tools, your cadences, your channels. With clear reporting along the way.</p>
+        </div>
+        <span class="step-tag" data-i18n="step3.tag">Weekly cadence</span>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <div>
+          <h3 data-i18n="step4.h">Handover</h3>
+          <p data-i18n="step4.p">Documentation, processes, know-how you can reuse. The value stays with the team.</p>
+        </div>
+        <span class="step-tag" data-i18n="step4.tag">Closing sprint</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap contact-grid">
+      <div class="contact-copy">
+        <span class="kicker" data-reveal data-i18n="contact.kicker" data-i18n-html><span class="num">04</span> Get in touch</span>
+        <h2 id="contact-h" data-reveal data-i18n="contact.h">
+          Working on something that needs an experienced hand?
+        </h2>
+        <p data-reveal data-i18n="contact.p">
+          Tell me about the game, the stage it&rsquo;s in, and what&rsquo;s getting in the way. If we fit, we&rsquo;ll set up a 30-minute discovery call. If we don&rsquo;t, I&rsquo;ll send you to someone who does.
+        </p>
+        <p class="contact-note" data-reveal data-i18n="contact.note" data-i18n-html>
+          P.S. Replies usually go out within 1 to 3 working days.<br />
+          If you don&rsquo;t hear back in that window, don&rsquo;t hesitate to ping me again.
+        </p>
+      </div>
+
+      <form class="form" id="contact-form" data-reveal novalidate aria-describedby="form-status">
+        <div class="form-grid">
+          <div class="field">
+            <label for="f-name" data-i18n="form.name.label" data-i18n-html>Your name <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-name" name="name" required autocomplete="name" data-i18n-placeholder="form.name.placeholder" placeholder="Alessia Morandi" />
+            <span class="err" data-err-for="f-name" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-company" data-i18n="form.company.label">Company</label>
+            <input id="f-company" name="company" autocomplete="organization" data-i18n-placeholder="form.company.placeholder" placeholder="Driftline Studios" />
+            <span class="err" data-err-for="f-company" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-email" data-i18n="form.email.label" data-i18n-html>Email <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-email" name="email" type="email" required autocomplete="email" data-i18n-placeholder="form.email.placeholder" placeholder="alessia@driftline.games" />
+            <span class="err" data-err-for="f-email" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="f-phone" data-i18n="form.phone.label">Phone</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel" data-i18n-placeholder="form.phone.placeholder" placeholder="+39 011 847 1928" />
+            <span class="err" data-err-for="f-phone" aria-live="polite"></span>
+          </div>
+          <div class="field wide">
+            <label for="f-msg" data-i18n="form.msg.label" data-i18n-html>Message <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="f-msg" name="message" required rows="5" data-i18n-placeholder="form.msg.placeholder" placeholder="What are you building, where are you stuck, and when do you need it shipped?"></textarea>
+            <span class="err" data-err-for="f-msg" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="form-foot">
+          <small id="form-status" data-i18n="form.status">Opens your mail client &middot; no data stored.</small>
+          <span class="form-success" id="form-success" data-i18n="form.success">Message drafted. Check your mail client.</span>
+          <button type="submit" class="btn btn-primary">
+            <span data-i18n="form.submit">Submit</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <h2 class="say-hi" data-i18n="footer.sayhi" data-i18n-html>Say <em>Ciao,</em> anytime.</h2>
+  </div>
+  <div class="wrap footer-meta">
+    <div class="links">
+      <a href="mailto:michele.dinardo.job@gmail.com" data-i18n-aria="footer.email.aria" aria-label="Email Michele">
+        <span data-i18n="footer.email">Email</span>
+        <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/michele-dinardo/" target="_blank" rel="noopener noreferrer" data-i18n-aria="footer.linkedin.aria" aria-label="LinkedIn profile">
+        <span data-i18n="footer.linkedin">LinkedIn</span>
+        <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+      </a>
+    </div>
+    <div class="footer-settings">
+      <div class="theme-toggle" role="group" data-i18n-aria="theme.aria.group" aria-label="Colour theme">
+        <button type="button" data-theme-target="light" aria-pressed="false" data-i18n-aria="theme.aria.day" aria-label="Switch to day theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>
+          <span data-i18n="theme.day">Day</span>
+        </button>
+        <button type="button" data-theme-target="dark" aria-pressed="true" data-i18n-aria="theme.aria.night" aria-label="Switch to night theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+          <span data-i18n="theme.night">Night</span>
+        </button>
+      </div>
+      <div class="lang-toggle" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
+        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
+        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
+      </div>
+    </div>
+    <span class="copy" data-i18n="footer.copy">&copy; 2026 Michele Di Nardo &middot; All rights reserved</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).
+  // Works on Android Chrome / Samsung Internet. iOS Safari + iOS Chrome (WebKit) lack Vibration API — no-op.
+  if ('vibrate' in navigator) {
+    try {
+      const navEntry = performance.getEntriesByType('navigation')[0];
+      if (navEntry && navEntry.type === 'reload') {
+        navigator.vibrate(12);
+      }
+    } catch (e) {}
+  }
+
+  // Theme toggle
+  const THEME_KEY = 'mdn-theme';
+  const themeButtons = document.querySelectorAll('[data-theme-target]');
+  const applyTheme = (t) => {
+    const theme = (t === 'light' || t === 'dark') ? t : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    themeButtons.forEach(btn => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.themeTarget === theme));
+    });
+  };
+  applyTheme(document.documentElement.getAttribute('data-theme'));
+  themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tgt = btn.dataset.themeTarget;
+      try { localStorage.setItem(THEME_KEY, tgt); } catch (e) {}
+      applyTheme(tgt);
+    });
+  });
+
+  // i18n — EN comes from DOM originals, IT comes from dict
+  const LANG_KEY = 'mdn-lang';
+  const ORIG = new WeakMap();
+  const IT = {
+    'nav.consultancy': 'Consulenza',
+    'nav.services': 'Servizi',
+    'nav.process': 'Metodo',
+    'nav.contact': 'Contatti',
+    'menu.open': 'Apri menu',
+    'menu.close': 'Chiudi menu',
+    'mobile.foot.role': 'Producer · Torino',
+    'mobile.foot.avail': 'Disponibile Q3 ’26',
+
+    'theme.day': 'Chiaro',
+    'theme.night': 'Scuro',
+    'theme.aria.day': 'Passa al tema chiaro',
+    'theme.aria.night': 'Passa al tema scuro',
+    'theme.aria.group': 'Tema',
+    'lang.aria.group': 'Lingua',
+
+    'hero.kicker': 'Consulenza in Produzione & Publishing',
+    'hero.h1': 'Idee di gioco che<br />diventano <em>giochi veri.</em>',
+    'hero.intro': 'Sono Michele. Faccio il Game Producer da nove anni, con esperienze in QA, produzione live e publishing indie. Aiuto gli studi a muoversi più velocemente, a pubblicare meglio, e ad affrontare tutto quello che sta tra un pitch promettente e un gioco finito.',
+    'cta.book': 'Prenota una call conoscitiva',
+    'cta.services': 'Vedi i servizi',
+
+    'portrait.alt': 'Michele Di Nardo, con cappello e maglietta neri, su fondo giallo senape.',
+    'bubble.aria': 'Un saluto da Michele',
+    'bubble.title': '<span class="hola">Ciao! </span>Sono Michele',
+    'bubble.sub': '(o Miki, più breve)',
+
+    'meta.now.dt': 'Ora',
+    'meta.now.dd': 'Producer indipendente & consulenza',
+    'meta.also.dt': 'Inoltre',
+    'meta.also.dd': 'Co-fondatore Scuola Nash · Giurato Indie Arena Booth',
+    'meta.recent.dt': 'Recente',
+    'meta.recent.dd': 'Producer, Untold Games — <em>City 20</em>',
+    'meta.based.dt': 'Base',
+    'meta.based.dd': 'Torino, Italia · Remote first',
+    'meta.engage.dt': 'Formati',
+    'meta.engage.dd': 'Progetto · Retainer · Audit',
+
+    'marquee.h': 'Studi e organizzazioni con cui ho lavorato',
+    'marquee.range': '2015 — oggi',
+
+    'about.kicker': '<span class="num">01</span> Consulenza',
+    'about.h': 'Nove anni dentro lo sviluppo videoludico, da tutti i lati.',
+    'about.p1': 'Il mio primo lavoro è stato in <strong>34BigThings</strong>, prima come QA Tester e poi come QA Manager, su titoli come <em>Redout</em> per PlayStation e Xbox. Poi sono passato a <strong>Rebellion</strong> come QA Project Lead su <em>Sniper Elite 4</em>, <em>Strange Brigade</em> e <em>Zombie Army 4</em> per Stadia, e lì ho costruito la pipeline di QA da zero.',
+    'about.p2': 'Poi <strong>Raw Fury</strong>, alcuni anni come Line e Publishing Producer su titoli come <em>Kathy Rain 2</em>, <em>Moonstone Island</em> e <em>Dome Keeper</em>. Ogni progetto aveva la sua storia. L’unica costante era farlo uscire davvero.',
+    'about.p3': 'Oggi sono co-fondatore di <strong>Scuola Nash</strong> (scuola di sviluppo videoludico a Torino), giurato per l’<strong>Indie Arena Booth</strong> alla Gamescom, e lavoro in autonomia come producer e consulente. L’ultimo ruolo in-house è stato Producer in <strong>Untold Games</strong> su <em>City 20</em>. Con la consulenza porto tutta questa esperienza ai team che hanno bisogno di una mano esperta per un periodo, non di un’assunzione full-time.',
+    'about.p4': 'Ho visto cosa fa uscire i giochi e cosa li affossa, e il più delle volte il vero problema non è il codice o la visione creativa. È tutto quello che ci sta intorno: comunicazione interna, scope creep, certificazioni gestite male, pitch poco chiari. È lì che aiuto.',
+
+    'services.kicker': '<span class="num">02</span> Servizi',
+    'services.h': 'Tre modi in cui aiuto,<br />un obiettivo: <em>meno attrito,</em><br />decisioni migliori.',
+    'services.intro': 'Lavoro progetto per progetto, a retainer o con ingaggi ad hoc. Qualche forma tipica: uno sprint mirato per sbloccare un problema preciso, un retainer continuativo in cui sono il tuo producer frazionato, o un audit con raccomandazioni scritte. Scegli quello che ti serve di più.',
+
+    'svc1.h': 'Produzione & operazioni di progetto',
+    'svc1.p': 'Le cose giuste al momento giusto. Piani, documentazione e budget dalla pre-produzione fino al gold master.',
+    'svc1.b1': 'Project management end-to-end',
+    'svc1.b2': 'Review del GDD & gestione della conoscenza',
+    'svc1.b3': 'Audit dei workflow & ottimizzazione della pipeline',
+    'svc1.b4': 'Valutazione di scope & rischi',
+    'svc1.b5': 'Pianificazione finanziaria di progetto',
+    'svc1.b6': 'Consulenze ad hoc & peer review',
+
+    'svc2.h': 'Piattaforme & gestione delle release',
+    'svc2.p': 'Pubblicare in modo pulito su ogni piattaforma e in ogni mercato. Certificazioni, store, logistica di lancio, QA esterno e localizzazione.',
+    'svc2.b1': 'Certificazioni console (PS, Xbox, Switch)',
+    'svc2.b2': 'Setup degli store digitali & submission',
+    'svc2.b3': 'Logistica di lancio: patch, brand, storefront',
+    'svc2.b4': 'Coordinamento di QA esterno & localizzazione',
+    'svc2.b5': 'Steamworks, PlayStation Partner, MS Partner Center',
+    'svc2.b6': 'Esecuzione coerente delle release a livello globale',
+
+    'svc3.h': 'Supporto strategico al publishing',
+    'svc3.p': 'Non sono un publisher, ma ho passato anni dentro uno dei migliori in circolazione. Metto a disposizione una rete, l’esperienza, e una visione lucida su come arrivare sul mercato.',
+    'svc3.b1': 'Roadmap realistica & strategia di publishing',
+    'svc3.b2': 'Rete di studi di co-dev, porting house, fornitori',
+    'svc3.b3': 'Review del pitch deck per fondi & accordi',
+    'svc3.b4': 'Supporto post-lancio: DLC, stagioni, post-mortem',
+    'svc3.b5': 'Developer relations & strategia di community',
+    'svc3.b6': 'Giurato Gamescom Indie Arena Booth',
+
+    'process.kicker': '<span class="num">03</span> Come lavoriamo insieme',
+    'process.h': 'Come possiamo lavorare, in quattro step.',
+    'process.intro': 'Niente fronzoli, niente deck enormi. Parliamo, ci accordiamo sullo scope, lavoro dentro al tuo team, e quando me ne vado ti lascio quello che ti serve per andare avanti da solo.',
+
+    'step1.h': 'Call conoscitiva',
+    'step1.p': '30 minuti gratuiti per capire il progetto, a che punto è, e cosa serve davvero. Niente pressione.',
+    'step1.tag': '30 min · gratis',
+    'step2.h': 'Scope & proposta',
+    'step2.p': 'Una proposta pratica che copre aree di lavoro, deliverable, timeline, e come lavoreremmo insieme.',
+    'step2.tag': '3 – 5 giorni lavorativi',
+    'step3.h': 'Esecuzione',
+    'step3.p': 'Lavoro come parte del team, sui tuoi strumenti, le tue cadenze, i tuoi canali. Con reporting chiaro lungo tutto il percorso.',
+    'step3.tag': 'Cadenza settimanale',
+    'step4.h': 'Handover',
+    'step4.p': 'Documentazione, processi, know-how che puoi riusare. Il valore resta nel tuo team.',
+    'step4.tag': 'Sprint di chiusura',
+
+    'contact.kicker': '<span class="num">04</span> Mettiti in contatto',
+    'contact.h': 'Stai lavorando a qualcosa che ha bisogno di una mano?',
+    'contact.p': 'Raccontami il gioco, dove sta, e cosa lo sta frenando. Se siamo compatibili, fissiamo una call conoscitiva di 30 minuti. Altrimenti, ti indirizzo a qualcuno più adatto.',
+    'contact.note': 'P.S. Di norma rispondo entro 1 o 3 giorni lavorativi.<br />Se non ricevi niente in quella finestra, puoi scrivermi di nuovo senza problemi.',
+
+    'form.name.label': 'Il tuo nome <span class="req" aria-hidden="true">*</span>',
+    'form.name.placeholder': 'Alessia Morandi',
+    'form.company.label': 'Azienda',
+    'form.company.placeholder': 'Driftline Studios',
+    'form.email.label': 'Email <span class="req" aria-hidden="true">*</span>',
+    'form.email.placeholder': 'alessia@driftline.games',
+    'form.phone.label': 'Telefono',
+    'form.phone.placeholder': '+39 011 847 1928',
+    'form.msg.label': 'Messaggio <span class="req" aria-hidden="true">*</span>',
+    'form.msg.placeholder': 'Cosa stai costruendo, dove sei bloccato, e quando deve uscire?',
+    'form.status': 'Apre il tuo client email · nessun dato archiviato.',
+    'form.success': 'Messaggio pronto. Controlla il tuo client email.',
+    'form.submit': 'Invia',
+    'form.err.name': 'Aggiungi il tuo nome.',
+    'form.err.email.required': 'L’email è obbligatoria.',
+    'form.err.email.invalid': 'Email non valida.',
+    'form.err.msg': 'Scrivi un breve messaggio, per favore.',
+    'form.subject': 'Richiesta progetto — ',
+
+    'footer.sayhi': 'Fatti sentire, <em>quando vuoi.</em>',
+    'footer.email': 'Email',
+    'footer.email.aria': 'Scrivi a Michele',
+    'footer.linkedin': 'LinkedIn',
+    'footer.linkedin.aria': 'Profilo LinkedIn',
+    'footer.copy': '© 2026 Michele Di Nardo · Tutti i diritti riservati',
+  };
+  const EN_OVERRIDES = {
+    'form.err.name': 'Please add your name.',
+    'form.err.email.required': 'Email is required.',
+    'form.err.email.invalid': 'That email looks off.',
+    'form.err.msg': 'A short message, please.',
+    'form.subject': 'Project enquiry — ',
+  };
+
+  let currentLang = 'en';
+  const tr = (key) => (currentLang === 'it' ? (IT[key] ?? '') : (EN_OVERRIDES[key] ?? ''));
+
+  const cacheOriginal = (el) => {
+    let entry = ORIG.get(el);
+    if (entry) return entry;
+    entry = {
+      text: el.textContent,
+      html: el.innerHTML,
+      placeholder: el.getAttribute('placeholder'),
+      alt: el.getAttribute('alt'),
+      aria: el.getAttribute('aria-label'),
+    };
+    ORIG.set(el, entry);
+    return entry;
+  };
+
+  const applyLang = (lang) => {
+    currentLang = (lang === 'it') ? 'it' : 'en';
+    document.documentElement.setAttribute('lang', currentLang);
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const orig = cacheOriginal(el);
+      const key = el.dataset.i18n;
+      const useHtml = el.hasAttribute('data-i18n-html');
+      if (currentLang === 'it') {
+        const val = IT[key];
+        if (val == null) return;
+        if (useHtml) el.innerHTML = val; else el.textContent = val;
+      } else {
+        if (useHtml) el.innerHTML = orig.html; else el.textContent = orig.text;
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const orig = cacheOriginal(el);
+      const key = el.dataset.i18nPlaceholder;
+      el.setAttribute('placeholder', currentLang === 'it' ? (IT[key] ?? orig.placeholder ?? '') : (orig.placeholder ?? ''));
+    });
+    document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+      const orig = cacheOriginal(el);
+      const key = el.dataset.i18nAlt;
+      el.setAttribute('alt', currentLang === 'it' ? (IT[key] ?? orig.alt ?? '') : (orig.alt ?? ''));
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      const orig = cacheOriginal(el);
+      const key = el.dataset.i18nAria;
+      el.setAttribute('aria-label', currentLang === 'it' ? (IT[key] ?? orig.aria ?? '') : (orig.aria ?? ''));
+    });
+
+    document.querySelectorAll('[data-lang-target]').forEach(btn => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
+    });
+
+    if (typeof submitAttempted !== 'undefined' && submitAttempted && typeof validate === 'function') {
+      validate(true);
+    }
+  };
+
+  document.querySelectorAll('[data-lang-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const l = btn.dataset.langTarget;
+      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+      applyLang(l);
+    });
+  });
+
+  // Sticky header shadow on scroll
+  const header = document.getElementById('site-header');
+  const onScroll = () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Mobile menu
+  const openBtn = document.getElementById('menu-open');
+  const closeBtn = document.getElementById('menu-close');
+  const menu = document.getElementById('mobile-menu');
+  const setMenu = (open) => {
+    menu.dataset.open = String(open);
+    menu.setAttribute('aria-hidden', String(!open));
+    openBtn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  openBtn.addEventListener('click', () => setMenu(true));
+  closeBtn.addEventListener('click', () => setMenu(false));
+  document.querySelectorAll('[data-menu-link]').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+  // Scroll-spy for nav
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+  const navLinks = Array.from(document.querySelectorAll('.nav a[href^="#"]'));
+  const linkByHash = new Map(navLinks.map(a => [a.getAttribute('href'), a]));
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const id = '#' + e.target.id;
+      navLinks.forEach(a => a.classList.remove('is-active'));
+      const active = linkByHash.get(id);
+      if (active) active.classList.add('is-active');
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => spy.observe(s));
+
+  // Cursor-aware effects: spotlight + magnetic buttons
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hoverCapable  = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (hoverCapable && !reducedMotion) {
+    // Spotlight follow on cards
+    document.querySelectorAll('.service, .step').forEach(el => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top)  + 'px');
+      });
+    });
+    // Magnetic pull on buttons
+    const pull = 0.22;
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('pointermove', (e) => {
+        const r  = btn.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top  + r.height / 2;
+        btn.style.setProperty('--mx', ((e.clientX - cx) * pull) + 'px');
+        btn.style.setProperty('--my', ((e.clientY - cy) * pull) + 'px');
+      });
+      btn.addEventListener('pointerleave', () => {
+        btn.style.setProperty('--mx', '0px');
+        btn.style.setProperty('--my', '0px');
+      });
+    });
+    // Portrait 3D tilt follows cursor
+    const tilt = document.querySelector('.portrait-tilt');
+    if (tilt) {
+      const maxTilt = 6; // degrees
+      tilt.addEventListener('pointermove', (e) => {
+        const r = tilt.getBoundingClientRect();
+        const nx = ((e.clientX - r.left) / r.width  - 0.5) * 2;
+        const ny = ((e.clientY - r.top)  / r.height - 0.5) * 2;
+        tilt.style.transform =
+          `perspective(900px) rotateY(${nx * maxTilt}deg) rotateX(${-ny * maxTilt}deg)`;
+      });
+      tilt.addEventListener('pointerleave', () => {
+        tilt.style.transform = '';
+      });
+    }
+  }
+
+  // Reveal-on-scroll cascade
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const delay = (e.target.dataset.delay ? parseInt(e.target.dataset.delay, 10) : (i * 60));
+        e.target.style.transitionDelay = delay + 'ms';
+        e.target.classList.add('is-in');
+        revealIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => revealIO.observe(el));
+
+  // Form validation + mailto submit
+  const form = document.getElementById('contact-form');
+  const success = document.getElementById('form-success');
+  const setFieldError = (input, message) => {
+    const field = input.closest('.field');
+    const err = field.querySelector('.err');
+    if (message) {
+      field.dataset.error = 'true';
+      err.textContent = message;
+      input.setAttribute('aria-invalid', 'true');
+      const errId = input.id + '-err';
+      err.id = errId;
+      input.setAttribute('aria-describedby', errId);
+    } else {
+      field.dataset.error = 'false';
+      err.textContent = '';
+      input.removeAttribute('aria-invalid');
+      input.removeAttribute('aria-describedby');
+    }
+  };
+  const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const validate = (showAll) => {
+    let ok = true;
+    const name = form.querySelector('#f-name');
+    const email = form.querySelector('#f-email');
+    const msg = form.querySelector('#f-msg');
+    if (!name.value.trim()) {
+      if (showAll) setFieldError(name, tr('form.err.name'));
+      ok = false;
+    } else setFieldError(name, '');
+    if (!email.value.trim()) {
+      if (showAll) setFieldError(email, tr('form.err.email.required'));
+      ok = false;
+    } else if (!emailOk(email.value.trim())) {
+      if (showAll) setFieldError(email, tr('form.err.email.invalid'));
+      ok = false;
+    } else setFieldError(email, '');
+    if (!msg.value.trim()) {
+      if (showAll) setFieldError(msg, tr('form.err.msg'));
+      ok = false;
+    } else setFieldError(msg, '');
+    return ok;
+  };
+  let submitAttempted = false;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    submitAttempted = true;
+    if (!validate(true)) return;
+    const data = new FormData(form);
+    const body =
+      'Name: ' + (data.get('name') || '') + '\n' +
+      'Company: ' + (data.get('company') || '') + '\n' +
+      'Email: ' + (data.get('email') || '') + '\n' +
+      'Phone: ' + (data.get('phone') || '') + '\n\n' +
+      (data.get('message') || '');
+    const subject = tr('form.subject') + (data.get('name') || '');
+    const href = 'mailto:michele.dinardo.job@gmail.com' +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(body);
+    window.location.href = href;
+    success.dataset.visible = 'true';
+  });
+  form.addEventListener('blur', (e) => {
+    if (!submitAttempted) return;
+    if (e.target.matches('input, textarea')) validate(true);
+  }, true);
+
+  // Bootstrap language (after form/validate are in scope)
+  let savedLang = 'en';
+  try { savedLang = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) {}
+  applyLang(savedLang);
+})();
+</script>
+
+</body>
+</html>
