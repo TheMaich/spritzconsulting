@@ -385,6 +385,9 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   padding-bottom: clamp(96px, 14vw, 184px);
   position: relative;
 }
+#consultancy{ padding-bottom: clamp(16px, 2vw, 28px); }
+#services{ padding-top: clamp(16px, 2vw, 28px); padding-bottom: clamp(16px, 2vw, 28px); }
+#process{ padding-top: clamp(16px, 2vw, 28px); }
 .kicker{
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--mono);
@@ -833,6 +836,19 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   line-height: 0.8;
   color: var(--clay);
   font-variant-numeric: tabular-nums;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+.step-n[data-count].is-locked{
+  animation: slot-land 420ms cubic-bezier(.2,.8,.2,1.2) 1;
+}
+@keyframes slot-land{
+  0%  { transform: translateY(-14px) scaleY(1.12); }
+  55% { transform: translateY(3px)   scaleY(0.94); }
+  100%{ transform: translateY(0)     scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce){
+  .step-n[data-count].is-locked{ animation: none; }
 }
 .step h3{
   font-family: var(--serif);
@@ -1308,6 +1324,41 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
       </div>
     </div>
 
+    <div class="process-rail" data-reveal>
+      <div class="step">
+        <div class="step-n" data-count="15">15</div>
+        <div>
+          <h3 data-i18n="stats.shipped.h">Games shipped</h3>
+          <p data-i18n="stats.shipped.p">Titles released across QA, publishing, and production roles, on PC and console.</p>
+        </div>
+        <span class="step-tag" data-i18n="stats.shipped.tag">Across studios</span>
+      </div>
+      <div class="step">
+        <div class="step-n" data-count="1">1</div>
+        <div>
+          <h3 data-i18n="stats.positive.h">Overwhelmingly Positive</h3>
+          <p data-i18n="stats.positive.p">Shipped a title that holds Steam&rsquo;s top user-review tier &mdash; the rarest rating on the store.</p>
+        </div>
+        <span class="step-tag" data-i18n="stats.positive.tag">Steam rating</span>
+      </div>
+      <div class="step">
+        <div class="step-n" data-count="9">9</div>
+        <div>
+          <h3 data-i18n="stats.years.h">Years in games</h3>
+          <p data-i18n="stats.years.p">From QA Tester to Publishing Producer to independent consultant. Every angle of the pipeline.</p>
+        </div>
+        <span class="step-tag" data-i18n="stats.years.tag">Since 2015</span>
+      </div>
+      <div class="step">
+        <div class="step-n" data-count="5">5</div>
+        <div>
+          <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
+          <p data-i18n="stats.platforms.p">Certification, submission, and release pipelines across the major storefronts and consoles.</p>
+        </div>
+        <span class="step-tag" data-i18n="stats.platforms.tag">PS · Xbox · PC · Switch · Stadia</span>
+      </div>
+    </div>
+
   </section>
 
   <!-- Services -->
@@ -1583,7 +1634,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     'portrait.alt': 'Michele Di Nardo, con cappello e maglietta neri, su fondo giallo senape.',
     'bubble.aria': 'Un saluto da Michele',
     'bubble.title': '<span class="hola">Ciao! </span>Sono Michele',
-    'bubble.sub': '(o Miki, più breve)',
+    'bubble.sub': '(o Miki, in breve)',
 
     'meta.now.dt': 'Ora',
     'meta.now.dd': 'Producer indipendente & consulenza',
@@ -1604,6 +1655,19 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     'about.p1': 'Nove anni lungo tutta la filiera della produzione. Ho iniziato nel QA, prima come Tester e poi come Manager in <strong>34BigThings</strong> su <em>Redout</em>, poi come QA Project Lead in <strong>Rebellion</strong> su <em>Sniper Elite 4</em>, <em>Strange Brigade</em> e <em>Zombie Army 4</em>. Sono passato al publishing come Line e Publishing Producer in <strong>Raw Fury</strong> su <em>Kathy Rain 2</em>, <em>Moonstone Island</em> e <em>Dome Keeper</em>, e più di recente sono tornato in-house come Producer in <strong>Untold Games</strong> su <em>City&nbsp;20</em>.',
     'about.p2': 'Oggi sono co-fondatore di <strong>Scuola Nash</strong>, una scuola di sviluppo videoludico a Torino, siedo nella giuria dell&rsquo;<strong>Indie Arena Booth</strong> alla Gamescom e porto avanti <strong>Spritz Consulting</strong>, che offre supporto in produzione e publishing agli studi che hanno bisogno di una mano esperta per un periodo, non di un&rsquo;assunzione full-time.',
     'about.p3': 'Dopo tutto questo, un pattern si ripete: quello che rompe i progetti raramente è il codice o la visione creativa. È la struttura intorno. Comunicazione che si perde per strada, scope che raddoppia in silenzio, certificazioni gestite troppo tardi, pitch che non arrivano. È lì che entra <strong>Spritz Consulting</strong>. Sbroglia il lavoro intorno al lavoro, così il tuo team può concentrarsi sul gioco e farlo uscire davvero.',
+
+    'stats.shipped.h': 'Giochi pubblicati',
+    'stats.shipped.p': 'Titoli usciti tra ruoli in QA, publishing e produzione, su PC e console.',
+    'stats.shipped.tag': 'Tra più studi',
+    'stats.positive.h': 'Overwhelmingly Positive',
+    'stats.positive.p': 'Ho pubblicato un titolo che tiene la fascia più alta di recensioni utente su Steam &mdash; il rating più raro sullo store.',
+    'stats.positive.tag': 'Valutazione Steam',
+    'stats.years.h': 'Anni nei videogiochi',
+    'stats.years.p': 'Da QA Tester a Publishing Producer a consulente indipendente. Ogni lato della pipeline.',
+    'stats.years.tag': 'Dal 2015',
+    'stats.platforms.h': 'Piattaforme di pubblicazione',
+    'stats.platforms.p': 'Certificazioni, submission e pipeline di release sui principali store e console.',
+    'stats.platforms.tag': 'PS · Xbox · PC · Switch · Stadia',
 
     'services.kicker': '<span class="num">02</span> Servizi',
     'services.h': 'Tre modi in cui aiuto,<br />un obiettivo: <em>meno attrito,</em><br />decisioni migliori.',
@@ -1852,6 +1916,67 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     });
   }, { threshold: 0.12 });
   reveals.forEach(el => revealIO.observe(el));
+
+  // Slot-machine animation for stat numbers
+  const counters = Array.from(document.querySelectorAll('.step-n[data-count]'));
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (counters.length) {
+    const targets = counters.map(el => parseInt(el.dataset.count, 10));
+    if (reduceMotion) {
+      counters.forEach((el, i) => { el.textContent = targets[i]; });
+    } else {
+      const locked = counters.map(() => false);
+      let spinning = false;
+      const randomFor = (target) => {
+        const digits = String(target).length;
+        const max = Math.pow(10, digits);
+        return Math.floor(Math.random() * max);
+      };
+      counters.forEach((el, i) => { el.textContent = randomFor(targets[i]); });
+      let lastFlip = 0;
+      const flipInterval = 70;
+      const tick = (now) => {
+        if (!spinning) return;
+        if (now - lastFlip >= flipInterval) {
+          lastFlip = now;
+          counters.forEach((el, i) => {
+            if (!locked[i]) el.textContent = randomFor(targets[i]);
+          });
+        }
+        requestAnimationFrame(tick);
+      };
+      const startSpin = () => {
+        if (spinning) return;
+        spinning = true;
+        requestAnimationFrame(tick);
+      };
+      const lockAll = () => {
+        counters.forEach((el, i) => {
+          const delay = i * 380;
+          setTimeout(() => {
+            locked[i] = true;
+            el.textContent = targets[i];
+            el.classList.add('is-locked');
+            if (locked.every(Boolean)) spinning = false;
+          }, delay);
+        });
+      };
+      const preIO = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) startSpin(); });
+      }, { rootMargin: '300px 0px 300px 0px', threshold: 0 });
+      const lockIO = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            startSpin();
+            lockAll();
+            lockIO.unobserve(e.target);
+            preIO.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.6 });
+      counters.forEach(el => { preIO.observe(el); lockIO.observe(el); });
+    }
+  }
 
   // Form validation + mailto submit
   const form = document.getElementById('contact-form');
