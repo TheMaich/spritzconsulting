@@ -388,6 +388,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 #consultancy{ padding-bottom: clamp(16px, 2vw, 28px); }
 #services{ padding-top: clamp(16px, 2vw, 28px); padding-bottom: clamp(16px, 2vw, 28px); }
 #process{ padding-top: clamp(16px, 2vw, 28px); }
+#contact{ padding-top: clamp(56px, 8vw, 108px); padding-bottom: clamp(64px, 9vw, 120px); }
 .kicker{
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--mono);
@@ -873,7 +874,11 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 
 /* Contact */
-.contact{ background: var(--paper-2); border-top: 1px solid var(--rule); }
+.contact{
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) clamp(120px, 14vw, 200px), var(--paper-2) 100%);
+  border-top: 0;
+  position: relative;
+}
 .contact-grid{
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
