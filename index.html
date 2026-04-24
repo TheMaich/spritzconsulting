@@ -9,7 +9,7 @@
 <meta property="og:title" content="Michele Di Nardo — Production & Publishing Consultancy" />
 <meta property="og:description" content="Turning game ideas into shipped titles. Production, platform, and publishing support for studios." />
 <meta property="og:type" content="website" />
-<link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%230A0B0E"/><path d="M14 46 L14 18 L32 38 L50 18 L50 46" fill="none" stroke="%23ECEFF6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="52" r="4.5" fill="%23E5B415"/></svg>' />
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><mask id="slice"><circle cx="32" cy="32" r="28" fill="white"/><g stroke="black" stroke-width="3" stroke-linecap="round" fill="none"><line x1="32" y1="6" x2="32" y2="58"/><line x1="6" y1="32" x2="58" y2="32"/><line x1="13.6" y1="13.6" x2="50.4" y2="50.4"/><line x1="13.6" y1="50.4" x2="50.4" y2="13.6"/></g><circle cx="32" cy="32" r="3" fill="black"/></mask><style>.body{fill:%23E5B415}@media (prefers-color-scheme: light){.body{fill:%238A6600}}</style><rect class="body" width="64" height="64" mask="url(%23slice)"/></svg>' />
 <meta property="og:image" content='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="%230A0B0E"/><path d="M120 470 L120 170 L300 350 L480 170 L480 470" fill="none" stroke="%23ECEFF6" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/><circle cx="480" cy="508" r="20" fill="%23E5B415"/><text x="580" y="310" font-family="serif" font-size="72" fill="%23ECEFF6" font-weight="500">Michele Di Nardo</text><text x="580" y="370" font-family="monospace" font-size="26" fill="%238E95A4" letter-spacing="2">PRODUCTION &amp; PUBLISHING CONSULTANCY</text></svg>' />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -232,9 +232,19 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   letter-spacing: -0.01em;
 }
 .wordmark .dot{
-  width: 7px; height: 7px; border-radius: 999px;
-  background: var(--clay);
-  display: inline-block; transform: translateY(-2px);
+  width: 14px; height: 14px;
+  display: inline-block;
+  transform: translateY(1px);
+  margin: 0 2px;
+  background-color: var(--clay);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7.2' fill='white'/><g stroke='black' stroke-width='1' stroke-linecap='round' fill='none'><line x1='8' y1='2' x2='8' y2='14'/><line x1='2' y1='8' x2='14' y2='8'/><line x1='3.5' y1='3.5' x2='12.5' y2='12.5'/><line x1='3.5' y1='12.5' x2='12.5' y2='3.5'/></g><circle cx='8' cy='8' r='0.9' fill='black'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7.2' fill='white'/><g stroke='black' stroke-width='1' stroke-linecap='round' fill='none'><line x1='8' y1='2' x2='8' y2='14'/><line x1='2' y1='8' x2='14' y2='8'/><line x1='3.5' y1='3.5' x2='12.5' y2='12.5'/><line x1='3.5' y1='12.5' x2='12.5' y2='3.5'/></g><circle cx='8' cy='8' r='0.9' fill='black'/></svg>");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
 }
 .wordmark .role{
   font-family: var(--mono);
