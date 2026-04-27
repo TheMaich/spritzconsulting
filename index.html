@@ -422,9 +422,11 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
   gap: clamp(24px, 5vw, 72px);
-  align-items: end;
+  align-items: stretch;
 }
+.hero-left{ display: flex; flex-direction: column; }
 .hero-left > * + * { margin-top: 28px; }
+.hero-left .cta-row{ margin-top: auto; padding-top: 28px; }
 .hero-h1{
   font-family: var(--serif);
   font-weight: 400;
@@ -488,6 +490,72 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   display: grid; gap: 22px;
   align-self: end;
   position: relative;
+}
+.hero-deck{
+  display: grid;
+  gap: 18px;
+  align-self: end;
+}
+.hero-deck-cards{
+  display: grid;
+  position: relative;
+  isolation: isolate;
+}
+.hero-deck-cards > .hero-card{
+  grid-area: 1 / 1;
+  transition: transform .55s var(--ease), opacity .4s var(--ease), filter .4s var(--ease);
+  z-index: 1;
+}
+.hero-deck-cards > .hero-card.is-active{ z-index: 2; }
+.hero-deck-cards > .hero-card:not(.is-active){
+  opacity: 0.55;
+  filter: blur(0.5px) saturate(0.85);
+  pointer-events: none;
+}
+.hero-card--tilt-1{ transform: rotate(-1.6deg); }
+.hero-card--tilt-2{ transform: rotate(1.6deg); }
+.hero-card--tilt-1:not(.is-active){
+  transform: rotate(-3.2deg) translate(-18px, 22px) scale(0.96);
+}
+.hero-card--tilt-2:not(.is-active){
+  transform: rotate(3.2deg) translate(18px, 22px) scale(0.96);
+}
+.hero-deck-nav{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+.hero-nav-btn{
+  appearance: none;
+  width: 42px; height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  color: var(--ink);
+  display: grid; place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color .25s var(--ease), color .25s var(--ease), transform .2s var(--ease);
+}
+.hero-nav-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.hero-nav-btn:active{ transform: scale(0.94); }
+.hero-nav-btn svg{
+  width: 18px; height: 18px;
+  stroke: currentColor; stroke-width: 1.7;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.hero-nav-dots{ display: inline-flex; gap: 8px; }
+.hero-nav-dot{
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--rule);
+  transition: background .25s var(--ease);
+}
+.hero-nav-dot.is-active{ background: var(--clay); }
+@media (prefers-reduced-motion: reduce){
+  .hero-deck-cards > .hero-card{ transition: none; }
 }
 .hero-right::before{
   content: ""; position: absolute; inset: 0;
@@ -651,6 +719,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   width: max-content;
   animation: scroll 58s linear infinite;
 }
+.marquee-track--reverse{
+  animation-direction: reverse;
+  margin-top: 18px;
+}
 .logo-tile{
   flex: 0 0 auto;
   height: 104px;
@@ -685,6 +757,17 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   gap: clamp(24px, 4vw, 72px);
   align-items: start;
 }
+#consultancy .about-grid{ grid-template-columns: 1fr; }
+#consultancy .process-rail{ margin-top: 32px; }
+#consultancy .step{
+  padding: 22px 24px;
+  gap: 12px;
+  min-height: 0;
+  grid-template-rows: auto auto;
+  align-content: center;
+}
+#consultancy .step-n{ font-size: 56px; }
+#consultancy .step h3{ font-size: 19px; }
 .about-title{
   font-family: var(--serif);
   font-weight: 400;
@@ -742,6 +825,39 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   align-items: start;
 }
 .services .service:first-of-type{ margin-top: 72px; }
+.services-tabs{
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 56px;
+  padding: 4px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper-3);
+}
+.services-tab{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--ink-2);
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: -0.005em;
+  font-size: 14.5px;
+  transition: background 180ms ease, color 180ms ease;
+}
+.services-tab:hover{ color: var(--ink); }
+.services-tab.is-active{
+  background: var(--ink);
+  color: var(--paper);
+}
+.services-tab:focus-visible{
+  outline: 2px solid var(--clay);
+  outline-offset: 2px;
+}
+.services-panel[hidden]{ display: none; }
+.services-panel .service:first-of-type{ margin-top: 32px; }
 .service:last-child{ border-bottom: 1px solid var(--rule); }
 .service-num{
   font-family: var(--mono);
@@ -888,11 +1004,16 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   margin-top: 28px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   border-radius: 12px;
+  max-width: 320px;
 }
 .process-rail--compact .step{
-  padding: 20px 20px 22px;
-  gap: 12px;
-  min-height: 180px;
+  padding: 14px 16px;
+  gap: 6px;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-items: start;
 }
 .process-rail--compact .step-n{
   font-size: 52px;
@@ -900,15 +1021,26 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .process-rail--compact .step h3{
   font-size: 17px;
 }
-.process-rail--compact .step p{
-  font-size: 13px;
-  line-height: 1.5;
-}
-.process-rail--compact .step-tag{
-  font-size: 11.5px;
-}
 @media (max-width: 760px){
   .process-rail--compact{ grid-template-columns: 1fr; }
+}
+
+/* Slim variant: how-we-work steps without uppercase tags */
+.process-rail--slim .step{
+  padding: 22px 22px 24px;
+  gap: 14px;
+  min-height: 200px;
+  grid-template-rows: auto auto;
+}
+.process-rail--slim .step-n{
+  font-size: 56px;
+}
+.process-rail--slim .step h3{
+  font-size: 19px;
+}
+.process-rail--slim .step p{
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 
 /* Contact */
@@ -955,7 +1087,20 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   border: 1px solid var(--rule);
   border-radius: 18px;
   padding: clamp(22px, 2.4vw, 32px);
-  box-shadow: var(--shadow-md);
+  box-shadow:
+    0 0 32px 6px transparent,
+    0 0 90px 16px transparent,
+    var(--shadow-md);
+  transition: box-shadow 2.5s cubic-bezier(.4,0,.2,1);
+}
+.form:hover{
+  box-shadow:
+    0 0 32px 6px color-mix(in srgb, var(--clay) 10%, transparent),
+    0 0 90px 16px color-mix(in srgb, var(--clay) 6%, transparent),
+    var(--shadow-md);
+}
+@media (prefers-reduced-motion: reduce){
+  .form{ transition: none; }
 }
 .form-grid{
   display: grid;
@@ -1096,6 +1241,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   .contact-grid,
   .footer-grid{ grid-template-columns: 1fr; }
   .hero-right{ order: -1; }
+  .hero-deck{ order: -1; }
   .service{ grid-template-columns: 1fr; gap: 20px; }
   .service-icon{ margin-top: 0; }
   .service ul{ columns: 1; }
@@ -1147,11 +1293,11 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 
 /* Heading variable-weight shift on hover */
-.hero-h1, .about-title, .services-title,
+.hero-h1, .services-title,
 .process-head h2, .contact-copy h2, .say-hi{
   transition: font-variation-settings .4s var(--ease);
 }
-.hero-h1:hover, .about-title:hover, .services-title:hover,
+.hero-h1:hover, .services-title:hover,
 .process-head h2:hover, .contact-copy h2:hover, .say-hi:hover{
   font-variation-settings: "opsz" 96, "wght" 600;
 }
@@ -1211,7 +1357,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     </a>
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
-        <a href="#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">Consultancy</span></a>
+        <a href="#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">Our Experience</span></a>
         <a href="#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="#process"><span class="num">03</span><span data-i18n="nav.process">Process</span></a>
         <a href="#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
@@ -1231,7 +1377,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     </button>
   </div>
   <nav aria-label="Mobile">
-    <a href="#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">Consultancy</span></a>
+    <a href="#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">Our Experience</span></a>
     <a href="#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
     <a href="#process" data-menu-link><span class="num">03</span> <span data-i18n="nav.process">Process</span></a>
     <a href="#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
@@ -1268,54 +1414,136 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
         </div>
       </div>
 
-      <aside class="hero-right" data-reveal aria-label="Current status">
-        <div class="portrait-tilt">
-          <figure class="portrait">
-            <img src="assets/miki-portrait.png" data-i18n-alt="portrait.alt" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="720" height="720" />
-            <div class="speech-bubble" role="note" data-i18n-aria="bubble.aria" aria-label="A greeting from Michele">
-              <div class="bubble-body">
-                <span class="bubble-title" data-i18n="bubble.title" data-i18n-html><span class="hola">Ciao! </span>I&rsquo;m Michele</span>
-                <span class="bubble-sub" data-i18n="bubble.sub">(or Miki for short)</span>
-              </div>
-              <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 2 20 L 10 2 L 28 20" />
-              </svg>
+      <div class="hero-deck" data-reveal>
+        <div class="hero-deck-cards">
+          <aside class="hero-right hero-card hero-card--tilt-1 is-active" data-card="0" aria-label="Current status">
+            <div class="portrait-tilt">
+              <figure class="portrait">
+                <img src="assets/miki-portrait.png" data-i18n-alt="portrait.alt" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="720" height="720" />
+                <div class="speech-bubble" role="note" data-i18n-aria="bubble.aria" aria-label="A greeting from Michele">
+                  <div class="bubble-body">
+                    <span class="bubble-title" data-i18n="bubble.title" data-i18n-html><span class="hola">Ciao! </span>I&rsquo;m Michele</span>
+                    <span class="bubble-sub" data-i18n="bubble.sub">(or Miki for short)</span>
+                  </div>
+                  <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 2 20 L 10 2 L 28 20" />
+                  </svg>
+                </div>
+              </figure>
             </div>
-          </figure>
+            <dl class="capsule-meta">
+              <div class="meta-row">
+                <dt data-i18n="meta.now.dt">Now</dt>
+                <dd data-i18n="meta.now.dd">Independent producer &amp; consultancy</dd>
+              </div>
+              <div class="meta-row">
+                <dt data-i18n="meta.also.dt">Also</dt>
+                <dd data-i18n="meta.also.dd">Co-founder at Scuola Nash · Juror at Indie Arena Booth</dd>
+              </div>
+              <div class="meta-row">
+                <dt data-i18n="meta.recent.dt">Recent</dt>
+                <dd data-i18n="meta.recent.dd" data-i18n-html>Producer, Untold Games &mdash; <em>City&nbsp;20</em></dd>
+              </div>
+              <div class="meta-row">
+                <dt data-i18n="meta.based.dt">Based</dt>
+                <dd data-i18n="meta.based.dd">Turin, Italy · Remote first</dd>
+              </div>
+              <div class="meta-row">
+                <dt data-i18n="meta.engage.dt">Engage</dt>
+                <dd data-i18n="meta.engage.dd">Project · Retainer · Audit</dd>
+              </div>
+            </dl>
+          </aside>
+          <aside class="hero-right hero-card hero-card--tilt-2" data-card="1" aria-label="Current status">
+            <div class="portrait-tilt">
+              <figure class="portrait">
+                <img src="assets/sara-portrait.png" alt="Second team member portrait." width="720" height="720" />
+                <div class="speech-bubble" role="note" aria-label="A greeting from Sara">
+                  <div class="bubble-body">
+                    <span class="bubble-title"><span class="hola">Hej! </span>I&rsquo;m Sara</span>
+                    <span class="bubble-sub">(design partner)</span>
+                  </div>
+                  <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 2 20 L 10 2 L 28 20" />
+                  </svg>
+                </div>
+              </figure>
+            </div>
+            <dl class="capsule-meta">
+              <div class="meta-row">
+                <dt>Now</dt>
+                <dd>Design consultant &amp; partner</dd>
+              </div>
+              <div class="meta-row">
+                <dt>Also</dt>
+                <dd>Lecturer at Scuola Nash · Playtest lead</dd>
+              </div>
+              <div class="meta-row">
+                <dt>Recent</dt>
+                <dd>Lead Designer &mdash; <em>Untitled Project</em></dd>
+              </div>
+              <div class="meta-row">
+                <dt>Based</dt>
+                <dd>Turin, Italy · Remote first</dd>
+              </div>
+              <div class="meta-row">
+                <dt>Engage</dt>
+                <dd>Project · Retainer · Audit</dd>
+              </div>
+            </dl>
+          </aside>
         </div>
-        <dl class="capsule-meta">
-          <div class="meta-row">
-            <dt data-i18n="meta.now.dt">Now</dt>
-            <dd data-i18n="meta.now.dd">Independent producer &amp; consultancy</dd>
-          </div>
-          <div class="meta-row">
-            <dt data-i18n="meta.also.dt">Also</dt>
-            <dd data-i18n="meta.also.dd">Co-founder at Scuola Nash · Juror at Indie Arena Booth</dd>
-          </div>
-          <div class="meta-row">
-            <dt data-i18n="meta.recent.dt">Recent</dt>
-            <dd data-i18n="meta.recent.dd" data-i18n-html>Producer, Untold Games &mdash; <em>City&nbsp;20</em></dd>
-          </div>
-          <div class="meta-row">
-            <dt data-i18n="meta.based.dt">Based</dt>
-            <dd data-i18n="meta.based.dd">Turin, Italy · Remote first</dd>
-          </div>
-          <div class="meta-row">
-            <dt data-i18n="meta.engage.dt">Engage</dt>
-            <dd data-i18n="meta.engage.dd">Project · Retainer · Audit</dd>
-          </div>
-        </dl>
-      </aside>
+        <div class="hero-deck-nav" role="group" aria-label="Switch person">
+          <button type="button" class="hero-nav-btn" data-card-prev aria-label="Previous person">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <span class="hero-nav-dots" aria-hidden="true">
+            <span class="hero-nav-dot is-active"></span>
+            <span class="hero-nav-dot"></span>
+          </span>
+          <button type="button" class="hero-nav-btn" data-card-next aria-label="Next person">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Marquee / Studios -->
   <section class="marquee" aria-labelledby="marquee-h">
     <div class="wrap marquee-kicker">
-      <span id="marquee-h" data-i18n="marquee.h">Studios &amp; organisations I&rsquo;ve worked with</span>
+      <span id="marquee-h" data-i18n="marquee.h">Studios, orgs and games we worked with</span>
       <span data-i18n="marquee.range">2015 &mdash; now</span>
     </div>
     <div class="marquee-track">
+      <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-rebellion.png" alt="Rebellion" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-rawfury.png" alt="Raw Fury" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-untoldgames.png" alt="Untold Games" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-scuolanash.png" alt="Scuola Nash" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-indiearenabooth.png" alt="Indie Arena Booth" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-bippinbits.png" alt="Bippinbits" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-clifftop.png" alt="Clifftop Games" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-supersoft.png" alt="Supersoft" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-milestone.png" alt="Milestone" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-firstplayable.png" alt="First Playable" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-indiedevday.png" alt="Indie DevDay" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-babyrobot.png" alt="Baby Robot Games" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-34bigthings.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rebellion.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rawfury.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-untoldgames.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-scuolanash.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiearenabooth.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-bippinbits.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-clifftop.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-supersoft.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-milestone.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-firstplayable.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiedevday.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-babyrobot.png" alt="" loading="lazy" /></div>
+    </div>
+    <div class="marquee-track marquee-track--reverse">
       <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
       <div class="logo-tile"><img src="assets/logo-rebellion.png" alt="Rebellion" loading="lazy" /></div>
       <div class="logo-tile"><img src="assets/logo-rawfury.png" alt="Raw Fury" loading="lazy" /></div>
@@ -1349,55 +1577,36 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   <section class="section wrap" id="consultancy" aria-labelledby="about-h">
     <div class="about-grid">
       <div>
-        <span class="kicker" data-reveal data-i18n="about.kicker" data-i18n-html><span class="num">01</span> Consultancy</span>
+        <span class="kicker" data-reveal data-i18n="about.kicker" data-i18n-html><span class="num">01</span> Our Experience</span>
         <h2 class="about-title" id="about-h" data-reveal data-i18n="about.h">
           Nine years inside game development, at every angle.
         </h2>
-        <div class="process-rail process-rail--compact" data-reveal>
+        <div class="process-rail" data-reveal>
           <div class="step">
-            <div class="step-n" data-count="15">15</div>
+            <div class="step-n" data-count="15+">15+</div>
             <div>
               <h3 data-i18n="stats.shipped.h">Games shipped</h3>
-              <p data-i18n="stats.shipped.p">Titles released across QA, publishing, and production roles, on PC and console.</p>
             </div>
-            <span class="step-tag" data-i18n="stats.shipped.tag">Across studios</span>
           </div>
           <div class="step">
             <div class="step-n" data-count="1">1</div>
             <div>
-              <h3 data-i18n="stats.positive.h">Overwhelmingly Positive</h3>
-              <p data-i18n="stats.positive.p">Shipped a title that holds Steam&rsquo;s top user-review tier &mdash; the rarest rating on the store.</p>
+              <h3 data-i18n="stats.positive.h">Overwhelmingly Positive releases</h3>
             </div>
-            <span class="step-tag" data-i18n="stats.positive.tag">Steam rating</span>
           </div>
           <div class="step">
             <div class="step-n" data-count="9">9</div>
             <div>
               <h3 data-i18n="stats.years.h">Years in games</h3>
-              <p data-i18n="stats.years.p">From QA Tester to Publishing Producer to independent consultant. Every angle of the pipeline.</p>
             </div>
-            <span class="step-tag" data-i18n="stats.years.tag">Since 2015</span>
           </div>
           <div class="step">
-            <div class="step-n" data-count="5">5</div>
+            <div class="step-n" data-count="7">5</div>
             <div>
               <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
-              <p data-i18n="stats.platforms.p">Certification, submission, and release pipelines across the major storefronts and consoles.</p>
             </div>
-            <span class="step-tag" data-i18n="stats.platforms.tag">PS · Xbox · PC · Switch · Stadia</span>
           </div>
         </div>
-      </div>
-      <div class="about-copy" data-reveal>
-        <p data-i18n="about.p1" data-i18n-html>
-  Nine years across the production stack. I started in QA, first as Tester and then as Manager at <strong>34BigThings</strong> on <em>Redout</em>, then as QA Project Lead at <strong>Rebellion</strong> on <em>Sniper Elite 4</em>, <em>Strange Brigade</em> and <em>Zombie Army 4</em>. I moved to publishing as Line and Publishing Producer at <strong>Raw Fury</strong> on <em>Kathy Rain 2</em>, <em>Moonstone Island</em> and <em>Dome Keeper</em>, and most recently I went back in-house as Producer at <strong>Untold Games</strong> on <em>City&nbsp;20</em>.
-        </p>
-        <p data-i18n="about.p2" data-i18n-html>
-  Today I&rsquo;m a co-founder of <strong>Scuola Nash</strong>, a game dev school in Turin, I sit on the jury of the <strong>Indie Arena Booth</strong> at Gamescom, and I run <strong>Spritz Consulting</strong>, offering production and publishing support to studios that need an experienced hand for a stretch, not a full-time hire.
-</p>
-        <p data-i18n="about.p3" data-i18n-html>
-  After all of it, one pattern stands out: what breaks projects is rarely the code or the creative vision. It&rsquo;s the structure around them. Communication that drifts, scope that quietly doubles, certifications handled too late, pitches that don&rsquo;t land. That&rsquo;s where <strong>Spritz Consulting</strong> comes in. We untangle the work around the work, so your team can focus on the game and actually ship it.
-</p>
       </div>
     </div>
 
@@ -1419,59 +1628,104 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
       </p>
     </div>
 
-    <article class="service service--icon-lead" data-reveal>
-      <div class="service-icon service-icon--lead" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M3 6h12"/><path d="M3 12h18"/><path d="M3 18h9"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/></svg>
-      </div>
-      <div class="service-head">
-        <h3 data-i18n="svc1.h">Production &amp; Project Operations</h3>
-        <p data-i18n="svc1.p">The right things at the right time. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
-      </div>
-      <ul>
-        <li data-i18n="svc1.b1">End-to-end project management</li>
-        <li data-i18n="svc1.b2">GDD review &amp; knowledge management</li>
-        <li data-i18n="svc1.b3">Workflow audits &amp; pipeline optimisation</li>
-        <li data-i18n="svc1.b4">Scope &amp; risk assessment</li>
-        <li data-i18n="svc1.b5">Project financial planning</li>
-        <li data-i18n="svc1.b6">Ad hoc consultations &amp; peer review</li>
-      </ul>
-    </article>
+    <div class="services-tabs" role="tablist" aria-label="Services audience" data-reveal>
+      <button type="button" class="services-tab is-active" role="tab" aria-selected="true" aria-controls="tab-developers" id="tabbtn-developers" data-tab-target="tab-developers">For Developers</button>
+      <button type="button" class="services-tab" role="tab" aria-selected="false" aria-controls="tab-publishers" id="tabbtn-publishers" data-tab-target="tab-publishers" tabindex="-1">For Publishers</button>
+    </div>
 
-    <article class="service service--icon-lead" data-reveal>
-      <div class="service-icon service-icon--lead" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="3" y="8" width="14" height="10" rx="1.5"/><path d="M17 11h3l1 3v4h-4"/><circle cx="7" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg>
-      </div>
-      <div class="service-head">
-        <h3 data-i18n="svc2.h">Platform &amp; Release Management</h3>
-        <p data-i18n="svc2.p">Clean releases, every platform, every market. Certifications, stores, launch logistics, external QA, and localisation.</p>
-      </div>
-      <ul>
-        <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
-        <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
-        <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
-        <li data-i18n="svc2.b4">External QA &amp; localisation coordination</li>
-        <li data-i18n="svc2.b5">Steamworks, PlayStation Partner, MS Partner Center</li>
-        <li data-i18n="svc2.b6">Globally consistent release execution</li>
-      </ul>
-    </article>
+    <div class="services-panel" id="tab-developers" role="tabpanel" aria-labelledby="tabbtn-developers">
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 6h12"/><path d="M3 12h18"/><path d="M3 18h9"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svc1.h">Production &amp; Project Operations</h3>
+          <p data-i18n="svc1.p">The right things at the right time. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
+        </div>
+        <ul>
+          <li data-i18n="svc1.b1">End-to-end project management</li>
+          <li data-i18n="svc1.b2">GDD review &amp; knowledge management</li>
+          <li data-i18n="svc1.b3">Workflow audits &amp; pipeline optimisation</li>
+          <li data-i18n="svc1.b4">Scope &amp; risk assessment</li>
+          <li data-i18n="svc1.b5">Project financial planning</li>
+          <li data-i18n="svc1.b6">Ad hoc consultations &amp; peer review</li>
+        </ul>
+      </article>
 
-    <article class="service service--icon-lead" data-reveal>
-      <div class="service-icon service-icon--lead" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8 16 3-7 5-3-3 7z"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
-      </div>
-      <div class="service-head">
-        <h3 data-i18n="svc3.h">Strategic Publishing Support</h3>
-        <p data-i18n="svc3.p">Not a publisher myself, but I worked inside one of the best. I can share a network, the experience, and an honest view on how to reach the market.</p>
-      </div>
-      <ul>
-        <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
-        <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
-        <li data-i18n="svc3.b3">Pitch deck review for funding &amp; deals</li>
-        <li data-i18n="svc3.b4">Post-launch support: DLC, seasons, post-mortems</li>
-        <li data-i18n="svc3.b5">Developer relations &amp; community strategy</li>
-        <li data-i18n="svc3.b6">Gamescom Indie Arena Booth juror</li>
-      </ul>
-    </article>
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="3" y="8" width="14" height="10" rx="1.5"/><path d="M17 11h3l1 3v4h-4"/><circle cx="7" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svc2.h">Platform &amp; Release Management</h3>
+          <p data-i18n="svc2.p">Clean releases, every platform, every market. Certifications, stores, launch logistics, external QA, and localisation.</p>
+        </div>
+        <ul>
+          <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
+          <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
+          <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
+          <li data-i18n="svc2.b4">External QA &amp; localisation coordination</li>
+          <li data-i18n="svc2.b5">Steamworks, PlayStation Partner, MS Partner Center</li>
+          <li data-i18n="svc2.b6">Globally consistent release execution</li>
+        </ul>
+      </article>
+
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8 16 3-7 5-3-3 7z"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svc3.h">Strategic Publishing Support</h3>
+          <p data-i18n="svc3.p">Not a publisher myself, but I worked inside one of the best. I can share a network, the experience, and an honest view on how to reach the market.</p>
+        </div>
+        <ul>
+          <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
+          <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
+          <li data-i18n="svc3.b3">Pitch deck review for funding &amp; deals</li>
+          <li data-i18n="svc3.b4">Post-launch support: DLC, seasons, post-mortems</li>
+          <li data-i18n="svc3.b5">Developer relations &amp; community strategy</li>
+          <li data-i18n="svc3.b6">Gamescom Indie Arena Booth juror</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="services-panel" id="tab-publishers" role="tabpanel" aria-labelledby="tabbtn-publishers" hidden>
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/><circle cx="8" cy="5" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="11" cy="19" r="1.6"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svcP2.h">External Production Oversight</h3>
+          <p data-i18n="svcP2.p">A producer on your side of the table. Milestones, scope, and risk tracked across signed studios so surprises surface early, not at cert.</p>
+        </div>
+        <ul>
+          <li data-i18n="svcP2.b1">Publisher-side line producing</li>
+          <li data-i18n="svcP2.b2">Milestone &amp; deliverable tracking</li>
+          <li data-i18n="svcP2.b3">Scope &amp; schedule risk monitoring</li>
+          <li data-i18n="svcP2.b4">Vendor coordination: port, QA, audio, loc</li>
+          <li data-i18n="svcP2.b5">Cert &amp; launch oversight across platforms</li>
+          <li data-i18n="svcP2.b6">Internal producer hiring &amp; training</li>
+        </ul>
+      </article>
+
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 20h4L18.5 9.5a2.83 2.83 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/><path d="m5 19 3-1"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svcP4.h">Design Consultancy</h3>
+          <p data-i18n="svcP4.p">A design read on signed and prospective titles. Where the design holds, where it leaks players, and what to prototype before greenlighting more scope.</p>
+        </div>
+        <ul>
+          <li data-i18n="svcP4.b1">Onboarding &amp; first-session effectiveness</li>
+          <li data-i18n="svcP4.b2">Design risk identification &amp; mitigation</li>
+          <li data-i18n="svcP4.b3">Design prototyping &amp; implementation review</li>
+          <li data-i18n="svcP4.b4">Core loop &amp; retention diagnostics</li>
+          <li data-i18n="svcP4.b5">Playtest design, observation &amp; analysis</li>
+          <li data-i18n="svcP4.b6">Tutorial, UX flow &amp; difficulty pacing</li>
+        </ul>
+      </article>
+    </div>
   </section>
 
   <!-- Process -->
@@ -1486,14 +1740,13 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
       </p>
     </div>
 
-    <div class="process-rail" data-reveal>
+    <div class="process-rail process-rail--slim" data-reveal>
       <div class="step">
         <div class="step-n">01</div>
         <div>
           <h3 data-i18n="step1.h">Discovery call</h3>
           <p data-i18n="step1.p">A free half-hour to talk through the project, its current state, and the real needs. No pitch, no pressure.</p>
         </div>
-        <span class="step-tag" data-i18n="step1.tag">30 min · free</span>
       </div>
       <div class="step">
         <div class="step-n">02</div>
@@ -1501,7 +1754,6 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="step2.h">Scope &amp; proposal</h3>
           <p data-i18n="step2.p">A practical proposal covering areas of work, deliverables, timeline, and how we&rsquo;d work together.</p>
         </div>
-        <span class="step-tag" data-i18n="step2.tag">3 &ndash; 5 working days</span>
       </div>
       <div class="step">
         <div class="step-n">03</div>
@@ -1509,15 +1761,13 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="step3.h">Execution</h3>
           <p data-i18n="step3.p">Working as part of the team, on your tools, your cadences, your channels. With clear reporting along the way.</p>
         </div>
-        <span class="step-tag" data-i18n="step3.tag">Weekly cadence</span>
       </div>
       <div class="step">
         <div class="step-n">04</div>
         <div>
           <h3 data-i18n="step4.h">Handover</h3>
-          <p data-i18n="step4.p">Documentation, processes, know-how you can reuse. The value stays with the team.</p>
+          <p data-i18n="step4.p">Documentation, processes, know-how you can reuse. The value stays with you.</p>
         </div>
-        <span class="step-tag" data-i18n="step4.tag">Closing sprint</span>
       </div>
     </div>
   </section>
@@ -1651,7 +1901,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   const LANG_KEY = 'mdn-lang';
   const ORIG = new WeakMap();
   const IT = {
-    'nav.consultancy': 'Consulenza',
+    'nav.consultancy': 'La Nostra Esperienza',
     'nav.services': 'Servizi',
     'nav.process': 'Metodo',
     'nav.contact': 'Contatti',
@@ -1689,10 +1939,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     'meta.engage.dt': 'Formati',
     'meta.engage.dd': 'Progetto · Retainer · Audit',
 
-    'marquee.h': 'Studi e organizzazioni con cui ho lavorato',
+    'marquee.h': 'Studi, organizzazioni e giochi con cui abbiamo lavorato',
     'marquee.range': '2015 — oggi',
 
-    'about.kicker': '<span class="num">01</span> Consulenza',
+    'about.kicker': '<span class="num">01</span> La Nostra Esperienza',
     'about.h': 'Nove anni dentro lo sviluppo videoludico, da tutti i lati.',
     'about.p1': 'Nove anni lungo tutta la filiera della produzione. Ho iniziato nel QA, prima come Tester e poi come Manager in <strong>34BigThings</strong> su <em>Redout</em>, poi come QA Project Lead in <strong>Rebellion</strong> su <em>Sniper Elite 4</em>, <em>Strange Brigade</em> e <em>Zombie Army 4</em>. Sono passato al publishing come Line e Publishing Producer in <strong>Raw Fury</strong> su <em>Kathy Rain 2</em>, <em>Moonstone Island</em> e <em>Dome Keeper</em>, e più di recente sono tornato in-house come Producer in <strong>Untold Games</strong> su <em>City&nbsp;20</em>.',
     'about.p2': 'Oggi sono co-fondatore di <strong>Scuola Nash</strong>, una scuola di sviluppo videoludico a Torino, siedo nella giuria dell&rsquo;<strong>Indie Arena Booth</strong> alla Gamescom e porto avanti <strong>Spritz Consulting</strong>, che offre supporto in produzione e publishing agli studi che hanno bisogno di una mano esperta per un periodo, non di un&rsquo;assunzione full-time.',
@@ -1744,7 +1994,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 
     'process.kicker': '<span class="num">03</span> Come lavoriamo insieme',
     'process.h': 'Come possiamo lavorare, in quattro step.',
-    'process.intro': 'Niente fronzoli, niente deck enormi. Parliamo, ci accordiamo sullo scope, lavoro dentro al tuo team, e quando me ne vado ti lascio quello che ti serve per andare avanti da solo.',
+    'process.intro': 'Niente fronzoli, niente deck enormi. Parliamo, ci accordiamo sullo scope, lavoro dentro al tuo team, e quando me ne vado ti lascio quello che ti serve per andare avanti da soli.',
 
     'step1.h': 'Call conoscitiva',
     'step1.p': '30 minuti gratuiti per capire il progetto, a che punto è, e cosa serve davvero. Niente pressione.',
@@ -1929,8 +2179,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
       });
     });
     // Portrait 3D tilt follows cursor
-    const tilt = document.querySelector('.portrait-tilt');
-    if (tilt) {
+    document.querySelectorAll('.portrait-tilt').forEach((tilt) => {
       const maxTilt = 6; // degrees
       tilt.addEventListener('pointermove', (e) => {
         const r = tilt.getBoundingClientRect();
@@ -1942,8 +2191,25 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
       tilt.addEventListener('pointerleave', () => {
         tilt.style.transform = '';
       });
-    }
+    });
   }
+
+  // Hero card deck (switch between persons)
+  (function initHeroDeck(){
+    const cards = Array.from(document.querySelectorAll('.hero-deck-cards .hero-card'));
+    if (cards.length < 2) return;
+    const dots = Array.from(document.querySelectorAll('.hero-nav-dot'));
+    const prev = document.querySelector('[data-card-prev]');
+    const next = document.querySelector('[data-card-next]');
+    let idx = 0;
+    function show(n){
+      idx = (n + cards.length) % cards.length;
+      cards.forEach((c, i) => c.classList.toggle('is-active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+    }
+    if (prev) prev.addEventListener('click', () => show(idx - 1));
+    if (next) next.addEventListener('click', () => show(idx + 1));
+  })();
 
   // Reveal-on-scroll cascade
   const reveals = document.querySelectorAll('[data-reveal]');
@@ -2086,6 +2352,37 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     if (!submitAttempted) return;
     if (e.target.matches('input, textarea')) validate(true);
   }, true);
+
+  // Services tabs (For Developers / For Publishers)
+  (function initServicesTabs(){
+    const tabs = Array.from(document.querySelectorAll('.services-tab'));
+    if (!tabs.length) return;
+    const panels = new Map(tabs.map(t => [t.dataset.tabTarget, document.getElementById(t.dataset.tabTarget)]));
+    function activate(targetId){
+      tabs.forEach(t => {
+        const on = t.dataset.tabTarget === targetId;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach((panel, id) => {
+        if (!panel) return;
+        if (id === targetId) panel.removeAttribute('hidden');
+        else panel.setAttribute('hidden', '');
+      });
+    }
+    tabs.forEach(t => {
+      t.addEventListener('click', () => activate(t.dataset.tabTarget));
+      t.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        const i = tabs.indexOf(t);
+        const next = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
+        tabs[next].focus();
+        activate(tabs[next].dataset.tabTarget);
+      });
+    });
+  })();
 
   // Bootstrap language (after form/validate are in scope)
   let savedLang = 'en';
