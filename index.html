@@ -395,7 +395,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   padding-bottom: clamp(96px, 14vw, 184px);
   position: relative;
 }
-#consultancy{ padding-bottom: clamp(16px, 2vw, 28px); }
+#consultancy{ padding-top: clamp(12px, 1.6vw, 24px); padding-bottom: clamp(16px, 2vw, 28px); }
 #services{ padding-top: clamp(16px, 2vw, 28px); padding-bottom: clamp(16px, 2vw, 28px); }
 #process{ padding-top: clamp(16px, 2vw, 28px); }
 #contact{ padding-top: clamp(56px, 8vw, 108px); padding-bottom: clamp(64px, 9vw, 120px); }
@@ -412,10 +412,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 
 /* Hero */
 .hero{
-  padding-top: clamp(56px, 10vw, 120px);
-  padding-bottom: clamp(76px, 12vw, 148px);
-  min-height: calc(100dvh - 72px);
-  display: flex; flex-direction: column; justify-content: center;
+  padding-top: clamp(24px, 2.8vw, 40px);
+  padding-bottom: clamp(30px, 2.5vw, 36px);
+  min-height: 0;
+  display: flex; flex-direction: column;
   position: relative;
 }
 .hero-grid{
@@ -721,7 +721,30 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 .marquee-track--reverse{
   animation-direction: reverse;
+  animation-duration: 64s;
   margin-top: 18px;
+}
+.marquee-track--reverse .logo-tile{
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  min-width: 0;
+  height: 104px;
+  box-shadow: none;
+}
+.marquee-track--reverse .logo-tile:hover{
+  border-color: transparent;
+  transform: none;
+}
+.marquee-track--reverse .logo-tile img{
+  height: 104px;
+  width: auto;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  display: block;
+  border-radius: 12px;
 }
 .logo-tile{
   flex: 0 0 auto;
@@ -748,6 +771,103 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 @media (prefers-reduced-motion: reduce){
   .marquee-track{ animation: none; }
+}
+
+/* Testimonials */
+.testimonials{
+  padding-block: clamp(56px, 8vw, 96px);
+}
+.testimonials-head{
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.testimonials-head .kicker{ justify-content: center; }
+.testimonials-head h2{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(32px, 4.4vw, 54px);
+  font-variation-settings: "opsz" 96;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 0;
+  text-wrap: balance;
+}
+.testimonials-stage{
+  position: relative;
+  height: clamp(220px, 24vw, 280px);
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: var(--paper-3);
+  box-shadow: var(--shadow-md);
+  max-width: 760px;
+  margin: 0 auto;
+}
+.testimonials-stage::before, .testimonials-stage::after{
+  content: ""; position: absolute; left: 0; right: 0; height: 28px; z-index: 2;
+  pointer-events: none;
+}
+.testimonials-stage::before{ top: 0; background: linear-gradient(to bottom, var(--paper-3), transparent); }
+.testimonials-stage::after { bottom: 0; background: linear-gradient(to top, var(--paper-3), transparent); }
+.testimonials-track{
+  list-style: none; margin: 0; padding: 0;
+  animation: quote-roll 24s steps(4, end) infinite;
+  will-change: transform;
+}
+.testimonials-stage:hover .testimonials-track,
+.testimonials-stage:focus-within .testimonials-track{
+  animation-play-state: paused;
+}
+.testimonial{
+  display: grid; place-items: center; align-content: center;
+  height: clamp(220px, 24vw, 280px);
+  padding: 28px clamp(28px, 5vw, 64px);
+  text-align: center;
+  gap: 16px;
+  box-sizing: border-box;
+}
+.testimonial blockquote{
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(18px, 1.7vw, 22px);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.testimonial blockquote::before{
+  content: "\201C";
+  color: var(--clay);
+  font-size: 1.6em;
+  line-height: 0;
+  vertical-align: -0.25em;
+  margin-right: 4px;
+}
+.testimonial blockquote::after{
+  content: "\201D";
+  color: var(--clay);
+  font-size: 1.6em;
+  line-height: 0;
+  vertical-align: -0.25em;
+  margin-left: 4px;
+}
+.testimonial cite{
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+@keyframes quote-roll{
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-80%); }
+}
+@media (prefers-reduced-motion: reduce){
+  .testimonials-track{ animation: none; }
 }
 
 /* About */
@@ -1460,8 +1580,8 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
                 <img src="assets/sara-portrait.png" alt="Second team member portrait." width="720" height="720" />
                 <div class="speech-bubble" role="note" aria-label="A greeting from Sara">
                   <div class="bubble-body">
-                    <span class="bubble-title"><span class="hola">Hej! </span>I&rsquo;m Sara</span>
-                    <span class="bubble-sub">(design partner)</span>
+                    <span class="bubble-title"><span class="hola">Ciao! </span>I&rsquo;m Alessandro</span>
+                    <span class="bubble-sub">or Ale for short</span>
                   </div>
                   <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                     <path d="M 2 20 L 10 2 L 28 20" />
@@ -1506,70 +1626,6 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           </button>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Marquee / Studios -->
-  <section class="marquee" aria-labelledby="marquee-h">
-    <div class="wrap marquee-kicker">
-      <span id="marquee-h" data-i18n="marquee.h">Studios, orgs and games we worked with</span>
-      <span data-i18n="marquee.range">2015 &mdash; now</span>
-    </div>
-    <div class="marquee-track">
-      <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-rebellion.png" alt="Rebellion" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-rawfury.png" alt="Raw Fury" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-untoldgames.png" alt="Untold Games" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-scuolanash.png" alt="Scuola Nash" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-indiearenabooth.png" alt="Indie Arena Booth" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-bippinbits.png" alt="Bippinbits" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-clifftop.png" alt="Clifftop Games" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-supersoft.png" alt="Supersoft" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-milestone.png" alt="Milestone" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-firstplayable.png" alt="First Playable" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-indiedevday.png" alt="Indie DevDay" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-babyrobot.png" alt="Baby Robot Games" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-34bigthings.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rebellion.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rawfury.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-untoldgames.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-scuolanash.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiearenabooth.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-bippinbits.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-clifftop.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-supersoft.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-milestone.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-firstplayable.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiedevday.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-babyrobot.png" alt="" loading="lazy" /></div>
-    </div>
-    <div class="marquee-track marquee-track--reverse">
-      <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-rebellion.png" alt="Rebellion" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-rawfury.png" alt="Raw Fury" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-untoldgames.png" alt="Untold Games" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-scuolanash.png" alt="Scuola Nash" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-indiearenabooth.png" alt="Indie Arena Booth" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-bippinbits.png" alt="Bippinbits" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-clifftop.png" alt="Clifftop Games" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-supersoft.png" alt="Supersoft" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-milestone.png" alt="Milestone" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-firstplayable.png" alt="First Playable" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-indiedevday.png" alt="Indie DevDay" loading="lazy" /></div>
-      <div class="logo-tile"><img src="assets/logo-babyrobot.png" alt="Baby Robot Games" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-34bigthings.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rebellion.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rawfury.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-untoldgames.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-scuolanash.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiearenabooth.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-bippinbits.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-clifftop.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-supersoft.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-milestone.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-firstplayable.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiedevday.png" alt="" loading="lazy" /></div>
-      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-babyrobot.png" alt="" loading="lazy" /></div>
     </div>
   </section>
 
@@ -1664,7 +1720,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
           <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
           <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
-          <li data-i18n="svc2.b4">External QA &amp; localisation coordination</li>
+          <li data-i18n="svc2.b4">External QA, localisation coordination &amp; TRC/TCR compliance</li>
           <li data-i18n="svc2.b5">Steamworks, PlayStation Partner, MS Partner Center</li>
           <li data-i18n="svc2.b6">Globally consistent release execution</li>
         </ul>
@@ -1676,16 +1732,16 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
         </div>
         <div class="service-head">
           <h3 data-i18n="svc3.h">Strategic Publishing Support</h3>
-          <p data-i18n="svc3.p">Not a publisher myself, but I worked inside one of the best. I can share a network, the experience, and an honest view on how to reach the market.</p>
+          <p data-i18n="svc3.p">Not a publisher myself, but I worked inside one of the best. I can share a network, the experience, and an honest view on how to reach the players.</p>
         </div>
         <ul>
           <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
           <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
-          <li data-i18n="svc3.b3">Pitch deck review for funding &amp; deals</li>
-          <li data-i18n="svc3.b4">Post-launch support: DLC, seasons, post-mortems</li>
-          <li data-i18n="svc3.b5">Developer relations &amp; community strategy</li>
-          <li data-i18n="svc3.b6">Gamescom Indie Arena Booth juror</li>
-        </ul>
+          <li data-i18n="svc3.b3">Pitch deck shaping and review for funding &amp; deals</li>
+          <li data-i18n="svc3.b4">Publisher demo prep and feedback</li>
+          <li data-i18n="svc3.b5">Deal term review & founder
+advisory</li>
+                </ul>
       </article>
     </div>
 
@@ -1696,7 +1752,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
         </div>
         <div class="service-head">
           <h3 data-i18n="svcP2.h">External Production Oversight</h3>
-          <p data-i18n="svcP2.p">A producer on your side of the table. Milestones, scope, and risk tracked across signed studios so surprises surface early, not at cert.</p>
+          <p data-i18n="svcP2.p">A producer on your side of the table. Milestones, scope, and risk tracked across signed studios so surprises surface early, not at Portfolio Review meetings.</p>
         </div>
         <ul>
           <li data-i18n="svcP2.b1">Publisher-side line producing</li>
@@ -1725,6 +1781,42 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <li data-i18n="svcP4.b6">Tutorial, UX flow &amp; difficulty pacing</li>
         </ul>
       </article>
+
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.4l6-.9z"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svcP6.h">Mock Reviews for In-Development Games</h3>
+          <p data-i18n="svcP6.p">A press-style critique of titles still in development. We play the build, write the review you&rsquo;d wish you had at launch, and flag what reviewers will likely praise or pick apart.</p>
+        </div>
+        <ul>
+          <li data-i18n="svcP6.b1">Press-style written review on current build</li>
+          <li data-i18n="svcP6.b2">Score range estimate with reasoning</li>
+          <li data-i18n="svcP6.b3">Strengths reviewers will highlight</li>
+          <li data-i18n="svcP6.b4">Weaknesses likely to land in critique</li>
+          <li data-i18n="svcP6.b5">Comparable titles &amp; positioning notes</li>
+          <li data-i18n="svcP6.b6">Recommendations to lift the perceived score</li>
+        </ul>
+      </article>
+
+      <article class="service service--icon-lead" data-reveal>
+        <div class="service-icon service-icon--lead" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="service-head">
+          <h3 data-i18n="svcP5.h">Scouting &amp; Dev Relationships Help</h3>
+          <p data-i18n="svcP5.p">Freelance scouting on the ground when your team can&rsquo;t be present. Direct dev conversations, plus feedback on trends and projects worth watching.</p>
+        </div>
+        <ul>
+          <li data-i18n="svcP5.b1">Event coverage when your scouts are double-booked</li>
+          <li data-i18n="svcP5.b2">Booth walks, dev meetings &amp; pitch sessions on your behalf</li>
+          <li data-i18n="svcP5.b3">Trend reports across genres &amp; regions</li>
+          <li data-i18n="svcP5.b4">Studio feedback drawn from direct dev conversations</li>
+          <li data-i18n="svcP5.b5">Heads-up on interesting projects before they make rounds</li>
+          <li data-i18n="svcP5.b6">Festival &amp; showcase coverage (Gamescom, IAB, GDC)</li>
+        </ul>
+      </article>
     </div>
   </section>
 
@@ -1736,7 +1828,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
         <h2 id="process-h" data-reveal data-i18n="process.h">How we work, in four steps.</h2>
       </div>
       <p data-reveal data-i18n="process.intro">
-        No gimmicks, no oversized decks. We chat, we agree on the scope, I work as part of your team, and when I leave you have what you need to keep going on your own.
+        No gimmicks, no overhead. We chat, we agree on the scope, I work as part of your team, and when I leave you have what you need to keep going on your own.
       </p>
     </div>
 
@@ -1826,6 +1918,104 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           </button>
         </div>
       </form>
+    </div>
+  </section>
+
+  <!-- Marquee / Studios -->
+  <section class="marquee" aria-labelledby="marquee-h">
+    <div class="wrap marquee-kicker">
+      <span id="marquee-h" data-i18n="marquee.h">Studios, orgs and games we worked with</span>
+      <span data-i18n="marquee.range">2015 &mdash; now</span>
+    </div>
+    <div class="marquee-track">
+      <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-rebellion.png" alt="Rebellion" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-rawfury.png" alt="Raw Fury" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-untoldgames.png" alt="Untold Games" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-scuolanash.png" alt="Scuola Nash" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-indiearenabooth.png" alt="Indie Arena Booth" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-bippinbits.png" alt="Bippinbits" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-clifftop.png" alt="Clifftop Games" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-supersoft.png" alt="Supersoft" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-milestone.png" alt="Milestone" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-firstplayable.png" alt="First Playable" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-indiedevday.png" alt="Indie DevDay" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets/logo-babyrobot.png" alt="Baby Robot Games" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-34bigthings.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rebellion.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-rawfury.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-untoldgames.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-scuolanash.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiearenabooth.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-bippinbits.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-clifftop.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-supersoft.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-milestone.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-firstplayable.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-indiedevday.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets/logo-babyrobot.png" alt="" loading="lazy" /></div>
+    </div>
+    <div class="marquee-track marquee-track--reverse">
+      <div class="logo-tile"><img src="assets-2/logo-01.png" alt="Dome Keeper" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/logo-02.jpg" alt="Logo 02" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/egs-redout2-34bigthings-g1a-00-1920x1080-98d732c63d36.jpg" alt="Redout 2" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header.jpg" alt="Header" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(1).jpg" alt="Header 1" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(2).jpg" alt="Header 2" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(3).jpg" alt="Header 3" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(4).jpg" alt="Header 4" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(5).jpg" alt="Header 5" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(6).jpg" alt="Header 6" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(7).jpg" alt="Header 7" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(8).jpg" alt="Header 8" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/header%20(9).jpg" alt="Header 9" loading="lazy" /></div>
+      <div class="logo-tile"><img src="assets-2/trasferimento.jpg" alt="Trasferimento" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/logo-01.png" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/logo-02.jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/egs-redout2-34bigthings-g1a-00-1920x1080-98d732c63d36.jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header.jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(1).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(2).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(3).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(4).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(5).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(6).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(7).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(8).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/header%20(9).jpg" alt="" loading="lazy" /></div>
+      <div class="logo-tile" aria-hidden="true"><img src="assets-2/trasferimento.jpg" alt="" loading="lazy" /></div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials wrap" id="testimonials" aria-labelledby="testimonials-h">
+    <div class="testimonials-head" data-reveal>
+      <span class="kicker"><span class="num">05</span> Testimonials</span>
+      <h2 id="testimonials-h">What folks say about us</h2>
+    </div>
+    <div class="testimonials-stage" data-reveal>
+      <ul class="testimonials-track">
+        <li class="testimonial">
+          <blockquote>Michele turned a slipping milestone into a clean cert pass &mdash; calm under fire, deadly precise on scope.</blockquote>
+          <cite>Lina Werner &middot; Studio Director</cite>
+        </li>
+        <li class="testimonial">
+          <blockquote>We hired Spritz expecting a producer. We got a thinking partner who reframed our whole publishing plan.</blockquote>
+          <cite>Tom&aacute;s Aguilar &middot; Founder, Brick Avenue Games</cite>
+        </li>
+        <li class="testimonial">
+          <blockquote>Honest, fast, and uncomfortable in the best way. He&rsquo;ll find the crack in your roadmap before launch does.</blockquote>
+          <cite>Priya Shah &middot; Head of Production</cite>
+        </li>
+        <li class="testimonial">
+          <blockquote>Rare to find someone who&rsquo;s lived QA, production, and publishing &mdash; and uses all three when it matters.</blockquote>
+          <cite>Daniel Olafsen &middot; Publishing Director</cite>
+        </li>
+        <li class="testimonial" aria-hidden="true">
+          <blockquote>Michele turned a slipping milestone into a clean cert pass &mdash; calm under fire, deadly precise on scope.</blockquote>
+          <cite>Lina Werner &middot; Studio Director</cite>
+        </li>
+      </ul>
     </div>
   </section>
 </main>
