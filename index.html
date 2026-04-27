@@ -883,6 +883,34 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   align-self: end;
 }
 
+/* Compact stats rail (lives under about-title in left column) */
+.process-rail--compact{
+  margin-top: 28px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-radius: 12px;
+}
+.process-rail--compact .step{
+  padding: 20px 20px 22px;
+  gap: 12px;
+  min-height: 180px;
+}
+.process-rail--compact .step-n{
+  font-size: 52px;
+}
+.process-rail--compact .step h3{
+  font-size: 17px;
+}
+.process-rail--compact .step p{
+  font-size: 13px;
+  line-height: 1.5;
+}
+.process-rail--compact .step-tag{
+  font-size: 11.5px;
+}
+@media (max-width: 760px){
+  .process-rail--compact{ grid-template-columns: 1fr; }
+}
+
 /* Contact */
 .contact{
   background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) clamp(120px, 14vw, 200px), var(--paper-2) 100%);
@@ -1325,6 +1353,40 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
         <h2 class="about-title" id="about-h" data-reveal data-i18n="about.h">
           Nine years inside game development, at every angle.
         </h2>
+        <div class="process-rail process-rail--compact" data-reveal>
+          <div class="step">
+            <div class="step-n" data-count="15">15</div>
+            <div>
+              <h3 data-i18n="stats.shipped.h">Games shipped</h3>
+              <p data-i18n="stats.shipped.p">Titles released across QA, publishing, and production roles, on PC and console.</p>
+            </div>
+            <span class="step-tag" data-i18n="stats.shipped.tag">Across studios</span>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="1">1</div>
+            <div>
+              <h3 data-i18n="stats.positive.h">Overwhelmingly Positive</h3>
+              <p data-i18n="stats.positive.p">Shipped a title that holds Steam&rsquo;s top user-review tier &mdash; the rarest rating on the store.</p>
+            </div>
+            <span class="step-tag" data-i18n="stats.positive.tag">Steam rating</span>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="9">9</div>
+            <div>
+              <h3 data-i18n="stats.years.h">Years in games</h3>
+              <p data-i18n="stats.years.p">From QA Tester to Publishing Producer to independent consultant. Every angle of the pipeline.</p>
+            </div>
+            <span class="step-tag" data-i18n="stats.years.tag">Since 2015</span>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="5">5</div>
+            <div>
+              <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
+              <p data-i18n="stats.platforms.p">Certification, submission, and release pipelines across the major storefronts and consoles.</p>
+            </div>
+            <span class="step-tag" data-i18n="stats.platforms.tag">PS · Xbox · PC · Switch · Stadia</span>
+          </div>
+        </div>
       </div>
       <div class="about-copy" data-reveal>
         <p data-i18n="about.p1" data-i18n-html>
@@ -1336,41 +1398,6 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
         <p data-i18n="about.p3" data-i18n-html>
   After all of it, one pattern stands out: what breaks projects is rarely the code or the creative vision. It&rsquo;s the structure around them. Communication that drifts, scope that quietly doubles, certifications handled too late, pitches that don&rsquo;t land. That&rsquo;s where <strong>Spritz Consulting</strong> comes in. We untangle the work around the work, so your team can focus on the game and actually ship it.
 </p>
-      </div>
-    </div>
-
-    <div class="process-rail" data-reveal>
-      <div class="step">
-        <div class="step-n" data-count="15">15</div>
-        <div>
-          <h3 data-i18n="stats.shipped.h">Games shipped</h3>
-          <p data-i18n="stats.shipped.p">Titles released across QA, publishing, and production roles, on PC and console.</p>
-        </div>
-        <span class="step-tag" data-i18n="stats.shipped.tag">Across studios</span>
-      </div>
-      <div class="step">
-        <div class="step-n" data-count="1">1</div>
-        <div>
-          <h3 data-i18n="stats.positive.h">Overwhelmingly Positive</h3>
-          <p data-i18n="stats.positive.p">Shipped a title that holds Steam&rsquo;s top user-review tier &mdash; the rarest rating on the store.</p>
-        </div>
-        <span class="step-tag" data-i18n="stats.positive.tag">Steam rating</span>
-      </div>
-      <div class="step">
-        <div class="step-n" data-count="9">9</div>
-        <div>
-          <h3 data-i18n="stats.years.h">Years in games</h3>
-          <p data-i18n="stats.years.p">From QA Tester to Publishing Producer to independent consultant. Every angle of the pipeline.</p>
-        </div>
-        <span class="step-tag" data-i18n="stats.years.tag">Since 2015</span>
-      </div>
-      <div class="step">
-        <div class="step-n" data-count="5">5</div>
-        <div>
-          <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
-          <p data-i18n="stats.platforms.p">Certification, submission, and release pipelines across the major storefronts and consoles.</p>
-        </div>
-        <span class="step-tag" data-i18n="stats.platforms.tag">PS · Xbox · PC · Switch · Stadia</span>
       </div>
     </div>
 
