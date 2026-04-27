@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Spritz Consulting — Production &amp; Publishing Consultancy</title>
+<title>Spritz Consulting | Production &amp; Publishing Consultancy</title>
 <meta name="description" content="Michele Di Nardo, games producer with 9+ years across QA, live production, and indie publishing. Production, platform, and publishing support for studios that need a seasoned hand." />
 <meta name="color-scheme" content="dark light" />
-<meta property="og:title" content="Michele Di Nardo — Production & Publishing Consultancy" />
+<meta property="og:title" content="Michele Di Nardo | Production & Publishing Consultancy" />
 <meta property="og:description" content="Turning game ideas into shipped titles. Production, platform, and publishing support for studios." />
 <meta property="og:type" content="website" />
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><mask id="slice"><circle cx="32" cy="32" r="28" fill="white"/><g stroke="black" stroke-width="3" stroke-linecap="round" fill="none"><line x1="32" y1="6" x2="32" y2="58"/><line x1="6" y1="32" x2="58" y2="32"/><line x1="13.6" y1="13.6" x2="50.4" y2="50.4"/><line x1="13.6" y1="50.4" x2="50.4" y2="13.6"/></g><circle cx="32" cy="32" r="3" fill="black"/></mask><style>.body{fill:%23E5B415}@media (prefers-color-scheme: light){.body{fill:%238A6600}}</style><rect class="body" width="64" height="64" mask="url(%23slice)"/></svg>' />
@@ -247,7 +247,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   mask-mode: luminance;
 }
 .wordmark .role{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 13.5px; font-weight: 400;
   color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase;
   padding-left: 12px; margin-left: 2px;
@@ -257,26 +257,31 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   display: flex; align-items: center; gap: clamp(18px, 2.4vw, 34px);
 }
 .nav a{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14px; letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-2);
-  padding: 8px 0;
+  padding: 8px 14px;
+  border-radius: 999px;
   position: relative;
-  transition: color .2s var(--ease);
+  transition: color .25s var(--ease), background-color .25s var(--ease);
 }
 .nav a::after{
   content: "";
-  position: absolute; left: 0; right: 0; bottom: 2px;
+  position: absolute; left: 14px; right: 14px; bottom: 2px;
   height: 1px; background: currentColor;
   transform: scaleX(0); transform-origin: left;
   transition: transform .35s var(--ease);
 }
 .nav a:hover{ color: var(--ink); }
-.nav a:hover::after,
-.nav a.is-active::after{ transform: scaleX(0.75); }
-.nav a.is-active{ color: var(--clay); }
-.nav a .num{ color: var(--clay); margin-right: 6px; }
+.nav a:hover::after{ transform: scaleX(0.75); }
+.nav a.is-active{
+  background: var(--clay);
+  color: var(--paper);
+}
+.nav a.is-active .num{ color: var(--paper); }
+.nav a.is-active::after{ transform: scaleX(0); }
+.nav a .num{ color: var(--clay); margin-right: 6px; transition: color .25s var(--ease); }
 
 .menu-toggle{
   display: none;
@@ -302,7 +307,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .theme-toggle button{
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 12px;
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -334,7 +339,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 .lang-toggle button{
   padding: 6px 12px;
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -380,10 +385,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   letter-spacing: -0.02em; line-height: 1;
 }
 .mobile-menu nav a{ display: flex; align-items: baseline; gap: 16px; }
-.mobile-menu nav a .num{ font-family: var(--mono); font-size: 13px; color: var(--clay); letter-spacing: 0.06em; }
+.mobile-menu nav a .num{ font-family: var(--mono); font-style: italic; font-size: 13px; color: var(--clay); letter-spacing: 0.06em; }
 .mobile-menu .foot{
   margin-top: auto;
-  font-family: var(--mono); font-size: 14px; color: var(--ink-2);
+  font-family: var(--mono); font-style: italic; font-size: 14px; color: var(--ink-2);
   letter-spacing: 0.04em; text-transform: uppercase;
   display: flex; justify-content: space-between; padding-top: 32px;
   border-top: 1px solid var(--rule);
@@ -401,7 +406,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 #contact{ padding-top: clamp(56px, 8vw, 108px); padding-bottom: clamp(64px, 9vw, 120px); }
 .kicker{
   display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-2);
 }
@@ -545,6 +550,27 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   width: 18px; height: 18px;
   stroke: currentColor; stroke-width: 1.7;
   fill: none; stroke-linecap: round; stroke-linejoin: round;
+  position: relative; z-index: 1;
+}
+@property --hero-ring-p { syntax: '<number>'; initial-value: 0; inherits: false; }
+.hero-nav-btn--auto{ position: relative; overflow: visible; }
+.hero-nav-ring{
+  position: absolute; inset: -5px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: conic-gradient(var(--clay) calc(var(--hero-ring-p) * 1%), color-mix(in srgb, var(--clay) 18%, transparent) 0);
+  -webkit-mask: radial-gradient(closest-side, transparent 72%, #000 73%, #000 100%);
+          mask: radial-gradient(closest-side, transparent 72%, #000 73%, #000 100%);
+  animation: hero-ring-fill var(--hero-ring-dur, 6s) linear infinite;
+}
+.hero-nav-btn--auto.is-paused .hero-nav-ring{ animation-play-state: paused; }
+.hero-nav-btn--auto.is-reset .hero-nav-ring{ animation: none; }
+@keyframes hero-ring-fill{
+  from { --hero-ring-p: 0; }
+  to   { --hero-ring-p: 100; }
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-nav-ring{ animation: none; background: none; }
 }
 .hero-nav-dots{ display: inline-flex; gap: 8px; }
 .hero-nav-dot{
@@ -687,7 +713,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   font-size: 14px;
 }
 .meta-row dt{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-3);
 }
@@ -710,7 +736,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .marquee::after{  right: 0; background: linear-gradient(to left,  var(--paper-2), transparent); }
 .marquee-kicker{
   display: flex; justify-content: space-between; align-items: center;
-  font-family: var(--mono); font-size: 13.5px; letter-spacing: 0.08em;
+  font-family: var(--mono); font-style: italic; font-size: 13.5px; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--ink-2);
   padding-bottom: 20px;
 }
@@ -856,7 +882,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 .testimonial cite{
   font-style: normal;
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 12.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -980,7 +1006,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .services-panel .service:first-of-type{ margin-top: 32px; }
 .service:last-child{ border-bottom: 1px solid var(--rule); }
 .service-num{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14px; letter-spacing: 0.1em;
   color: var(--clay);
 }
@@ -1113,7 +1139,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   margin: 0;
 }
 .step-tag{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-3);
   align-self: end;
@@ -1230,7 +1256,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .field{ display: grid; gap: 6px; }
 .field.wide{ grid-column: 1 / -1; }
 .field label{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 13.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1261,7 +1287,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   background: var(--err-bg);
 }
 .field .err{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14px; letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--clay);
@@ -1274,14 +1300,14 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   flex-wrap: wrap;
 }
 .form-foot small{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14.5px; color: var(--ink-3);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .form-success{
   display: none;
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14.5px; color: #3E8B59;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1316,7 +1342,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .footer-meta{ margin-top: 72px; border-top: 1px solid var(--rule); padding-top: 28px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }
 .footer-meta .links{ display: flex; gap: 20px; flex-wrap: wrap; }
 .footer-meta a{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-2);
   display: inline-flex; align-items: center; gap: 8px;
@@ -1326,7 +1352,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .footer-meta a .arrow{ transition: transform .3s var(--ease); }
 .footer-meta a:hover .arrow{ transform: translate(2px, -2px); }
 .footer-meta .copy{
-  font-family: var(--mono);
+  font-family: var(--mono); font-style: italic;
   font-size: 14.5px; color: var(--ink-3);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1419,7 +1445,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 .hero-h1:hover, .services-title:hover,
 .process-head h2:hover, .contact-copy h2:hover, .say-hi:hover{
-  font-variation-settings: "opsz" 96, "wght" 600;
+  font-variation-settings: "opsz" 96;
 }
 
 /* Italic-accent em pulse on parent hover */
@@ -1471,16 +1497,16 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 
 <header class="site-header" id="site-header">
   <div class="wrap bar">
-    <a href="#top" class="wordmark" aria-label="Spritz Consulting — home">
+    <a href="#top" class="wordmark" aria-label="Spritz Consulting, home">
       <span>spritz<span class="dot" aria-hidden="true"></span>consulting</span>
       <span class="role"></span>
     </a>
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
-        <a href="#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">Our Experience</span></a>
-        <a href="#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
-        <a href="#process"><span class="num">03</span><span data-i18n="nav.process">Process</span></a>
-        <a href="#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
+        <a href="#services"><span class="num">01</span><span data-i18n="nav.services">Services</span></a>
+        <a href="#process"><span class="num">02</span><span data-i18n="nav.process">Process</span></a>
+        <a href="#contact"><span class="num">03</span><span data-i18n="nav.contact">Contact</span></a>
+        <a href="#consultancy"><span class="num">04</span><span data-i18n="nav.consultancy">Our Experience</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -1497,10 +1523,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     </button>
   </div>
   <nav aria-label="Mobile">
-    <a href="#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">Our Experience</span></a>
-    <a href="#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
-    <a href="#process" data-menu-link><span class="num">03</span> <span data-i18n="nav.process">Process</span></a>
-    <a href="#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
+    <a href="#services" data-menu-link><span class="num">01</span> <span data-i18n="nav.services">Services</span></a>
+    <a href="#process" data-menu-link><span class="num">02</span> <span data-i18n="nav.process">Process</span></a>
+    <a href="#contact" data-menu-link><span class="num">03</span> <span data-i18n="nav.contact">Contact</span></a>
+    <a href="#consultancy" data-menu-link><span class="num">04</span> <span data-i18n="nav.consultancy">Our Experience</span></a>
   </nav>
   <div class="foot">
     <span data-i18n="mobile.foot.role">Producer · Turin</span>
@@ -1562,7 +1588,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
               </div>
               <div class="meta-row">
                 <dt data-i18n="meta.recent.dt">Recent</dt>
-                <dd data-i18n="meta.recent.dd" data-i18n-html>Producer, Untold Games &mdash; <em>City&nbsp;20</em></dd>
+                <dd data-i18n="meta.recent.dd" data-i18n-html>Producer, Untold Games · <em>City&nbsp;20</em></dd>
               </div>
               <div class="meta-row">
                 <dt data-i18n="meta.based.dt">Based</dt>
@@ -1600,7 +1626,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
               </div>
               <div class="meta-row">
                 <dt>Recent</dt>
-                <dd>Lead Designer &mdash; <em>Untitled Project</em></dd>
+                <dd>Lead Designer · <em>Untitled Project</em></dd>
               </div>
               <div class="meta-row">
                 <dt>Based</dt>
@@ -1621,7 +1647,8 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
             <span class="hero-nav-dot is-active"></span>
             <span class="hero-nav-dot"></span>
           </span>
-          <button type="button" class="hero-nav-btn" data-card-next aria-label="Next person">
+          <button type="button" class="hero-nav-btn hero-nav-btn--auto" data-card-next aria-label="Next person">
+            <span class="hero-nav-ring" aria-hidden="true"></span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
           </button>
         </div>
@@ -1629,58 +1656,18 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     </div>
   </section>
 
-  <!-- About / Consultancy -->
-  <section class="section wrap" id="consultancy" aria-labelledby="about-h">
-    <div class="about-grid">
-      <div>
-        <span class="kicker" data-reveal data-i18n="about.kicker" data-i18n-html><span class="num">01</span> Our Experience</span>
-        <h2 class="about-title" id="about-h" data-reveal data-i18n="about.h">
-          Nine years inside game development, at every angle.
-        </h2>
-        <div class="process-rail" data-reveal>
-          <div class="step">
-            <div class="step-n" data-count="15+">15+</div>
-            <div>
-              <h3 data-i18n="stats.shipped.h">Games shipped</h3>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-n" data-count="1">1</div>
-            <div>
-              <h3 data-i18n="stats.positive.h">Overwhelmingly Positive releases</h3>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-n" data-count="9">9</div>
-            <div>
-              <h3 data-i18n="stats.years.h">Years in games</h3>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-n" data-count="7">5</div>
-            <div>
-              <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
   <!-- Services -->
   <section class="section wrap services" id="services" aria-labelledby="services-h">
     <div class="services-intro">
       <div>
-        <span class="kicker" data-reveal data-i18n="services.kicker" data-i18n-html><span class="num">02</span> Services</span>
+        <span class="kicker" data-reveal data-i18n="services.kicker" data-i18n-html><span class="num">01</span> Services</span>
         <h2 class="services-title" id="services-h" data-reveal data-i18n="services.h" data-i18n-html>
-          Three ways I help,<br />
-          with one aim: <em>less friction,</em><br />
-          better decisions.
+          <em>Veterans</em> of production<br />
+          and design.
         </h2>
       </div>
       <p data-reveal data-i18n="services.intro">
-        I work project by project, on retainer, or with ad hoc engagements. A few common shapes: a focused sprint to unblock one specific problem, a rolling retainer as fractional producer, or an audit with written recommendations. Pick whatever fits your studio best.
+        We&rsquo;re a small group of producers and designers who have shipped on console, PC and mobile across studios and publishers. We plug in project by project, on retainer, or as a focused audit, matching the right discipline to the problem in front of you.
       </p>
     </div>
 
@@ -1824,7 +1811,7 @@ advisory</li>
   <section class="section wrap" id="process" aria-labelledby="process-h">
     <div class="process-head">
       <div>
-        <span class="kicker" data-reveal data-i18n="process.kicker" data-i18n-html><span class="num">03</span> How we work together</span>
+        <span class="kicker" data-reveal data-i18n="process.kicker" data-i18n-html><span class="num">02</span> How we work together</span>
         <h2 id="process-h" data-reveal data-i18n="process.h">How we work, in four steps.</h2>
       </div>
       <p data-reveal data-i18n="process.intro">
@@ -1868,7 +1855,7 @@ advisory</li>
   <section class="section contact" id="contact" aria-labelledby="contact-h">
     <div class="wrap contact-grid">
       <div class="contact-copy">
-        <span class="kicker" data-reveal data-i18n="contact.kicker" data-i18n-html><span class="num">04</span> Get in touch</span>
+        <span class="kicker" data-reveal data-i18n="contact.kicker" data-i18n-html><span class="num">03</span> Get in touch</span>
         <h2 id="contact-h" data-reveal data-i18n="contact.h">
           Working on something that needs an experienced hand?
         </h2>
@@ -1921,11 +1908,50 @@ advisory</li>
     </div>
   </section>
 
+  <!-- About / Consultancy -->
+  <section class="section wrap" id="consultancy" aria-labelledby="about-h">
+    <div class="about-grid">
+      <div>
+        <span class="kicker" data-reveal data-i18n="about.kicker" data-i18n-html><span class="num">04</span> Our Experience</span>
+        <h2 class="about-title" id="about-h" data-reveal data-i18n="about.h">
+          Nine years inside game development, at every angle.
+        </h2>
+        <div class="process-rail" data-reveal>
+          <div class="step">
+            <div class="step-n" data-count="15+">15+</div>
+            <div>
+              <h3 data-i18n="stats.shipped.h">Games shipped</h3>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="1">1</div>
+            <div>
+              <h3 data-i18n="stats.positive.h">Overwhelmingly Positive releases</h3>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="9">9</div>
+            <div>
+              <h3 data-i18n="stats.years.h">Years in games</h3>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="7">5</div>
+            <div>
+              <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
   <!-- Marquee / Studios -->
   <section class="marquee" aria-labelledby="marquee-h">
     <div class="wrap marquee-kicker">
       <span id="marquee-h" data-i18n="marquee.h">Studios, orgs and games we worked with</span>
-      <span data-i18n="marquee.range">2015 &mdash; now</span>
+      <span data-i18n="marquee.range">Since 2015</span>
     </div>
     <div class="marquee-track">
       <div class="logo-tile"><img src="assets/logo-34bigthings.png" alt="34BigThings" loading="lazy" /></div>
@@ -2092,16 +2118,16 @@ advisory</li>
     'meta.also.dt': 'Inoltre',
     'meta.also.dd': 'Co-fondatore Scuola Nash · Giurato Indie Arena Booth',
     'meta.recent.dt': 'Recente',
-    'meta.recent.dd': 'Producer, Untold Games — <em>City 20</em>',
+    'meta.recent.dd': 'Producer, Untold Games · <em>City 20</em>',
     'meta.based.dt': 'Base',
     'meta.based.dd': 'Torino, Italia · Remote first',
     'meta.engage.dt': 'Formati',
     'meta.engage.dd': 'Progetto · Retainer · Audit',
 
     'marquee.h': 'Studi, organizzazioni e giochi con cui abbiamo lavorato',
-    'marquee.range': '2015 — oggi',
+    'marquee.range': 'Dal 2015',
 
-    'about.kicker': '<span class="num">01</span> La Nostra Esperienza',
+    'about.kicker': '<span class="num">04</span> La Nostra Esperienza',
     'about.h': 'Nove anni dentro lo sviluppo videoludico, da tutti i lati.',
     'about.p1': 'Nove anni lungo tutta la filiera della produzione. Ho iniziato nel QA, prima come Tester e poi come Manager in <strong>34BigThings</strong> su <em>Redout</em>, poi come QA Project Lead in <strong>Rebellion</strong> su <em>Sniper Elite 4</em>, <em>Strange Brigade</em> e <em>Zombie Army 4</em>. Sono passato al publishing come Line e Publishing Producer in <strong>Raw Fury</strong> su <em>Kathy Rain 2</em>, <em>Moonstone Island</em> e <em>Dome Keeper</em>, e più di recente sono tornato in-house come Producer in <strong>Untold Games</strong> su <em>City&nbsp;20</em>.',
     'about.p2': 'Oggi sono co-fondatore di <strong>Scuola Nash</strong>, una scuola di sviluppo videoludico a Torino, siedo nella giuria dell&rsquo;<strong>Indie Arena Booth</strong> alla Gamescom e porto avanti <strong>Spritz Consulting</strong>, che offre supporto in produzione e publishing agli studi che hanno bisogno di una mano esperta per un periodo, non di un&rsquo;assunzione full-time.',
@@ -2111,7 +2137,7 @@ advisory</li>
     'stats.shipped.p': 'Titoli usciti tra ruoli in QA, publishing e produzione, su PC e console.',
     'stats.shipped.tag': 'Tra più studi',
     'stats.positive.h': 'Overwhelmingly Positive',
-    'stats.positive.p': 'Ho pubblicato un titolo che tiene la fascia più alta di recensioni utente su Steam &mdash; il rating più raro sullo store.',
+    'stats.positive.p': 'Ho pubblicato un titolo che tiene la fascia più alta di recensioni utente su Steam: il rating più raro sullo store.',
     'stats.positive.tag': 'Valutazione Steam',
     'stats.years.h': 'Anni nei videogiochi',
     'stats.years.p': 'Da QA Tester a Publishing Producer a consulente indipendente. Ogni lato della pipeline.',
@@ -2120,9 +2146,9 @@ advisory</li>
     'stats.platforms.p': 'Certificazioni, submission e pipeline di release sui principali store e console.',
     'stats.platforms.tag': 'PS · Xbox · PC · Switch · Stadia',
 
-    'services.kicker': '<span class="num">02</span> Servizi',
-    'services.h': 'Tre modi in cui aiuto,<br />un obiettivo: <em>meno attrito,</em><br />decisioni migliori.',
-    'services.intro': 'Lavoro progetto per progetto, a retainer o con ingaggi ad hoc. Qualche forma tipica: uno sprint mirato per sbloccare un problema preciso, un retainer continuativo in cui sono il tuo producer frazionato, o un audit con raccomandazioni scritte. Scegli quello che ti serve di più.',
+    'services.kicker': '<span class="num">01</span> Servizi',
+    'services.h': '<em>Veterani</em> della produzione<br />e del design.',
+    'services.intro': 'Siamo un piccolo gruppo di producer e designer che hanno pubblicato titoli su console, PC e mobile dentro studi di sviluppo e publisher. Ci inseriamo progetto per progetto, a retainer o con un audit mirato, abbinando la disciplina giusta al problema che hai davanti.',
 
     'svc1.h': 'Produzione & operazioni di progetto',
     'svc1.p': 'Le cose giuste al momento giusto. Piani, documentazione e budget dalla pre-produzione fino al gold master.',
@@ -2151,7 +2177,7 @@ advisory</li>
     'svc3.b5': 'Developer relations & strategia di community',
     'svc3.b6': 'Giurato Gamescom Indie Arena Booth',
 
-    'process.kicker': '<span class="num">03</span> Come lavoriamo insieme',
+    'process.kicker': '<span class="num">02</span> Come lavoriamo insieme',
     'process.h': 'Come possiamo lavorare, in quattro step.',
     'process.intro': 'Niente fronzoli, niente deck enormi. Parliamo, ci accordiamo sullo scope, lavoro dentro al tuo team, e quando me ne vado ti lascio quello che ti serve per andare avanti da soli.',
 
@@ -2168,7 +2194,7 @@ advisory</li>
     'step4.p': 'Documentazione, processi, know-how che puoi riusare. Il valore resta nel tuo team.',
     'step4.tag': 'Sprint di chiusura',
 
-    'contact.kicker': '<span class="num">04</span> Mettiti in contatto',
+    'contact.kicker': '<span class="num">03</span> Mettiti in contatto',
     'contact.h': 'Stai lavorando a qualcosa che ha bisogno di una mano?',
     'contact.p': 'Raccontami il gioco, dove sta, e cosa lo sta frenando. Se siamo compatibili, fissiamo una call conoscitiva di 30 minuti. Altrimenti, ti indirizzo a qualcuno più adatto.',
     'contact.note': 'P.S. Di norma rispondo entro 1 o 3 giorni lavorativi.<br />Se non ricevi niente in quella finestra, puoi scrivermi di nuovo senza problemi.',
@@ -2190,7 +2216,7 @@ advisory</li>
     'form.err.email.required': 'L’email è obbligatoria.',
     'form.err.email.invalid': 'Email non valida.',
     'form.err.msg': 'Scrivi un breve messaggio, per favore.',
-    'form.subject': 'Richiesta progetto — ',
+    'form.subject': 'Richiesta progetto: ',
 
     'footer.sayhi': 'Fatti sentire, <em>quando vuoi.</em>',
     'footer.email': 'Email',
@@ -2204,7 +2230,7 @@ advisory</li>
     'form.err.email.required': 'Email is required.',
     'form.err.email.invalid': 'That email looks off.',
     'form.err.msg': 'A short message, please.',
-    'form.subject': 'Project enquiry — ',
+    'form.subject': 'Project enquiry: ',
   };
 
   let currentLang = 'en';
@@ -2299,16 +2325,26 @@ advisory</li>
   const sections = Array.from(document.querySelectorAll('main section[id]'));
   const navLinks = Array.from(document.querySelectorAll('.nav a[href^="#"]'));
   const linkByHash = new Map(navLinks.map(a => [a.getAttribute('href'), a]));
+  let spyLockUntil = 0;
+  const setActiveLink = (hash) => {
+    navLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === hash));
+  };
   const spy = new IntersectionObserver((entries) => {
+    if (Date.now() < spyLockUntil) return;
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
-      const id = '#' + e.target.id;
-      navLinks.forEach(a => a.classList.remove('is-active'));
-      const active = linkByHash.get(id);
-      if (active) active.classList.add('is-active');
+      setActiveLink('#' + e.target.id);
     });
   }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
   sections.forEach(s => spy.observe(s));
+
+  navLinks.forEach(a => {
+    a.addEventListener('click', () => {
+      const hash = a.getAttribute('href');
+      spyLockUntil = Date.now() + 1400;
+      setActiveLink(hash);
+    });
+  });
 
   // Cursor-aware effects: spotlight + magnetic buttons
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2353,21 +2389,58 @@ advisory</li>
     });
   }
 
-  // Hero card deck (switch between persons)
+  // Hero card deck (switch between persons) + auto-flip with progress ring
   (function initHeroDeck(){
     const cards = Array.from(document.querySelectorAll('.hero-deck-cards .hero-card'));
     if (cards.length < 2) return;
     const dots = Array.from(document.querySelectorAll('.hero-nav-dot'));
     const prev = document.querySelector('[data-card-prev]');
     const next = document.querySelector('[data-card-next]');
+    const stage = document.querySelector('.hero-deck-stack') || document.querySelector('.hero-deck-cards');
+    const AUTO_MS = 6000;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let idx = 0;
+    let timer = null;
+
     function show(n){
       idx = (n + cards.length) % cards.length;
       cards.forEach((c, i) => c.classList.toggle('is-active', i === idx));
       dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
     }
-    if (prev) prev.addEventListener('click', () => show(idx - 1));
-    if (next) next.addEventListener('click', () => show(idx + 1));
+    function restartRing(){
+      if (!next) return;
+      next.classList.add('is-reset');
+      // force reflow so the animation restarts cleanly
+      void next.offsetWidth;
+      next.classList.remove('is-reset');
+    }
+    function schedule(){
+      clearTimeout(timer);
+      if (reduceMotion) return;
+      restartRing();
+      timer = setTimeout(() => { show(idx + 1); schedule(); }, AUTO_MS);
+    }
+    function pause(){
+      clearTimeout(timer);
+      if (next) next.classList.add('is-paused');
+    }
+    function resume(){
+      if (next) next.classList.remove('is-paused');
+      schedule();
+    }
+
+    if (prev) prev.addEventListener('click', () => { show(idx - 1); schedule(); });
+    if (next) next.addEventListener('click', () => { show(idx + 1); schedule(); });
+
+    if (stage){
+      stage.addEventListener('pointerenter', pause);
+      stage.addEventListener('pointerleave', resume);
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) pause(); else resume();
+    });
+
+    schedule();
   })();
 
   // Reveal-on-scroll cascade
