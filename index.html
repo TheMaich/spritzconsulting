@@ -1034,9 +1034,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 .services .service:first-of-type{ margin-top: 72px; }
 .services-tabs{
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   gap: 8px;
-  margin-top: 56px;
+  margin: 56px auto 0;
   padding: 5px;
   border: 1px solid var(--rule);
   border-radius: 999px;
@@ -1047,11 +1048,13 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   background: transparent;
   font: inherit;
   color: var(--ink);
-  padding: 13px 26px;
+  padding: 13px 44px;
+  min-width: 220px;
   border-radius: 999px;
   cursor: pointer;
   letter-spacing: -0.005em;
   font-size: 16px;
+  font-weight: 600;
   border: 1px solid var(--rule);
   transition: background 180ms ease, color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
