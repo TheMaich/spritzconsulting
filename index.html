@@ -1125,15 +1125,13 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 .process-rail{
   margin-top: 64px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 2px;
   background: var(--rule);
   border: 1px solid var(--rule);
   border-radius: 14px;
   overflow: hidden;
   position: relative;
-  max-width: 760px;
-  margin-inline: auto;
 }
 .step{
   background: var(--paper-3);
@@ -1511,6 +1509,9 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   .monogram{ font-size: 76px; }
   body{ font-size: 16px; }
 }
+@media (max-width: 768px){
+  .process-rail{ display: none; }
+}
 
 /* Cursor-aware hover effects */
 .service, .step{
@@ -1711,19 +1712,19 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
             <dl class="capsule-meta">
               <div class="meta-row">
                 <dt data-i18n="meta.now.dt">Now</dt>
-                <dd data-i18n="meta.now.dd">Independent producer &amp; consultancy</dd>
+                <dd data-i18n="meta.now.dd">Independent producer · Spritz Consulting</dd>
               </div>
               <div class="meta-row">
                 <dt data-i18n="meta.also.dt">Also</dt>
-                <dd data-i18n="meta.also.dd">9 yrs across Raw Fury, Rebellion &amp; Untold Games</dd>
+                <dd data-i18n="meta.also.dd">9 yrs across Raw Fury, Rebellion &amp; 34BigThings</dd>
               </div>
               <div class="meta-row">
                 <dt data-i18n="meta.recent.dt">Recent</dt>
-                <dd data-i18n="meta.recent.dd" data-i18n-html>Producer, Untold Games · <em>City&nbsp;20</em></dd>
+                <dd data-i18n="meta.recent.dd" data-i18n-html>Producer on <em>City&nbsp;20</em> (Untold Games)</dd>
               </div>
               <div class="meta-row">
                 <dt data-i18n="meta.based.dt">Based</dt>
-                <dd data-i18n="meta.based.dd">Europe (CET)</dd>
+                <dd data-i18n="meta.based.dd">Europe · CET</dd>
               </div>
               <div class="meta-row">
                 <dt data-i18n="meta.engage.dt">Engage</dt>
@@ -1896,6 +1897,12 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
             <div class="step-n" data-count="6">6</div>
             <div>
               <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n" data-count="3">3</div>
+            <div>
+              <h3 data-i18n="stats.publishers.h">Publishers worked with</h3>
             </div>
           </div>
         </div>
@@ -2264,13 +2271,13 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     'bubble.sub': '(o Miki, in breve)',
 
     'meta.now.dt': 'Ora',
-    'meta.now.dd': 'Producer indipendente & consulenza',
+    'meta.now.dd': 'Producer indipendente · Spritz Consulting',
     'meta.also.dt': 'Inoltre',
-    'meta.also.dd': '9 anni in Raw Fury, Rebellion & Untold Games',
+    'meta.also.dd': '9 anni in Raw Fury, Rebellion & 34BigThings',
     'meta.recent.dt': 'Recente',
-    'meta.recent.dd': 'Producer, Untold Games · <em>City 20</em>',
+    'meta.recent.dd': 'Producer su <em>City 20</em> (Untold Games)',
     'meta.based.dt': 'Base',
-    'meta.based.dd': 'Europe (CET)',
+    'meta.based.dd': 'Europe · CET',
     'meta.engage.dt': 'Formati',
     'meta.engage.dd': 'Progetto · Retainer · Audit',
 
@@ -2295,6 +2302,7 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     'stats.platforms.h': 'Piattaforme di pubblicazione',
     'stats.platforms.p': 'Certificazioni, submission e pipeline di release sui principali store e console.',
     'stats.platforms.tag': 'PS · Xbox · PC · Switch · Stadia',
+    'stats.publishers.h': 'Publisher con cui ho lavorato',
 
     'services.kicker': '<span class="num">02</span> Servizi',
     'services.h': '<em>Veterani</em> della produzione<br />e del design.',
