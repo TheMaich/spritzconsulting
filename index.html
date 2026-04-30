@@ -1157,6 +1157,45 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   width: 10px; height: 1px; background: var(--clay);
 }
 
+@media (min-width: 769px) {
+  .service-bullets-wrapper summary {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-bullets-wrapper {
+    margin-top: 12px;
+  }
+  .service-bullets-wrapper summary {
+    cursor: pointer;
+    list-style: none;
+    color: rgba(245, 197, 24, 0.9);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 0;
+    position: relative;
+    padding-right: 24px;
+    display: inline-block;
+  }
+  .service-bullets-wrapper summary::-webkit-details-marker { display: none; }
+  .service-bullets-wrapper summary::marker { display: none; }
+  .service-bullets-wrapper summary::after {
+    content: '↓';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease;
+  }
+  .service-bullets-wrapper[open] summary::after {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  .service-bullets-wrapper[open] summary {
+    margin-bottom: 8px;
+  }
+}
+
 /* Process rail (used by stats only) */
 .process-rail{
   margin-top: 64px;
@@ -2007,13 +2046,16 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svc3.h">Strategic Publishing Support</h3>
           <p data-i18n="svc3.p">Nine years on the publisher side at Raw Fury and others. I share the network, the experience, and an honest view on how to reach the players, without becoming your publisher.</p>
         </div>
-        <ul>
-          <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
-          <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
-          <li data-i18n="svc3.b3">Pitch deck shaping and review for funding &amp; deals</li>
-          <li data-i18n="svc3.b4">Publisher demo prep and feedback</li>
-          <li data-i18n="svc3.b5">Deal milestone &amp; schedule sanity check</li>
-                </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
+            <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
+            <li data-i18n="svc3.b3">Pitch deck shaping and review for funding &amp; deals</li>
+            <li data-i18n="svc3.b4">Publisher demo prep and feedback</li>
+            <li data-i18n="svc3.b5">Deal milestone &amp; schedule sanity check</li>
+          </ul>
+        </details>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2024,14 +2066,17 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svc1.h">Production &amp; Project Operations</h3>
           <p data-i18n="svc1.p">The right things at the right time. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
         </div>
-        <ul>
-          <li data-i18n="svc1.b1">End-to-end project management</li>
-          <li data-i18n="svc1.b2">GDD review &amp; docs management</li>
-          <li data-i18n="svc1.b3">Workflow audits &amp; pipeline optimisation</li>
-          <li data-i18n="svc1.b4">Scope &amp; risk assessment</li>
-          <li data-i18n="svc1.b5">Project financial planning</li>
-          <li data-i18n="svc1.b6">Ad hoc consultations &amp; peer review</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svc1.b1">End-to-end project management</li>
+            <li data-i18n="svc1.b2">GDD review &amp; docs management</li>
+            <li data-i18n="svc1.b3">Workflow audits &amp; pipeline optimisation</li>
+            <li data-i18n="svc1.b4">Scope &amp; risk assessment</li>
+            <li data-i18n="svc1.b5">Project financial planning</li>
+            <li data-i18n="svc1.b6">Ad hoc consultations &amp; peer review</li>
+          </ul>
+        </details>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2042,14 +2087,17 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svc2.h">Platform &amp; Release Management</h3>
           <p data-i18n="svc2.p">Clean releases, every platform, every market. Certifications, stores, launch logistics, external QA, and localisation.</p>
         </div>
-        <ul>
-          <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
-          <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
-          <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
-          <li data-i18n="svc2.b4">External QA, localisation coordination &amp; TRC/TCR compliance</li>
-          <li data-i18n="svc2.b5">PC, Nintendo, PlayStation, Xbox developer platforms</li>
-          <li data-i18n="svc2.b6">Globally consistent release execution</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
+            <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
+            <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
+            <li data-i18n="svc2.b4">External QA, localisation coordination &amp; TRC/TCR compliance</li>
+            <li data-i18n="svc2.b5">PC, Nintendo, PlayStation, Xbox developer platforms</li>
+            <li data-i18n="svc2.b6">Globally consistent release execution</li>
+          </ul>
+        </details>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2060,13 +2108,16 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svc4.h">Physical &amp; Boxed Editions</h3>
           <p data-i18n="svc4.p">Disc, cart, box, art book. I&rsquo;ve taken indie titles through full physical releases, including Switch boxed and PS/Xbox disc editions. I run the conversations with distributors, replication houses, and rating boards so you don&rsquo;t have to learn that pipeline from scratch.</p>
         </div>
-        <ul>
-          <li data-i18n="svc4.b1">Distributor relationships (US, EU, JP regions)</li>
-          <li data-i18n="svc4.b2">Replication &amp; manufacturing coordination</li>
-          <li data-i18n="svc4.b3">Physical SKU planning</li>
-          <li data-i18n="svc4.b4">ESRB / PEGI / USK / CERO age rating submissions</li>
-          <li data-i18n="svc4.b5">Production timeline &amp; disc/cart deadlines</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svc4.b1">Distributor relationships (US, EU, JP regions)</li>
+            <li data-i18n="svc4.b2">Replication &amp; manufacturing coordination</li>
+            <li data-i18n="svc4.b3">Physical SKU planning</li>
+            <li data-i18n="svc4.b4">ESRB / PEGI / USK / CERO age rating submissions</li>
+            <li data-i18n="svc4.b5">Production timeline &amp; disc/cart deadlines</li>
+          </ul>
+        </details>
       </article>
     </div>
 
@@ -2079,13 +2130,16 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svcP2.h">External Production Oversight</h3>
           <p data-i18n="svcP2.p">A producer on your side of the table. Milestones, scope, and risk tracked across signed studios so surprises surface early, not at Portfolio Review meetings.</p>
         </div>
-        <ul>
-          <li data-i18n="svcP2.b1">Publisher-side line producing</li>
-          <li data-i18n="svcP2.b2">Milestone &amp; deliverable tracking</li>
-          <li data-i18n="svcP2.b3">Scope &amp; schedule risk monitoring</li>
-          <li data-i18n="svcP2.b4">Vendor coordination: port, QA, audio, loc</li>
-          <li data-i18n="svcP2.b5">Cert &amp; launch oversight across platforms</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svcP2.b1">Publisher-side line producing</li>
+            <li data-i18n="svcP2.b2">Milestone &amp; deliverable tracking</li>
+            <li data-i18n="svcP2.b3">Scope &amp; schedule risk monitoring</li>
+            <li data-i18n="svcP2.b4">Vendor coordination: port, QA, audio, loc</li>
+            <li data-i18n="svcP2.b5">Cert &amp; launch oversight across platforms</li>
+          </ul>
+        </details>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2096,14 +2150,17 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svcP4.h">Design Consultancy</h3>
           <p data-i18n="svcP4.p">A design read on signed and prospective titles, run with the design partners I work with. Where the design holds, where it leaks players, and what to prototype before greenlighting more scope.</p>
         </div>
-        <ul>
-          <li data-i18n="svcP4.b1">Onboarding &amp; first-session effectiveness</li>
-          <li data-i18n="svcP4.b2">Design risk identification &amp; mitigation</li>
-          <li data-i18n="svcP4.b3">Design prototyping &amp; implementation review</li>
-          <li data-i18n="svcP4.b4">Core loop &amp; retention diagnostics</li>
-          <li data-i18n="svcP4.b5">Playtest design, observation &amp; analysis</li>
-          <li data-i18n="svcP4.b6">Tutorial, UX flow &amp; difficulty pacing</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svcP4.b1">Onboarding &amp; first-session effectiveness</li>
+            <li data-i18n="svcP4.b2">Design risk identification &amp; mitigation</li>
+            <li data-i18n="svcP4.b3">Design prototyping &amp; implementation review</li>
+            <li data-i18n="svcP4.b4">Core loop &amp; retention diagnostics</li>
+            <li data-i18n="svcP4.b5">Playtest design, observation &amp; analysis</li>
+            <li data-i18n="svcP4.b6">Tutorial, UX flow &amp; difficulty pacing</li>
+          </ul>
+        </details>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2114,14 +2171,17 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svcP6.h">Mock Reviews for In-Development Games</h3>
           <p data-i18n="svcP6.p">A press-style critique of titles still in development. We play the build, write the review you&rsquo;d wish you had at launch, and flag what reviewers will likely praise or pick apart.</p>
         </div>
-        <ul>
-          <li data-i18n="svcP6.b1">Press-style written review on current build</li>
-          <li data-i18n="svcP6.b2">Score range estimate with reasoning</li>
-          <li data-i18n="svcP6.b3">Strengths reviewers will highlight</li>
-          <li data-i18n="svcP6.b4">Weaknesses likely to land in critique</li>
-          <li data-i18n="svcP6.b5">Comparable titles &amp; positioning notes</li>
-          <li data-i18n="svcP6.b6">Recommendations to lift the perceived score</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svcP6.b1">Press-style written review on current build</li>
+            <li data-i18n="svcP6.b2">Score range estimate with reasoning</li>
+            <li data-i18n="svcP6.b3">Strengths reviewers will highlight</li>
+            <li data-i18n="svcP6.b4">Weaknesses likely to land in critique</li>
+            <li data-i18n="svcP6.b5">Comparable titles &amp; positioning notes</li>
+            <li data-i18n="svcP6.b6">Recommendations to lift the perceived score</li>
+          </ul>
+        </details>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2132,14 +2192,17 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
           <h3 data-i18n="svcP5.h">Scouting &amp; Dev Relationships Help</h3>
           <p data-i18n="svcP5.p">Freelance scouting on the ground when your team can&rsquo;t be present. Direct dev conversations, plus feedback on trends and projects worth watching.</p>
         </div>
-        <ul>
-          <li data-i18n="svcP5.b1">Event coverage when your scouts are double-booked</li>
-          <li data-i18n="svcP5.b2">Booth walks, dev meetings &amp; pitch sessions on your behalf</li>
-          <li data-i18n="svcP5.b3">Trend reports across genres &amp; regions</li>
-          <li data-i18n="svcP5.b4">Studio feedback drawn from direct dev conversations</li>
-          <li data-i18n="svcP5.b5">Heads-up on interesting projects before they make rounds</li>
-          <li data-i18n="svcP5.b6">Festival &amp; showcase coverage (Gamescom, IAB, GDC)</li>
-        </ul>
+        <details class="service-bullets-wrapper">
+          <summary class="service-bullets-toggle" data-i18n="service.show_details">Show details</summary>
+          <ul>
+            <li data-i18n="svcP5.b1">Event coverage when your scouts are double-booked</li>
+            <li data-i18n="svcP5.b2">Booth walks, dev meetings &amp; pitch sessions on your behalf</li>
+            <li data-i18n="svcP5.b3">Trend reports across genres &amp; regions</li>
+            <li data-i18n="svcP5.b4">Studio feedback drawn from direct dev conversations</li>
+            <li data-i18n="svcP5.b5">Heads-up on interesting projects before they make rounds</li>
+            <li data-i18n="svcP5.b6">Festival &amp; showcase coverage (Gamescom, IAB, GDC)</li>
+          </ul>
+        </details>
       </article>
     </div>
   </section>
@@ -2390,6 +2453,8 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     'services.kicker': '<span class="num">02</span> Servizi',
     'services.h': '<em>Veterani</em> della produzione<br />e del design.',
     'services.intro': 'Lavoro con un piccolo gruppo di producer e designer di fiducia, tutti con titoli pubblicati su console, PC e mobile dentro studi di sviluppo e publisher. Ci inseriamo progetto per progetto, a retainer o con un audit mirato. Due toolkit distinti, a seconda di che lato del tavolo sei.',
+
+    'service.show_details': 'Mostra dettagli',
 
     'svc1.h': 'Produzione & Project Operations',
     'svc1.p': 'Le cose giuste al momento giusto. Schedule, documentazione e budget, dalla pre-produzione fino al gold master.',
@@ -2940,6 +3005,20 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     apply();
     if (mq.addEventListener) mq.addEventListener('change', apply);
     else if (mq.addListener) mq.addListener(apply);
+  })();
+
+  // Service bullets: collapsed on mobile, forced open on desktop
+  (function() {
+    const mq = window.matchMedia('(min-width: 769px)');
+    function applyDesktopState() {
+      if (mq.matches) {
+        document.querySelectorAll('.service-bullets-wrapper').forEach(el => el.open = true);
+      } else {
+        document.querySelectorAll('.service-bullets-wrapper').forEach(el => el.open = false);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', applyDesktopState);
+    mq.addEventListener('change', applyDesktopState);
   })();
 
   // Cursor-following tooltips on marquee tiles (custom, no animation pause, no native dwell)
