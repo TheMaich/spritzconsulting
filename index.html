@@ -1332,10 +1332,10 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   .process-rail--compact{ grid-template-columns: 1fr; }
 }
 
-/* FAQ — always-visible 2-col Q+A list (no accordion) */
+/* FAQ — unified single-column accordion across all viewports */
 .faq-head{
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
   gap: clamp(24px, 4vw, 72px);
   align-items: end;
 }
@@ -1356,36 +1356,32 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
 }
 .faq-head p{
   color: var(--ink-2);
-  max-width: 52ch;
+  font-size: 17px;
   line-height: 1.6;
 }
-.faq-grid{
-  margin-top: clamp(48px, 6vw, 88px);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 0;
-  row-gap: 0;
+.faq-list{
+  margin: clamp(48px, 6vw, 88px) auto 0;
+  max-width: 720px;
+  width: 100%;
   border-top: 1px solid var(--rule);
 }
 .faq-item{
-  padding: clamp(28px, 3vw, 40px) 0;
   border-bottom: 1px solid var(--rule);
   position: relative;
   transition: background-color .35s var(--ease);
 }
-/* vertical seam between left and right columns */
-.faq-item:nth-child(odd){
-  border-right: 1px solid var(--rule);
-  padding-right: clamp(20px, 2.4vw, 36px);
+.faq-item:hover{ background: color-mix(in srgb, var(--clay) 5%, transparent); }
+.faq-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(20px, 2.4vw, 28px) 0;
+  cursor: pointer;
 }
-.faq-item:nth-child(even){
-  padding-left: clamp(20px, 2.4vw, 36px);
-}
-@media (max-width: 760px){
-  .faq-item:nth-child(odd){ border-right: 0; padding-right: 0; }
-  .faq-item:nth-child(even){ padding-left: 0; }
-}
-.faq-item h3{
+.faq-question{
+  margin: 0;
+  flex: 1;
   font-family: var(--serif);
   font-weight: 500;
   font-size: clamp(20px, 1.8vw, 26px);
@@ -1393,52 +1389,61 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
   line-height: 1.18;
   letter-spacing: -0.018em;
   color: var(--ink);
-  margin: 0 0 12px;
   text-wrap: balance;
   transition: color .25s var(--ease);
 }
-.faq-item p{
-  margin: 0;
-  color: var(--ink-2);
-  font-size: 15.5px;
-  line-height: 1.62;
-  max-width: 42ch;
+.faq-item:hover .faq-question{ color: var(--clay); }
+.faq-toggle{
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--clay);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--clay) 25%, transparent);
 }
-.faq-item:hover{ background: color-mix(in srgb, var(--clay) 5%, transparent); }
-.faq-item:hover h3{ color: var(--clay); }
-.faq-item > summary{
-  list-style: none;
+.faq-toggle:hover,
+.faq-toggle:focus-visible{
+  background: var(--clay-deep);
+  transform: scale(1.05);
+  outline: none;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--clay) 40%, transparent);
+}
+.faq-toggle:active{ transform: scale(0.95); }
+.faq-toggle .toggle-icon{
+  color: #000;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1;
   display: block;
+  transform: translateY(-1px);
 }
-.faq-item > summary::-webkit-details-marker{ display: none; }
-.faq-item > summary::marker{ display: none; }
-@media (min-width: 769px){
-  .faq-item > summary{ cursor: default; pointer-events: none; }
+.faq-answer{
+  padding: 0 0 clamp(20px, 2.4vw, 28px) 0;
+  color: var(--ink-2);
+  line-height: 1.62;
+  max-width: 64ch;
+}
+.faq-answer p{
+  margin: 0;
+  font-size: 15.5px;
+}
+.faq-answer:not([hidden]){
+  animation: faq-fade-in 0.25s ease-out;
+}
+@keyframes faq-fade-in{
+  from{ opacity: 0; transform: translateY(-4px); }
+  to{ opacity: 1; transform: translateY(0); }
 }
 @media (max-width: 768px){
-  .faq-item{ padding: 14px 0; }
-  .faq-item > summary{
-    cursor: pointer;
-    position: relative;
-    padding-right: 32px;
-  }
-  .faq-item > summary::after{
-    content: '+';
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.5rem;
-    font-weight: 300;
-    color: var(--clay);
-    line-height: 1;
-  }
-  .faq-item[open] > summary::after{ content: '\2212'; }
-  .faq-item h3{ margin: 0; }
-  .faq-item p{ margin-top: 12px; }
-}
-@media (max-width: 760px){
-  .faq-grid{ grid-template-columns: 1fr; }
+  .faq-header{ padding: 16px 0; }
+  .faq-answer{ padding: 0 0 16px 0; }
 }
 
 /* Contact */
@@ -2317,43 +2322,73 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
       </p>
     </div>
 
-    <div class="faq-grid" data-reveal>
-      <details class="faq-item" open>
-        <summary>
-          <h3 data-i18n="faq1.q">How do you charge? Project, retainer, or audit?</h3>
-        </summary>
-        <p data-i18n="faq1.a">Three formats. Projects for defined deliverables: a cert pass, a workflow audit, a publisher demo prep. Retainers for ongoing producer support, billed monthly. Audits for short, focused diagnostics, usually one to two weeks. We agree the format on the discovery call, once I understand what you actually need.</p>
-      </details>
-      <details class="faq-item" open>
-        <summary>
-          <h3 data-i18n="faq2.q">Do you sign NDAs before a discovery call?</h3>
-        </summary>
-        <p data-i18n="faq2.a">Happy to sign your standard NDA before the call if your project warrants it. For most early conversations, a verbal &ldquo;this stays between us&rdquo; is enough. I&rsquo;ve been around the industry long enough to know how to keep my mouth shut.</p>
-      </details>
-      <details class="faq-item" open>
-        <summary>
-          <h3 data-i18n="faq3.q">Who keeps the IP, the documentation, the processes after you leave?</h3>
-        </summary>
-        <p data-i18n="faq3.a">You do. Everything I produce, from schedules and GDD reviews to pipelines and cert prep, is yours. The whole point of the engagement is that the value stays with you, not with me.</p>
-      </details>
-      <details class="faq-item" open>
-        <summary>
-          <h3 data-i18n="faq4.q">What&rsquo;s the smallest engagement you take?</h3>
-        </summary>
-        <p data-i18n="faq4.a">A two-hour paid consultation if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
-      </details>
-      <details class="faq-item" open>
-        <summary>
-          <h3 data-i18n="faq5.q">Can you co-source vendors? Porting, external QA, audio, localisation?</h3>
-        </summary>
-        <p data-i18n="faq5.a">Yes. Nine years in the industry built a network of trusted studios, porting houses, QA partners, audio teams, and loc vendors. I introduce, brief, and coordinate them as part of the engagement. No referral fees on either side.</p>
-      </details>
-      <details class="faq-item" open>
-        <summary>
-          <h3 data-i18n="faq6.q">We&rsquo;re pre-funding or pre-publisher. Will you still talk?</h3>
-        </summary>
-        <p data-i18n="faq6.a">Yes. The discovery call doesn&rsquo;t care what stage you&rsquo;re in. If pitch deck shaping or publisher demo prep is what you need, that&rsquo;s its own service. If you genuinely can&rsquo;t afford anything yet, I&rsquo;ll point you at the right reading or the right people, no strings.</p>
-      </details>
+    <div class="faq-list" data-reveal>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question" data-i18n="faq1.q">How do you charge? Project, retainer, or audit?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-1" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-1" hidden>
+          <p data-i18n="faq1.a">Three formats. Projects for defined deliverables: a cert pass, a workflow audit, a publisher demo prep. Retainers for ongoing producer support, billed monthly. Audits for short, focused diagnostics, usually one to two weeks. We agree the format on the discovery call, once I understand what you actually need.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question" data-i18n="faq2.q">Do you sign NDAs before a discovery call?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-2" hidden>
+          <p data-i18n="faq2.a">Happy to sign your standard NDA before the call if your project warrants it. For most early conversations, a verbal &ldquo;this stays between us&rdquo; is enough. I&rsquo;ve been around the industry long enough to know how to keep my mouth shut.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question" data-i18n="faq3.q">Who keeps the IP, the documentation, the processes after you leave?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-3" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-3" hidden>
+          <p data-i18n="faq3.a">You do. Everything I produce, from schedules and GDD reviews to pipelines and cert prep, is yours. The whole point of the engagement is that the value stays with you, not with me.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question" data-i18n="faq4.q">What&rsquo;s the smallest engagement you take?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-4" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-4" hidden>
+          <p data-i18n="faq4.a">A two-hour paid consultation if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question" data-i18n="faq5.q">Can you co-source vendors? Porting, external QA, audio, localisation?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-5" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-5" hidden>
+          <p data-i18n="faq5.a">Yes. Nine years in the industry built a network of trusted studios, porting houses, QA partners, audio teams, and loc vendors. I introduce, brief, and coordinate them as part of the engagement. No referral fees on either side.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question" data-i18n="faq6.q">We&rsquo;re pre-funding or pre-publisher. Will you still talk?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-6" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-6" hidden>
+          <p data-i18n="faq6.a">Yes. The discovery call doesn&rsquo;t care what stage you&rsquo;re in. If pitch deck shaping or publisher demo prep is what you need, that&rsquo;s its own service. If you genuinely can&rsquo;t afford anything yet, I&rsquo;ll point you at the right reading or the right people, no strings.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3089,18 +3124,34 @@ html[data-theme="light"] .bg-aurora .blob-3{ opacity: 0.12; }
     }
   })();
 
-  // FAQ accordion: collapsed on mobile, forced open on desktop
-  (function initFaqAccordion(){
-    const items = document.querySelectorAll('details.faq-item');
-    if (!items.length) return;
-    const mq = window.matchMedia('(max-width: 768px)');
-    function apply(){
-      const isMobile = mq.matches;
-      items.forEach(d => { d.open = !isMobile; });
+  // FAQ accordion: unified collapsible across all viewports
+  (function initFaq(){
+    const toggles = document.querySelectorAll('.faq-toggle');
+    if (!toggles.length) return;
+
+    function setState(btn, expanded){
+      const target = document.getElementById(btn.getAttribute('aria-controls'));
+      const icon = btn.querySelector('.toggle-icon');
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      btn.setAttribute('aria-label', expanded ? 'Hide answer' : 'Show answer');
+      if (target) target.hidden = !expanded;
+      if (icon) icon.textContent = expanded ? '−' : '+';
     }
-    apply();
-    if (mq.addEventListener) mq.addEventListener('change', apply);
-    else if (mq.addListener) mq.addListener(apply);
+
+    toggles.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        setState(btn, !expanded);
+      });
+    });
+
+    document.querySelectorAll('.faq-header').forEach(header => {
+      header.addEventListener('click', e => {
+        if (e.target.closest('.faq-toggle')) return;
+        const btn = header.querySelector('.faq-toggle');
+        if (btn) btn.click();
+      });
+    });
   })();
 
   // Service bullets: collapsed on mobile with toggle button, always visible on desktop
