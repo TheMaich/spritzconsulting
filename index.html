@@ -2437,7 +2437,7 @@ body.is-tab-hidden .dot{
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-4" hidden>
-          <p data-i18n="faq4.a">A two-hour paid consultation if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
+          <p data-i18n="faq4.a">A two-hour paid consultation at €150 if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -2462,6 +2462,7 @@ body.is-tab-hidden .dot{
           <p data-i18n="faq6.a">Yes. The discovery call doesn&rsquo;t care what stage you&rsquo;re in. If pitch deck shaping or publisher demo prep is what you need, that&rsquo;s its own service. If you genuinely can&rsquo;t afford anything yet, I&rsquo;ll point you at the right reading or the right people, no strings.</p>
         </div>
       </div>
+      <p class="faq-note" data-i18n="faq.note" style="margin-top:32px;font-size:14px;color:var(--ink-3);">These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number.</p>
     </div>
   </section>
 
@@ -2519,21 +2520,10 @@ body.is-tab-hidden .dot{
             <input id="f-company" name="company" autocomplete="organization" data-i18n-placeholder="form.company.placeholder" placeholder="Your studio or company" />
             <span class="err" data-err-for="f-company" aria-live="polite"></span>
           </div>
-          <div class="field">
+          <div class="field wide">
             <label for="f-email" data-i18n="form.email.label" data-i18n-html>Email <span class="req" aria-hidden="true">*</span></label>
             <input id="f-email" name="email" type="email" required autocomplete="email" data-i18n-placeholder="form.email.placeholder" placeholder="you@studio.com" />
             <span class="err" data-err-for="f-email" aria-live="polite"></span>
-          </div>
-          <div class="field wide">
-            <label for="f-budget" data-i18n="form.budget.label">What's your budget for this engagement?</label>
-            <select id="f-budget" name="budget">
-              <option value="" disabled selected hidden data-i18n="form.budget.placeholder">Select one...</option>
-              <option value="under-1k" data-i18n="form.budget.opt1">Under €1,000</option>
-              <option value="1k-3k" data-i18n="form.budget.opt2">€1,000 – €3,000</option>
-              <option value="3k-5k" data-i18n="form.budget.opt3">€3,000 – €5,000</option>
-              <option value="10k-plus" data-i18n="form.budget.opt4">€10,000+</option>
-              <option value="not-sure" data-i18n="form.budget.opt5">Not sure yet</option>
-            </select>
           </div>
           <div class="field wide">
             <label for="f-msg" data-i18n="form.msg.label" data-i18n-html>Message <span class="req" aria-hidden="true">*</span></label>
@@ -2770,11 +2760,12 @@ body.is-tab-hidden .dot{
     'faq3.q': 'Chi tiene IP, documentazione e processi quando te ne vai?',
     'faq3.a': 'Tu. Tutto quello che produco, dalle pianificazioni alle review del GDD, dalle pipeline al prep di cert, è vostro. Il senso dell’ingaggio è che il valore resti a voi, non a me.',
     'faq4.q': 'Qual è l’ingaggio più piccolo che prendi?',
-    'faq4.a': 'Una consulenza pagata di due ore se ti serve solo un sanity check su una decisione specifica. Sotto quella soglia, la call conoscitiva stessa è gratis: mezz’ora, senza pitch.',
+    'faq4.a': "Una consulenza a pagamento di due ore a €150 se hai bisogno di un parere su una decisione specifica. Al di sotto, la discovery call è gratuita: mezz'ora, senza pitch.",
     'faq5.q': 'Puoi co-sourciare fornitori? Porting, QA esterno, audio, localizzazione?',
     'faq5.a': 'Sì. Nove anni nel settore hanno costruito una rete di studi, porting house, partner QA, team audio e fornitori di localizzazione fidati. Faccio introduzioni, brief e coordinamento come parte dell’ingaggio. Niente referral fee da nessuna parte.',
     'faq6.q': 'Siamo pre-funding o pre-publisher. Parli con noi lo stesso?',
     'faq6.a': 'Sì. La call conoscitiva non guarda in che stadio siete. Se vi serve costruzione del pitch deck o publisher demo prep, è un servizio a sé. Se davvero non potete permettervi nulla, vi indirizzo alle letture giuste o alle persone giuste, senza vincoli.',
+    'faq.note': "Questi sono i miei termini standard. Se la tua situazione è diversa, parliamone in call. Preferisco trovare un formato che funzioni piuttosto che perdere un buon progetto per una questione di numeri.",
 
     'contact.kicker': '<span class="num">04</span> Mettiti in contatto',
     'contact.h': 'Dimmi a cosa stai lavorando.',
@@ -2787,13 +2778,6 @@ body.is-tab-hidden .dot{
     'form.company.placeholder': 'Il tuo studio o azienda',
     'form.email.label': 'Email <span class="req" aria-hidden="true">*</span>',
     'form.email.placeholder': 'tu@studio.com',
-    'form.budget.label': 'Qual è il tuo budget per questa consulenza?',
-    'form.budget.placeholder': 'Seleziona...',
-    'form.budget.opt1': 'Meno di €1.000',
-    'form.budget.opt2': '€1.000 – €3.000',
-    'form.budget.opt3': '€3.000 – €5.000',
-    'form.budget.opt4': '€10.000+',
-    'form.budget.opt5': 'Non sono sicuro',
     'form.msg.label': 'Messaggio <span class="req" aria-hidden="true">*</span>',
     'form.msg.placeholder': 'Su cosa stai lavorando, dove sei bloccato, quando ti serve shippato.',
     'form.status': 'Apre il tuo client email · nessun dato archiviato.',
@@ -3173,8 +3157,7 @@ body.is-tab-hidden .dot{
     const body =
       'Name: ' + (data.get('name') || '') + '\n' +
       'Company: ' + (data.get('company') || '') + '\n' +
-      'Email: ' + (data.get('email') || '') + '\n' +
-      'Budget: ' + (data.get('budget') || '') + '\n\n' +
+      'Email: ' + (data.get('email') || '') + '\n\n' +
       (data.get('message') || '');
     const subject = tr('form.subject') + (data.get('name') || '');
     const href = 'mailto:michele@spritzconsulting.com' +
