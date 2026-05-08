@@ -40,7 +40,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&display=swap" rel="stylesheet" />
 
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 
 <script>
   (function(){
@@ -3846,23 +3845,6 @@ body.is-tab-hidden .dot{
       observer.observe(el);
     }
   });
-})();
-</script>
-
-<script>
-(function() {
-  var lenis = new Lenis({
-    lerp: 0.08,
-    wheelMultiplier: 1,
-    smoothWheel: true,
-    smoothTouch: false,
-  });
-
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
 })();
 </script>
 
