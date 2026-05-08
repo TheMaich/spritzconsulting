@@ -3848,5 +3848,25 @@ body.is-tab-hidden .dot{
 })();
 </script>
 
+<script>
+(function() {
+  var lenis = new Lenis({
+    duration: 0.6,
+    easing: function(t) {
+      return 1 - Math.pow(1 - t, 3);
+    },
+    smoothWheel: true,
+    smoothTouch: false,
+    wheelMultiplier: 1.2,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+})();
+</script>
+
 </body>
 </html>
