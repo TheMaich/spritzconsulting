@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Resources | Spritz Consulting</title>
+<title>Marketing is part of the deal. So is the invoice. — Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -13,7 +13,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Guides from the production side. Practical writing on publishing contracts, production, and platform delivery." />
+<meta name="description" content="In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
@@ -500,24 +500,6 @@ html{
   color: var(--clay);
   transform: translateX(3px);
 }
-.res-card.is-locked{
-  opacity: 0.55;
-  cursor: default;
-}
-.res-card.is-locked .res-title{ color: var(--ink-2); }
-.res-card.is-locked:hover .res-title{ color: var(--ink-2); }
-.res-lock{
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--clay);
-  border: 1px solid color-mix(in srgb, var(--clay) 45%, transparent);
-  padding: 3px 8px;
-  border-radius: 100px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
 
 @media (max-width: 720px){
   .res-card{
@@ -577,6 +559,94 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .bg-aurora .blob{ animation: none; }
 }
 </style>
+<style>
+.article-wrap{
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 64px 32px 96px;
+}
+.article-wrap article{ font-size: 18px; line-height: 1.78; }
+.article-wrap .category{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--clay);
+  margin-bottom: 20px;
+}
+.article-wrap h1{
+  font-family: var(--serif, var(--sans));
+  font-size: clamp(30px, 5vw, 44px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+.article-wrap h1 em{ color: var(--clay); font-style: italic; }
+.article-wrap .meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 44px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+.article-wrap .meta b{ color: var(--ink-2); font-weight: 400; }
+.article-wrap .deck{
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin-bottom: 44px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--rule);
+}
+.article-wrap p{ margin-bottom: 26px; color: var(--ink-2); }
+.article-wrap p strong{ color: var(--ink); font-weight: 500; }
+.article-wrap p em{ color: var(--clay); font-style: italic; }
+.article-wrap h2{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--clay);
+  margin: 52px 0 18px;
+}
+.article-wrap .note{
+  border-left: 2px solid var(--clay);
+  background: rgba(229,180,21,0.05);
+  padding: 18px 22px;
+  margin: 36px 0;
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.article-wrap .cta{
+  margin-top: 72px;
+  padding-top: 44px;
+  border-top: 1px solid var(--rule);
+}
+.article-wrap .cta p{
+  font-size: 14px;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+.article-wrap .cta a.btn{
+  display: inline-block;
+  background: var(--clay);
+  color: var(--paper);
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.article-wrap .cta a.btn:hover{ background: var(--clay-deep); }
+html[data-theme="light"] .article-wrap .cta a.btn{ color: #fff; }
+</style>
 </head>
 <body>
 
@@ -599,7 +669,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <a href="/#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="/#faq"><span class="num">03</span><span data-i18n="nav.faq">FAQ</span></a>
         <a href="/#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
-        <a href="/resources/" class="is-active"><span class="num">05</span><span data-i18n="nav.resources">Resources</span></a>
+        <a href="/resources/"><span class="num">05</span><span data-i18n="nav.resources">Resources</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -627,55 +697,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   </div>
 </div>
 
-<main id="main">
-  <section class="resources-hero wrap">
-    <span class="kicker" data-i18n="res.kicker">05 RESOURCES</span>
-    <h2 class="resources-h2" data-i18n="res.h1">Guides from the production side.</h2>
-    <p class="resources-deck" data-i18n="res.deck">Practical writing on publishing contracts, production, and platform delivery. Written from experience, not from a template.</p>
-  </section>
-
-  <section class="resources-list wrap">
-    <a href="/resources/what-5050-means.html" class="res-card">
-      <span class="res-num">01</span>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card1.title">What '50/50' actually means</h3>
-        <p class="res-desc" data-i18n="res.card1.desc">The revenue split is the number everyone talks about in the pitch. It is also probably the least useful number in the whole contract.</p>
-        <span class="res-link" data-i18n="res.read">Read →</span>
-      </div>
-    </a>
-    <div class="res-card is-locked" aria-disabled="true">
-      <span class="res-num">02</span>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card2.title">You own the IP. What for?</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card2.desc">There's a version of 'you keep your game' that means almost nothing in practice. Ownership and control are different things.</p>
-      </div>
+<main style="max-width:700px;margin:0 auto;padding:64px 32px 96px;">
+  <article>
+    <p class="category">Marketing &amp; Costs</p>
+    <h1>Marketing is part of the deal. <em>So is the invoice.</em></h1>
+    <div class="meta">
+      <div>Topic <b>Service Costs</b></div>
+      <div>Level <b>Practical</b></div>
+      <div>Read time <b>~5 min</b></div>
+      <div>Updated <b>2026</b></div>
     </div>
-    <div class="res-card is-locked" aria-disabled="true">
-      <span class="res-num">03</span>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card3.title">When your publisher goes quiet</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card3.desc">Nobody negotiates for year three. That's usually when the contract structure starts to matter.</p>
-      </div>
+    <p class="deck">In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share, and you often have no say in how large it gets.</p>
+    <p>One of the things that makes full-service publishing genuinely attractive is the marketing. You're a small team. You make games. You probably don't have a PR network, a community team, or a working relationship with Valve. The publisher does. That's real value.</p>
+    <p>What's less obvious until the royalty statement arrives is that in most full-service deals, the marketing done on your behalf is fully recoverable from your revenue share. The publisher spends 50,000 euros on your launch campaign. That 50,000 goes into the recoupment pool alongside your advance and any service costs. You pay it back out of your side before any split revenue reaches you.</p>
+    <p>This isn't inherently wrong. Marketing costs money. Publishers take on real financial risk by spending before the game launches. The structure becomes a problem when there's no cap on what the publisher can spend, and you have no approval mechanism for individual decisions.</p>
+    <h2>The part no one explains until later</h2>
+    <p>An uncapped recoverable marketing budget with sole publisher discretion means the publisher can decide what your game needs and spend accordingly. You're not in the room. You see the royalty statement.</p>
+    <p>I've watched this play out in both directions. Sometimes the publisher's spending was genuinely effective and made the game's launch better than the studio could have managed alone. Sometimes the budget was spent in ways the developer found questionable and had no contractual way to challenge. The contract determines which of those situations you're in before you even know it matters.</p>
+    <p>A few things worth getting into the contract specifically: a defined or capped marketing budget, ideally as a number rather than a category. Some form of written approval right on large individual expenditures, a threshold above which you have to be consulted. And the question of what percentage of marketing costs are actually recoverable. Some publishers absorb a portion of marketing risk rather than passing 100% back through the recoupment pool. The range varies a lot across deals and it's worth asking about directly.</p>
+    <div class="note">
+      On the publisher side, I saw deals where marketing recoupment was one of the main reasons developers stayed in the red longer than the sales numbers seemed to justify. It's not an exotic problem.
     </div>
-    <div class="res-card is-locked" aria-disabled="true">
-      <span class="res-num">04</span>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card4.title">Marketing is part of the deal. So is the invoice.</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card4.desc">In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share.</p>
-      </div>
-    </div>
-    <div class="res-card is-locked" aria-disabled="true">
-      <span class="res-num">05</span>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card5.title">Three things to read before you sign</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card5.desc">You've got the offer. You probably don't have a lawyer yet. Here's where to start reading.</p>
-      </div>
-    </div>
-  </section>
+    <h2>Pricing and discount strategy</h2>
+    <p>Pricing is another area that tends to get overlooked until it's a source of friction. Who sets the sale price? Who decides when the game goes on discount, and by how much? Who controls key distribution and what the threshold for a bundle deal looks like?</p>
+    <p>These feel like operational questions. They become commercial ones when you disagree on strategy, or when a heavy discount cycle starts affecting the game's baseline perceived value in ways you never agreed to. The contract usually says something about this. It's worth knowing what before you're in that conversation.</p>
+    <p>The goal isn't to do the publisher's job for them. It's to be a participant in decisions that affect your revenue and your game's position in the market, before those decisions are made rather than after.</p>
+  </article>
+  <div class="cta" style="margin-top:72px;padding-top:44px;border-top:1px solid var(--rule);">
+    <p style="font-size:14px;color:var(--ink-2);margin-bottom:18px;">Marketing costs in publishing deals are one of the more opaque areas until you've seen a few royalty statements. If you want to talk through what's in yours, a 30-minute call is free.</p>
+    <a class="btn" href="https://spritzconsulting.com/#contact" style="display:inline-block;background:var(--clay);color:var(--paper);padding:12px 24px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;">Book a discovery call</a>
+  </div>
 </main>
 
 <footer class="site-footer">
@@ -764,11 +815,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'res.card2.desc': 'Esiste una versione di \'tieni il tuo gioco\' che nella pratica non significa quasi nulla. Possesso e controllo sono cose diverse.',
     'res.card3.title': 'Quando il publisher diventa silenzioso',
     'res.card3.desc': 'Nessuno negozia pensando al terzo anno. È di solito lì che la struttura del contratto inizia a contare.',
-    'res.card4.title': 'Il marketing fa parte del deal. Anche la fattura.',
-    'res.card4.desc': 'In un deal full-service, il publisher gestisce il marketing. Quel costo di solito esce dalla tua quota.',
-    'res.card5.title': 'Tre cose da leggere prima di firmare',
-    'res.card5.desc': 'Hai ricevuto l\'offerta. Probabilmente non hai ancora un avvocato. Ecco da dove iniziare a leggere.',
-    'res.lock': 'In arrivo',
+    'res.card4.title': 'Titolo articolo qui',
+    'res.card4.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
+    'res.card5.title': 'Titolo articolo qui',
+    'res.card5.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
   };
 
   const FR = {
@@ -799,11 +849,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'res.card2.desc': 'Il existe une version de \'vous gardez votre jeu\' qui en pratique ne veut presque rien dire. Possession et contrôle sont deux choses différentes.',
     'res.card3.title': 'Quand le publisher devient silencieux',
     'res.card3.desc': 'Personne ne négocie en pensant à la troisième année. C\'est généralement là que la structure du contrat commence à compter.',
-    'res.card4.title': 'Le marketing fait partie du deal. La facture aussi.',
-    'res.card4.desc': 'Dans un deal full-service, le publisher gère votre marketing. Cette dépense sort généralement de votre part.',
-    'res.card5.title': 'Trois choses à lire avant de signer',
-    'res.card5.desc': 'Vous avez l\'offre. Vous n\'avez probablement pas encore d\'avocat. Voici par où commencer.',
-    'res.lock': 'À venir',
+    'res.card4.title': 'Titre de l\'article ici',
+    'res.card4.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
+    'res.card5.title': 'Titre de l\'article ici',
+    'res.card5.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
   };
 
   const ES = {
@@ -834,11 +883,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'res.card2.desc': 'Hay una versión de \'te quedas con tu juego\' que en la práctica no significa casi nada. Propiedad y control son cosas distintas.',
     'res.card3.title': 'Cuando tu publisher se queda en silencio',
     'res.card3.desc': 'Nadie negocia pensando en el tercer año. Suele ser ahí donde la estructura del contrato empieza a importar.',
-    'res.card4.title': 'El marketing es parte del trato. La factura también.',
-    'res.card4.desc': 'En un acuerdo full-service, el publisher se encarga del marketing. Esa factura suele salir de tu parte.',
-    'res.card5.title': 'Tres cosas que leer antes de firmar',
-    'res.card5.desc': 'Tienes la oferta. Probablemente aún no tienes abogado. Aquí es donde empezar a leer.',
-    'res.lock': 'Próximamente',
+    'res.card4.title': 'Título del artículo aquí',
+    'res.card4.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
+    'res.card5.title': 'Título del artículo aquí',
+    'res.card5.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
   };
 
   const DICTS = { it: IT, fr: FR, es: ES };
