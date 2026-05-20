@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>You own the IP. What for? — Spritz Consulting</title>
+<meta name="description" content="'You keep your IP' sounds like the good news. But ownership and control are different things, and the gap between them is where most of the risk lives." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --clay: #E5B415;
+  --clay-deep: #C4970A;
+  --paper: #0A0B0E;
+  --paper-2: #111214;
+  --ink: #F0EDE6;
+  --ink-2: #8E95A4;
+  --ink-3: #5C6272;
+  --rule: rgba(255,255,255,0.08);
+  --sans: 'Bricolage Grotesque', sans-serif;
+  --mono: 'Bebas Neue', sans-serif;
+}
+*, *::before, *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.78;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+nav {
+  border-bottom: 1px solid var(--rule);
+  padding: 18px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  z-index: 10;
+}
+.logo {
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-dot {
+  width: 7px; height: 7px;
+  background: var(--clay);
+  border-radius: 50%;
+  display: inline-block;
+}
+.back {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  transition: color 0.2s;
+}
+.back:hover { color: var(--clay); }
+article {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 64px 32px 96px;
+}
+.category {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--clay);
+  margin-bottom: 20px;
+}
+h1 {
+  font-size: clamp(30px, 5vw, 44px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  font-variation-settings: "opsz" 48;
+}
+h1 em { color: var(--clay); font-style: italic; }
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 44px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+.meta b { color: var(--ink-2); font-weight: 400; }
+.deck {
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin-bottom: 44px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--rule);
+}
+p { margin-bottom: 26px; color: var(--ink-2); }
+p strong { color: var(--ink); font-weight: 500; }
+p em { color: var(--clay); font-style: italic; }
+h2 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--clay);
+  margin: 52px 0 18px;
+}
+.note {
+  border-left: 2px solid var(--clay);
+  background: rgba(229,180,21,0.05);
+  padding: 18px 22px;
+  margin: 36px 0;
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.cta {
+  max-width: 700px;
+  margin: 72px auto 0;
+  padding: 44px 32px;
+  border-top: 1px solid var(--rule);
+}
+.cta p {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+.cta a.btn {
+  display: inline-block;
+  background: var(--clay);
+  color: var(--paper);
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta a.btn:hover { background: var(--clay-deep); }
+footer {
+  text-align: center;
+  padding: 28px 32px;
+  border-top: 1px solid var(--rule);
+  margin-top: 60px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <span class="logo-dot"></span>
+    SPRITZ
+  </a>
+  <a href="/resources/" class="back">
+    ← All resources
+  </a>
+</nav>
+
+<article>
+  <p class="category">Intellectual Property</p>
+  <h1>You own the IP. <em>What for?</em></h1>
+  <div class="meta">
+    <div>Topic <b>IP Ownership</b></div>
+    <div>Level <b>Foundational</b></div>
+    <div>Read time <b>~5 min</b></div>
+    <div>Updated <b>2026</b></div>
+  </div>
+  <p class="deck">There's a version of "you keep your game" that means almost nothing in practice. Ownership and control are different things, and the gap between them is where most of the risk lives.</p>
+  <p>"You keep your IP" is something publishers say early and often in a pitch. It sounds like the good news. Sometimes it is.</p>
+  <p>IP ownership and IP control are different things. You can technically own your game and still be unable to release it on a new platform, publish a sequel, or do anything commercially meaningful with it, because the publisher holds a perpetual exclusive licence covering every exploitation of the work, everywhere in the world, for as long as the agreement is in effect. In a perpetual contract, that's forever.</p>
+  <p>A lot of publishing deals are structured exactly this way and work fine while the relationship is active. The problem surfaces when things go quiet. When the publisher has moved on to their next slate. When the game isn't being promoted, isn't in any active campaigns, but is still under a licence that means you can't take it anywhere else.</p>
+  <h2>The three things that actually matter</h2>
+  <p>Whether "you keep your IP" means something in practice comes down to three things: scope, duration, and reversion.</p>
+  <p>Scope is what the publisher is actually licensed to do. Distribution only, or does the licence also cover porting, sequels, remasters, merchandise, and adaptations? The wider the scope, the less you can do with your own game even while owning it. I've seen contracts where "the Game and all derivative works" was the operative phrase. That's not a distribution licence. That's most of the commercial future of your IP.</p>
+  <p>Duration is whether the licence has an end date. A ten-year licence from commercial release is a different thing from "in perpetuity." First drafts from publishers often default to perpetual. It's one of the things worth pushing back on even if you don't get everything else you want.</p>
+  <p>Reversion is the practical exit. If the publisher doesn't release the game within 18 months of receiving the final build, rights revert automatically. If the game goes off sale for twelve months straight, rights revert. If the publisher goes bankrupt, rights revert immediately. Without these clauses, you're relying on goodwill and a phone call to get your game back. That's a bad position to negotiate from.</p>
+  <div class="note">
+    Publishers who have developer-friendly intentions will agree to time-limited licences and reasonable reversion clauses without much friction. The ones who resist all of it are telling you something worth knowing before you sign.
+  </div>
+  <h2>The question to ask</h2>
+  <p>Don't ask "do I keep my IP?" That question gets a yes in almost every pitch, regardless of what the contract actually says. Ask instead: what does my IP ownership let me do if this relationship doesn't work out?</p>
+  <p>If the honest answer is "not much," that's not necessarily a deal-breaker. It depends on the publisher, the relationship, the deal structure, and what you're getting in return. But it should be a conscious decision, not something you discover two years later when you want to make a remaster and find out you need their sign-off.</p>
+</article>
+
+<div class="cta">
+  <p>I've read a lot of IP clauses from both sides of the table. If something in your contract doesn't read clearly, a 30-minute call is free.</p>
+  <a class="btn" href="https://spritzconsulting.com/#contact">Book a discovery call</a>
+</div>
+
+<footer>
+  spritz consulting · resources · © 2026 spritz consulting
+</footer>
+
+</body>
+</html>

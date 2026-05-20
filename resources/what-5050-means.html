@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>What '50/50' actually means — Spritz Consulting</title>
+<meta name="description" content="The revenue split percentage is the last thing to look at in a publishing deal. Here's what actually determines your share." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --clay: #E5B415;
+  --clay-deep: #C4970A;
+  --paper: #0A0B0E;
+  --paper-2: #111214;
+  --ink: #F0EDE6;
+  --ink-2: #8E95A4;
+  --ink-3: #5C6272;
+  --rule: rgba(255,255,255,0.08);
+  --sans: 'Bricolage Grotesque', sans-serif;
+  --mono: 'Bebas Neue', sans-serif;
+}
+*, *::before, *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.78;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+nav {
+  border-bottom: 1px solid var(--rule);
+  padding: 18px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  z-index: 10;
+}
+.logo {
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-dot {
+  width: 7px; height: 7px;
+  background: var(--clay);
+  border-radius: 50%;
+  display: inline-block;
+}
+.back {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  transition: color 0.2s;
+}
+.back:hover { color: var(--clay); }
+article {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 64px 32px 96px;
+}
+.category {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--clay);
+  margin-bottom: 20px;
+}
+h1 {
+  font-size: clamp(30px, 5vw, 44px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  font-variation-settings: "opsz" 48;
+}
+h1 em { color: var(--clay); font-style: italic; }
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 44px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+.meta b { color: var(--ink-2); font-weight: 400; }
+.deck {
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin-bottom: 44px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--rule);
+}
+p { margin-bottom: 26px; color: var(--ink-2); }
+p strong { color: var(--ink); font-weight: 500; }
+p em { color: var(--clay); font-style: italic; }
+h2 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--clay);
+  margin: 52px 0 18px;
+}
+.note {
+  border-left: 2px solid var(--clay);
+  background: rgba(229,180,21,0.05);
+  padding: 18px 22px;
+  margin: 36px 0;
+  font-size: 16px;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.cta {
+  max-width: 700px;
+  margin: 72px auto 0;
+  padding: 44px 32px;
+  border-top: 1px solid var(--rule);
+}
+.cta p {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+.cta a.btn {
+  display: inline-block;
+  background: var(--clay);
+  color: var(--paper);
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta a.btn:hover { background: var(--clay-deep); }
+footer {
+  text-align: center;
+  padding: 28px 32px;
+  border-top: 1px solid var(--rule);
+  margin-top: 60px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <span class="logo-dot"></span>
+    SPRITZ
+  </a>
+  <a href="/resources/" class="back">
+    ← All resources
+  </a>
+</nav>
+
+<article>
+  <p class="category">Publishing Contracts</p>
+  <h1>What <em>'50/50'</em> actually means</h1>
+  <div class="meta">
+    <div>Topic <b>Revenue Share</b></div>
+    <div>Level <b>Foundational</b></div>
+    <div>Read time <b>~5 min</b></div>
+    <div>Updated <b>2026</b></div>
+  </div>
+  <p class="deck">The revenue split is the number everyone talks about in the pitch. It is also probably the least useful number in the whole contract.</p>
+  <p>I spent three years on the publishing side at Raw Fury. A lot of deals came together in that time. The split percentage was almost never where the interesting decisions were. The interesting decisions were in the definition of Net Revenue.</p>
+  <p>In a full-service publishing deal, the publisher funds development. They handle porting, QA, localisation, and marketing. All of that costs money, and in most contracts, all of it comes back out of your revenue share before the split actually applies. That's recoupment. It's the structure most developers understand in principle and don't fully model before signing.</p>
+  <h2>The math nobody runs</h2>
+  <p>Say you sign a 50,000 euro advance. The publisher also spends 20,000 on a Switch port, 15,000 on localisation, 40,000 on marketing. Some contracts add a markup to the advance, 1.15x is not uncommon. Before any split revenue reaches you, the publisher needs to recover roughly 132,500 euro.</p>
+  <p>Then you subtract the platform cut (Steam takes 30%), taxes, and refunds. Your Net Revenue might be 0.60 euros for every 1.00 euro in gross sales before the recoupment pool is even touched.</p>
+  <p>A game that brings in 200,000 euro on Steam might clear that pool with 20,000 left over. Post-recoupment split on 20,000 at 50% is 10,000 euro to you. On 200,000 in gross sales.</p>
+  <p>None of this is hidden. It's in the contract. Most developers just don't run the numbers before signing.</p>
+  <div class="note">
+    Ask the publisher to model recoupment using three sales scenarios: their projections, half of their projections, and a quarter. A publisher confident in their deal structure will do this without hesitating. Most do. The ones who don't, that's information too.
+  </div>
+  <h2>What actually matters</h2>
+  <p>The questions to ask before agreeing to anything: what's in the recoupment pool? Is there a markup on the advance? Is marketing 100% recoverable, or does the publisher absorb some of the risk? Some deals have moved away from full marketing recoupment. It's worth asking about.</p>
+  <p>The split percentage is a secondary question. You can have a 70/30 in your favour and still wait years for your first payment if the recoupment pool is large enough and the net revenue calculation strips out enough before it gets to you.</p>
+  <p>The number to focus on first is the Net Revenue definition. Get the complete list of deductions in writing. Run the waterfall for your worst-case sales scenario. That result is your floor. The split percentage only matters once you know what it's applied to.</p>
+</article>
+
+<div class="cta">
+  <p>I've been on both sides of these calculations. If you've got a deal on the table and want a second read on the numbers, a 30-minute call is free.</p>
+  <a class="btn" href="https://spritzconsulting.com/#contact">Book a discovery call</a>
+</div>
+
+<footer>
+  spritz consulting · resources · © 2026 spritz consulting
+</footer>
+
+</body>
+</html>
