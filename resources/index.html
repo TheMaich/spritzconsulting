@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resources — Spritz Consulting</title>
+<meta name="description" content="Practical guides on publishing contracts, IP, revenue share, and platform delivery for indie game studios." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --clay: #E5B415;
+    --clay-deep: #C4970A;
+    --paper: #0A0B0E;
+    --paper-2: #111214;
+    --paper-3: #16181C;
+    --ink: #F0EDE6;
+    --ink-2: #8E95A4;
+    --ink-3: #5C6272;
+    --rule: rgba(255,255,255,0.08);
+    --sans: 'Bricolage Grotesque', sans-serif;
+    --mono: 'Bebas Neue', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  .nav {
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--clay);
+  }
+  .back-link {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--ink-2);
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--clay); }
+
+  /* HEADER */
+  .header {
+    padding: 96px 0 64px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--clay);
+    margin-bottom: 24px;
+  }
+  .header h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+    margin-bottom: 20px;
+  }
+  .header .subtitle {
+    font-size: 18px;
+    color: var(--ink-2);
+    max-width: 60ch;
+    margin-bottom: 32px;
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+
+  /* CARDS */
+  .articles {
+    padding: 64px 0 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card-wide {
+    background: var(--paper-3);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 40px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card-wide:hover {
+    border-color: rgba(229, 180, 21, 0.3);
+  }
+
+  .card-wide .kicker {
+    margin-bottom: 16px;
+  }
+  .card-wide h2 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+    max-width: 28ch;
+  }
+  .card-wide p {
+    font-size: 16px;
+    color: var(--ink-2);
+    max-width: 70ch;
+    margin-bottom: 24px;
+  }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+    padding: 6px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--clay);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--clay-deep); }
+
+  .btn-ghost {
+    display: inline-block;
+    background: transparent;
+    color: var(--ink-3);
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 12px 22px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    cursor: not-allowed;
+  }
+
+  .card-preview {
+    position: relative;
+  }
+  .card-preview::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    opacity: 0.35;
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  .card-preview > * {
+    position: relative;
+    z-index: 1;
+  }
+  .card-preview h2,
+  .card-preview p {
+    opacity: 1;
+  }
+
+  /* GRID LOCKED */
+  .locked-grid {
+    padding: 16px 0 96px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 768px) {
+    .locked-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .locked-grid { grid-template-columns: 1fr; }
+  }
+
+  .card-locked {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 120px;
+  }
+  .lock-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--ink-3);
+  }
+  .card-locked .title {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.4;
+    font-weight: 500;
+    flex: 1;
+  }
+  .card-locked .cat {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+
+  /* CTA */
+  .cta {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 40px;
+    margin: 32px 0 96px;
+    text-align: center;
+  }
+  .cta h3 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .cta p {
+    font-size: 16px;
+    color: var(--ink-2);
+    margin-bottom: 24px;
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--rule);
+    padding: 32px 0;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 600px) {
+    .card-wide { padding: 28px 20px; }
+    .cta { padding: 28px 20px; }
+    .header { padding: 64px 0 48px; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-dot"></span>
+      <span>spritz · consulting</span>
+    </a>
+    <a href="/" class="back-link">← Back to site</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="wrap">
+    <div class="kicker">RESOURCES</div>
+    <h1>Guides for indie studios navigating publishing deals.</h1>
+    <p class="subtitle">Practical frameworks on contracts, IP, revenue share, and platform delivery. New guides added regularly.</p>
+    <div class="meta">15 GUIDES · PUBLISHING CONTRACTS · FREE</div>
+  </div>
+</header>
+
+<!-- ARTICLES -->
+<section class="wrap articles">
+
+  <!-- CARD 1 — UNLOCKED -->
+  <article class="card-wide">
+    <div class="kicker">PUBLISHING CONTRACTS · FOUNDATIONAL · 5 MIN READ</div>
+    <h2>Revenue Share Demystified: What the Numbers Actually Mean</h2>
+    <p>When a publisher says "we split 50/50", that sounds simple. 50% of what, exactly? A breakdown of how revenue share actually works, gross vs net, recoupment waterfalls, and what the numbers mean in practice.</p>
+    <div class="tag">Foundational</div>
+    <div>
+      <a href="/resources/revenue-share.html" class="btn-primary">Read guide →</a>
+    </div>
+  </article>
+
+  <!-- CARD 2 — PREVIEW -->
+  <article class="card-wide card-preview">
+    <div class="kicker">INTELLECTUAL PROPERTY · FOUNDATIONAL · 5 MIN READ</div>
+    <h2>Protecting Your IP: What Every Indie Dev Must Know Before Signing</h2>
+    <p>Publishing contracts can strip you of control over your game without technically taking ownership. IP forfeiture clauses, perpetual licences, and reversion rights explained.</p>
+    <div class="tag">Foundational</div>
+    <div>
+      <span class="btn-ghost">Coming soon</span>
+    </div>
+  </article>
+
+</section>
+
+<!-- LOCKED GRID -->
+<section class="wrap locked-grid">
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Contract Duration & Exit Rights: Are You Signing Forever?</div>
+    <div class="cat">CONTRACT DURATION</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">5 Red Flags in Indie Publishing Contracts</div>
+    <div class="cat">RED FLAGS</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">The Indie Developer's Pre-Signing Checklist</div>
+    <div class="cat">CHECKLIST</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Understanding Recoupment: The Advance Trap</div>
+    <div class="cat">RECOUPMENT</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Reporting & Audit Rights: Holding Your Publisher Accountable</div>
+    <div class="cat">AUDIT RIGHTS</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Marketing Control: Who Steers Your Game's Launch</div>
+    <div class="cat">MARKETING</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Sequel & Future Projects: When Your Next Game Isn't Yours</div>
+    <div class="cat">SEQUEL RIGHTS</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Platform & Territory Control: Who Decides Where Your Game Lives</div>
+    <div class="cat">PLATFORM</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Force Majeure in Game Contracts: When the Unexpected Strikes</div>
+    <div class="cat">FORCE MAJEURE</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Material Breach & Cure Periods: What Can Get You Fired (and How to Fight Back)</div>
+    <div class="cat">BREACH</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Porting Rights & Costs: The Hidden Cost Center</div>
+    <div class="cat">PORTING</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">AI & Generative Content Clauses: The New Frontier</div>
+    <div class="cat">AI CLAUSES</div>
+  </div>
+
+  <div class="card-locked">
+    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <div class="title">Jurisdiction & Governing Law: Why Where You Sign Matters</div>
+    <div class="cat">JURISDICTION</div>
+  </div>
+
+</section>
+
+<!-- CTA -->
+<section class="wrap">
+  <div class="cta">
+    <h3>Have a contract to review?</h3>
+    <p>I've been on both sides of these deals. A 30-minute call is free.</p>
+    <a href="/#contact" class="btn-primary">Book a discovery call →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>SPRITZ CONSULTING · RESOURCES</span>
+    <span>© 2026 SPRITZ CONSULTING</span>
+  </div>
+</footer>
+
+</body>
+</html>
