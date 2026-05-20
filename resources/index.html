@@ -518,11 +518,55 @@ html{
 @media (max-width: 640px){
   .footer-meta{ font-size: 12px; }
 }
+
+/* Aurora — drifting lime washes behind content */
+.bg-aurora{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-aurora .blob{
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  opacity: 0.55;
+}
+.bg-aurora .blob-1{
+  width: 82vmax; height: 52vmax;
+  left: -24vmax; top: -22vmax;
+  background: radial-gradient(ellipse 60% 50% at center, color-mix(in srgb, var(--clay) 65%, transparent), transparent 68%);
+  animation: aurora-1 34s ease-in-out infinite alternate;
+}
+.bg-aurora .blob-2{
+  width: 50vmax; height: 72vmax;
+  right: -18vmax; bottom: -20vmax;
+  background: radial-gradient(ellipse 50% 60% at center, color-mix(in srgb, var(--clay) 48%, transparent), transparent 70%);
+  animation: aurora-2 44s ease-in-out infinite alternate;
+  opacity: 0.45;
+}
+html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
+@keyframes aurora-1{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(28vw, 18vh) rotate(32deg) scale(1.15); }
+}
+@keyframes aurora-2{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(-22vw, -14vh) rotate(-40deg) scale(1.2); }
+}
+@media (prefers-reduced-motion: reduce){
+  .bg-aurora .blob{ animation: none; }
+}
 </style>
 </head>
 <body>
 
 <a class="skip" href="#main">Skip to content</a>
+<div class="bg-aurora" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+</div>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="site-header" id="site-header">
