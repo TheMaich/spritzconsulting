@@ -536,11 +536,15 @@ html{
   font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
-  transition: background-color .25s var(--ease), transform .25s var(--ease);
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+  will-change: transform;
+  transition: background-color .25s var(--ease), transform .2s var(--ease);
 }
 .res-card.is-unlocked:hover .res-cta{
   background: var(--clay-deep);
-  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce){
+  .res-cta{ transform: none !important; }
 }
 .res-card.is-locked{
   opacity: 0.55;
@@ -973,6 +977,26 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && menu.dataset.open === 'true') setMenu(false);
   });
+
+  // Magnetic pull on the Read button (cursor-aware, desktop only)
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hoverCapable  = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (hoverCapable && !reducedMotion) {
+    const pull = 0.22;
+    document.querySelectorAll('.res-cta').forEach(btn => {
+      btn.addEventListener('pointermove', (e) => {
+        const r  = btn.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top  + r.height / 2;
+        btn.style.setProperty('--mx', ((e.clientX - cx) * pull) + 'px');
+        btn.style.setProperty('--my', ((e.clientY - cy) * pull) + 'px');
+      });
+      btn.addEventListener('pointerleave', () => {
+        btn.style.setProperty('--mx', '0px');
+        btn.style.setProperty('--my', '0px');
+      });
+    });
+  }
 
   // Bootstrap language
   let savedLang = null;
