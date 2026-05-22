@@ -698,8 +698,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   text-decoration: none;
   white-space: nowrap;
   transition: background 0.2s, transform 0.2s;
-  transform: translate(var(--mx, 0px), var(--my, 0px));
-  will-change: transform;
 }
 
 .cta-card-btn:hover {
@@ -1082,28 +1080,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   } else {
     applyLang('en');
   }
-})();
-</script>
-
-<script>
-(function() {
-  var mq = window.matchMedia('(hover: hover) and (pointer: fine)');
-  if (!mq.matches) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  document.querySelectorAll('.cta-card-btn').forEach(function(btn) {
-    btn.addEventListener('pointermove', function(e) {
-      var r = btn.getBoundingClientRect();
-      var x = e.clientX - r.left - r.width / 2;
-      var y = e.clientY - r.top - r.height / 2;
-      btn.style.setProperty('--mx', (x * 0.22) + 'px');
-      btn.style.setProperty('--my', (y * 0.22) + 'px');
-    });
-    btn.addEventListener('pointerleave', function() {
-      btn.style.setProperty('--mx', '0px');
-      btn.style.setProperty('--my', '0px');
-    });
-  });
 })();
 </script>
 
