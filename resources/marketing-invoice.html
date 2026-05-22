@@ -712,6 +712,30 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     transition: background 0.2s;
   }
 }
+
+.cta-card-text {
+  transition: transform 0.3s ease-out;
+}
+
+.cta-card:hover .cta-card-text {
+  transform: translateY(-4px);
+}
+
+.cta-card-btn svg {
+  transition: transform 0.3s ease-out;
+}
+
+.cta-card-btn:hover svg {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-card-text,
+  .cta-card-btn svg {
+    transition: none !important;
+    transform: none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -798,7 +822,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     </div>
     <div class="cta-card-action">
       <a href="https://spritzconsulting.com/#contact" class="cta-card-btn">
-        Book a call →
+        Book a call <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
       </a>
     </div>
   </div>
