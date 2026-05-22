@@ -628,6 +628,48 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-2);
   line-height: 1.65;
 }
+.tldr {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--clay);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin: 48px 0;
+}
+
+.tldr-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--clay);
+  margin-bottom: 12px;
+}
+
+.tldr ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tldr li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding-left: 16px;
+  position: relative;
+}
+
+.tldr li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--clay);
+  font-weight: 700;
+}
+
 .cta-card {
   position: relative;
   overflow: hidden;
@@ -848,6 +890,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <p>Get a games industry lawyer to review the contract before you sign. Not a general commercial solicitor, and not a friend who happens to have a law degree. Someone who has read publishing agreements before and knows where the problems tend to hide.</p>
     <p>The cost of a contract review is a fraction of what you'll wish you'd spent if the contract turns out to be badly structured. I've had this conversation with developers at several stages of their deal. It's a much easier conversation before signing than after.</p>
   </article>
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <ul>
+      <li>Net Revenue: get the complete list of deductions and run the worst-case waterfall before signing.</li>
+      <li>The Licence: check whether it's time-limited, what the publisher can do with your game, and what triggers reversion.</li>
+      <li>The Cure Period: 30 days minimum, 60 is better. Some contracts attach IP forfeiture to an uncured breach.</li>
+      <li>Get a games industry lawyer to review the contract. Not a general solicitor.</li>
+    </ul>
+  </div>
+
   <div class="cta-card">
     <div class="cta-card-text">
       <p class="cta-card-headline">

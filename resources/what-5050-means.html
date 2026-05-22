@@ -628,6 +628,48 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-2);
   line-height: 1.65;
 }
+.tldr {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--clay);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin: 48px 0;
+}
+
+.tldr-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--clay);
+  margin-bottom: 12px;
+}
+
+.tldr ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tldr li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding-left: 16px;
+  position: relative;
+}
+
+.tldr li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--clay);
+  font-weight: 700;
+}
+
 .cta-card {
   position: relative;
   overflow: hidden;
@@ -844,6 +886,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>The split percentage is a secondary question. You can have a 70/30 in your favour and still wait years for your first payment if the recoupment pool is large enough and the net revenue calculation strips out enough before it gets to you.</p>
       <p>The number to focus on first is the Net Revenue definition. Get the complete list of deductions in writing. Run the waterfall for your worst-case sales scenario. That result is your floor. The split percentage only matters once you know what it's applied to.</p>
     </article>
+
+    <div class="tldr">
+      <div class="tldr-label">TL;DR</div>
+      <ul>
+        <li>The split percentage is the least useful number in a publishing deal.</li>
+        <li>What matters is Net Revenue: the list of deductions applied before the split kicks in.</li>
+        <li>In a full-service deal, that list includes the advance, porting, QA, localisation, marketing, and sometimes a markup on top.</li>
+        <li>Ask the publisher to model three sales scenarios before you agree to anything.</li>
+      </ul>
+    </div>
 
     <div class="cta-card">
       <div class="cta-card-text">

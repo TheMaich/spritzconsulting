@@ -628,6 +628,48 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-2);
   line-height: 1.65;
 }
+.tldr {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--clay);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin: 48px 0;
+}
+
+.tldr-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--clay);
+  margin-bottom: 12px;
+}
+
+.tldr ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tldr li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding-left: 16px;
+  position: relative;
+}
+
+.tldr li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--clay);
+  font-weight: 700;
+}
+
 .cta-card {
   position: relative;
   overflow: hidden;
@@ -847,6 +889,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>If you build in a termination right for publisher breach with a clear list of what that covers, you have a genuine exit option that doesn't depend on the other side being cooperative or feeling guilty about it. That's a different kind of leverage than goodwill.</p>
       <p>Think about exit before you sign. Not because you expect it to go wrong. Because the time to negotiate a way out is before you're inside.</p>
     </article>
+
+    <div class="tldr">
+      <div class="tldr-label">TL;DR</div>
+      <ul>
+        <li>A perpetual contract with no publication obligation lets a publisher hold your rights without actively selling the game.</li>
+        <li>Push for: a fixed or renewable term, a publication deadline (12-18 months), a commercial inactivity trigger (12 months off-sale), and an insolvency provision.</li>
+        <li>Publisher breach definitions are usually vague. Developer breach definitions are specific. Push to make them equivalent.</li>
+        <li>The time to negotiate your way out is before you're inside.</li>
+      </ul>
+    </div>
 
     <div class="cta-card">
       <div class="cta-card-text">

@@ -628,6 +628,48 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-2);
   line-height: 1.65;
 }
+.tldr {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--clay);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin: 48px 0;
+}
+
+.tldr-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--clay);
+  margin-bottom: 12px;
+}
+
+.tldr ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tldr li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  padding-left: 16px;
+  position: relative;
+}
+
+.tldr li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--clay);
+  font-weight: 700;
+}
+
 .cta-card {
   position: relative;
   overflow: hidden;
@@ -844,6 +886,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>Don't ask "do I keep my IP?" That question gets a yes in almost every pitch, regardless of what the contract actually says. Ask instead: what does my IP ownership let me do if this relationship doesn't work out?</p>
       <p>If the honest answer is "not much," that's not necessarily a deal-breaker. It depends on the publisher, the relationship, the deal structure, and what you're getting in return. But it should be a conscious decision, not something you discover two years later when you want to make a remaster and find out you need their sign-off.</p>
     </article>
+
+    <div class="tldr">
+      <div class="tldr-label">TL;DR</div>
+      <ul>
+        <li>"You keep your IP" is not the same as controlling it.</li>
+        <li>Three things determine whether ownership means anything: scope, duration, and reversion.</li>
+        <li>Without reversion clauses, a publisher can hold your rights indefinitely and do nothing with them.</li>
+        <li>Don't ask "do I keep my IP?" Ask: what can I do with it if this relationship stops working?</li>
+      </ul>
+    </div>
 
     <div class="cta-card">
       <div class="cta-card-text">
