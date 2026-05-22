@@ -629,28 +629,90 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-2);
   line-height: 1.65;
 }
-.article-wrap .cta{
-  margin-top: 72px;
-  padding-top: 44px;
-  border-top: 1px solid var(--rule);
+.cta-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  padding: 48px;
+  margin: 64px auto 0;
+  max-width: 860px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
 }
-.article-wrap .cta p{
-  font-size: 14px;
-  color: var(--ink-2);
-  margin-bottom: 18px;
+
+@media (max-width: 640px) {
+  .cta-card {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+    gap: 24px;
+  }
 }
-.article-wrap .cta a.btn{
-  display: inline-block;
+
+.cta-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 80% at 100% 50%,
+    color-mix(in srgb, var(--clay) 8%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.cta-card-text {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-card-headline {
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0;
+  font-variation-settings: "opsz" 32;
+}
+
+.cta-card-action {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.cta-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: var(--clay);
   color: var(--paper);
-  padding: 12px 24px;
-  border-radius: 100px;
-  font-size: 14px;
+  font-family: var(--sans);
+  font-size: 15px;
   font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 100px;
   text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.2s;
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+  will-change: transform;
 }
-.article-wrap .cta a.btn:hover{ background: var(--clay-deep); }
-html[data-theme="light"] .article-wrap .cta a.btn{ color: #fff; }
+
+.cta-card-btn:hover {
+  background: var(--clay-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-card-btn {
+    transform: none !important;
+    transition: background 0.2s;
+  }
+}
 </style>
 </head>
 <body>
@@ -733,9 +795,18 @@ html[data-theme="light"] .article-wrap .cta a.btn{ color: #fff; }
     <p>Get a games industry lawyer to review the contract before you sign. Not a general commercial solicitor, and not a friend who happens to have a law degree. Someone who has read publishing agreements before and knows where the problems tend to hide.</p>
     <p>The cost of a contract review is a fraction of what you'll wish you'd spent if the contract turns out to be badly structured. I've had this conversation with developers at several stages of their deal. It's a much easier conversation before signing than after.</p>
   </article>
-  <div class="cta" style="margin-top:72px;padding-top:44px;border-top:1px solid var(--rule);">
-    <p style="font-size:14px;color:var(--ink-2);margin-bottom:18px;">I've reviewed a lot of publishing contracts. If you want a non-lawyer read on what's in yours before you get legal involved, a 30-minute call is free.</p>
-    <a class="btn" href="https://spritzconsulting.com/#contact" style="display:inline-block;background:var(--clay);color:var(--paper);padding:12px 24px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;">Book a discovery call</a>
+  <div class="cta-card">
+    <div class="cta-card-text">
+      <p class="cta-card-headline">
+        Want to talk through this?<br>
+        Book a 30-minute discovery call.
+      </p>
+    </div>
+    <div class="cta-card-action">
+      <a href="https://spritzconsulting.com/#contact" class="cta-card-btn">
+        Book a call →
+      </a>
+    </div>
   </div>
 </main>
 
@@ -987,6 +1058,28 @@ html[data-theme="light"] .article-wrap .cta a.btn{ color: #fff; }
   } else {
     applyLang('en');
   }
+})();
+</script>
+
+<script>
+(function() {
+  var mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+  if (!mq.matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  document.querySelectorAll('.cta-card-btn').forEach(function(btn) {
+    btn.addEventListener('pointermove', function(e) {
+      var r = btn.getBoundingClientRect();
+      var x = e.clientX - r.left - r.width / 2;
+      var y = e.clientY - r.top - r.height / 2;
+      btn.style.setProperty('--mx', (x * 0.22) + 'px');
+      btn.style.setProperty('--my', (y * 0.22) + 'px');
+    });
+    btn.addEventListener('pointerleave', function() {
+      btn.style.setProperty('--mx', '0px');
+      btn.style.setProperty('--my', '0px');
+    });
+  });
 })();
 </script>
 
