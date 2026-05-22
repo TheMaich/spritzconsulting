@@ -201,13 +201,6 @@ html{
 @media (prefers-reduced-motion: reduce){
   .wordmark .dot{ animation: none; }
 }
-.wordmark .role{
-  font-family: var(--mono);
-  font-size: 13.5px; font-weight: 400;
-  color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase;
-  padding-left: 12px; margin-left: 2px;
-  border-left: 1px solid var(--rule);
-}
 .nav{
   display: flex; align-items: center; gap: 4px;
 }
@@ -372,12 +365,12 @@ html{
   margin-top: 0;
 }
 .footer-grid{
-  padding-bottom: clamp(40px, 6vw, 72px);
+  padding-bottom: clamp(32px, 5vw, 48px);
 }
 .say-hi{
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 6vw, 96px);
+  font-size: clamp(40px, 6vw, 72px);
   font-variation-settings: "opsz" 80;
   line-height: 0.96;
   letter-spacing: -0.03em;
@@ -453,7 +446,6 @@ html{
   align-items: start;
   transition: background-color .25s var(--ease);
 }
-.res-card[hidden]{ display: none; }
 .res-card:hover{
   background-color: color-mix(in srgb, var(--clay) 4%, transparent);
 }
@@ -499,20 +491,6 @@ html{
   margin: 0;
   max-width: 70ch;
 }
-.res-link{
-  font-family: var(--mono);
-  font-size: 14px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  margin-top: 4px;
-  transition: color .25s var(--ease), transform .25s var(--ease);
-  display: inline-block;
-}
-.res-card:hover .res-link{
-  color: var(--clay);
-  transform: translateX(3px);
-}
 .res-card.is-unlocked .res-body{
   flex-direction: row;
   align-items: center;
@@ -546,23 +524,14 @@ html{
 @media (prefers-reduced-motion: reduce){
   .res-cta{ transform: none !important; }
 }
-.res-card.is-locked{
-  opacity: 0.55;
-  cursor: default;
-}
-.res-card.is-locked .res-title{ color: var(--ink-2); }
-.res-card.is-locked:hover .res-title{ color: var(--ink-2); }
-.res-lock{
-  display: inline-block;
+.res-more{
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--clay);
-  border: 1px solid color-mix(in srgb, var(--clay) 45%, transparent);
-  padding: 3px 8px;
-  border-radius: 100px;
-  margin-bottom: 10px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+  padding: clamp(28px, 4vw, 44px) 0;
 }
 
 @media (max-width: 720px){
@@ -570,6 +539,10 @@ html{
     grid-template-columns: 1fr;
     gap: 10px;
     padding: 28px 0;
+  }
+  .res-card.is-unlocked .res-body{
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -594,7 +567,7 @@ html{
   position: absolute;
   border-radius: 50%;
   will-change: transform;
-  opacity: 0.55;
+  opacity: 0.42;
 }
 .bg-aurora .blob-1{
   width: 82vmax; height: 52vmax;
@@ -607,9 +580,9 @@ html{
   right: -18vmax; bottom: -20vmax;
   background: radial-gradient(ellipse 50% 60% at center, color-mix(in srgb, var(--clay) 48%, transparent), transparent 70%);
   animation: aurora-2 44s ease-in-out infinite alternate;
-  opacity: 0.45;
+  opacity: 0.34;
 }
-html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
+html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
 @keyframes aurora-1{
   0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
   100% { transform: translate(28vw, 18vh) rotate(32deg) scale(1.15); }
@@ -636,7 +609,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="wrap bar">
     <a href="/" class="wordmark" aria-label="Spritz Consulting, home">
       <span>spritz<span class="dot" aria-hidden="true"></span>consulting</span>
-      <span class="role"></span>
     </a>
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
@@ -675,14 +647,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <main id="main">
   <section class="resources-hero wrap">
     <span class="kicker" data-i18n="res.kicker">05 RESOURCES</span>
-    <h2 class="resources-h2" data-i18n="res.h1">Guides from the production side.</h2>
+    <h1 class="resources-h2" data-i18n="res.h1">Guides from the production side.</h1>
     <p class="resources-deck" data-i18n="res.deck">Practical writing on publishing contracts, production, and platform delivery. Written from experience, not from a template.</p>
   </section>
 
   <section class="resources-list wrap">
     <a href="/resources/what-5050-means.html" class="res-card is-unlocked">
       <div class="res-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
       </div>
       <div class="res-body">
         <div class="res-text">
@@ -692,46 +664,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <span class="res-cta" data-i18n="res.read">Read →</span>
       </div>
     </a>
-    <div class="res-card is-locked" aria-disabled="true" hidden>
-      <div class="res-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card2.title">You own the IP. What for?</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card2.desc">There's a version of 'you keep your game' that means almost nothing in practice. Ownership and control are different things.</p>
-      </div>
-    </div>
-    <div class="res-card is-locked" aria-disabled="true" hidden>
-      <div class="res-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </div>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card3.title">When your publisher goes quiet</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card3.desc">Nobody negotiates for year three. That's usually when the contract structure starts to matter.</p>
-      </div>
-    </div>
-    <div class="res-card is-locked" aria-disabled="true" hidden>
-      <div class="res-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
-      </div>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card4.title">Marketing is part of the deal. So is the invoice.</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card4.desc">In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share.</p>
-      </div>
-    </div>
-    <div class="res-card is-locked" aria-disabled="true" hidden>
-      <div class="res-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-      </div>
-      <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card5.title">Three things to read before you sign</h3>
-        <span class="res-lock" data-i18n="res.lock">Coming soon</span>
-        <p class="res-desc" data-i18n="res.card5.desc">You've got the offer. You probably don't have a lawyer yet. Here's where to start reading.</p>
-      </div>
-    </div>
+    <p class="res-more" data-i18n="res.more">More guides in production.</p>
   </section>
 </main>
 
@@ -817,15 +750,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'res.read': 'Leggi →',
     'res.card1.title': 'Cosa significa davvero \'50/50\'',
     'res.card1.desc': 'La revenue split è il numero di cui tutti parlano nel pitch. È anche probabilmente il numero meno utile dell\'intero contratto.',
-    'res.card2.title': 'L\'IP è tuo. Per fare cosa?',
-    'res.card2.desc': 'Esiste una versione di \'tieni il tuo gioco\' che nella pratica non significa quasi nulla. Possesso e controllo sono cose diverse.',
-    'res.card3.title': 'Quando il publisher diventa silenzioso',
-    'res.card3.desc': 'Nessuno negozia pensando al terzo anno. È di solito lì che la struttura del contratto inizia a contare.',
-    'res.card4.title': 'Il marketing fa parte del deal. Anche la fattura.',
-    'res.card4.desc': 'In un deal full-service, il publisher gestisce il marketing. Quel costo di solito esce dalla tua quota.',
-    'res.card5.title': 'Tre cose da leggere prima di firmare',
-    'res.card5.desc': 'Hai ricevuto l\'offerta. Probabilmente non hai ancora un avvocato. Ecco da dove iniziare a leggere.',
-    'res.lock': 'In arrivo',
+    'res.more': 'Altre guide in produzione.',
   };
 
   const FR = {
@@ -852,15 +777,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'res.read': 'Lire →',
     'res.card1.title': 'Ce que \'50/50\' veut vraiment dire',
     'res.card1.desc': 'Le partage des revenus est le chiffre dont tout le monde parle dans le pitch. C\'est aussi probablement le moins utile de tout le contrat.',
-    'res.card2.title': 'Vous gardez l\'IP. Pour quoi faire?',
-    'res.card2.desc': 'Il existe une version de \'vous gardez votre jeu\' qui en pratique ne veut presque rien dire. Possession et contrôle sont deux choses différentes.',
-    'res.card3.title': 'Quand le publisher devient silencieux',
-    'res.card3.desc': 'Personne ne négocie en pensant à la troisième année. C\'est généralement là que la structure du contrat commence à compter.',
-    'res.card4.title': 'Le marketing fait partie du deal. La facture aussi.',
-    'res.card4.desc': 'Dans un deal full-service, le publisher gère votre marketing. Cette dépense sort généralement de votre part.',
-    'res.card5.title': 'Trois choses à lire avant de signer',
-    'res.card5.desc': 'Vous avez l\'offre. Vous n\'avez probablement pas encore d\'avocat. Voici par où commencer.',
-    'res.lock': 'À venir',
+    'res.more': 'D\'autres guides en préparation.',
   };
 
   const ES = {
@@ -887,15 +804,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'res.read': 'Leer →',
     'res.card1.title': 'Qué significa realmente \'50/50\'',
     'res.card1.desc': 'El reparto de ingresos es el número del que todos hablan en el pitch. También es probablemente el número menos útil de todo el contrato.',
-    'res.card2.title': 'Tienes la IP. ¿Para qué?',
-    'res.card2.desc': 'Hay una versión de \'te quedas con tu juego\' que en la práctica no significa casi nada. Propiedad y control son cosas distintas.',
-    'res.card3.title': 'Cuando tu publisher se queda en silencio',
-    'res.card3.desc': 'Nadie negocia pensando en el tercer año. Suele ser ahí donde la estructura del contrato empieza a importar.',
-    'res.card4.title': 'El marketing es parte del trato. La factura también.',
-    'res.card4.desc': 'En un acuerdo full-service, el publisher se encarga del marketing. Esa factura suele salir de tu parte.',
-    'res.card5.title': 'Tres cosas que leer antes de firmar',
-    'res.card5.desc': 'Tienes la oferta. Probablemente aún no tienes abogado. Aquí es donde empezar a leer.',
-    'res.lock': 'Próximamente',
+    'res.more': 'Más guías en producción.',
   };
 
   const DICTS = { it: IT, fr: FR, es: ES };
