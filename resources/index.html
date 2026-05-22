@@ -735,7 +735,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
         <span class="res-cta" data-i18n="res.read">Read →</span>
       </div>
     </a>
-    <div class="res-card" data-category="articles" hidden>
+    <div class="res-card" data-category="articles" data-locked="true" hidden>
       <div class="res-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
       </div>
@@ -1039,6 +1039,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     btn.setAttribute('tabindex', '0');
 
     cards.forEach(function(card) {
+      if (card.dataset.locked === 'true') return;
       var cat = card.dataset.category;
       if (filter === 'all' || cat === filter) {
         card.removeAttribute('hidden');
