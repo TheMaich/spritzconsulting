@@ -641,6 +641,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   grid-template-columns: 1fr auto;
   gap: 32px;
   align-items: center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
 }
 
 @media (max-width: 640px) {
@@ -661,6 +664,35 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     transparent 70%
   );
   pointer-events: none;
+}
+
+.cta-card:hover {
+  transform: scale(1.025);
+  border-color: color-mix(in srgb, var(--clay) 40%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--clay) 20%, transparent),
+    0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent);
+}
+
+.cta-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--clay) 60%, transparent),
+    transparent 40%,
+    color-mix(in srgb, var(--clay) 30%, transparent)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-card:hover::after {
+  opacity: 1;
 }
 
 .cta-card-text {
@@ -711,14 +743,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
 }
 
-.cta-card-text {
-  transition: transform 0.3s ease-out;
-}
-
-.cta-card:hover .cta-card-text {
-  transform: translateY(-4px);
-}
-
 .cta-card-btn svg {
   transition: transform 0.3s ease-out;
 }
@@ -730,6 +754,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (prefers-reduced-motion: reduce) {
   .cta-card-text,
   .cta-card-btn svg {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-card,
+  .cta-card::after {
     transition: none !important;
     transform: none !important;
   }
