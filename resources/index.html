@@ -431,33 +431,64 @@ html{
 
 .res-filters {
   display: flex;
+  width: fit-content;
   gap: 8px;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
+  margin: 0 auto 56px;
+  padding: 5px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper-3);
 }
 
 .res-filter-btn {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  padding: 8px 18px;
-  border-radius: 100px;
-  border: 1px solid var(--rule);
+  appearance: none;
   background: transparent;
-  color: var(--ink-3);
+  font: inherit;
+  color: var(--ink);
+  padding: 13px 48px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: all 0.2s;
+  letter-spacing: -0.005em;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid var(--rule);
+  transition: background 180ms ease,
+              color 180ms ease,
+              border-color 180ms ease,
+              box-shadow 180ms ease;
 }
 
 .res-filter-btn:hover {
-  border-color: var(--clay);
-  color: var(--clay);
+  color: var(--ink);
+  border-color: var(--ink-3);
 }
 
 .res-filter-btn.is-active {
-  background: var(--clay);
+  background: var(--ink);
   color: var(--paper);
-  border-color: var(--clay);
+  border-color: var(--ink);
+}
+
+.res-filter-btn:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .res-filters {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 32px;
+  }
+  .res-filter-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+  }
 }
 
 .res-card[hidden] { display: none; }
@@ -684,11 +715,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     <p class="resources-deck" data-i18n="res.deck">Practical writing on publishing contracts, production, and platform delivery. Written from experience, not from a template.</p>
   </section>
 
-  <div class="res-filters wrap">
-    <button class="res-filter-btn is-active" data-filter="all">All</button>
-    <button class="res-filter-btn" data-filter="articles">Articles</button>
-    <button class="res-filter-btn" data-filter="tools">Tools</button>
-    <button class="res-filter-btn" data-filter="decks">Decks</button>
+  <div class="res-filters" role="tablist" aria-label="Resource type">
+    <button type="button" class="res-filter-btn is-active" role="tab" aria-selected="true" data-filter="all">All</button>
+    <button type="button" class="res-filter-btn" role="tab" aria-selected="false" data-filter="articles" tabindex="-1">Articles</button>
+    <button type="button" class="res-filter-btn" role="tab" aria-selected="false" data-filter="tools" tabindex="-1">Tools</button>
+    <button type="button" class="res-filter-btn" role="tab" aria-selected="false" data-filter="decks" tabindex="-1">Decks</button>
   </div>
 
   <section class="resources-list wrap">
@@ -982,26 +1013,50 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
 
 <script>
 (function() {
-  var btns = document.querySelectorAll('.res-filter-btn');
+  var btns = Array.from(document.querySelectorAll('.res-filter-btn'));
   var cards = document.querySelectorAll('.res-card, .res-more');
+
+  function activate(btn) {
+    var filter = btn.dataset.filter;
+    btns.forEach(function(b) {
+      b.classList.remove('is-active');
+      b.setAttribute('aria-selected', 'false');
+      b.setAttribute('tabindex', '-1');
+    });
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-selected', 'true');
+    btn.setAttribute('tabindex', '0');
+
+    cards.forEach(function(card) {
+      var cat = card.dataset.category;
+      if (filter === 'all' || cat === filter) {
+        card.removeAttribute('hidden');
+      } else {
+        card.setAttribute('hidden', '');
+      }
+    });
+  }
 
   btns.forEach(function(btn) {
     btn.addEventListener('click', function() {
-      var filter = btn.dataset.filter;
-
-      btns.forEach(function(b) {
-        b.classList.remove('is-active');
-      });
-      btn.classList.add('is-active');
-
-      cards.forEach(function(card) {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.removeAttribute('hidden');
-        } else {
-          card.setAttribute('hidden', '');
-        }
-      });
+      activate(btn);
     });
+  });
+
+  document.querySelector('.res-filters').addEventListener('keydown', function(e) {
+    var idx = btns.indexOf(document.activeElement);
+    if (idx === -1) return;
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      activate(btns[(idx + 1) % btns.length]);
+      btns[(idx + 1) % btns.length].focus();
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      var prev = (idx - 1 + btns.length) % btns.length;
+      activate(btns[prev]);
+      btns[prev].focus();
+    }
   });
 })();
 </script>
