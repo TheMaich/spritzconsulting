@@ -439,6 +439,7 @@ html{
 .resources-list{
   padding-top: clamp(24px, 3vw, 40px);
   padding-bottom: 0;
+  margin-bottom: 0;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--rule);
@@ -510,6 +511,35 @@ html{
 }
 .res-card:hover .res-link{
   color: var(--clay);
+  transform: translateX(3px);
+}
+.res-card.is-unlocked .res-body{
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+}
+.res-text{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.res-cta{
+  flex-shrink: 0;
+  align-self: center;
+  background: var(--clay);
+  color: var(--paper);
+  border-radius: 100px;
+  padding: 12px 24px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color .25s var(--ease), transform .25s var(--ease);
+}
+.res-card.is-unlocked:hover .res-cta{
+  background: var(--clay-deep);
   transform: translateX(3px);
 }
 .res-card.is-locked{
@@ -651,9 +681,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
       </div>
       <div class="res-body">
-        <h3 class="res-title" data-i18n="res.card1.title">What '50/50' actually means</h3>
-        <p class="res-desc" data-i18n="res.card1.desc">The revenue split is the number everyone talks about in the pitch. It is also probably the least useful number in the whole contract.</p>
-        <span class="res-link" data-i18n="res.read">Read →</span>
+        <div class="res-text">
+          <h3 class="res-title" data-i18n="res.card1.title">What '50/50' actually means</h3>
+          <p class="res-desc" data-i18n="res.card1.desc">The revenue split is the number everyone talks about in the pitch. It is also probably the least useful number in the whole contract.</p>
+        </div>
+        <span class="res-cta" data-i18n="res.read">Read →</span>
       </div>
     </a>
     <div class="res-card is-locked" aria-disabled="true" hidden>

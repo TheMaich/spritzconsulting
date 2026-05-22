@@ -369,7 +369,7 @@ html{
   border-top: 1px solid var(--rule);
   padding-top: clamp(60px, 8vw, 96px);
   padding-bottom: 40px;
-  margin-top: clamp(64px, 10vw, 120px);
+  margin-top: 0;
 }
 .footer-grid{
   padding-bottom: clamp(40px, 6vw, 72px);
@@ -563,13 +563,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .article-wrap{
   max-width: 860px;
   margin: 0 auto;
-  padding: 64px 32px 96px;
+  margin-bottom: 0;
+  padding: 64px 32px 0;
 }
 .article-wrap article{ font-size: 18px; line-height: 1.78; }
 .article-wrap .category{
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 13px;
+  letter-spacing: 0.14em;
   color: var(--clay);
   margin-bottom: 20px;
 }
@@ -593,11 +594,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border-bottom: 1px solid var(--rule);
   margin-bottom: 44px;
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  letter-spacing: 0.08em;
   color: var(--ink-3);
 }
-.article-wrap .meta b{ color: var(--ink-2); font-weight: 400; }
+.article-wrap .meta b{ color: var(--ink); font-weight: 400; font-size: 12px; }
 .article-wrap .deck{
   font-size: 19px;
   line-height: 1.65;
