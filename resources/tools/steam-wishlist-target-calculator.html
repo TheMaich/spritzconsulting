@@ -1166,28 +1166,51 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   right: 0;
 }
 @media (max-width: 640px){
-  #scenario-card .scenario-strong{ display: none; }
-}
-@media (max-width: 768px){
-  .calc-result-wrap.is-sticky #scenario-card{
-    padding: 12px 16px;
-    gap: 4px;
+  .calc-result-wrap.is-sticky #scenario-card {
+    padding: 10px 16px;
+    gap: 2px;
+    border-bottom: 1px solid var(--rule);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
-  .calc-result-wrap.is-sticky #scenario-card .calc-result-label{
-    font-size: clamp(16px, 3.4vw, 20px);
+  .calc-result-wrap.is-sticky #scenario-card .calc-result-label {
+    font-size: clamp(11px, 2.8vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    flex: 1;
+    min-width: 0;
   }
-  .calc-result-wrap.is-sticky #scenario-card .scenario-grid{
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .calc-result-wrap.is-sticky #scenario-card .recoup-tier-value{
-    font-size: clamp(30px, 5vw, 44px);
-  }
-  .calc-result-wrap.is-sticky #scenario-card .scenario-strong .recoup-tier-value{
-    font-size: clamp(20px, 3vw, 30px);
-  }
-  .calc-result-wrap.is-sticky #scenario-card .recoup-tier-sub{
+  .calc-result-wrap.is-sticky #scenario-card .calc-result-label::before,
+  .calc-result-wrap.is-sticky #scenario-card .calc-result-label::after {
     display: none;
+  }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-grid {
+    display: contents;
+  }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-strong,
+  .calc-result-wrap.is-sticky #scenario-card .recoup-tier-label,
+  .calc-result-wrap.is-sticky #scenario-card .recoup-tier-sub,
+  .calc-result-wrap.is-sticky #scenario-card .calc-copy-btn {
+    display: none;
+  }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-median {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-median .recoup-tier-value {
+    font-size: clamp(28px, 7vw, 38px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    margin: 0;
+    text-align: right;
   }
 }
 .recoup-grid{
@@ -1582,7 +1605,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
 
       <div class="calc-nav-wrap">
-        <a href="/resources/tools/publishing-recoup-calculator.html" class="calc-nav-btn calc-nav-back">← Publishing Recoup Calculator</a>
+        <a href="/resources/tools/steam-follower-velocity-calculator.html" class="calc-nav-btn calc-nav-back">← Steam Follower Velocity Calculator</a>
+        <a href="/resources/tools/publishing-recoup-calculator.html" class="calc-nav-btn">Publishing Recoup Calculator →</a>
       </div>
 
       <div class="calc-notes">

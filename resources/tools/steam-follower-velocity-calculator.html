@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Publisher's Game Budget Calculator — Spritz Consulting</title>
+<title>Steam Follower Velocity Calculator | Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -13,12 +13,16 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Estimate your total game project budget including development, publisher markup, marketing and services. A free tool from Spritz Consulting." />
+<meta name="description" content="Project your Steam follower velocity from your page open date to your launch date. See if you're on track to hit your wishlist target. A free tool from Spritz Consulting." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
 
-<meta property="og:image" content="/assets/Publisher_s_Game_Budget_Calculator.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Steam Follower Velocity Calculator | Spritz Consulting">
+<meta property="og:description" content="Project your Steam follower velocity from page open to launch. See if you're on track to hit your wishlist target.">
+<meta property="og:url" content="https://spritzconsulting.com/resources/tools/steam-follower-velocity-calculator.html">
+<meta property="og:image" content="/assets/Steam_Follower_Velocity_Calculator.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
@@ -57,6 +61,8 @@
   --clay-deep:#C4970A;
   --clay-soft:#2A1F05;
   --accent-2:#FF2EC8;
+  --danger:#FF5B5B;
+  --success:#4BC86E;
   --grain-blend: screen;
   --grain-opacity: 0.05;
   --shadow-sm: 0 1px 0 rgba(0,0,0,0.55), 0 2px 8px -2px rgba(229,180,21,0.22);
@@ -76,6 +82,8 @@ html[data-theme="light"]{
   --clay-deep:#6B5000;
   --clay-soft:#F3E4A8;
   --accent-2:#BE1383;
+  --danger:#C53030;
+  --success:#2F855A;
   --grain-blend: multiply;
   --grain-opacity: 0.05;
   --shadow-sm: 0 1px 0 rgba(10,11,14,0.07), 0 2px 6px -2px rgba(138,102,0,0.12);
@@ -354,7 +362,6 @@ html{
   color: var(--clay);
 }
 
-/* Footer */
 .site-footer{
   padding-top: clamp(60px, 8vw, 96px);
   padding-bottom: 40px;
@@ -397,109 +404,6 @@ html{
 .footer-meta .links a:hover{ color: var(--clay); }
 .footer-meta .copy{ color: var(--ink-3); }
 
-/* Resources page */
-.resources-hero{
-  padding-top: clamp(48px, 6vw, 88px);
-  padding-bottom: clamp(32px, 4vw, 56px);
-}
-.resources-hero .kicker{
-  margin-bottom: 22px;
-}
-.resources-h2{
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(40px, 5.4vw, 76px);
-  font-variation-settings: "opsz" 80;
-  line-height: 1.0;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  margin: 0 0 22px;
-  text-wrap: balance;
-  max-width: 22ch;
-}
-.resources-deck{
-  font-size: clamp(16px, 1.2vw, 19px);
-  color: var(--ink-2);
-  max-width: 62ch;
-  line-height: 1.55;
-  margin: 0;
-}
-
-.resources-list{
-  padding-top: clamp(24px, 3vw, 40px);
-  padding-bottom: clamp(60px, 9vw, 120px);
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--rule);
-}
-.res-card{
-  display: grid;
-  grid-template-columns: 88px 1fr;
-  gap: clamp(16px, 3vw, 36px);
-  padding: clamp(28px, 4vw, 44px) 0;
-  border-bottom: 1px solid var(--rule);
-  align-items: start;
-  transition: background-color .25s var(--ease);
-}
-.res-card:hover{
-  background-color: color-mix(in srgb, var(--clay) 4%, transparent);
-}
-.res-num{
-  font-family: var(--mono);
-  font-size: clamp(22px, 2.2vw, 28px);
-  letter-spacing: 0.04em;
-  color: var(--clay);
-  padding-top: 6px;
-  font-variant-numeric: tabular-nums;
-}
-.res-body{
-  display: flex; flex-direction: column; gap: 12px;
-  min-width: 0;
-}
-.res-title{
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(22px, 2.4vw, 32px);
-  font-variation-settings: "opsz" 36;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-  color: var(--ink);
-  margin: 0;
-  transition: color .25s var(--ease);
-}
-.res-card:hover .res-title{ color: var(--clay); }
-.res-desc{
-  font-size: 16px;
-  color: var(--ink-2);
-  line-height: 1.55;
-  margin: 0;
-  max-width: 70ch;
-}
-.res-link{
-  font-family: var(--mono);
-  font-size: 14px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  margin-top: 4px;
-  transition: color .25s var(--ease), transform .25s var(--ease);
-  display: inline-block;
-}
-.res-card:hover .res-link{
-  color: var(--clay);
-  transform: translateX(3px);
-}
-
-@media (max-width: 720px){
-  .res-card{
-    grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 28px 0;
-  }
-  .res-num{ padding-top: 0; }
-}
-
-/* Header responsive */
 @media (max-width: 960px){
   .nav{ display: none; }
   .menu-toggle{ display: inline-flex; }
@@ -508,7 +412,6 @@ html{
   .footer-meta{ font-size: 12px; }
 }
 
-/* Aurora — drifting lime washes behind content */
 .bg-aurora{
   position: fixed;
   inset: 0;
@@ -601,47 +504,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .article-wrap p{ margin-bottom: 26px; color: var(--ink-2); }
 .article-wrap p strong{ color: var(--ink); font-weight: 500; }
 .article-wrap p em{ color: var(--clay); font-style: italic; }
-.article-wrap h2{
-  counter-increment: h2;
-  font-family: var(--serif);
-  font-size: clamp(26px, 3.4vw, 40px);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  font-variation-settings: "opsz" 40;
-  color: var(--ink);
-  text-transform: none;
-  margin: 72px 0 20px;
-  line-height: 1.12;
-  padding-top: 28px;
-  border-top: 1px solid var(--rule);
-}
-.article-wrap h2::before{
-  content: counter(h2, decimal-leading-zero);
-  display: block;
-  font-family: var(--mono);
-  font-size: 14px;
-  letter-spacing: 0.14em;
-  color: var(--clay);
-  margin-bottom: 14px;
-}
-.article-wrap .note{
-  font-family: var(--serif);
-  font-size: clamp(22px, 2.8vw, 32px);
-  font-weight: 500;
-  line-height: 1.32;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin: 56px 0;
-  padding: 0;
-}
-.article-wrap .note::before{
-  content: "";
-  display: block;
-  width: 44px;
-  height: 3px;
-  background: var(--clay);
-  margin-bottom: 24px;
-}
 
 .cta-card {
   position: relative;
@@ -660,7 +522,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
               border-color 0.3s ease,
               box-shadow 0.3s ease;
 }
-
 @media (max-width: 640px) {
   .cta-card {
     grid-template-columns: 1fr;
@@ -668,19 +529,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     gap: 24px;
   }
 }
-
 .cta-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 60% 80% at 100% 50%,
-    color-mix(in srgb, var(--clay) 8%, transparent),
-    transparent 70%
-  );
+  background: radial-gradient(ellipse 60% 80% at 100% 50%, color-mix(in srgb, var(--clay) 8%, transparent), transparent 70%);
   pointer-events: none;
 }
-
 .cta-card:hover {
   transform: scale(1.025);
   border-color: color-mix(in srgb, var(--clay) 40%, transparent);
@@ -688,33 +543,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     0 0 0 1px color-mix(in srgb, var(--clay) 20%, transparent),
     0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent);
 }
-
-.cta-card::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 17px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--clay) 60%, transparent),
-    transparent 40%,
-    color-mix(in srgb, var(--clay) 30%, transparent)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.cta-card:hover::after {
-  opacity: 1;
-}
-
-.cta-card-text {
-  position: relative;
-  z-index: 1;
-}
-
+.cta-card-text { position: relative; z-index: 1; }
 .cta-card-headline {
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 600;
@@ -724,13 +553,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-bottom: 0;
   font-variation-settings: "opsz" 32;
 }
-
-.cta-card-action {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-}
-
+.cta-card-action { position: relative; z-index: 1; flex-shrink: 0; }
 .cta-card-btn {
   display: inline-flex;
   align-items: center;
@@ -746,43 +569,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   white-space: nowrap;
   transition: background 0.2s, transform 0.2s;
 }
+.cta-card-btn:hover { background: var(--clay-deep); }
+.cta-card-btn svg { transition: transform 0.3s ease-out; }
+.cta-card-btn:hover svg { transform: rotate(45deg); }
 
-.cta-card-btn:hover {
-  background: var(--clay-deep);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-card-btn {
-    transform: none !important;
-    transition: background 0.2s;
-  }
-}
-
-.cta-card-btn svg {
-  transition: transform 0.3s ease-out;
-}
-
-.cta-card-btn:hover svg {
-  transform: rotate(45deg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-card-text,
-  .cta-card-btn svg {
-    transition: none !important;
-    transform: none !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-card,
-  .cta-card::after {
-    transition: none !important;
-    transform: none !important;
-  }
-}
-
-/* Bolder pass: editorial amplification */
 .reading-progress{
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -811,8 +601,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .article-wrap article > *:nth-child(2){ animation-delay: .10s; }
 .article-wrap article > *:nth-child(3){ animation-delay: .15s; }
 .article-wrap article > *:nth-child(4){ animation-delay: .20s; }
-.article-wrap article > *:nth-child(5){ animation-delay: .25s; }
-.article-wrap article > *:nth-child(n+6){ animation-delay: .30s; }
 .calculator > *{
   animation: article-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -827,7 +615,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .calculator > *{ animation: none; }
 }
 
-/* Budget calculator */
 .calc-wrap{
   max-width: 1180px;
   margin: 0 auto;
@@ -877,10 +664,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   overflow: hidden;
   transition: border-color 0.2s;
 }
-
-.calc-input-wrap:focus-within {
-  border-color: var(--clay);
-}
+.calc-input-wrap:focus-within { border-color: var(--clay); }
 
 .calc-currency,
 .calc-suffix {
@@ -892,12 +676,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border-right: 1px solid var(--rule);
   flex-shrink: 0;
 }
-
 .calc-suffix {
   border-right: none;
   border-left: 1px solid var(--rule);
 }
-
 .calc-input {
   flex: 1;
   background: transparent;
@@ -909,15 +691,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink);
   width: 100%;
 }
-
-.calc-input::placeholder {
-  color: var(--ink-3);
-}
-
+.calc-input::placeholder { color: var(--ink-3); }
 .calc-input::-webkit-inner-spin-button,
-.calc-input::-webkit-outer-spin-button {
-  opacity: 0.3;
+.calc-input::-webkit-outer-spin-button { opacity: 0.3; }
+.calc-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(var(--cal-invert, 0.7));
+  cursor: pointer;
 }
+html[data-theme="light"] { --cal-invert: 0.3; }
 
 .calc-presets {
   display: flex;
@@ -925,7 +706,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   gap: 8px;
   margin-top: 4px;
 }
-
 .preset-btn {
   font-family: var(--mono);
   font-size: 14px;
@@ -939,13 +719,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   cursor: pointer;
   transition: border-color 0.2s var(--ease), color 0.2s var(--ease), background 0.2s var(--ease);
 }
-
 .preset-btn:hover {
   border-color: color-mix(in srgb, var(--clay) 70%, var(--rule));
   background: color-mix(in srgb, var(--clay) 8%, var(--paper-3));
   color: var(--clay);
 }
-
 .preset-btn.is-active {
   border-color: var(--clay);
   background: var(--clay);
@@ -984,6 +762,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .calc-result-wrap .calc-result-label::after {
     display: none;
   }
+  .calc-result-wrap .calc-result-sublabel { display: none; }
+  .calc-result-wrap .calc-copy-btn { display: none; }
   .calc-result-wrap .calc-result-value {
     font-size: clamp(28px, 7vw, 38px);
     font-weight: 700;
@@ -995,8 +775,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 .calc-result {
   position: relative;
-  bottom: auto;
-  z-index: auto;
   overflow: hidden;
   background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
   border: 1px solid var(--rule);
@@ -1038,6 +816,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   background: color-mix(in srgb, var(--clay) 35%, transparent);
 }
 
+.calc-result-sublabel {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
 .calc-result-value {
   font-family: var(--serif);
   font-size: clamp(56px, 10vw, 104px);
@@ -1067,39 +854,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transition: border-color 0.2s, color 0.2s;
   padding: 0;
 }
-
-.calc-copy-btn:hover {
-  border-color: var(--ink-2);
-  color: var(--ink);
-}
-
-.calc-copy-btn.is-copied {
-  border-color: var(--clay);
-  color: var(--clay);
-}
-
-.recoup-calc-wrap {
-  display: flex;
-  justify-content: flex-end;
-  max-width: 860px;
-  margin: 0 auto 32px;
-  padding: 0 32px;
-}
-
-@media (max-width: 640px) {
-  .recoup-calc-wrap {
-    justify-content: center;
-  }
-}
+.calc-copy-btn:hover { border-color: var(--ink-2); color: var(--ink); }
+.calc-copy-btn.is-copied { border-color: var(--clay); color: var(--clay); }
 
 .calc-result-breakdown {
   font-family: var(--mono-data);
   font-size: 12px;
   color: var(--ink-2);
   line-height: 1.9;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid color-mix(in srgb, var(--clay) 22%, var(--rule));
+  margin-top: 0;
+  padding-top: 0;
   display: grid;
   gap: 4px;
   font-variant-numeric: tabular-nums;
@@ -1115,100 +879,200 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   text-transform: uppercase;
   font-size: 11px;
 }
-.calc-result-breakdown .row span:last-child{
-  color: var(--ink);
-}
+.calc-result-breakdown .row span:last-child{ color: var(--ink); }
+.gap-positive { color: var(--clay) !important; font-weight: 600; }
+.gap-negative { color: var(--danger) !important; font-weight: 600; }
 
-.calc-result-note{
-  margin: 20px 0 0;
-  padding-top: 16px;
-  border-top: 1px solid color-mix(in srgb, var(--clay) 22%, var(--rule));
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--ink-2);
+.trajectory-card {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 28px 32px;
 }
-.calc-result-note strong{
-  color: var(--ink);
-  font-weight: 500;
-}
-
-.calc-rates {
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  padding: 8px 0 0;
-  margin-top: 8px;
-}
-
-.calc-rates-label {
+.trajectory-label {
   display: flex;
   align-items: center;
   gap: 16px;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(20px, 2.2vw, 24px);
-  font-variation-settings: "opsz" 28;
-  letter-spacing: -0.015em;
+  font-size: clamp(22px, 2.6vw, 28px);
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.02em;
   color: var(--ink);
-  text-transform: none;
-  margin-bottom: 18px;
   line-height: 1.15;
+  margin-bottom: 6px;
 }
-.calc-rates-label::after {
+.trajectory-label::before {
+  content: "Σ";
+  font-family: var(--serif);
+  font-size: 0.9em;
+  color: var(--clay);
+  font-style: italic;
+  font-weight: 400;
+}
+.trajectory-label::after {
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--rule);
+  background: color-mix(in srgb, var(--clay) 35%, transparent);
 }
-
-.rates-grid {
+.trajectory-status {
+  font-family: var(--mono-data);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 18px;
+}
+.trajectory-status.is-positive { color: var(--clay); }
+.trajectory-status.is-negative { color: var(--danger); }
+.trajectory-chart-wrap {
+  width: 100%;
+  position: relative;
+  margin-bottom: 14px;
+}
+#trajectory-chart {
+  width: 100%;
+  height: 320px;
+  display: block;
+}
+.trajectory-legend {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-family: var(--mono-data);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.legend-item { display: inline-flex; align-items: center; gap: 8px; }
+.legend-line { display: inline-block; width: 24px; height: 2px; background: var(--ink); }
+.legend-line-dashed {
+  background-image: linear-gradient(to right, var(--clay) 50%, transparent 50%);
+  background-size: 6px 2px;
+  background-repeat: repeat-x;
+  background-color: transparent;
+}
+.spike-section { margin-top: 18px; }
+.spike-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+.spike-title {
+  font-family: var(--mono-data); font-size: 11px;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+.spike-add-btn {
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.08em; padding: 8px 16px;
+  border-radius: 100px; border: 1px solid var(--rule);
+  background: var(--paper-2); color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.spike-add-btn:hover {
+  border-color: var(--clay); color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 8%, var(--paper-2));
+}
+.spike-add-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.spike-list { display: flex; flex-direction: column; gap: 10px; }
+.spike-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.spike-row select,
+.spike-row input {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+}
+.spike-row select:focus,
+.spike-row input:focus { border-color: var(--clay); }
+.spike-remove {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink-3);
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+}
+.spike-remove:hover { border-color: var(--danger); color: var(--danger); }
+.spike-summary {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  border: 1px solid color-mix(in srgb, var(--clay) 22%, var(--rule));
+  border-radius: 8px;
+  font-family: var(--mono-data);
+  font-size: 12px;
+  display: grid;
+  gap: 6px;
+}
+.spike-summary-row {
+  display: flex; justify-content: space-between; gap: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.spike-summary-row span:first-child {
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.spike-summary-row span:last-child { color: var(--ink); }
+
+@media (max-width: 640px) {
+  .spike-row { grid-template-columns: 1fr 1fr auto; }
+  .spike-row select { grid-column: 1 / -1; }
+  .trajectory-card { padding: 20px 18px; }
+  #trajectory-chart { height: 260px; }
 }
 
-.rate-item {
+.calc-nav-wrap {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding: 12px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--clay) 14%, var(--rule));
+  align-items: center;
+  max-width: 860px;
+  margin: 0 auto 32px;
+  padding: 0 32px;
+  gap: 16px;
 }
-
-.rate-item:first-child {
-  padding-top: 4px;
+.calc-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay);
+  color: var(--paper);
+  border-radius: 100px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
 }
-
-.rate-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.rate-name {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.4;
-  color: var(--ink-2);
-  letter-spacing: -0.005em;
-}
-
-.rate-value {
-  font-family: var(--mono);
-  font-size: 16px;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.rate-name { color: var(--ink-2); }
-
-.rate-value {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--clay);
-  letter-spacing: 0.04em;
+.calc-nav-btn:hover { background: var(--clay-deep); text-decoration: none; }
+@media (max-width: 640px) {
+  .calc-nav-wrap { flex-direction: column; align-items: stretch; }
+  .calc-nav-btn { width: 100%; justify-content: center; }
 }
 
 .calc-notes {
@@ -1261,48 +1125,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   height: 1px;
   background: var(--clay);
 }
-.calc-notes li strong{
-  color: var(--ink);
-  font-weight: 500;
-}
-
-.calc-handoff{
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 22px 26px;
-  background: var(--paper-2);
-  border: 1px solid color-mix(in srgb, var(--clay) 30%, var(--rule));
-  border-radius: 14px;
-}
-.calc-handoff-text{
-  font-size: 15px;
-  color: var(--ink-2);
-  line-height: 1.45;
-  max-width: 52ch;
-}
-.calc-handoff-text strong{ color: var(--ink); font-weight: 500; }
-.calc-handoff-actions{ display: flex; flex-wrap: wrap; gap: 10px; }
-.calc-handoff-btn{
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--clay); color: var(--paper);
-  font-family: var(--sans); font-size: 14px; font-weight: 600;
-  padding: 12px 20px; border-radius: 100px; border: 0;
-  cursor: pointer; text-decoration: none;
-  transition: background 0.2s var(--ease);
-}
-.calc-handoff-btn:hover{ background: var(--clay-deep); }
-.calc-handoff-btn[disabled]{
-  background: var(--paper-3); color: var(--ink-3); cursor: not-allowed;
-}
-.calc-handoff-btn svg{
-  width: 14px; height: 14px; stroke: currentColor; stroke-width: 2;
-  fill: none; stroke-linecap: round; stroke-linejoin: round;
-  transition: transform 0.2s var(--ease);
-}
-.calc-handoff-btn:not([disabled]):hover svg{ transform: translateX(2px); }
+.calc-notes li strong{ color: var(--ink); font-weight: 500; }
 .calc-notes a, .calc-hint a{
   color: var(--clay);
   text-decoration: underline;
@@ -1311,86 +1134,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transition: color 0.2s var(--ease);
 }
 .calc-notes a:hover, .calc-hint a:hover{ color: var(--clay-deep); }
-.calc-handoff-back{
-  display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 18px;
-  font-family: var(--mono); font-size: 13px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink-2);
-  transition: color 0.2s var(--ease);
-}
-.calc-handoff-back:hover{ color: var(--clay); }
 
 @media (max-width: 640px) {
   .calculator { padding: 0; }
   .calc-result-value { font-size: clamp(48px, 14vw, 72px); }
   .calc-result { padding: 24px; }
-  .calc-notes, .calc-rates { padding: 22px 20px; }
+  .calc-notes { padding: 22px 20px; }
   .preset-btn { min-height: 44px; padding: 12px 18px; font-size: 14px; }
-}
-
-.calc-floating {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-left: 2px solid var(--clay);
-  border-radius: 12px;
-  padding: 16px 20px;
-  z-index: 100;
-  min-width: 200px;
-  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.4);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
-
-.calc-floating.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.calc-floating.is-docked {
-  position: absolute;
-  bottom: auto;
-  right: 24px;
-  opacity: 1;
-  transform: none;
-  box-shadow: none;
-}
-
-.calc-floating-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--clay);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.calc-floating-value {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-}
-
-@media (max-width: 640px) {
-  .calc-floating {
-    bottom: 16px;
-    right: 16px;
-    left: 16px;
-    min-width: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .calc-floating {
-    transition: none;
-  }
 }
 </style>
 </head>
@@ -1448,13 +1198,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="article-wrap">
     <article>
       <p class="category">Tools</p>
-      <h1>Publisher's Game Budget <em>Calculator</em></h1>
+      <h1>Steam Follower Velocity <em>Calculator</em></h1>
       <div class="meta">
         <div>Type <b>Calculator</b></div>
-        <div>Topic <b>Budgeting</b></div>
+        <div>Topic <b>Steam Visibility</b></div>
         <div>Updated <b>2026</b></div>
       </div>
-      <p class="deck">Four inputs. One total. Built for the moment a publisher asks: <em>what's the all-in number</em>.</p>
+      <p class="deck">Enter your current Steam followers and launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
     </article>
   </div>
 
@@ -1462,85 +1212,72 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <div class="calculator">
 
       <div class="calc-group">
-        <label class="calc-label" for="dev-budget">Development Budget</label>
-        <div class="calc-hint">This is the number you know best, and the only one entirely in your control. It's also the figure you put in the deck when you pitch to a publisher.</div>
+        <label class="calc-label" for="current-followers">Current Steam Followers</label>
+        <div class="calc-hint">Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.</div>
         <div class="calc-input-wrap">
-          <span class="calc-currency">$</span>
-          <input type="number" id="dev-budget" class="calc-input" placeholder="0" min="0" step="1000">
+          <input type="number" id="current-followers" class="calc-input" placeholder="0" min="0" step="1">
+          <span class="calc-suffix">FOLLOWERS</span>
+        </div>
+        <div class="calc-presets" data-target="current-followers">
+          <button type="button" class="preset-btn" data-value="500">500</button>
+          <button type="button" class="preset-btn" data-value="1000">1K</button>
+          <button type="button" class="preset-btn" data-value="5000">5K</button>
+          <button type="button" class="preset-btn" data-value="10000">10K</button>
         </div>
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="markup">Publisher Markup</label>
-        <div class="calc-hint">This percentage is often buried in the contract definition of Net Revenue. Read the recoupment section carefully before agreeing to any number.</div>
+        <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
+        <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="markup" class="calc-input calc-input-pct" placeholder="0" min="0" max="15" step="0.5">
-          <span class="calc-suffix">%</span>
-        </div>
-        <div class="calc-presets" data-target="markup">
-          <button type="button" class="preset-btn" data-value="0">0%</button>
-          <button type="button" class="preset-btn" data-value="5">5%</button>
-          <button type="button" class="preset-btn" data-value="10">10%</button>
-          <button type="button" class="preset-btn" data-value="15">15%</button>
+          <input type="date" id="page-open-date" class="calc-input">
         </div>
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="marketing">Marketing Budget</label>
-        <div class="calc-hint">Set by the publisher, not by you. Indie titles typically run $50,000 to $200,000; more ambitious projects reach $500,000 or beyond.</div>
+        <label class="calc-label" for="launch-date">Target Launch Date</label>
+        <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
         <div class="calc-input-wrap">
-          <span class="calc-currency">$</span>
-          <input type="number" id="marketing" class="calc-input" placeholder="0" min="0" step="1000">
-        </div>
-        <div class="calc-presets" data-target="marketing">
-          <button type="button" class="preset-btn" data-value="50000">$50k</button>
-          <button type="button" class="preset-btn" data-value="100000">$100k</button>
-          <button type="button" class="preset-btn" data-value="200000">$200k</button>
-          <button type="button" class="preset-btn" data-value="500000">$500k</button>
+          <input type="date" id="launch-date" class="calc-input">
         </div>
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="services">Services Budget</label>
-        <div class="calc-hint">Porting, QA, and localisation. Usually set by the publisher, but worth pressure-testing: which platforms you want to release on, which languages are non-negotiable for you, how many words you have to localize, etc.. Use the rates below to estimate.</div>
+        <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
+        <div class="calc-hint">GameDiscoverCo data puts the median at 10x to 12x for unreleased games. Conservative: 7x. Strong: 14x.</div>
         <div class="calc-input-wrap">
-          <span class="calc-currency">$</span>
-          <input type="number" id="services" class="calc-input" placeholder="0" min="0" step="1000">
+          <input type="number" id="multiplier" class="calc-input" placeholder="10" min="1" max="30" step="0.1" value="10">
+          <span class="calc-suffix">X</span>
         </div>
-        <div class="calc-presets" data-target="services">
-          <button type="button" class="preset-btn" data-value="25000">$25k</button>
-          <button type="button" class="preset-btn" data-value="75000">$75k</button>
-          <button type="button" class="preset-btn" data-value="150000">$150k</button>
-          <button type="button" class="preset-btn" data-value="300000">$300k</button>
+        <div class="calc-presets" data-target="multiplier">
+          <button type="button" class="preset-btn" data-value="7">7x</button>
+          <button type="button" class="preset-btn is-active" data-value="10">10x</button>
+          <button type="button" class="preset-btn" data-value="12">12x</button>
+          <button type="button" class="preset-btn" data-value="14">14x</button>
         </div>
-        <div class="calc-rates">
-          <div class="calc-rates-label">Reference rates for services</div>
-          <div class="rates-grid">
-            <div class="rate-item">
-              <span class="rate-name">Porting (per platform)</span>
-              <span class="rate-value">≈ $20,000</span>
-            </div>
-            <div class="rate-item">
-              <span class="rate-name">Localisation (standard)</span>
-              <span class="rate-value">≈ $0.015 / word</span>
-            </div>
-            <div class="rate-item">
-              <span class="rate-name">Localisation (exotic languages)</span>
-              <span class="rate-value">≈ $0.020 / word</span>
-            </div>
-            <div class="rate-item">
-              <span class="rate-name">QA</span>
-              <span class="rate-value">≈ $25 / hour</span>
-            </div>
-          </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="wishlist-target">Wishlist Target at Launch</label>
+        <div class="calc-hint">Paste the figure from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a>, or enter your target manually.</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="wishlist-target" class="calc-input" placeholder="0" min="0" step="100">
+          <span class="calc-suffix">WISHLISTS</span>
+        </div>
+        <div class="calc-presets" data-target="wishlist-target">
+          <button type="button" class="preset-btn" data-value="10000">10K</button>
+          <button type="button" class="preset-btn" data-value="25000">25K</button>
+          <button type="button" class="preset-btn" data-value="50000">50K</button>
+          <button type="button" class="preset-btn" data-value="100000">100K</button>
         </div>
       </div>
 
       <div class="calc-result-wrap">
         <div class="calc-result" aria-live="polite">
-          <div class="calc-result-label">Total to Recoup</div>
-          <div class="calc-result-value" id="total">$0</div>
-          <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy total to clipboard">
+          <div class="calc-result-label">Followers Needed</div>
+          <div class="calc-result-sublabel">to hit your wishlist target</div>
+          <div class="calc-result-value" id="followers-needed">0</div>
+          <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy followers needed to clipboard">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1549,22 +1286,45 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           </button>
         </div>
       </div>
-      <div class="calc-result-breakdown" id="breakdown"></div>
-      <p class="calc-result-note"><strong>Recoupment.</strong> As a general rule, the developer doesn't see a revenue share until net sales clear this total, but this isn't written in stone. Some deals carve out marketing, tier the recoupment, or apply different rules to different cost buckets. Read the recoupment clause before assuming anything.</p>
 
-      <div class="recoup-calc-wrap">
-        <a href="/resources/tools/publishing-recoup-calculator.html" style="background:var(--clay); color:var(--paper); border-radius:100px; padding:12px 24px; font-weight:600; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-          Publishing Recoup Calculator
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
-        </a>
+      <div class="trajectory-card">
+        <div class="trajectory-label">Follower Trajectory</div>
+        <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
+        <div class="trajectory-chart-wrap">
+          <canvas id="trajectory-chart"></canvas>
+        </div>
+        <div class="trajectory-legend">
+          <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
+          <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target follower equivalent</span>
+        </div>
+        <div class="spike-section">
+          <div class="spike-header">
+            <div class="spike-title">Spike events (max 5)</div>
+            <button type="button" class="spike-add-btn" id="add-spike-btn">+ Add Event</button>
+          </div>
+          <div class="spike-list" id="spike-list"></div>
+        </div>
+        <div class="spike-summary" id="spike-summary" hidden>
+          <div class="spike-summary-row"><span>Total spike boost</span><span id="spike-total-boost">0</span></div>
+          <div class="spike-summary-row"><span>Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
+        </div>
+      </div>
+
+      <div class="calc-result-breakdown" id="breakdown"></div>
+
+      <div class="calc-nav-wrap">
+        <span></span>
+        <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-nav-btn">Steam Wishlist Target Calculator →</a>
       </div>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Publisher math.</strong> Project viability is usually evaluated against 2x the total (company-level break-even) and 3x (growth). You aren't expected to model those targets, but knowing they exist tells you how the publisher reads your budget when the pitch lands on their desk.</li>
-          <li><strong>Estimation only.</strong> Every figure here, including the reference rates, is a working estimate drawn from market averages. Treat the output as a directional indicator, not a contract. Real numbers come from real quotes.</li>
-          <li><strong>Next step.</strong> Once you have a total, run it through the <a href="/resources/tools/publishing-recoup-calculator.html">Publishing Recoup Calculator</a> to see how many units you need to sell to clear recoupment at 1×, 2× and 3×.</li>
+          <li><strong>Where 10x comes from.</strong> GameDiscoverCo surveys of unreleased Steam games show a median of 9.6x to 12x wishlists per follower, with a range of 7x to 20x depending on genre, festival exposure, and marketing activity. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> · <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a></li>
+          <li><strong>Followers are a proxy, not a promise.</strong> Publishers and algorithm alike use follower counts as a visible signal of pre-launch interest. But follower velocity matters more than the absolute number. A game gaining 200 followers per day is a different conversation from one with 10,000 followers accumulated over three years.</li>
+          <li><strong>Spikes are not guaranteed.</strong> Next Fest, demos, and trailers can produce large follower boosts, but results vary enormously by genre, timing, and execution. Use spike estimates conservatively.</li>
+          <li><strong>Estimation only.</strong> Directional indicator, not a forecast. Real planning needs your actual Steamworks data.</li>
+          <li><strong>Next step.</strong> Once you have a wishlist target in mind, run it through the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> to size your launch.</li>
         </ul>
       </div>
 
@@ -1615,7 +1375,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 <script>
 (() => {
-  // Theme toggle
   const THEME_KEY = 'mdn-theme';
   const themeButtons = document.querySelectorAll('[data-theme-target]');
   const applyTheme = (t) => {
@@ -1624,6 +1383,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     themeButtons.forEach(btn => {
       btn.setAttribute('aria-pressed', String(btn.dataset.themeTarget === theme));
     });
+    document.dispatchEvent(new CustomEvent('themechange'));
   };
   applyTheme(document.documentElement.getAttribute('data-theme'));
   themeButtons.forEach(btn => {
@@ -1634,155 +1394,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     });
   });
 
-  // i18n
-  const LANG_KEY = 'mdn-lang';
-  const ORIG = new WeakMap();
-
-  const IT = {
-    'nav.consultancy': 'La Mia Esperienza',
-    'nav.services': 'Servizi',
-    'nav.faq': 'FAQ',
-    'nav.contact': 'Contatti',
-    'nav.resources': 'Risorse',
-    'menu.open': 'Apri menu',
-    'menu.close': 'Chiudi menu',
-    'theme.day': 'Chiaro',
-    'theme.night': 'Scuro',
-    'theme.aria.day': 'Passa al tema chiaro',
-    'theme.aria.night': 'Passa al tema scuro',
-    'theme.aria.group': 'Tema',
-    'lang.aria.group': 'Lingua',
-    'footer.sayhi': 'Fatti sentire, <em>quando vuoi.</em>',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'Profilo LinkedIn',
-    'footer.copy': '© 2026 Spritz Consulting · Tutti i diritti riservati',
-    'res.kicker': '05 RISORSE',
-    'res.h1': 'Guide dal lato produzione.',
-    'res.deck': 'Articoli pratici su contratti di publishing, produzione e platform delivery. Scritti per esperienza, non da template.',
-    'res.read': 'Leggi →',
-    'res.card1.title': 'Cosa significa davvero \'50/50\'',
-    'res.card1.desc': 'La revenue split è il numero di cui tutti parlano nel pitch. È anche probabilmente il numero meno utile dell\'intero contratto.',
-    'res.card2.title': 'L\'IP è tuo. Per fare cosa?',
-    'res.card2.desc': 'Esiste una versione di \'tieni il tuo gioco\' che nella pratica non significa quasi nulla. Possesso e controllo sono cose diverse.',
-    'res.card3.title': 'Quando il publisher diventa silenzioso',
-    'res.card3.desc': 'Nessuno negozia pensando al terzo anno. È di solito lì che la struttura del contratto inizia a contare.',
-    'res.card4.title': 'Titolo articolo qui',
-    'res.card4.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
-    'res.card5.title': 'Titolo articolo qui',
-    'res.card5.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
-  };
-
-  const FR = {
-    'nav.consultancy': 'Mon Parcours',
-    'nav.services': 'Services',
-    'nav.faq': 'FAQ',
-    'nav.contact': 'Contact',
-    'nav.resources': 'Ressources',
-    'menu.open': 'Ouvrir le menu',
-    'menu.close': 'Fermer le menu',
-    'theme.day': 'Clair',
-    'theme.night': 'Sombre',
-    'theme.aria.day': 'Passer au thème clair',
-    'theme.aria.night': 'Passer au thème sombre',
-    'theme.aria.group': 'Thème',
-    'lang.aria.group': 'Langue',
-    'footer.sayhi': 'Écrivez-nous, <em>quand vous voulez.</em>',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'LinkedIn Spritz Consulting',
-    'footer.copy': '© 2026 Spritz Consulting · Tous droits réservés',
-    'res.kicker': '05 RESSOURCES',
-    'res.h1': 'Des guides côté production.',
-    'res.deck': 'Des articles pratiques sur les contrats de publishing, la production et le release management. Écrits depuis l\'expérience, pas depuis un template.',
-    'res.read': 'Lire →',
-    'res.card1.title': 'Ce que \'50/50\' veut vraiment dire',
-    'res.card1.desc': 'Le partage des revenus est le chiffre dont tout le monde parle dans le pitch. C\'est aussi probablement le moins utile de tout le contrat.',
-    'res.card2.title': 'Vous gardez l\'IP. Pour quoi faire?',
-    'res.card2.desc': 'Il existe une version de \'vous gardez votre jeu\' qui en pratique ne veut presque rien dire. Possession et contrôle sont deux choses différentes.',
-    'res.card3.title': 'Quand le publisher devient silencieux',
-    'res.card3.desc': 'Personne ne négocie en pensant à la troisième année. C\'est généralement là que la structure du contrat commence à compter.',
-    'res.card4.title': 'Titre de l\'article ici',
-    'res.card4.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
-    'res.card5.title': 'Titre de l\'article ici',
-    'res.card5.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
-  };
-
-  const ES = {
-    'nav.consultancy': 'Mi Trayectoria',
-    'nav.services': 'Servicios',
-    'nav.faq': 'FAQ',
-    'nav.contact': 'Contacto',
-    'nav.resources': 'Recursos',
-    'menu.open': 'Abrir menú',
-    'menu.close': 'Cerrar menú',
-    'theme.day': 'Claro',
-    'theme.night': 'Oscuro',
-    'theme.aria.day': 'Cambiar a tema claro',
-    'theme.aria.night': 'Cambiar a tema oscuro',
-    'theme.aria.group': 'Tema',
-    'lang.aria.group': 'Idioma',
-    'footer.sayhi': 'Di hola, <em>cuando quieras.</em>',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'LinkedIn de Spritz Consulting',
-    'footer.copy': '© 2026 Spritz Consulting · Todos los derechos reservados',
-    'res.kicker': '05 RECURSOS',
-    'res.h1': 'Guías desde el lado de la producción.',
-    'res.deck': 'Artículos prácticos sobre contratos de publishing, producción y platform delivery. Escritos desde la experiencia, no desde una plantilla.',
-    'res.read': 'Leer →',
-    'res.card1.title': 'Qué significa realmente \'50/50\'',
-    'res.card1.desc': 'El reparto de ingresos es el número del que todos hablan en el pitch. También es probablemente el número menos útil de todo el contrato.',
-    'res.card2.title': 'Tienes la IP. ¿Para qué?',
-    'res.card2.desc': 'Hay una versión de \'te quedas con tu juego\' que en la práctica no significa casi nada. Propiedad y control son cosas distintas.',
-    'res.card3.title': 'Cuando tu publisher se queda en silencio',
-    'res.card3.desc': 'Nadie negocia pensando en el tercer año. Suele ser ahí donde la estructura del contrato empieza a importar.',
-    'res.card4.title': 'Título del artículo aquí',
-    'res.card4.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
-    'res.card5.title': 'Título del artículo aquí',
-    'res.card5.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
-  };
-
-  const DICTS = { it: IT, fr: FR, es: ES };
-  let currentLang = 'en';
-
-  const cacheOriginal = (el) => {
-    let entry = ORIG.get(el);
-    if (entry) return entry;
-    entry = {
-      text: el.textContent,
-      html: el.innerHTML,
-      aria: el.getAttribute('aria-label'),
-    };
-    ORIG.set(el, entry);
-    return entry;
-  };
-
-  const applyLang = (lang) => {
-    currentLang = DICTS[lang] ? lang : 'en';
-    document.documentElement.setAttribute('lang', currentLang);
-
-    const dict = DICTS[currentLang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18n;
-      if (dict) {
-        const val = dict[key];
-        if (val == null) return;
-        el.innerHTML = val;
-      } else {
-        el.innerHTML = orig.html;
-      }
-    });
-    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18nAria;
-      el.setAttribute('aria-label', dict ? (dict[key] ?? orig.aria ?? '') : (orig.aria ?? ''));
-    });
-
-    document.querySelectorAll('[data-lang-target]').forEach(btn => {
-      btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
-    });
-  };
-
-  // Sticky header shadow on scroll
   const header = document.getElementById('site-header');
   const onScroll = () => {
     header.classList.toggle('is-scrolled', window.scrollY > 8);
@@ -1790,7 +1401,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // Reading progress bar
   const progressBar = document.querySelector('.reading-progress span');
   if (progressBar) {
     const updateProgress = () => {
@@ -1804,7 +1414,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     window.addEventListener('resize', updateProgress, { passive: true });
   }
 
-  // Mobile menu
   const openBtn = document.getElementById('menu-open');
   const closeBtn = document.getElementById('menu-close');
   const menu = document.getElementById('mobile-menu');
@@ -1813,11 +1422,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     menu.setAttribute('aria-hidden', String(!open));
     openBtn.setAttribute('aria-expanded', String(open));
     document.body.style.overflow = open ? 'hidden' : '';
-    if (open) {
-      closeBtn.focus();
-    } else {
-      openBtn.focus();
-    }
+    if (open) closeBtn.focus(); else openBtn.focus();
   };
   openBtn.addEventListener('click', () => setMenu(true));
   closeBtn.addEventListener('click', () => setMenu(false));
@@ -1825,42 +1430,41 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && menu.dataset.open === 'true') setMenu(false);
   });
-
-  // Bootstrap language
-  let savedLang = null;
-  try { savedLang = localStorage.getItem(LANG_KEY); } catch (e) {}
-  if (savedLang) {
-    applyLang(savedLang);
-  } else {
-    applyLang('en');
-  }
 })();
 </script>
 
 <script>
 (function() {
-  var devInput = document.getElementById('dev-budget');
-  var markupInput = document.getElementById('markup');
-  var marketingInput = document.getElementById('marketing');
-  var servicesInput = document.getElementById('services');
-  var totalEl = document.getElementById('total');
+  var followersInput = document.getElementById('current-followers');
+  var pageOpenInput = document.getElementById('page-open-date');
+  var launchInput = document.getElementById('launch-date');
+  var multInput = document.getElementById('multiplier');
+  var targetInput = document.getElementById('wishlist-target');
+  var followersNeededEl = document.getElementById('followers-needed');
   var breakdownEl = document.getElementById('breakdown');
+  var statusEl = document.getElementById('trajectory-status');
+  var canvas = document.getElementById('trajectory-chart');
+  var ctx = canvas.getContext('2d');
+  var addSpikeBtn = document.getElementById('add-spike-btn');
+  var spikeList = document.getElementById('spike-list');
+  var spikeSummary = document.getElementById('spike-summary');
+  var spikeTotalBoostEl = document.getElementById('spike-total-boost');
+  var spikeTotalProjEl = document.getElementById('spike-total-projection');
+  var MAX_SPIKES = 5;
 
-  // Tween numeric values between old and new with ease-out-quart over 350ms.
-  // Stores last numeric value on el._rollVal so subsequent calls start from
-  // the current displayed number, not from zero.
   var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function rollTo(el, finalNum, fmt) {
+
+  function rollTo(el, finalNum, fmtFn) {
     if (!isFinite(finalNum)) finalNum = 0;
     if (REDUCE_MOTION) {
       el._rollVal = finalNum;
-      el.textContent = fmt(finalNum);
+      el.textContent = fmtFn(finalNum);
       return;
     }
     if (el._rollRAF) cancelAnimationFrame(el._rollRAF);
     var fromVal = (typeof el._rollVal === 'number' && isFinite(el._rollVal)) ? el._rollVal : 0;
     if (fromVal === finalNum) {
-      el.textContent = fmt(finalNum);
+      el.textContent = fmtFn(finalNum);
       el._rollVal = finalNum;
       return;
     }
@@ -1870,76 +1474,336 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     function tick(now) {
       var t = (now - startTime) / DURATION;
       if (t >= 1) {
-        el.textContent = fmt(finalNum);
+        el.textContent = fmtFn(finalNum);
         el._rollVal = finalNum;
         el._rollRAF = null;
         return;
       }
       var v = fromVal + (finalNum - fromVal) * ease(t);
-      el.textContent = fmt(v);
+      el.textContent = fmtFn(v);
       el._rollRAF = requestAnimationFrame(tick);
     }
     el._rollRAF = requestAnimationFrame(tick);
   }
 
-  function fmt(n) {
-    return '$' + Math.round(n).toLocaleString('en-US');
+  function fmtNum(n) { return Math.round(n).toLocaleString('en-US'); }
+  function fmtDecimal(n) {
+    var rounded = Math.round(n * 10) / 10;
+    return rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   }
 
   function readNum(el) {
-    // Strip thousands separators / currency before parseFloat — when the input
-    // is in formatted display mode (type=text, value="150,000"), parseFloat
-    // would otherwise stop at the comma and return 150.
     var raw = el.value.toString().replace(/[^0-9.]/g, '');
     return Math.max(0, parseFloat(raw) || 0);
   }
 
-  function calculate() {
-    var dev = readNum(devInput);
-    var markupPct = readNum(markupInput);
-    var marketing = readNum(marketingInput);
-    var services = readNum(servicesInput);
+  function parseDate(el) {
+    if (!el.value) return null;
+    var d = new Date(el.value + 'T00:00:00');
+    if (isNaN(d.getTime())) return null;
+    return d;
+  }
 
-    var markupAmt = dev * (markupPct / 100);
-    var total = dev + markupAmt + marketing + services;
+  function daysBetween(d1, d2) {
+    return Math.max(0, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
+  }
 
-    rollTo(totalEl, total, fmt);
+  function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
 
-    var floatingVal = document.getElementById('floating-total');
-    if (floatingVal) {
-      floatingVal.textContent = totalEl.textContent;
+  function drawChart(state) {
+    var dpr = window.devicePixelRatio || 1;
+    var cssW = canvas.clientWidth || 800;
+    var cssH = canvas.clientHeight || 320;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    var ink = getCSSVar('--ink') || '#ECEFF6';
+    var ink3 = getCSSVar('--ink-3') || '#5C6272';
+    var clay = getCSSVar('--clay') || '#E5B415';
+    var rule = getCSSVar('--rule') || '#262A33';
+    var danger = getCSSVar('--danger') || '#FF5B5B';
+    var success = getCSSVar('--success') || '#4BC86E';
+
+    var padL = 64, padR = 24, padT = 18, padB = 36;
+    var W = cssW - padL - padR;
+    var H = cssH - padT - padB;
+
+    if (!state.valid) {
+      ctx.fillStyle = ink3;
+      ctx.font = '12px ui-monospace, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('Awaiting input', cssW / 2, cssH / 2);
+      return;
     }
 
-    function row(label, value) {
-      return '<div class="row"><span>' + label + '</span><span>' + fmt(value) + '</span></div>';
+    var totalDays = Math.max(1, daysBetween(state.today, state.launchDate));
+
+    var sortedSpikes = state.spikes.slice().sort(function(a, b){ return a.day - b.day; });
+
+    var points = [{ day: 0, followers: state.currentFollowers }];
+    var running = state.currentFollowers;
+    var lastDay = 0;
+    for (var s = 0; s < sortedSpikes.length; s++) {
+      var sp = sortedSpikes[s];
+      if (sp.day <= 0 || sp.day > totalDays) continue;
+      running += state.velocity * (sp.day - lastDay);
+      points.push({ day: sp.day, followers: running });
+      running += sp.boost;
+      points.push({ day: sp.day, followers: running });
+      lastDay = sp.day;
     }
-    var lines = [];
-    lines.push(row('Development', dev));
-    lines.push(row('Markup ' + markupPct + '%', markupAmt));
-    lines.push(row('Marketing', marketing));
-    lines.push(row('Services', services));
+    running += state.velocity * (totalDays - lastDay);
+    points.push({ day: totalDays, followers: running });
 
-    breakdownEl.innerHTML = lines.join('');
+    var finalProjection = running;
+    var maxY = Math.max(finalProjection, state.targetEquiv, state.currentFollowers + 100) * 1.15;
+    if (maxY <= 0) maxY = 100;
 
-    var carryBtn = document.getElementById('carry-to-deal');
-    if (carryBtn) {
-      if (total > 0) {
-        carryBtn.disabled = false;
-        carryBtn.dataset.total = Math.round(total);
-      } else {
-        carryBtn.disabled = true;
-      }
+    ctx.strokeStyle = rule;
+    ctx.lineWidth = 1;
+    ctx.font = '10px ui-monospace, monospace';
+    ctx.fillStyle = ink3;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (var i = 0; i <= 4; i++) {
+      var y = padT + (H * i / 4);
+      var val = maxY * (1 - i / 4);
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + W, y);
+      ctx.stroke();
+      ctx.fillText(fmtNum(val), padL - 10, y);
+    }
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    function fmtDate(d) {
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+    ctx.fillText(fmtDate(state.today), padL, padT + H + 12);
+    var midDate = new Date(state.today.getTime() + (state.launchDate - state.today) / 2);
+    ctx.fillText(fmtDate(midDate), padL + W / 2, padT + H + 12);
+    ctx.fillText(fmtDate(state.launchDate), padL + W, padT + H + 12);
+
+    function xAt(days) { return padL + (W * days / totalDays); }
+    function yAt(f) { return padT + H - (H * f / maxY); }
+
+    var hitsTarget = finalProjection >= state.targetEquiv;
+    var fillColor = hitsTarget
+      ? 'rgba(75, 200, 110, 0.10)'
+      : 'rgba(255, 91, 91, 0.10)';
+    ctx.fillStyle = fillColor;
+    ctx.beginPath();
+    ctx.moveTo(xAt(0), padT + H);
+    for (var p = 0; p < points.length; p++) {
+      ctx.lineTo(xAt(points[p].day), yAt(points[p].followers));
+    }
+    ctx.lineTo(xAt(totalDays), padT + H);
+    ctx.closePath();
+    ctx.fill();
+
+    if (state.targetEquiv > 0) {
+      var targetY = yAt(state.targetEquiv);
+      ctx.strokeStyle = clay;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(padL, targetY);
+      ctx.lineTo(padL + W, targetY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = clay;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText('TARGET ' + fmtNum(state.targetEquiv), padL + 6, targetY - 4);
+    }
+
+    ctx.strokeStyle = ink;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (var p2 = 0; p2 < points.length; p2++) {
+      var pt = points[p2];
+      if (p2 === 0) ctx.moveTo(xAt(pt.day), yAt(pt.followers));
+      else ctx.lineTo(xAt(pt.day), yAt(pt.followers));
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle = clay;
+    ctx.fillStyle = clay;
+    ctx.lineWidth = 2;
+    for (var s2 = 0; s2 < sortedSpikes.length; s2++) {
+      var sp2 = sortedSpikes[s2];
+      if (sp2.day <= 0 || sp2.day > totalDays) continue;
+      var sx = xAt(sp2.day);
+      ctx.beginPath();
+      ctx.moveTo(sx, padT + H);
+      ctx.lineTo(sx, padT + H - 10);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(sx, padT + H - 14, 3.5, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
-  [devInput, markupInput, marketingInput, servicesInput].forEach(function(el) {
-    ['input', 'change', 'touchend'].forEach(function(evt) {
+  function getSpikes() {
+    var rows = spikeList.querySelectorAll('.spike-row');
+    var arr = [];
+    var today = new Date(); today.setHours(0,0,0,0);
+    rows.forEach(function(row) {
+      var d = row.querySelector('.spike-date').value;
+      var boost = parseFloat(row.querySelector('.spike-boost').value) || 0;
+      if (!d || boost <= 0) return;
+      var date = new Date(d + 'T00:00:00');
+      var day = Math.round((date - today) / (1000*60*60*24));
+      arr.push({ day: day, boost: boost });
+    });
+    return arr;
+  }
+
+  function calculate() {
+    var current = readNum(followersInput);
+    var pageOpen = parseDate(pageOpenInput);
+    var launch = parseDate(launchInput);
+    var multiplier = readNum(multInput) || 10;
+    var target = readNum(targetInput);
+
+    var today = new Date(); today.setHours(0,0,0,0);
+    var daysSinceOpen = pageOpen ? daysBetween(pageOpen, today) : 0;
+    var daysToLaunch = launch ? daysBetween(today, launch) : 0;
+    var velocity = daysSinceOpen > 0 ? current / daysSinceOpen : 0;
+    var baseProjected = current + velocity * daysToLaunch;
+
+    var spikes = getSpikes();
+    var spikeBoost = spikes.reduce(function(acc, s){ return acc + s.boost; }, 0);
+    var projected = baseProjected + spikeBoost;
+    var estimatedWishlists = projected * multiplier;
+    var targetEquiv = multiplier > 0 ? target / multiplier : 0;
+    var followersNeeded = Math.max(0, targetEquiv - current);
+    var gap = projected - targetEquiv;
+
+    rollTo(followersNeededEl, followersNeeded, fmtNum);
+
+    statusEl.classList.remove('is-positive', 'is-negative');
+    if (!launch) {
+      statusEl.textContent = 'Set a launch date to see your trajectory';
+    } else if (launch < today) {
+      statusEl.textContent = 'Launch date is in the past';
+      statusEl.classList.add('is-negative');
+    } else if (!pageOpen) {
+      statusEl.textContent = 'Add your page open date to calculate velocity';
+    } else if (target <= 0) {
+      statusEl.textContent = daysToLaunch + ' days to launch · set a wishlist target above';
+    } else {
+      var statusText = (gap >= 0 ? 'On track to clear target' : 'Below target by ' + fmtNum(Math.abs(gap)) + ' followers')
+        + ' · ' + daysToLaunch + ' days to launch';
+      statusEl.textContent = statusText;
+      statusEl.classList.add(gap >= 0 ? 'is-positive' : 'is-negative');
+    }
+
+    var rows = [
+      ['Current followers', fmtNum(current)],
+      ['Days since page open', fmtNum(daysSinceOpen)],
+      ['Followers / day', fmtDecimal(velocity)],
+      ['Days to launch', fmtNum(daysToLaunch)],
+      ['Projected followers at launch', fmtNum(projected)],
+      ['Estimated wishlists (x' + multiplier + ')', fmtNum(estimatedWishlists)],
+      ['Wishlist target', fmtNum(target)]
+    ];
+    var gapStr = (gap >= 0 ? '+' : '') + fmtNum(gap);
+    var gapCls = gap >= 0 ? 'gap-positive' : 'gap-negative';
+    var html = rows.map(function(r){
+      return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>';
+    }).join('');
+    html += '<div class="row"><span>Gap</span><span class="' + gapCls + '">' + gapStr + '</span></div>';
+    breakdownEl.innerHTML = html;
+
+    if (spikes.length > 0) {
+      spikeSummary.hidden = false;
+      spikeTotalBoostEl.textContent = fmtNum(spikeBoost);
+      spikeTotalProjEl.textContent = fmtNum(projected);
+    } else {
+      spikeSummary.hidden = true;
+    }
+
+    var valid = pageOpen && launch && launch >= today;
+    drawChart({
+      valid: valid,
+      today: today,
+      launchDate: launch,
+      currentFollowers: current,
+      velocity: velocity,
+      projected: projected,
+      targetEquiv: targetEquiv,
+      spikes: spikes
+    });
+  }
+
+  function addSpike() {
+    if (spikeList.children.length >= MAX_SPIKES) return;
+    var row = document.createElement('div');
+    row.className = 'spike-row';
+    row.innerHTML = ''
+      + '<select class="spike-type" aria-label="Event type">'
+      + '<option value="next-fest">Next Fest</option>'
+      + '<option value="demo">Demo Release</option>'
+      + '<option value="trailer">Trailer</option>'
+      + '<option value="press">Press Coverage</option>'
+      + '<option value="custom">Custom</option>'
+      + '</select>'
+      + '<input type="date" class="spike-date" aria-label="Event date" />'
+      + '<input type="number" class="spike-boost" min="0" step="50" placeholder="Followers boost" aria-label="Follower boost" />'
+      + '<button type="button" class="spike-remove" aria-label="Remove event">&times;</button>';
+    spikeList.appendChild(row);
+
+    row.querySelector('.spike-remove').addEventListener('click', function() {
+      row.remove();
+      addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
+      calculate();
+    });
+    row.querySelectorAll('select, input').forEach(function(el) {
+      el.addEventListener('input', calculate);
+      el.addEventListener('change', calculate);
+    });
+    addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
+  }
+
+  addSpikeBtn.addEventListener('click', function() {
+    addSpike();
+    calculate();
+  });
+
+  document.querySelectorAll('.calc-presets').forEach(function(group) {
+    var targetId = group.dataset.target;
+    var input = document.getElementById(targetId);
+    if (!input) return;
+    group.querySelectorAll('.preset-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        input.value = btn.dataset.value;
+        group.querySelectorAll('.preset-btn').forEach(function(b){
+          b.classList.toggle('is-active', b === btn);
+        });
+        calculate();
+      });
+    });
+    input.addEventListener('input', function() {
+      var v = parseFloat(input.value);
+      group.querySelectorAll('.preset-btn').forEach(function(b){
+        b.classList.toggle('is-active', !isNaN(v) && parseFloat(b.dataset.value) === v);
+      });
+    });
+  });
+
+  [followersInput, pageOpenInput, launchInput, multInput, targetInput].forEach(function(el) {
+    ['input', 'change'].forEach(function(evt) {
       el.addEventListener(evt, calculate);
     });
   });
 
-  // Prevent mouse wheel from changing focused number input values.
-  [devInput, markupInput, marketingInput, servicesInput].forEach(function(el) {
+  [followersInput, multInput, targetInput].forEach(function(el) {
     el.addEventListener('wheel', function(e) {
       if (document.activeElement === el) {
         e.preventDefault();
@@ -1948,85 +1812,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }, { passive: false });
   });
 
-  var carryBtn = document.getElementById('carry-to-deal');
-  if (carryBtn) {
-    carryBtn.addEventListener('click', function() {
-      var t = carryBtn.dataset.total;
-      if (!t) return;
-      window.location.href = '/resources/tools/publishing-recoup-calculator.html?budget=' + encodeURIComponent(t);
-    });
-  }
-
-  var dollarIds = { 'dev-budget': true, 'marketing': true, 'services': true };
-
-  function formatDollar(el) {
-    var v = parseFloat(el.value.toString().replace(/[^0-9.]/g, ''));
-    if (!isNaN(v) && v > 0) {
-      el.type = 'text';
-      el.value = Math.round(v).toLocaleString('en-US');
-    }
-  }
-  function unformatDollar(el) {
-    if (el.type === 'text') {
-      var raw = el.value.replace(/[^0-9.]/g, '');
-      el.type = 'number';
-      el.value = raw;
-    }
-  }
-
-  function syncGroup(groupEl, value) {
-    var n = parseFloat(value);
-    groupEl.querySelectorAll('.preset-btn').forEach(function(b) {
-      b.classList.toggle('is-active', !isNaN(n) && parseFloat(b.dataset.value) === n);
-    });
-  }
-
-  document.querySelectorAll('.calc-presets').forEach(function(group) {
-    var targetId = group.dataset.target;
-    var input = document.getElementById(targetId === 'dev-budget' ? 'dev-budget' : targetId);
-    if (!input) return;
-
-    group.querySelectorAll('.preset-btn').forEach(function(btn) {
-      var handler = function(e) {
-        if (e && e.type === 'touchstart') e.preventDefault();
-        unformatDollar(input);
-        input.value = btn.dataset.value;
-        syncGroup(group, btn.dataset.value);
-        calculate();
-        if (document.activeElement !== input && dollarIds[input.id]) {
-          formatDollar(input);
-        }
-      };
-      btn.addEventListener('click', handler);
-      btn.addEventListener('touchstart', handler, { passive: false });
-    });
-
-    input.addEventListener('input', function() {
-      syncGroup(group, input.value);
-    });
+  var resizeTO;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTO);
+    resizeTO = setTimeout(calculate, 100);
   });
 
-  // Format dollar inputs with thousands separators on blur; strip on focus.
-  [devInput, marketingInput, servicesInput].forEach(function(el) {
-    el.addEventListener('blur', function() { formatDollar(el); });
-    el.addEventListener('focus', function() { unformatDollar(el); });
-    // Strip thousands separators / currency on paste so "$150,000" doesn't get
-    // truncated to 150 by the type=number input.
-    el.addEventListener('paste', function(e) {
-      e.preventDefault();
-      var text = ((e.clipboardData || window.clipboardData).getData('text') || '');
-      var clean = text.replace(/[^0-9.]/g, '');
-      if (!clean) return;
-      if (el.type === 'text') { el.type = 'number'; }
-      el.value = clean;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-    });
+  document.addEventListener('themechange', function() {
+    setTimeout(calculate, 50);
   });
 
   var copyBtn = document.getElementById('calc-copy-btn');
   if (copyBtn) {
     copyBtn.addEventListener('click', function() {
-      var val = document.getElementById('total').textContent.trim();
+      var val = followersNeededEl.textContent.trim();
       navigator.clipboard.writeText(val).then(function() {
         copyBtn.classList.add('is-copied');
         copyBtn.querySelector('.calc-copy-label').textContent = 'Copied';
@@ -2042,46 +1841,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
   calculate();
 })();
-
-(function() {
-  var floating = document.getElementById('calc-floating');
-  var resultBlock = document.getElementById('total');
-  if (!floating || !resultBlock) return;
-
-  var hasValue = false;
-
-  document.querySelectorAll('.calc-input').forEach(function(input) {
-    ['input', 'change'].forEach(function(evt) {
-      input.addEventListener(evt, function() {
-        hasValue = true;
-        checkVisibility();
-      });
-    });
-  });
-
-  function isResultVisible() {
-    var rect = resultBlock.getBoundingClientRect();
-    return rect.top < window.innerHeight && rect.bottom > 0;
-  }
-
-  function checkVisibility() {
-    if (!hasValue) return;
-    if (isResultVisible()) {
-      floating.classList.remove('is-visible');
-    } else {
-      floating.classList.add('is-visible');
-    }
-  }
-
-  window.addEventListener('scroll', checkVisibility, { passive: true });
-  window.addEventListener('resize', checkVisibility, { passive: true });
-})();
 </script>
-
-<div class="calc-floating" id="calc-floating" aria-live="polite" aria-label="Running total">
-  <div class="calc-floating-label">Total</div>
-  <div class="calc-floating-value" id="floating-total">$0</div>
-</div>
 
 </body>
 </html>
