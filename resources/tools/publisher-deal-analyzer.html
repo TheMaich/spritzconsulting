@@ -305,35 +305,6 @@ html{
 }
 .theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
 
-.lang-toggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  background: var(--paper-3);
-  border-radius: 999px;
-}
-.lang-toggle button{
-  padding: 6px 12px;
-  min-height: 38px;
-  display: inline-flex; align-items: center;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  border-radius: 999px;
-  transition: color .25s var(--ease), background .25s var(--ease);
-  white-space: nowrap;
-}
-.lang-toggle button[aria-pressed="true"]{
-  background: var(--ink);
-  color: var(--paper);
-}
-.lang-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
-.lang-toggle button[hidden]{ display: none; }
-
 .footer-settings{
   display: inline-flex;
   align-items: center;
@@ -551,13 +522,13 @@ html{
   width: 82vmax; height: 52vmax;
   left: -24vmax; top: -22vmax;
   background: radial-gradient(ellipse 60% 50% at center, color-mix(in srgb, var(--clay) 65%, transparent), transparent 68%);
-  animation: aurora-1 34s ease-in-out infinite alternate;
+  animation: aurora-1 34s linear infinite alternate;
 }
 .bg-aurora .blob-2{
   width: 50vmax; height: 72vmax;
   right: -18vmax; bottom: -20vmax;
   background: radial-gradient(ellipse 50% 60% at center, color-mix(in srgb, var(--clay) 48%, transparent), transparent 70%);
-  animation: aurora-2 44s ease-in-out infinite alternate;
+  animation: aurora-2 44s linear infinite alternate;
   opacity: 0.45;
 }
 html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
@@ -712,27 +683,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--clay) 20%, transparent),
     0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent);
-}
-
-.cta-card::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 17px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--clay) 60%, transparent),
-    transparent 40%,
-    color-mix(in srgb, var(--clay) 30%, transparent)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.cta-card:hover::after {
-  opacity: 1;
 }
 
 .cta-card-text {
@@ -1817,7 +1767,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <div class="calculator">
 
       <div class="calc-group">
-        <label class="calc-label" for="budget">Project Budget Total</label>
+        <label class="calc-label" for="budget">Project Budget to Recoup</label>
         <div class="calc-hint">Paste the figure from the <a href="/resources/tools/game-budget-calculator.html">Publisher's Game Budget Calculator</a>, or type a number directly, to see how many units you need to sell to recoup.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
@@ -2050,12 +2000,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <span data-i18n="theme.night">Dark</span>
         </button>
       </div>
-      <div class="lang-toggle notranslate" translate="no" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
-        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
-        <button type="button" data-lang-target="fr" aria-pressed="false" aria-label="Passer en français" hidden>FR</button>
-        <button type="button" data-lang-target="es" aria-pressed="false" aria-label="Cambiar a español" hidden>ES</button>
-      </div>
     </div>
     <span class="copy" data-i18n="footer.copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
   </div>
@@ -2229,14 +2173,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
     });
   };
-
-  document.querySelectorAll('[data-lang-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const l = btn.dataset.langTarget;
-      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-      applyLang(l);
-    });
-  });
 
   // Sticky header shadow on scroll
   const header = document.getElementById('site-header');

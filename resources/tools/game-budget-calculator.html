@@ -305,35 +305,6 @@ html{
 }
 .theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
 
-.lang-toggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  background: var(--paper-3);
-  border-radius: 999px;
-}
-.lang-toggle button{
-  padding: 6px 12px;
-  min-height: 38px;
-  display: inline-flex; align-items: center;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  border-radius: 999px;
-  transition: color .25s var(--ease), background .25s var(--ease);
-  white-space: nowrap;
-}
-.lang-toggle button[aria-pressed="true"]{
-  background: var(--ink);
-  color: var(--paper);
-}
-.lang-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
-.lang-toggle button[hidden]{ display: none; }
-
 .footer-settings{
   display: inline-flex;
   align-items: center;
@@ -1533,11 +1504,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </div>
             <div class="rate-item">
               <span class="rate-name">Localisation (standard)</span>
-              <span class="rate-value">≈ $0.15 / word</span>
+              <span class="rate-value">≈ $0.015 / word</span>
             </div>
             <div class="rate-item">
               <span class="rate-name">Localisation (exotic languages)</span>
-              <span class="rate-value">≈ $0.20 / word</span>
+              <span class="rate-value">≈ $0.020 / word</span>
             </div>
             <div class="rate-item">
               <span class="rate-name">QA</span>
@@ -1618,12 +1589,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
           <span data-i18n="theme.night">Dark</span>
         </button>
-      </div>
-      <div class="lang-toggle notranslate" translate="no" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
-        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
-        <button type="button" data-lang-target="fr" aria-pressed="false" aria-label="Passer en français" hidden>FR</button>
-        <button type="button" data-lang-target="es" aria-pressed="false" aria-label="Cambiar a español" hidden>ES</button>
       </div>
     </div>
     <span class="copy" data-i18n="footer.copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
@@ -1798,14 +1763,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
     });
   };
-
-  document.querySelectorAll('[data-lang-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const l = btn.dataset.langTarget;
-      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-      applyLang(l);
-    });
-  });
 
   // Sticky header shadow on scroll
   const header = document.getElementById('site-header');

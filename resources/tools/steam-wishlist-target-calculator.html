@@ -305,35 +305,6 @@ html{
 }
 .theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
 
-.lang-toggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  background: var(--paper-3);
-  border-radius: 999px;
-}
-.lang-toggle button{
-  padding: 6px 12px;
-  min-height: 38px;
-  display: inline-flex; align-items: center;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  border-radius: 999px;
-  transition: color .25s var(--ease), background .25s var(--ease);
-  white-space: nowrap;
-}
-.lang-toggle button[aria-pressed="true"]{
-  background: var(--ink);
-  color: var(--paper);
-}
-.lang-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
-.lang-toggle button[hidden]{ display: none; }
-
 .footer-settings{
   display: inline-flex;
   align-items: center;
@@ -1159,7 +1130,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-family: var(--serif);
   font-size: 0.9em;
   color: var(--clay);
-  font-style: italic;
   font-weight: 400;
   order: -1;
 }
@@ -1662,12 +1632,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <span data-i18n="theme.night">Dark</span>
         </button>
       </div>
-      <div class="lang-toggle notranslate" translate="no" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
-        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
-        <button type="button" data-lang-target="fr" aria-pressed="false" aria-label="Passer en français" hidden>FR</button>
-        <button type="button" data-lang-target="es" aria-pressed="false" aria-label="Cambiar a español" hidden>ES</button>
-      </div>
     </div>
     <span class="copy" data-i18n="footer.copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
   </div>
@@ -1841,14 +1805,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
     });
   };
-
-  document.querySelectorAll('[data-lang-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const l = btn.dataset.langTarget;
-      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-      applyLang(l);
-    });
-  });
 
   // Sticky header shadow on scroll
   const header = document.getElementById('site-header');
