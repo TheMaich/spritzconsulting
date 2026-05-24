@@ -702,6 +702,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
 .date-picker-wrap { position: relative; overflow: visible; z-index: 1; }
 .date-picker-wrap.is-open { z-index: 200; }
+.calc-group.is-picker-open { position: relative; z-index: 300; }
 .date-picker-input { cursor: pointer; }
 .date-picker-toggle {
   background: var(--paper-3);
@@ -1766,6 +1767,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       render();
       dropdown.hidden = false;
       wrap.classList.add('is-open');
+      var group = wrap.closest('.calc-group');
+      if (group) group.classList.add('is-picker-open');
       setTimeout(function(){
         document.addEventListener('click', handleOutside);
         document.addEventListener('keydown', handleKey);
@@ -1775,6 +1778,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     function close() {
       dropdown.hidden = true;
       wrap.classList.remove('is-open');
+      var group = wrap.closest('.calc-group');
+      if (group) group.classList.remove('is-picker-open');
       document.removeEventListener('click', handleOutside);
       document.removeEventListener('keydown', handleKey);
     }
