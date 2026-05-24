@@ -1308,7 +1308,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-result-wrap">
         <div class="calc-result" aria-live="polite">
           <div class="calc-result-label">Followers Needed</div>
-          <div class="calc-result-sublabel">to hit your wishlist target</div>
+          <div class="calc-result-sublabel" id="followers-needed-sublabel">to hit your wishlist target</div>
           <div class="calc-result-value" id="followers-needed">0</div>
           <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy followers needed to clipboard">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1481,6 +1481,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var multInput = document.getElementById('multiplier');
   var targetInput = document.getElementById('wishlist-target');
   var followersNeededEl = document.getElementById('followers-needed');
+  var followersNeededSublabelEl = document.getElementById('followers-needed-sublabel');
   var breakdownEl = document.getElementById('breakdown');
   var statusEl = document.getElementById('trajectory-status');
   var canvas = document.getElementById('trajectory-chart');
@@ -1727,6 +1728,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     rollTo(followersNeededEl, followersNeeded, fmtNum);
 
+    var alreadyOnTrack = target > 0 && current > 0 && followersNeeded === 0;
+    if (alreadyOnTrack) {
+      followersNeededEl.style.color = 'var(--clay)';
+      followersNeededSublabelEl.textContent = "you're already on track";
+    } else {
+      followersNeededEl.style.color = '';
+      followersNeededSublabelEl.textContent = 'to hit your wishlist target';
+    }
+
     statusEl.classList.remove('is-positive', 'is-negative');
     if (!launch) {
       statusEl.textContent = 'Set a launch date to see your trajectory';
@@ -1768,6 +1778,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>';
     }).join('');
     html += '<div class="row"><span>Gap</span><span class="' + gapCls + '">' + gapStr + '</span></div>';
+    if (alreadyOnTrack) {
+      html += '<div class="row"><span>Status</span><span class="gap-positive">On track · estimated wishlists already exceed target</span></div>';
+    }
     breakdownEl.innerHTML = html;
 
     if (spikes.length > 0) {
