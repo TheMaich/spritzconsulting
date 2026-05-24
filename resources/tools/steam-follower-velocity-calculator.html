@@ -883,6 +883,39 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .gap-positive { color: var(--clay) !important; font-weight: 600; }
 .gap-negative { color: var(--danger) !important; font-weight: 600; }
 
+.calc-secondary-card {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.calc-secondary-label {
+  font-family: var(--mono-data);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+.calc-secondary-value {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.calc-secondary-range {
+  font-family: var(--mono-data);
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
 .trajectory-card {
   background: var(--paper-3);
   border: 1px solid var(--rule);
@@ -1287,6 +1320,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
       </div>
 
+      <div class="calc-secondary-card" aria-live="polite">
+        <div class="calc-secondary-label">Estimated Wishlists Today</div>
+        <div class="calc-secondary-value" id="wishlists-today">0</div>
+        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (14x)</div>
+      </div>
+
       <div class="trajectory-card">
         <div class="trajectory-label">Follower Trajectory</div>
         <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
@@ -1322,6 +1361,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <ul>
           <li><strong>Where 10x comes from.</strong> GameDiscoverCo surveys of unreleased Steam games show a median of 9.6x to 12x wishlists per follower, with a range of 7x to 20x depending on genre, festival exposure, and marketing activity. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> · <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a></li>
           <li><strong>Followers are a proxy, not a promise.</strong> Publishers and algorithm alike use follower counts as a visible signal of pre-launch interest. But follower velocity matters more than the absolute number. A game gaining 200 followers per day is a different conversation from one with 10,000 followers accumulated over three years.</li>
+          <li><strong>Wishlist estimates are approximations.</strong> The follower to wishlist ratio varies by genre, festival participation, and how long the page has been open. GameDiscoverCo data shows a median of 9.6x for unreleased games, with a central cluster of 10x to 12x. Games with recent Next Fest or demo exposure tend to sit higher. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a></li>
           <li><strong>Spikes are not guaranteed.</strong> Next Fest, demos, and trailers can produce large follower boosts, but results vary enormously by genre, timing, and execution. Use spike estimates conservatively.</li>
           <li><strong>Estimation only.</strong> Directional indicator, not a forecast. Real planning needs your actual Steamworks data.</li>
           <li><strong>Next step.</strong> Once you have a wishlist target in mind, run it through the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> to size your launch.</li>
@@ -1704,13 +1744,22 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       statusEl.classList.add(gap >= 0 ? 'is-positive' : 'is-negative');
     }
 
+    var wishlistsToday = current * multiplier;
+    var wishlistsTodayLow = current * 7;
+    var wishlistsTodayHigh = current * 14;
+    document.getElementById('wishlists-today').textContent = fmtNum(wishlistsToday);
+    document.getElementById('wishlists-today-range').textContent =
+      'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (14x)';
+
     var rows = [
       ['Current followers', fmtNum(current)],
       ['Days since page open', fmtNum(daysSinceOpen)],
       ['Followers / day', fmtDecimal(velocity)],
+      ['Estimated wishlists today (x' + multiplier + ')', fmtNum(wishlistsToday)],
+      ['Wishlist range today', fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (14x)'],
       ['Days to launch', fmtNum(daysToLaunch)],
       ['Projected followers at launch', fmtNum(projected)],
-      ['Estimated wishlists (x' + multiplier + ')', fmtNum(estimatedWishlists)],
+      ['Estimated wishlists at launch (x' + multiplier + ')', fmtNum(estimatedWishlists)],
       ['Wishlist target', fmtNum(target)]
     ];
     var gapStr = (gap >= 0 ? '+' : '') + fmtNum(gap);
