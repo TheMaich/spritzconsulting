@@ -700,7 +700,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 html[data-theme="light"] { --cal-invert: 0.3; }
 
-.date-picker-wrap { position: relative; overflow: visible; }
+.date-picker-wrap { position: relative; overflow: visible; z-index: 1; }
+.date-picker-wrap.is-open { z-index: 200; }
 .date-picker-input { cursor: pointer; }
 .date-picker-toggle {
   background: var(--paper-3);
@@ -724,13 +725,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .date-picker-dropdown {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
-  z-index: 100;
+  right: 0;
+  left: auto;
+  z-index: 200;
   background: var(--paper-3);
   border: 1px solid var(--rule);
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
   user-select: none;
   width: 304px;
   max-width: calc(100vw - 32px);
@@ -1763,6 +1765,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       viewMonth = base.getMonth();
       render();
       dropdown.hidden = false;
+      wrap.classList.add('is-open');
       setTimeout(function(){
         document.addEventListener('click', handleOutside);
         document.addEventListener('keydown', handleKey);
@@ -1771,6 +1774,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     function close() {
       dropdown.hidden = true;
+      wrap.classList.remove('is-open');
       document.removeEventListener('click', handleOutside);
       document.removeEventListener('keydown', handleKey);
     }
