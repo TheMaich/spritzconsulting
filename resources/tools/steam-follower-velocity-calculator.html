@@ -700,6 +700,119 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 html[data-theme="light"] { --cal-invert: 0.3; }
 
+.date-picker-wrap { position: relative; }
+.date-picker-input { cursor: pointer; }
+.date-picker-toggle {
+  background: var(--paper-3);
+  border: 0;
+  border-left: 1px solid var(--rule);
+  padding: 0 16px;
+  color: var(--ink-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  transition: color 0.2s;
+}
+.date-picker-toggle:hover { color: var(--clay); }
+.date-picker-toggle svg {
+  width: 18px; height: 18px;
+  stroke: currentColor; stroke-width: 1.6;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.date-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 100;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  width: 304px;
+  max-width: calc(100vw - 32px);
+}
+.dp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+.dp-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 20;
+}
+.dp-nav {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--clay);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+.dp-nav:hover {
+  border-color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 10%, transparent);
+}
+.dp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  font-family: var(--mono-data);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.dp-weekday { padding: 4px 0; }
+.dp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.dp-day {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.dp-day:hover { background: var(--paper-2); }
+.dp-day.is-outside {
+  color: var(--ink-3);
+  opacity: 0.4;
+}
+.dp-day.is-today {
+  border-color: var(--clay);
+}
+.dp-day.is-selected {
+  background: var(--clay);
+  color: var(--paper);
+  font-weight: 700;
+  border-color: var(--clay);
+}
+.dp-day.is-selected:hover { background: var(--clay-deep); }
+
 .calc-presets {
   display: flex;
   flex-wrap: wrap;
@@ -1262,16 +1375,24 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-group">
         <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
         <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
-        <div class="calc-input-wrap">
-          <input type="date" id="page-open-date" class="calc-input">
+        <div class="calc-input-wrap date-picker-wrap">
+          <input type="text" id="page-open-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
+          <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+          </button>
+          <div class="date-picker-dropdown" hidden></div>
         </div>
       </div>
 
       <div class="calc-group">
         <label class="calc-label" for="launch-date">Target Launch Date</label>
         <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
-        <div class="calc-input-wrap">
-          <input type="date" id="launch-date" class="calc-input">
+        <div class="calc-input-wrap date-picker-wrap">
+          <input type="text" id="launch-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
+          <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+          </button>
+          <div class="date-picker-dropdown" hidden></div>
         </div>
       </div>
 
@@ -1539,11 +1660,134 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   }
 
   function parseDate(el) {
-    if (!el.value) return null;
-    var d = new Date(el.value + 'T00:00:00');
+    var iso = el.dataset && el.dataset.iso ? el.dataset.iso : el.value;
+    if (!iso) return null;
+    var d = new Date(iso + 'T00:00:00');
     if (isNaN(d.getTime())) return null;
     return d;
   }
+
+  function buildDatePicker(input) {
+    var wrap = input.closest('.date-picker-wrap');
+    if (!wrap) return;
+    var toggle = wrap.querySelector('.date-picker-toggle');
+    var dropdown = wrap.querySelector('.date-picker-dropdown');
+    var viewYear, viewMonth;
+    var selected = null;
+    var today = new Date(); today.setHours(0,0,0,0);
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function formatDisplay(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
+    function formatISO(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear()
+        && a.getMonth() === b.getMonth()
+        && a.getDate() === b.getDate();
+    }
+
+    function render() {
+      var first = new Date(viewYear, viewMonth, 1);
+      var startDay = first.getDay();
+      var offset = (startDay + 6) % 7;
+      var prevMonthLast = new Date(viewYear, viewMonth, 0).getDate();
+      var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var weekdays = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+      function dayCell(date, outside) {
+        var classes = ['dp-day'];
+        if (outside) classes.push('is-outside');
+        if (sameDay(date, today)) classes.push('is-today');
+        if (selected && sameDay(date, selected)) classes.push('is-selected');
+        return '<button type="button" class="' + classes.join(' ') + '" data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
+      }
+
+      var html = ''
+        + '<div class="dp-header">'
+        + '<button type="button" class="dp-nav dp-prev" aria-label="Previous month">&lsaquo;</button>'
+        + '<div class="dp-title">' + months[viewMonth] + ' ' + viewYear + '</div>'
+        + '<button type="button" class="dp-nav dp-next" aria-label="Next month">&rsaquo;</button>'
+        + '</div>'
+        + '<div class="dp-weekdays">'
+        + weekdays.map(function(w){ return '<div class="dp-weekday">' + w + '</div>'; }).join('')
+        + '</div>'
+        + '<div class="dp-grid">';
+
+      for (var i = offset - 1; i >= 0; i--) {
+        html += dayCell(new Date(viewYear, viewMonth - 1, prevMonthLast - i), true);
+      }
+      for (var d = 1; d <= daysInMonth; d++) {
+        html += dayCell(new Date(viewYear, viewMonth, d), false);
+      }
+      var totalRendered = offset + daysInMonth;
+      var trailing = (7 - (totalRendered % 7)) % 7;
+      for (var n = 1; n <= trailing; n++) {
+        html += dayCell(new Date(viewYear, viewMonth + 1, n), true);
+      }
+      html += '</div>';
+      dropdown.innerHTML = html;
+
+      dropdown.querySelector('.dp-prev').addEventListener('click', function(e){
+        e.stopPropagation();
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        render();
+      });
+      dropdown.querySelector('.dp-next').addEventListener('click', function(e){
+        e.stopPropagation();
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        render();
+      });
+      dropdown.querySelectorAll('.dp-day').forEach(function(btn){
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var iso = btn.dataset.iso;
+          var parts = iso.split('-');
+          selected = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          input.value = formatDisplay(selected);
+          input.dataset.iso = iso;
+          close();
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      });
+    }
+
+    function open() {
+      if (input.dataset.iso) {
+        var parts = input.dataset.iso.split('-');
+        selected = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      }
+      var base = selected || today;
+      viewYear = base.getFullYear();
+      viewMonth = base.getMonth();
+      render();
+      dropdown.hidden = false;
+      setTimeout(function(){
+        document.addEventListener('click', handleOutside);
+        document.addEventListener('keydown', handleKey);
+      }, 0);
+    }
+
+    function close() {
+      dropdown.hidden = true;
+      document.removeEventListener('click', handleOutside);
+      document.removeEventListener('keydown', handleKey);
+    }
+
+    function handleOutside(e) {
+      if (!wrap.contains(e.target)) close();
+    }
+    function handleKey(e) {
+      if (e.key === 'Escape') close();
+    }
+
+    input.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
+    toggle.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
+  }
+
+  buildDatePicker(pageOpenInput);
+  buildDatePicker(launchInput);
 
   function daysBetween(d1, d2) {
     return Math.max(0, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
