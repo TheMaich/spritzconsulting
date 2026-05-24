@@ -1194,6 +1194,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (max-width: 640px){
   #scenario-card .scenario-strong{ display: none; }
 }
+@media (max-width: 768px){
+  .calc-result-wrap.is-sticky #scenario-card{
+    padding: 12px 16px;
+    gap: 4px;
+  }
+  .calc-result-wrap.is-sticky #scenario-card .calc-result-label{
+    font-size: clamp(16px, 3.4vw, 20px);
+  }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-grid{
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .calc-result-wrap.is-sticky #scenario-card .recoup-tier-value{
+    font-size: clamp(30px, 5vw, 44px);
+  }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-strong .recoup-tier-value{
+    font-size: clamp(20px, 3vw, 30px);
+  }
+  .calc-result-wrap.is-sticky #scenario-card .recoup-tier-sub{
+    display: none;
+  }
+}
 .recoup-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
