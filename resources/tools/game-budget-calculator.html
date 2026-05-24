@@ -1060,7 +1060,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--clay);
 }
 
-.deal-analyzer-wrap {
+.recoup-calc-wrap {
   display: flex;
   justify-content: flex-end;
   max-width: 860px;
@@ -1069,7 +1069,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 @media (max-width: 640px) {
-  .deal-analyzer-wrap {
+  .recoup-calc-wrap {
     justify-content: center;
   }
 }
@@ -1534,9 +1534,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-result-breakdown" id="breakdown"></div>
       <p class="calc-result-note"><strong>Recoupment.</strong> As a general rule, the developer doesn't see a revenue share until net sales clear this total, but this isn't written in stone. Some deals carve out marketing, tier the recoupment, or apply different rules to different cost buckets. Read the recoupment clause before assuming anything.</p>
 
-      <div class="deal-analyzer-wrap">
-        <a href="/resources/tools/publisher-deal-analyzer.html" style="background:var(--clay); color:var(--paper); border-radius:100px; padding:12px 24px; font-weight:600; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-          Publisher Deal Analyzer
+      <div class="recoup-calc-wrap">
+        <a href="/resources/tools/publishing-recoup-calculator.html" style="background:var(--clay); color:var(--paper); border-radius:100px; padding:12px 24px; font-weight:600; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+          Publishing Recoup Calculator
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
         </a>
       </div>
@@ -1546,7 +1546,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <ul>
           <li><strong>Publisher math.</strong> Project viability is usually evaluated against 2x the total (company-level break-even) and 3x (growth). You aren't expected to model those targets, but knowing they exist tells you how the publisher reads your budget when the pitch lands on their desk.</li>
           <li><strong>Estimation only.</strong> Every figure here, including the reference rates, is a working estimate drawn from market averages. Treat the output as a directional indicator, not a contract. Real numbers come from real quotes.</li>
-          <li><strong>Next step.</strong> Once you have a total, run it through the <a href="/resources/tools/publisher-deal-analyzer.html">Publisher Deal Analyzer</a> to see how many units you need to sell to clear recoupment at 1×, 2× and 3×.</li>
+          <li><strong>Next step.</strong> Once you have a total, run it through the <a href="/resources/tools/publishing-recoup-calculator.html">Publishing Recoup Calculator</a> to see how many units you need to sell to clear recoupment at 1×, 2× and 3×.</li>
         </ul>
       </div>
 
@@ -1935,7 +1935,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     carryBtn.addEventListener('click', function() {
       var t = carryBtn.dataset.total;
       if (!t) return;
-      window.location.href = '/resources/tools/publisher-deal-analyzer.html?budget=' + encodeURIComponent(t);
+      window.location.href = '/resources/tools/publishing-recoup-calculator.html?budget=' + encodeURIComponent(t);
     });
   }
 
