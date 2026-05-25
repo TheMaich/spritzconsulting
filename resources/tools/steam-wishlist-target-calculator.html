@@ -1584,37 +1584,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </div>
       </div>
 
-      <div class="calc-result-wrap">
-        <div class="calc-result calc-result-recoup" aria-live="polite" id="forecast-card">
-          <div class="calc-result-label">Sales Forecast</div>
-          <div class="calc-group" style="margin-top:18px;">
-            <label class="calc-label" for="actual-first-week">First Week actual sales</label>
-            <div class="calc-hint">Enter your actual first-week sales to project Month 1 and Year One. Leave blank to use the estimated figure.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="actual-first-week" class="calc-input" placeholder="0" min="0" step="1">
-              <span class="calc-suffix">units</span>
-            </div>
-          </div>
-          <div class="recoup-grid">
-            <div class="recoup-tier">
-              <div class="recoup-tier-label">First Week</div>
-              <div class="recoup-tier-value" id="first-week">0</div>
-              <div class="recoup-tier-sub">month 1 &times; 0.75</div>
-            </div>
-            <div class="recoup-tier">
-              <div class="recoup-tier-label">First Month</div>
-              <div class="recoup-tier-value" id="first-month">0</div>
-              <div class="recoup-tier-sub">avg monthly &times; 2</div>
-            </div>
-            <div class="recoup-tier">
-              <div class="recoup-tier-label">Year One</div>
-              <div class="recoup-tier-value" id="year-one">0</div>
-              <div class="recoup-tier-sub">first week &times; 4</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="calc-nav-wrap">
         <a href="/resources/tools/steam-follower-velocity-calculator.html" class="calc-nav-btn calc-nav-back">← Steam Follower Velocity Calculator</a>
         <a href="/resources/tools/steam-sales-forecast-calculator.html" class="calc-nav-btn">Steam Sales Forecast →</a>
@@ -1623,8 +1592,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Where ×1.47 comes from.</strong> GameDiscoverCo tracked Month 1 / Week 1 revenue ratios across Steam launches and found a median of 1.47x in 2020, confirmed at 1.5x in a 2021 follow-up with a range of 1.2x to 1.9x depending on launch profile. No more recent dataset isolates this specific metric. Treat it as a directional benchmark, not a law. Source: <a href="https://www.gamedeveloper.com/game-platforms/analyst-your-first-week-and-first-year-s-steam-sales-might-be-correlating" target="_blank">GameDiscoverCo / Game Developer, 2021</a></li>
-          <li><strong>Where Year One comes from.</strong> GameDiscoverCo data on 2023 Steam releases puts the median Year 1 / Week 1 revenue ratio at 2.64x across all games, rising to around 3x for games that sold over 1,000 copies in Week 1. Viral or multiplayer titles can exceed 10x; hype-driven launches that front-load tend to land below the median. This calculator uses 3x as the conservative baseline. Source: <a href="https://gamedevreports.substack.com/p/gamediscoverco-games-long-tail-revenue" target="_blank" rel="noopener noreferrer">GameDiscoverCo via GameDev Reports, 2024</a></li>
           <li><strong>Wishlist conversion.</strong> Recent data (2024 to 2025) from GameDiscoverCo puts the median Week 1 conversion at 0.15x to 0.17x of launch wishlists for games with 10,000+ wishlists at launch. The 5% and 10% scenarios in this calculator represent the conservative end of the distribution, useful for stress-testing your targets. Cold launches, higher price points, and no demo tend to sit in that range. Strong genre fit, recent Next Fest presence, or an Overwhelmingly Positive rating push conversion higher. Sources: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a> and <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
           <li><strong>Wishlists are not customers.</strong> A wishlist is a soft signal of intent that decays over time. Convert via launch discount, demo, festival presence, content drops, and visibility windows, not by accumulating wishlists and waiting.</li>
           <li><strong>Estimation only.</strong> Directional indicator, not a forecast you can take to the bank. Real planning needs real data from your store page, your demo, and your wishlist velocity.</li>
@@ -1904,13 +1871,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 (function() {
   var unitsInput = document.getElementById('units');
   var monthsInput = document.getElementById('weeks');
-  var actualFirstWeekInput = document.getElementById('actual-first-week');
 
   var wish5El = document.getElementById('wishlists-5');
   var wish10El = document.getElementById('wishlists-10');
-  var firstWeekEl = document.getElementById('first-week');
-  var firstMonthEl = document.getElementById('first-month');
-  var yearOneEl = document.getElementById('year-one');
   var breakdownEl = document.getElementById('breakdown');
 
   function num(el, def){
@@ -1960,25 +1923,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var avgMonthly = totalUnits / months;
     var firstMonth = avgMonthly * 2;
     var firstWeek = firstMonth * 0.75;
-    var yearOne = firstWeek * 4;
     var wish5 = firstWeek / 0.05;
     var wish10 = firstWeek / 0.10;
 
-    var actualFW = num(actualFirstWeekInput, 0);
-    var fwDisplay, fmDisplay, yoDisplay;
-    if (actualFW > 0) {
-      fwDisplay = actualFW;
-      fmDisplay = actualFW * 1.47;
-      yoDisplay = actualFW * 4;
-    } else {
-      fwDisplay = firstWeek;
-      fmDisplay = firstMonth;
-      yoDisplay = yearOne;
-    }
-
-    rollTo(firstWeekEl, fwDisplay, intFmt);
-    rollTo(firstMonthEl, fmDisplay, intFmt);
-    rollTo(yearOneEl, yoDisplay, intFmt);
     rollTo(wish5El, wish5, intFmt);
     rollTo(wish10El, wish10, intFmt);
 
@@ -1995,7 +1942,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     breakdownEl.innerHTML = lines.join('');
   }
 
-  var allInputs = [unitsInput, monthsInput, actualFirstWeekInput];
+  var allInputs = [unitsInput, monthsInput];
   allInputs.forEach(function(el) {
     ['input', 'change', 'touchend'].forEach(function(evt) {
       el.addEventListener(evt, calculate);
