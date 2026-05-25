@@ -2386,6 +2386,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     });
   });
 
+  var tracked = false;
+  document.addEventListener('input', function() {
+    if (tracked) return;
+    tracked = true;
+    if (window.cf && window.cf.beacon) {
+      window.cf.beacon({ name: 'tool_used', data: { tool: 'publishing_recoup_calculator' } });
+    }
+  }, true);
+
   function formatDollarBudget(el) {
     var v = parseFloat(el.value.toString().replace(/[^0-9.]/g, ''));
     if (!isNaN(v) && v > 0) {

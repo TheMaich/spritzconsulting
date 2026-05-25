@@ -1487,7 +1487,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="marketing">Marketing Budget</label>
-        <div class="calc-hint">Set by the publisher, not by you. Indie titles typically run $50,000 to $200,000; more ambitious projects reach $500,000 or beyond.</div>
+        <div class="calc-hint">Covers promotional activities for the game: paid ad campaigns, influencer and creator deals, PR, festival and event presence, trailers, and store page assets. Set by the publisher, not by you. Indie titles typically run $50,000 to $200,000; more ambitious projects reach $500,000 or beyond.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
           <input type="number" id="marketing" class="calc-input" placeholder="0" min="0" step="1000">
@@ -1937,6 +1937,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       el.addEventListener(evt, calculate);
     });
   });
+
+  var tracked = false;
+  document.addEventListener('input', function() {
+    if (tracked) return;
+    tracked = true;
+    if (window.cf && window.cf.beacon) {
+      window.cf.beacon({ name: 'tool_used', data: { tool: 'game_budget_calculator' } });
+    }
+  }, true);
 
   // Prevent mouse wheel from changing focused number input values.
   [devInput, markupInput, marketingInput, servicesInput].forEach(function(el) {

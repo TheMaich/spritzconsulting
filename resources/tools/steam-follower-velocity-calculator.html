@@ -2118,6 +2118,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   });
 
+  var tracked = false;
+  document.addEventListener('input', function() {
+    if (tracked) return;
+    tracked = true;
+    if (window.cf && window.cf.beacon) {
+      window.cf.beacon({ name: 'tool_used', data: { tool: 'steam_follower_velocity_calculator' } });
+    }
+  }, true);
+
   [followersInput, multInput, targetInput].forEach(function(el) {
     el.addEventListener('wheel', function(e) {
       if (document.activeElement === el) {
