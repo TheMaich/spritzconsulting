@@ -1,0 +1,1646 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Steam Sales Forecast Calculator | Spritz Consulting</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
+<meta name="description" content="Estimate your Steam launch sales from wishlists and followers. Then track post-launch performance against industry benchmarks." />
+<meta name="author" content="Michele Di Nardo" />
+<meta name="robots" content="index, follow" />
+<meta name="color-scheme" content="dark light" />
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Steam Sales Forecast Calculator | Spritz Consulting">
+<meta property="og:description" content="Estimate your Steam launch sales from wishlists and followers. Then track post-launch performance against industry benchmarks.">
+<meta property="og:url" content="https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html">
+<meta property="og:image" content="/assets/Steam_Sales_Forecast_Calculator.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+<script>
+  (function(){
+    try {
+      var saved = localStorage.getItem('mdn-theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+:root{
+  --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Bebas Neue", "Impact", "Haettenschweiler", "Arial Narrow", sans-serif;
+  --mono-data: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --paper:#0A0B0E;
+  --paper-2:#12141A;
+  --paper-3:#1A1D25;
+  --ink:#ECEFF6;
+  --ink-2:#8E95A4;
+  --ink-3:#5C6272;
+  --rule:#262A33;
+  --rule-soft:#1C1F27;
+  --clay:#E5B415;
+  --clay-deep:#C4970A;
+  --clay-soft:#2A1F05;
+  --accent-2:#FF2EC8;
+  --grain-blend: screen;
+  --grain-opacity: 0.05;
+  --shadow-sm: 0 1px 0 rgba(0,0,0,0.55), 0 2px 8px -2px rgba(229,180,21,0.22);
+  --shadow-md: 0 1px 0 rgba(0,0,0,0.55), 0 20px 50px -20px rgba(229,180,21,0.26);
+}
+
+html[data-theme="light"]{
+  --paper:#F4F3ED;
+  --paper-2:#E9E7DE;
+  --paper-3:#FBFAF4;
+  --ink:#0A0B0E;
+  --ink-2:#4A4E58;
+  --ink-3:#5F6168;
+  --rule:#CFCDC2;
+  --rule-soft:#DCDAD0;
+  --clay:#8A6600;
+  --clay-deep:#6B5000;
+  --clay-soft:#F3E4A8;
+  --accent-2:#BE1383;
+  --grain-blend: multiply;
+  --grain-opacity: 0.05;
+  --shadow-sm: 0 1px 0 rgba(10,11,14,0.07), 0 2px 6px -2px rgba(138,102,0,0.12);
+  --shadow-md: 0 1px 0 rgba(10,11,14,0.07), 0 18px 40px -20px rgba(138,102,0,0.22);
+}
+
+html{ transition: background-color .4s var(--ease); }
+body{ transition: background-color .4s var(--ease), color .4s var(--ease); }
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family: var(--sans);
+  font-size: 17px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  isolation: isolate;
+}
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; text-decoration: none; }
+button{ font: inherit; color: inherit; background:none; border:0; cursor:pointer; }
+
+::selection{ background: var(--clay); color: var(--paper); }
+
+html{
+  scrollbar-color: var(--clay) var(--paper-2);
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar{ width: 12px; height: 12px; }
+::-webkit-scrollbar-track{ background: var(--paper-2); }
+::-webkit-scrollbar-thumb{
+  background: var(--clay);
+  border: 3px solid var(--paper-2);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover{ background: var(--clay-deep); }
+::-webkit-scrollbar-corner{ background: var(--paper-2); }
+
+:focus{ outline: 0; }
+:focus-visible{
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip{
+  position: absolute; left: -9999px; top: 12px;
+  background: var(--ink); color: var(--paper);
+  padding: 10px 14px; border-radius: 6px;
+  font: 500 13px/1 var(--sans); letter-spacing: 0.02em;
+  z-index: 100;
+}
+.skip:focus{ left: 12px; }
+
+.grain{
+  position: fixed; inset: -10%; pointer-events: none; z-index: 1;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.70  0 0 0 0 0.66  0 0 0 0 0.58  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation: grain-drift 22s linear infinite;
+  will-change: background-position;
+}
+@keyframes grain-drift{
+  from { background-position: 0 0; }
+  to   { background-position: 140px 140px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .grain{ animation: none; }
+}
+
+.wrap{
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 4vw, 56px);
+  position: relative;
+}
+
+.site-header{
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.site-header.is-scrolled{
+  border-bottom-color: var(--rule-soft);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+}
+.site-header .bar{
+  display: flex; align-items: center; justify-content: space-between;
+  padding-block: 18px;
+  gap: 18px;
+}
+.bar-right{
+  display: flex; align-items: center; gap: clamp(10px, 1.4vw, 18px);
+}
+.wordmark{
+  display: inline-flex; align-items: baseline; gap: 10px;
+  font-family: var(--serif);
+  font-weight: 500; font-size: 20px;
+  font-variation-settings: "opsz" 24;
+  letter-spacing: -0.01em;
+}
+.wordmark .dot{
+  width: 10px; height: 10px;
+  display: inline-block;
+  transform: translateY(-1px);
+  margin: 0 4px;
+  background-color: var(--clay);
+  border-radius: 50%;
+  animation: dot-pulse 1.8s ease-in-out infinite;
+  will-change: transform, opacity;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 60%, transparent);
+}
+@keyframes dot-pulse{
+  0%, 100% {
+    transform: translateY(-1px) scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 60%, transparent);
+  }
+  50% {
+    transform: translateY(-1px) scale(1.18);
+    opacity: 0.7;
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--clay) 0%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .wordmark .dot{ animation: none; }
+}
+.wordmark .role{
+  font-family: var(--mono);
+  font-size: 13.5px; font-weight: 400;
+  color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase;
+  padding-left: 12px; margin-left: 2px;
+  border-left: 1px solid var(--rule);
+}
+.nav{
+  display: flex; align-items: center; gap: 4px;
+}
+.nav a{
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: 8px 14px;
+  border-radius: 999px;
+  position: relative;
+  transition: color .25s var(--ease), background-color .25s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.nav a::after{
+  content: "";
+  position: absolute; left: 14px; right: 14px; bottom: 4px;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s var(--ease);
+}
+.nav a:hover{ color: var(--ink); }
+.nav a:hover::after{ transform: scaleX(0.6); }
+.nav a.is-active{
+  background: var(--clay);
+  color: var(--paper);
+}
+.nav a.is-active .num{ color: var(--paper); }
+.nav a.is-active::after{ transform: scaleX(0); }
+.nav a .num{
+  color: var(--clay);
+  margin-right: 6px;
+  font-variant-numeric: tabular-nums;
+  transition: color .25s var(--ease);
+}
+
+.resources-link {
+  color: var(--clay);
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+.resources-link:hover {
+  opacity: 1;
+}
+.nav a.resources-link,
+.nav a.resources-link:hover,
+.mobile-menu nav a.resources-link {
+  color: var(--clay);
+}
+
+.menu-toggle{
+  display: none;
+  width: 44px; height: 44px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  align-items: center; justify-content: center;
+  background: var(--paper-3);
+}
+.menu-toggle svg{ width: 18px; height: 18px; stroke: var(--ink); stroke-width: 1.5; fill: none; stroke-linecap: round; }
+
+.theme-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  border-radius: 999px;
+  position: relative;
+}
+.theme-toggle button{
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  min-height: 38px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-radius: 999px;
+  transition: color .25s var(--ease), background .25s var(--ease);
+  white-space: nowrap;
+}
+.theme-toggle button svg{
+  width: 12px; height: 12px;
+  stroke: currentColor; stroke-width: 1.5;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.theme-toggle button[aria-pressed="true"]{
+  background: var(--ink);
+  color: var(--paper);
+}
+.theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
+
+.footer-settings{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 640px){
+  .footer-settings{ width: 100%; justify-content: flex-start; }
+}
+
+.mobile-menu{
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--paper);
+  padding: 24px clamp(20px, 4vw, 56px);
+  display: none;
+  flex-direction: column;
+}
+.mobile-menu[data-open="true"]{ display: flex; }
+.mobile-menu .top{
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 48px;
+}
+.mobile-menu nav{
+  display: flex; flex-direction: column; gap: 24px;
+  font-family: var(--serif);
+  font-size: 36px; font-variation-settings: "opsz" 60;
+  letter-spacing: -0.02em; line-height: 1;
+}
+.mobile-menu nav a{ display: flex; align-items: baseline; gap: 16px; }
+.mobile-menu nav a .num{ font-family: var(--mono); font-size: 13px; color: var(--clay); letter-spacing: 0.06em; }
+.mobile-menu .foot{
+  margin-top: auto;
+  font-family: var(--mono); font-size: 14px; color: var(--ink-2);
+  letter-spacing: 0.04em; text-transform: uppercase;
+  display: flex; justify-content: center; padding: 32px 0 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.kicker{
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono);
+  font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--clay);
+}
+
+.site-footer{
+  padding-top: clamp(60px, 8vw, 96px);
+  padding-bottom: 40px;
+  margin-top: 0;
+}
+.footer-grid{
+  padding-bottom: clamp(40px, 6vw, 72px);
+}
+.say-hi{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 6vw, 96px);
+  font-variation-settings: "opsz" 80;
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+.say-hi em{
+  font-style: italic;
+  color: var(--clay);
+}
+.footer-meta{
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 18px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+.footer-meta .links{
+  display: inline-flex; gap: 18px; flex-wrap: wrap;
+}
+.footer-meta .links a{
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--ink-2);
+  transition: color .25s var(--ease);
+}
+.footer-meta .links a:hover{ color: var(--clay); }
+.footer-meta .copy{ color: var(--ink-3); }
+
+@media (max-width: 960px){
+  .nav{ display: none; }
+  .menu-toggle{ display: inline-flex; }
+}
+@media (max-width: 640px){
+  .footer-meta{ font-size: 12px; }
+}
+
+.bg-aurora{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-aurora .blob{
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  opacity: 0.55;
+}
+.bg-aurora .blob-1{
+  width: 82vmax; height: 52vmax;
+  left: -24vmax; top: -22vmax;
+  background: radial-gradient(ellipse 60% 50% at center, color-mix(in srgb, var(--clay) 65%, transparent), transparent 68%);
+  animation: aurora-1 34s ease-in-out infinite alternate;
+}
+.bg-aurora .blob-2{
+  width: 50vmax; height: 72vmax;
+  right: -18vmax; bottom: -20vmax;
+  background: radial-gradient(ellipse 50% 60% at center, color-mix(in srgb, var(--clay) 48%, transparent), transparent 70%);
+  animation: aurora-2 44s ease-in-out infinite alternate;
+  opacity: 0.45;
+}
+html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
+@keyframes aurora-1{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(28vw, 18vh) rotate(32deg) scale(1.15); }
+}
+@keyframes aurora-2{
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate(-22vw, -14vh) rotate(-40deg) scale(1.2); }
+}
+@media (prefers-reduced-motion: reduce){
+  .bg-aurora .blob{ animation: none; }
+}
+</style>
+<style>
+.article-wrap{
+  max-width: 1180px;
+  margin: 0 auto;
+  margin-bottom: 0;
+  padding: 28px clamp(20px, 4vw, 56px) 0;
+}
+.article-wrap article{ font-size: 18px; line-height: 1.78; }
+.article-wrap .category{
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--clay);
+  margin: 0 0 12px;
+}
+.article-wrap h1{
+  font-family: var(--serif, var(--sans));
+  font-size: clamp(48px, 8vw, 104px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 96;
+  margin-bottom: 32px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.article-wrap h1 em{ color: var(--clay); font-style: italic; }
+.article-wrap .meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 44px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.article-wrap .meta b{ color: var(--ink); font-weight: 400; font-size: 12px; }
+.article-wrap .deck{
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 52px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid var(--rule);
+}
+.article-wrap p{ margin-bottom: 26px; color: var(--ink-2); }
+.article-wrap p strong{ color: var(--ink); font-weight: 500; }
+.article-wrap p em{ color: var(--clay); font-style: italic; }
+
+.cta-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  padding: 48px;
+  margin: 36px auto 0;
+  max-width: 860px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .cta-card {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+    gap: 24px;
+  }
+}
+
+.cta-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 80% at 100% 50%,
+    color-mix(in srgb, var(--clay) 8%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.cta-card:hover {
+  transform: scale(1.025);
+  border-color: color-mix(in srgb, var(--clay) 40%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--clay) 20%, transparent),
+    0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent);
+}
+
+.cta-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--clay) 60%, transparent),
+    transparent 40%,
+    color-mix(in srgb, var(--clay) 30%, transparent)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-card:hover::after { opacity: 1; }
+.cta-card-text { position: relative; z-index: 1; }
+.cta-card-headline {
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0;
+  font-variation-settings: "opsz" 32;
+}
+.cta-card-action { position: relative; z-index: 1; flex-shrink: 0; }
+.cta-card-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--clay); color: var(--paper);
+  font-family: var(--sans); font-size: 15px; font-weight: 600;
+  padding: 14px 28px; border-radius: 100px;
+  text-decoration: none; white-space: nowrap;
+  transition: background 0.2s, transform 0.2s;
+}
+.cta-card-btn:hover { background: var(--clay-deep); }
+.cta-card-btn svg { transition: transform 0.3s ease-out; }
+.cta-card-btn:hover svg { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) {
+  .cta-card-text, .cta-card-btn svg, .cta-card, .cta-card::after {
+    transition: none !important; transform: none !important;
+  }
+}
+
+.reading-progress{
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 60; pointer-events: none;
+}
+.reading-progress span{
+  display: block; height: 100%; width: 100%;
+  background: var(--clay);
+  transform: scaleX(0); transform-origin: left;
+  will-change: transform;
+}
+
+@keyframes article-rise{
+  from{ opacity: 0; transform: translateY(18px); }
+  to{ opacity: 1; transform: none; }
+}
+.article-wrap article > *{
+  animation: article-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.article-wrap article > *:nth-child(1){ animation-delay: .05s; }
+.article-wrap article > *:nth-child(2){ animation-delay: .10s; }
+.article-wrap article > *:nth-child(3){ animation-delay: .15s; }
+.article-wrap article > *:nth-child(4){ animation-delay: .20s; }
+.calculator > *{
+  animation: article-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.calculator > *:nth-child(1){ animation-delay: .30s; }
+.calculator > *:nth-child(2){ animation-delay: .35s; }
+.calculator > *:nth-child(3){ animation-delay: .40s; }
+.calculator > *:nth-child(4){ animation-delay: .45s; }
+.calculator > *:nth-child(n+5){ animation-delay: .55s; }
+@media (prefers-reduced-motion: reduce){
+  .article-wrap article > *, .calculator > *{ animation: none; }
+}
+
+.calc-wrap{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 4vw, 56px);
+}
+.calculator {
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.calc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calc-label {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-transform: none;
+  line-height: 1.15;
+}
+
+.calc-hint {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.calc-hint a {
+  color: var(--clay);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s var(--ease);
+}
+.calc-hint a:hover { color: var(--clay-deep); }
+
+.calc-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.calc-input-wrap:focus-within { border-color: var(--clay); }
+
+.calc-currency,
+.calc-suffix {
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink-3);
+  background: var(--paper-3);
+  border-right: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.calc-suffix {
+  border-right: none;
+  border-left: 1px solid var(--rule);
+}
+
+.calc-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  width: 100%;
+}
+.calc-input::placeholder { color: var(--ink-3); }
+.calc-input::-webkit-inner-spin-button,
+.calc-input::-webkit-outer-spin-button { opacity: 0.3; }
+
+.calc-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.preset-btn {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  padding: 10px 18px;
+  min-height: 40px;
+  border-radius: 100px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.preset-btn:hover {
+  border-color: color-mix(in srgb, var(--clay) 70%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 8%, var(--paper-3));
+  color: var(--clay);
+}
+.preset-btn.is-active {
+  border-color: var(--clay);
+  background: var(--clay);
+  color: var(--paper);
+}
+
+.calc-part-header {
+  display: flex; align-items: center; gap: 16px;
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(26px, 3vw, 36px);
+  font-variation-settings: "opsz" 40;
+  letter-spacing: -0.02em;
+  color: var(--clay);
+  margin: 24px 0 4px;
+  line-height: 1.15;
+}
+.calc-part-header::after {
+  content: ""; flex: 1; height: 1px;
+  background: color-mix(in srgb, var(--clay) 60%, transparent);
+}
+.calc-part-sub {
+  font-size: 15px; color: var(--ink-2);
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+.calc-part-note {
+  margin: 0 0 8px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--clay);
+  background: color-mix(in srgb, var(--clay) 4%, var(--paper-2));
+  font-size: 14px; color: var(--ink-2); line-height: 1.55;
+}
+
+.toggle-pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.toggle-pill {
+  font-family: var(--mono); font-size: 14px;
+  letter-spacing: 0.08em; padding: 10px 18px; min-height: 40px;
+  border-radius: 100px; border: 1px solid var(--rule);
+  background: var(--paper-3); color: var(--ink); cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.toggle-pill:hover {
+  border-color: color-mix(in srgb, var(--clay) 70%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 8%, var(--paper-3));
+  color: var(--clay);
+}
+.toggle-pill.is-active {
+  border-color: var(--clay); background: var(--clay); color: var(--paper);
+}
+
+.calc-result-wrap { position: static; bottom: auto; z-index: auto; }
+@media (max-width: 640px) {
+  .calc-result-wrap.is-sticky-mobile {
+    position: sticky;
+    bottom: 40px;
+    z-index: 50;
+  }
+}
+
+.calc-result {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  border: 1px solid color-mix(in srgb, var(--clay) 28%, var(--rule));
+  border-radius: 8px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--clay) 18%, transparent) inset,
+    0 24px 60px -32px color-mix(in srgb, var(--clay) 35%, transparent);
+}
+.calc-result-muted {
+  background: var(--paper-2);
+  border-color: var(--rule);
+  box-shadow: none;
+}
+
+.calc-result-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(22px, 2.6vw, 28px);
+  font-variation-settings: "opsz" 36;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-transform: none;
+  line-height: 1.1;
+}
+.calc-result-label::before {
+  content: "Σ";
+  font-family: var(--serif);
+  font-size: 0.9em;
+  color: var(--clay);
+  font-style: italic;
+  font-weight: 400;
+}
+.calc-result-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--clay) 35%, transparent);
+}
+
+.recoup-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 18px;
+}
+.recoup-tier{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+.recoup-tier.is-highlight {
+  background: color-mix(in srgb, var(--clay) 10%, var(--paper-3));
+  border-color: color-mix(in srgb, var(--clay) 40%, var(--rule));
+}
+.recoup-tier-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+.recoup-tier-value{
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 48;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+.recoup-tier.is-highlight .recoup-tier-value { color: var(--clay); }
+.recoup-tier-sub{
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+@media (max-width: 720px){
+  .recoup-grid{ grid-template-columns: 1fr; gap: 12px; }
+}
+
+.confidence-row {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: var(--paper-3);
+  border: 1px solid color-mix(in srgb, var(--clay) 30%, var(--rule));
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.confidence-row.is-out {
+  border-color: color-mix(in srgb, var(--accent-2) 45%, var(--rule));
+  background: color-mix(in srgb, var(--accent-2) 4%, var(--paper-3));
+}
+.confidence-row strong { color: var(--clay); font-weight: 600; }
+.confidence-row.is-out strong { color: var(--accent-2); }
+.confidence-row .conf-note { display: block; margin-top: 6px; font-size: 13px; color: var(--ink-3); }
+.confidence-row.is-out .conf-note { color: color-mix(in srgb, var(--accent-2) 70%, var(--ink-2)); }
+
+.calc-result-breakdown {
+  font-family: var(--mono-data);
+  font-size: 12px;
+  color: var(--ink-2);
+  line-height: 1.9;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--clay) 22%, var(--rule));
+  display: grid;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.calc-result-breakdown .row{
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.calc-result-breakdown .row span:first-child{
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.calc-result-breakdown .row span:last-child{ color: var(--ink); }
+.calc-result-breakdown .row.is-good span:last-child { color: var(--clay); }
+.calc-result-breakdown .row.is-bad span:last-child { color: var(--ink-2); }
+
+.calc-empty {
+  margin-top: 18px;
+  padding: 22px;
+  border-radius: 10px;
+  background: var(--paper-3);
+  border: 1px dashed var(--rule);
+  font-size: 15px; color: var(--ink-2);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.calc-nav-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 860px;
+  margin: 0 auto 32px;
+  padding: 0 32px;
+  gap: 16px;
+}
+.calc-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay);
+  color: var(--paper);
+  border-radius: 100px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.calc-nav-btn:hover {
+  background: var(--clay-deep);
+  text-decoration: none;
+}
+.calc-nav-back { background: transparent; color: var(--ink-2); border: 1px solid var(--rule); }
+.calc-nav-back:hover { background: var(--paper-3); color: var(--ink); }
+@media (max-width: 640px) {
+  .calc-nav-wrap { flex-direction: column; align-items: stretch; }
+  .calc-nav-btn { width: 100%; justify-content: center; }
+}
+.calc-step-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 8px 0 24px;
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color 0.2s var(--ease);
+}
+.calc-step-link:hover { color: var(--clay); }
+
+.calc-notes {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 8px 0 0;
+  margin-top: 8px;
+}
+.calc-notes-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-variation-settings: "opsz" 28;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 20px;
+  line-height: 1.15;
+}
+.calc-notes-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.calc-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.calc-notes li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.calc-notes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 8px;
+  height: 1px;
+  background: var(--clay);
+}
+.calc-notes li strong{
+  color: var(--ink);
+  font-weight: 500;
+}
+.calc-notes a {
+  color: var(--clay);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s var(--ease);
+}
+.calc-notes a:hover { color: var(--clay-deep); }
+
+@media (max-width: 640px) {
+  .calculator { padding: 0; }
+  .calc-result { padding: 24px; }
+  .preset-btn, .toggle-pill { min-height: 44px; padding: 12px 18px; font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="bg-aurora" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="reading-progress" aria-hidden="true"><span></span></div>
+
+<header class="site-header" id="site-header">
+  <div class="wrap bar">
+    <a href="/" class="wordmark" aria-label="Spritz Consulting, home">
+      <span>spritz<span class="dot" aria-hidden="true"></span>consulting</span>
+      <span class="role"></span>
+    </a>
+    <div class="bar-right">
+      <nav class="nav" aria-label="Primary">
+        <a href="/#consultancy"><span class="num">01</span><span>My Experience</span></a>
+        <a href="/#services"><span class="num">02</span><span>Services</span></a>
+        <a href="/#faq"><span class="num">03</span><span>FAQ</span></a>
+        <a href="/#contact"><span class="num">04</span><span>Contact</span></a>
+        <a href="/resources/" class="resources-link"><span>Resources</span> ↗</a>
+      </nav>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" id="menu-open">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" data-open="false" aria-hidden="true">
+  <div class="top">
+    <span class="wordmark"><span>spritz<span class="dot" aria-hidden="true"></span> consulting</span></span>
+    <button class="menu-toggle" id="menu-close" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <nav aria-label="Mobile">
+    <a href="/#consultancy" data-menu-link><span class="num">01</span> <span>My Experience</span></a>
+    <a href="/#services" data-menu-link><span class="num">02</span> <span>Services</span></a>
+    <a href="/#faq" data-menu-link><span class="num">03</span> <span>FAQ</span></a>
+    <a href="/#contact" data-menu-link><span class="num">04</span> <span>Contact</span></a>
+    <a href="/resources/" class="resources-link" data-menu-link><span>Resources</span> ↗</a>
+  </nav>
+  <div class="foot">
+    <span class="menu-tagline">production · publishing · audit</span>
+  </div>
+</div>
+
+<main id="main">
+  <div class="article-wrap">
+    <article>
+      <p class="category">Tools</p>
+      <h1>Steam Sales Forecast <em>Calculator</em></h1>
+      <div class="meta">
+        <div>Type <b>Calculator</b></div>
+        <div>Topic <b>Steam Sales</b></div>
+        <div>Updated <b>2026</b></div>
+      </div>
+      <p class="deck">Two parts. Before launch: estimate Week 1, Month 1 and Year One sales from your wishlist and follower count. After launch: enter your actual Week 1 numbers and see how you track against benchmarks.</p>
+      <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-step-link">← Previous step: Steam Wishlist Target Calculator</a>
+    </article>
+  </div>
+
+  <div class="calc-wrap">
+    <div class="calculator">
+
+      <h2 class="calc-part-header">Pre-Launch Forecast</h2>
+      <p class="calc-part-sub">Estimate your launch sales from what you know today.</p>
+
+      <div class="calc-group">
+        <label class="calc-label" for="wishlists">Wishlists at Launch</label>
+        <div class="calc-hint">Your estimated or target wishlist count at launch. Paste from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> or enter manually.</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="wishlists" class="calc-input" placeholder="0" min="0" step="1000">
+          <span class="calc-suffix">wishlists</span>
+        </div>
+        <div class="calc-presets" data-target="wishlists">
+          <button type="button" class="preset-btn" data-value="10000">10K</button>
+          <button type="button" class="preset-btn" data-value="25000">25K</button>
+          <button type="button" class="preset-btn" data-value="50000">50K</button>
+          <button type="button" class="preset-btn" data-value="100000">100K</button>
+        </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="followers">Steam Followers (optional)</label>
+        <div class="calc-hint">If you enter followers, the calculator will cross-check your wishlist estimate using the 10x median ratio and show a confidence range.</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="followers" class="calc-input" placeholder="0" min="0" step="100">
+          <span class="calc-suffix">followers</span>
+        </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="price">Game Price at Launch</label>
+        <div class="calc-hint">The price shown on your Steam store page on launch day.</div>
+        <div class="calc-input-wrap">
+          <span class="calc-currency">$</span>
+          <input type="number" id="price" class="calc-input" placeholder="0" min="0" step="0.01">
+        </div>
+        <div class="calc-presets" data-target="price">
+          <button type="button" class="preset-btn" data-value="9.99">$9.99</button>
+          <button type="button" class="preset-btn" data-value="19.99">$19.99</button>
+          <button type="button" class="preset-btn" data-value="29.99">$29.99</button>
+          <button type="button" class="preset-btn" data-value="39.99">$39.99</button>
+        </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="launch-type">Launch Type</label>
+        <div class="calc-hint">Early Access games convert roughly 8% fewer wishlists on average.</div>
+        <div class="toggle-pill-group" id="launch-type" role="radiogroup" aria-label="Launch type">
+          <button type="button" class="toggle-pill is-active" data-launch="full" role="radio" aria-checked="true">Full Release</button>
+          <button type="button" class="toggle-pill" data-launch="ea" role="radio" aria-checked="false">Early Access</button>
+        </div>
+      </div>
+
+      <div class="calc-result-wrap is-sticky-mobile">
+        <div class="calc-result" aria-live="polite" id="prelaunch-card">
+          <div class="calc-result-label">Pre-Launch Sales Estimate</div>
+          <div class="recoup-grid">
+            <div class="recoup-tier">
+              <div class="recoup-tier-label">Week 1</div>
+              <div class="recoup-tier-value" id="pre-week1">0</div>
+              <div class="recoup-tier-sub" id="pre-week1-sub">5% low / 15% median</div>
+            </div>
+            <div class="recoup-tier is-highlight">
+              <div class="recoup-tier-label">Month 1</div>
+              <div class="recoup-tier-value" id="pre-month1">0</div>
+              <div class="recoup-tier-sub">median month 1 conversion</div>
+            </div>
+            <div class="recoup-tier">
+              <div class="recoup-tier-label">Year One</div>
+              <div class="recoup-tier-value" id="pre-year1">0</div>
+              <div class="recoup-tier-sub">first week × 3 (conservative)</div>
+            </div>
+          </div>
+          <div class="confidence-row" id="confidence-row" hidden>
+            <strong id="conf-headline">Follower-implied wishlists</strong>
+            <span id="conf-range"></span>
+            <span class="conf-note" id="conf-note"></span>
+          </div>
+        </div>
+      </div>
+      <div class="calc-result-breakdown" id="pre-breakdown"></div>
+
+      <h2 class="calc-part-header">Post-Launch Tracker</h2>
+      <p class="calc-part-sub">Enter your actual numbers. See how you compare to benchmarks.</p>
+      <p class="calc-part-note">This section requires real data from your Steamworks dashboard. Without actual numbers, the projections below are not meaningful.</p>
+
+      <div class="calc-group">
+        <label class="calc-label" for="actual-week1">Actual Week 1 Sales</label>
+        <div class="calc-hint">Total copies sold in the first 7 days from your Steamworks data.</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="actual-week1" class="calc-input" placeholder="0" min="0" step="1">
+          <span class="calc-suffix">units</span>
+        </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="actual-reviews">Week 1 Reviews</label>
+        <div class="calc-hint">Public review count at end of Week 1. Used to cross-check sales via Boxleiter method (20x to 60x sales per review).</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="actual-reviews" class="calc-input" placeholder="0" min="0" step="1">
+          <span class="calc-suffix">reviews</span>
+        </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="post-wishlists">Wishlists at Launch</label>
+        <div class="calc-hint">Used to calculate your actual conversion rate and compare to the 15% median. Inherits the value from Part 1 if left empty.</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="post-wishlists" class="calc-input" placeholder="0" min="0" step="1000">
+          <span class="calc-suffix">wishlists</span>
+        </div>
+      </div>
+
+      <div class="calc-result-wrap">
+        <div class="calc-result calc-result-muted" aria-live="polite" id="postlaunch-card">
+          <div class="calc-result-label">Post-Launch Projections</div>
+          <div id="post-empty" class="calc-empty">Enter your Week 1 sales to see projections.</div>
+          <div class="recoup-grid" id="post-grid" hidden>
+            <div class="recoup-tier">
+              <div class="recoup-tier-label">Month 1 Projection</div>
+              <div class="recoup-tier-value" id="post-month1">0</div>
+              <div class="recoup-tier-sub">first week × 1.47</div>
+            </div>
+            <div class="recoup-tier">
+              <div class="recoup-tier-label">Year One Projection</div>
+              <div class="recoup-tier-value" id="post-year1">0</div>
+              <div class="recoup-tier-sub">first week × 3 (conservative)</div>
+            </div>
+            <div class="recoup-tier" id="conv-tier">
+              <div class="recoup-tier-label">Actual Conversion Rate</div>
+              <div class="recoup-tier-value" id="post-conv">0%</div>
+              <div class="recoup-tier-sub">vs 15% median</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="calc-result-breakdown" id="post-breakdown"></div>
+
+      <div class="calc-nav-wrap">
+        <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-nav-btn calc-nav-back">← Steam Wishlist Target Calculator</a>
+      </div>
+
+      <div class="calc-notes">
+        <div class="calc-notes-label">Notes</div>
+        <ul>
+          <li><strong>Where 15% comes from.</strong> GameDiscoverCo analysis of Steam launches from September 2024 to September 2025 puts the median Week 1 conversion at 0.15x of launch wishlists for games with 25,000+ wishlists. For games priced above $10, the median drops to 0.10x. Source: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a></li>
+          <li><strong>Where 27% Month 1 comes from.</strong> Gamalytic analysis of 5,744 Steam games released after June 2024 puts median Month 1 sales at 27% of launch wishlists. Source: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
+          <li><strong>Where ×3 Year One comes from.</strong> GameDiscoverCo survey of 100+ developers (2024) puts median Year 1 revenue at 3.16x Week 1 revenue. This calculator uses 3x as the conservative baseline. Source: <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a></li>
+          <li><strong>Early Access adjustment.</strong> Early Access games convert roughly 8% fewer wishlists than full releases on average. Source: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
+          <li><strong>Boxleiter cross-check.</strong> The Boxleiter method estimates 20x to 60x sales per public review, with a central range of 25x to 45x for most indie titles. This calculator uses 30x as a conservative midpoint for the cross-check only. Source: <a href="https://www.steampageanalyzer.com/blog/steam-sales-calculator" target="_blank" rel="noopener noreferrer">Steam Page Analyzer, 2026</a></li>
+          <li><strong>Estimation only.</strong> Both sections are directional indicators, not financial forecasts. Real planning needs your actual Steamworks data, genre comps, and marketing context.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-card-text">
+        <p class="cta-card-headline">
+          Want to talk through this?<br>
+          Book a 30-minute discovery call.
+        </p>
+      </div>
+      <div class="cta-card-action">
+        <a href="https://spritzconsulting.com/#contact" class="cta-card-btn">
+          Book a call <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <h2 class="say-hi">Say <em>Ciao</em>, anytime.</h2>
+  </div>
+  <div class="wrap footer-meta">
+    <div class="links">
+      <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+        <span>LinkedIn</span>
+        <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+      </a>
+    </div>
+    <div class="footer-settings">
+      <div class="theme-toggle" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-target="light" aria-pressed="false" aria-label="Switch to light theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>
+          <span>Light</span>
+        </button>
+        <button type="button" data-theme-target="dark" aria-pressed="true" aria-label="Switch to dark theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+          <span>Dark</span>
+        </button>
+      </div>
+    </div>
+    <span class="copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const THEME_KEY = 'mdn-theme';
+  const themeButtons = document.querySelectorAll('[data-theme-target]');
+  const applyTheme = (t) => {
+    const theme = (t === 'light' || t === 'dark') ? t : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    themeButtons.forEach(btn => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.themeTarget === theme));
+    });
+  };
+  applyTheme(document.documentElement.getAttribute('data-theme'));
+  themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tgt = btn.dataset.themeTarget;
+      try { localStorage.setItem(THEME_KEY, tgt); } catch (e) {}
+      applyTheme(tgt);
+    });
+  });
+
+  const header = document.getElementById('site-header');
+  const onScroll = () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const progressBar = document.querySelector('.reading-progress span');
+  if (progressBar) {
+    const updateProgress = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      progressBar.style.transform = 'scaleX(' + p + ')';
+    };
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+  }
+
+  const openBtn = document.getElementById('menu-open');
+  const closeBtn = document.getElementById('menu-close');
+  const menu = document.getElementById('mobile-menu');
+  const setMenu = (open) => {
+    menu.dataset.open = String(open);
+    menu.setAttribute('aria-hidden', String(!open));
+    openBtn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) closeBtn.focus(); else openBtn.focus();
+  };
+  openBtn.addEventListener('click', () => setMenu(true));
+  closeBtn.addEventListener('click', () => setMenu(false));
+  document.querySelectorAll('[data-menu-link]').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.dataset.open === 'true') setMenu(false);
+  });
+})();
+</script>
+
+<script>
+(function() {
+  var wishlistsInput = document.getElementById('wishlists');
+  var followersInput = document.getElementById('followers');
+  var priceInput = document.getElementById('price');
+  var actualWeek1Input = document.getElementById('actual-week1');
+  var actualReviewsInput = document.getElementById('actual-reviews');
+  var postWishlistsInput = document.getElementById('post-wishlists');
+
+  var preWeek1El = document.getElementById('pre-week1');
+  var preWeek1Sub = document.getElementById('pre-week1-sub');
+  var preMonth1El = document.getElementById('pre-month1');
+  var preYear1El = document.getElementById('pre-year1');
+  var preBreakdownEl = document.getElementById('pre-breakdown');
+
+  var confRow = document.getElementById('confidence-row');
+  var confHeadline = document.getElementById('conf-headline');
+  var confRangeEl = document.getElementById('conf-range');
+  var confNoteEl = document.getElementById('conf-note');
+
+  var postEmpty = document.getElementById('post-empty');
+  var postGrid = document.getElementById('post-grid');
+  var postMonth1El = document.getElementById('post-month1');
+  var postYear1El = document.getElementById('post-year1');
+  var postConvEl = document.getElementById('post-conv');
+  var convTier = document.getElementById('conv-tier');
+  var postBreakdownEl = document.getElementById('post-breakdown');
+
+  var launchType = 'full';
+  var launchPills = document.querySelectorAll('#launch-type .toggle-pill');
+
+  var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function rollTo(el, finalNum, fmt) {
+    if (!isFinite(finalNum)) finalNum = 0;
+    if (REDUCE_MOTION) {
+      el._rollVal = finalNum;
+      el.textContent = fmt(finalNum);
+      return;
+    }
+    if (el._rollRAF) cancelAnimationFrame(el._rollRAF);
+    var fromVal = (typeof el._rollVal === 'number' && isFinite(el._rollVal)) ? el._rollVal : 0;
+    if (fromVal === finalNum) {
+      el.textContent = fmt(finalNum);
+      el._rollVal = finalNum;
+      return;
+    }
+    var startTime = performance.now();
+    var DURATION = 350;
+    function ease(t) { return 1 - Math.pow(1 - t, 4); }
+    function tick(now) {
+      var t = (now - startTime) / DURATION;
+      if (t >= 1) {
+        el.textContent = fmt(finalNum);
+        el._rollVal = finalNum;
+        el._rollRAF = null;
+        return;
+      }
+      var v = fromVal + (finalNum - fromVal) * ease(t);
+      el.textContent = fmt(v);
+      el._rollRAF = requestAnimationFrame(tick);
+    }
+    el._rollRAF = requestAnimationFrame(tick);
+  }
+
+  function intFmt(n) {
+    return Math.round(n).toLocaleString('en-US');
+  }
+  function dollarFmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function pctFmt(n) {
+    return n.toFixed(1) + '%';
+  }
+  function readNum(el) {
+    if (!el) return 0;
+    var raw = el.value.toString().replace(/[^0-9.]/g, '');
+    return Math.max(0, parseFloat(raw) || 0);
+  }
+
+  function row(label, value, cls) {
+    return '<div class="row' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><span>' + value + '</span></div>';
+  }
+
+  function calculate() {
+    var wishlists = readNum(wishlistsInput);
+    var followers = readNum(followersInput);
+    var price = readNum(priceInput);
+
+    var convRate = launchType === 'ea' ? 0.138 : 0.15;
+    var week1 = wishlists * convRate;
+    var month1 = wishlists * 0.27;
+    var year1 = week1 * 3;
+
+    rollTo(preWeek1El, week1, intFmt);
+    rollTo(preMonth1El, month1, intFmt);
+    rollTo(preYear1El, year1, intFmt);
+
+    preWeek1Sub.textContent = launchType === 'ea'
+      ? '13.8% early access median'
+      : '5% low / 15% median';
+
+    if (followers > 0) {
+      var low = followers * 7;
+      var high = followers * 14;
+      var outOfRange = wishlists > 0 && (wishlists < low || wishlists > high);
+      confRow.hidden = false;
+      confRow.classList.toggle('is-out', outOfRange);
+      confHeadline.textContent = 'Follower-implied wishlists';
+      confRangeEl.textContent = ' ' + intFmt(low) + ' to ' + intFmt(high) +
+        (wishlists > 0 ? ' — your input: ' + intFmt(wishlists) : '');
+      confNoteEl.textContent = outOfRange
+        ? 'Your wishlist estimate is outside the typical follower range — double check your inputs.'
+        : '';
+    } else {
+      confRow.hidden = true;
+      confRow.classList.remove('is-out');
+    }
+
+    var lines = [];
+    lines.push(row('Wishlists at launch', intFmt(wishlists)));
+    lines.push(row('Conversion rate used', pctFmt(convRate * 100) + (launchType === 'ea' ? ' (EA)' : ' (full)')));
+    lines.push(row('Week 1 estimate', intFmt(week1) + ' units'));
+    lines.push(row('Month 1 estimate', intFmt(month1) + ' units'));
+    lines.push(row('Year One estimate', intFmt(year1) + ' units'));
+    if (price > 0) {
+      lines.push(row('Implied gross revenue Week 1', dollarFmt(week1 * price)));
+      lines.push(row('Implied gross revenue Year One', dollarFmt(year1 * price)));
+    }
+    preBreakdownEl.innerHTML = lines.join('');
+
+    calculatePost();
+  }
+
+  function calculatePost() {
+    var actualW1 = readNum(actualWeek1Input);
+    var reviews = readNum(actualReviewsInput);
+    var postWl = readNum(postWishlistsInput);
+    if (postWl === 0) postWl = readNum(wishlistsInput);
+    var price = readNum(priceInput);
+
+    if (actualW1 <= 0) {
+      postEmpty.hidden = false;
+      postGrid.hidden = true;
+      postBreakdownEl.innerHTML = '';
+      return;
+    }
+
+    postEmpty.hidden = true;
+    postGrid.hidden = false;
+
+    var month1 = actualW1 * 1.47;
+    var year1 = actualW1 * 3;
+    var convPct = postWl > 0 ? (actualW1 / postWl) * 100 : 0;
+    var onTrack = convPct >= 15;
+
+    rollTo(postMonth1El, month1, intFmt);
+    rollTo(postYear1El, year1, intFmt);
+
+    if (postWl > 0) {
+      postConvEl.textContent = pctFmt(convPct);
+      convTier.classList.toggle('is-highlight', onTrack);
+    } else {
+      postConvEl.textContent = 'n/a';
+      convTier.classList.remove('is-highlight');
+    }
+
+    var boxleiter = reviews * 30;
+    var statusText, statusClass;
+    if (postWl <= 0) { statusText = 'No data'; statusClass = 'is-bad'; }
+    else if (onTrack) { statusText = 'On track'; statusClass = 'is-good'; }
+    else { statusText = 'Below median'; statusClass = 'is-bad'; }
+
+    var lines = [];
+    lines.push(row('Actual Week 1', intFmt(actualW1) + ' units'));
+    if (reviews > 0) {
+      lines.push(row('Boxleiter check (reviews × 30)', intFmt(boxleiter) + ' units (rough cross-check only)'));
+    }
+    if (postWl > 0) {
+      lines.push(row('Actual conversion rate', pctFmt(convPct) + ' vs 15% median', onTrack ? 'is-good' : 'is-bad'));
+    }
+    lines.push(row('Month 1 projection', intFmt(month1) + ' units'));
+    lines.push(row('Year One projection', intFmt(year1) + ' units'));
+    if (price > 0) {
+      lines.push(row('Implied gross revenue Year One', dollarFmt(year1 * price)));
+    }
+    lines.push(row('Status', statusText, statusClass));
+    postBreakdownEl.innerHTML = lines.join('');
+  }
+
+  var allInputs = [wishlistsInput, followersInput, priceInput, actualWeek1Input, actualReviewsInput, postWishlistsInput];
+  allInputs.forEach(function(el) {
+    ['input', 'change', 'touchend'].forEach(function(evt) {
+      el.addEventListener(evt, calculate);
+    });
+  });
+
+  var tracked = false;
+  document.addEventListener('input', function() {
+    if (tracked) return;
+    tracked = true;
+    if (window.cf && window.cf.beacon) {
+      window.cf.beacon({ name: 'tool_used', data: { tool: 'steam_sales_forecast_calculator' } });
+    }
+  }, true);
+
+  allInputs.forEach(function(el) {
+    el.addEventListener('wheel', function(e) {
+      if (document.activeElement === el) {
+        e.preventDefault();
+        el.blur();
+      }
+    }, { passive: false });
+  });
+
+  launchPills.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      launchType = btn.dataset.launch;
+      launchPills.forEach(function(b) {
+        var active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-checked', String(active));
+      });
+      calculate();
+    });
+  });
+
+  function syncGroup(groupEl, value) {
+    var n = parseFloat(value);
+    groupEl.querySelectorAll('.preset-btn').forEach(function(b) {
+      b.classList.toggle('is-active', !isNaN(n) && parseFloat(b.dataset.value) === n);
+    });
+  }
+
+  document.querySelectorAll('.calc-presets').forEach(function(group) {
+    var targetId = group.dataset.target;
+    var input = document.getElementById(targetId);
+    if (!input) return;
+    group.querySelectorAll('.preset-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        input.value = btn.dataset.value;
+        syncGroup(group, btn.dataset.value);
+        calculate();
+      });
+    });
+    input.addEventListener('input', function() {
+      syncGroup(group, input.value);
+    });
+  });
+
+  calculate();
+})();
+</script>
+
+</body>
+</html>
