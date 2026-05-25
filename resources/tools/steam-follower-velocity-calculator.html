@@ -1401,16 +1401,16 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-group">
         <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
-        <div class="calc-hint">GameDiscoverCo data puts the median at 10x to 12x for unreleased games. Conservative: 7x. Strong: 14x.</div>
+        <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="multiplier" class="calc-input" placeholder="10" min="1" max="30" step="0.1" value="10">
+          <input type="number" id="multiplier" class="calc-input" placeholder="12" min="1" max="30" step="0.1" value="12">
           <span class="calc-suffix">X</span>
         </div>
         <div class="calc-presets" data-target="multiplier">
           <button type="button" class="preset-btn" data-value="7">7x</button>
-          <button type="button" class="preset-btn is-active" data-value="10">10x</button>
-          <button type="button" class="preset-btn" data-value="12">12x</button>
-          <button type="button" class="preset-btn" data-value="14">14x</button>
+          <button type="button" class="preset-btn" data-value="10">10x</button>
+          <button type="button" class="preset-btn is-active" data-value="12">12x</button>
+          <button type="button" class="preset-btn" data-value="16">16x</button>
         </div>
       </div>
 
@@ -1483,6 +1483,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
+          <li><strong>Where the follower multiplier comes from, and why it keeps changing.</strong> The follower-to-wishlist ratio has increased over time as marketers focus more on wishlist calls-to-action than follower growth. In 2021, the median was 9.6x (range 5x to 14x). By June 2023, it had risen to 12x (range 7x to 20x). GameDiscoverCo data from May 2026 puts the median at 16.1x for games with more than 50,000 wishlists at launch, suggesting the ratio continues to drift upward, especially for larger titles. This calculator uses 12x as the default, which is appropriate for most indie games in active pre-launch. If your game has broad social reach or has been featured in multiple Next Fest events, consider using 14x to 16x. Sources: <a href="https://newsletter.gamediscover.co/p/why-your-steam-follower-to-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Jun 2023</a> &middot; <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
           <li><strong>Where 10x comes from.</strong> GameDiscoverCo surveys of unreleased Steam games show a median of 9.6x to 12x wishlists per follower, with a range of 7x to 20x depending on genre, festival exposure, and marketing activity. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> · <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a></li>
           <li><strong>Followers are a proxy, not a promise.</strong> Publishers and algorithm alike use follower counts as a visible signal of pre-launch interest. But follower velocity matters more than the absolute number. A game gaining 200 followers per day is a different conversation from one with 10,000 followers accumulated over three years.</li>
           <li><strong>Wishlist estimates are approximations.</strong> The follower to wishlist ratio varies by genre, festival participation, and how long the page has been open. GameDiscoverCo data shows a median of 9.6x for unreleased games, with a central cluster of 10x to 12x. Games with recent Next Fest or demo exposure tend to sit higher. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a></li>
