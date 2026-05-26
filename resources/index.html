@@ -247,6 +247,24 @@ html{
 .resources-link:hover {
   opacity: 1;
 }
+.resources-arrow {
+  display: inline-block;
+  will-change: transform;
+  animation: resources-arrow-drift 2.4s ease-in-out infinite;
+  transition: transform .25s ease;
+}
+.resources-link:hover .resources-arrow {
+  animation: none;
+  transform: translate(3px, -3px);
+}
+@keyframes resources-arrow-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(2px, -2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .resources-arrow { animation: none; }
+  .resources-link:hover .resources-arrow { transform: none; }
+}
 .nav a.resources-link,
 .nav a.resources-link:hover,
 .mobile-menu nav a.resources-link {
@@ -694,7 +712,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
         <a href="/#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="/#faq"><span class="num">03</span><span data-i18n="nav.faq">FAQ</span></a>
         <a href="/#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
-        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span> ↗</a>
+        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -715,7 +733,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     <a href="/#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
     <a href="/#faq" data-menu-link><span class="num">03</span> <span data-i18n="nav.faq">FAQ</span></a>
     <a href="/#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
-    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span> ↗</a>
+    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
   </nav>
   <div class="foot">
     <span class="menu-tagline">production · publishing · audit</span>
