@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-23T07:14:00Z",
+  "title": "Design System: Spritz Consulting",
+  "extensions": {
+    "colorMeta": {
+      "clay": {
+        "role": "primary",
+        "displayName": "Clay Mustard",
+        "canonical": "#E5B415",
+        "tonalRamp": ["#2A1F05", "#5C440D", "#876514", "#B0851B", "#C4970A", "#E5B415", "#F1C73C", "#F8DC80", "#FCEDB8"]
+      },
+      "clay-light": {
+        "role": "primary",
+        "displayName": "Deep Mustard (Light Theme)",
+        "canonical": "#8A6600",
+        "tonalRamp": ["#1F1700", "#3B2C00", "#574100", "#6B5000", "#8A6600", "#A88200", "#C7A03A", "#E2C16F", "#F3E4A8"]
+      },
+      "accent-2": {
+        "role": "secondary",
+        "displayName": "Signal Magenta",
+        "canonical": "#FF2EC8",
+        "tonalRamp": ["#2A1020", "#4D1840", "#751F60", "#9D2483", "#BE1383", "#FF2EC8", "#FF6BD8", "#FFA0E5", "#FFD2F2"]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Confirm Green",
+        "canonical": "#62C28A",
+        "tonalRamp": ["#0E2418", "#163826", "#1F6B3D", "#2F8A55", "#3FA66F", "#62C28A", "#8AD4A8", "#B2E3C3", "#D9F0DE"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Coal Paper",
+        "canonical": "#0A0B0E",
+        "tonalRamp": ["#0A0B0E", "#12141A", "#1A1D25", "#262A33", "#3A3F4B", "#5C6272", "#8E95A4", "#BFC4CE", "#ECEFF6"]
+      },
+      "paper-light": {
+        "role": "neutral",
+        "displayName": "Warm Cream",
+        "canonical": "#F4F3ED",
+        "tonalRamp": ["#0A0B0E", "#2A2A24", "#4A4E58", "#5F6168", "#7E7F76", "#CFCDC2", "#DCDAD0", "#E9E7DE", "#FBFAF4"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Bricolage opsz 96)", "purpose": "Hero H1. Italic emphasis is always clay." },
+      "headline": { "displayName": "Headline (Bricolage opsz 80)", "purpose": "Resources / calculator hero. Max 22ch line." },
+      "title": { "displayName": "Title (Bricolage opsz 36)", "purpose": "Resource card title, calculator input label." },
+      "body": { "displayName": "Body (SF Pro 17/1.55)", "purpose": "Default site copy." },
+      "body-article": { "displayName": "Article Body (SF Pro 18/1.78)", "purpose": "Long-form prose — looser leading for read-through." },
+      "label": { "displayName": "Label (Bebas Neue UPPERCASE)", "purpose": "Nav, kickers, button labels, preset chips." },
+      "meta": { "displayName": "Meta (Bebas Neue 12/0.14em)", "purpose": "Byline, footer, breakdown rows, category tags." }
+    },
+    "shadows": [
+      { "name": "shadow-sm", "value": "0 1px 0 rgba(0,0,0,0.55), 0 2px 8px -2px rgba(229,180,21,0.22)", "purpose": "Primary button at rest — black hairline grounds, clay glow signals brand." },
+      { "name": "shadow-md", "value": "0 1px 0 rgba(0,0,0,0.55), 0 20px 50px -20px rgba(229,180,21,0.26)", "purpose": "Hero-right panel, deck cards. Long soft clay drop." },
+      { "name": "shadow-result", "value": "0 1px 0 color-mix(in srgb, var(--clay) 18%, transparent) inset, 0 24px 60px -32px color-mix(in srgb, var(--clay) 35%, transparent)", "purpose": "Calculator result panel — inner highlight plus falloff drop." },
+      { "name": "shadow-cta-hover", "value": "0 0 0 1px color-mix(in srgb, var(--clay) 20%, transparent), 0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent)", "purpose": "CTA card lifts only on hover, never at rest." }
+    ],
+    "motion": [
+      { "name": "ease-default", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default state transitions (hover, theme switch, nav). Ease-out-quint shape." },
+      { "name": "ease-cta", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "CTA card scale-on-hover — slightly snappier ease-out." },
+      { "name": "duration-fast", "value": "0.2s", "purpose": "Hover color/border swaps." },
+      { "name": "duration-default", "value": "0.25s", "purpose": "Nav link color, button transitions." },
+      { "name": "duration-slow", "value": "0.4s", "purpose": "Theme switch (background + color crossfade)." },
+      { "name": "duration-ambient-grain", "value": "22s", "purpose": "Grain background-position drift loop." },
+      { "name": "duration-ambient-aurora-1", "value": "34s", "purpose": "Aurora blob 1 alternating ease-in-out." },
+      { "name": "duration-ambient-aurora-2", "value": "44s", "purpose": "Aurora blob 2 alternating ease-in-out." },
+      { "name": "duration-dot-pulse", "value": "1.8s", "purpose": "Wordmark dot heartbeat — ease-in-out infinite." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "720px" },
+      { "name": "lg", "value": "768px" },
+      { "name": "xl", "value": "960px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pill CTA — clay fill, paper text, clay-tinted glow. Right-arrow translates on hover.",
+      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\">Book a call <svg class=\"arrow\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m13 6 6 6-6 6\"/></svg></a>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;font-family:\"SF Pro Text\",system-ui,sans-serif;font-weight:500;font-size:14.5px;letter-spacing:0.01em;border-radius:999px;border:1px solid transparent;transition:transform .2s cubic-bezier(0.16,1,0.3,1),background-color .25s cubic-bezier(0.16,1,0.3,1),color .25s,border-color .25s,box-shadow .25s;cursor:pointer}.ds-btn .arrow{transition:transform .3s cubic-bezier(0.16,1,0.3,1)}.ds-btn:hover .arrow{transform:translateX(3px)}.ds-btn:active{transform:translateY(1px)}.ds-btn-primary{background:#E5B415;color:#0A0B0E;box-shadow:0 1px 0 rgba(0,0,0,0.55),0 2px 8px -2px rgba(229,180,21,0.22)}.ds-btn-primary:hover{background:#C4970A;color:#0A0B0E}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Transparent pill with rule border. Hover swaps border + text to clay.",
+      "html": "<a class=\"ds-btn ds-btn-ghost\" href=\"#\">Read article <svg class=\"arrow\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m13 6 6 6-6 6\"/></svg></a>",
+      "css": ".ds-btn-ghost{background:transparent;color:#ECEFF6;border:1px solid #262A33}.ds-btn-ghost:hover{border-color:#E5B415;color:#E5B415}"
+    },
+    {
+      "name": "Filter Chip Group",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "Segmented pill bar for resource filters. Active chip is ink fill, paper text.",
+      "html": "<div class=\"ds-res-filters\" role=\"tablist\"><button class=\"ds-res-filter-btn is-active\" role=\"tab\" aria-selected=\"true\">All</button><button class=\"ds-res-filter-btn\" role=\"tab\" aria-selected=\"false\">Articles</button><button class=\"ds-res-filter-btn\" role=\"tab\" aria-selected=\"false\">Tools</button><button class=\"ds-res-filter-btn\" role=\"tab\" aria-selected=\"false\">Decks</button></div>",
+      "css": ".ds-res-filters{display:inline-flex;gap:8px;padding:5px;border:1px solid #262A33;border-radius:999px;background:#1A1D25}.ds-res-filter-btn{appearance:none;background:transparent;color:#ECEFF6;padding:13px 48px;border-radius:999px;cursor:pointer;font:600 16px/1 \"SF Pro Text\",system-ui,sans-serif;letter-spacing:-0.005em;border:1px solid #262A33;transition:background 180ms ease,color 180ms ease,border-color 180ms ease}.ds-res-filter-btn:hover{color:#ECEFF6;border-color:#5C6272}.ds-res-filter-btn.is-active{background:#ECEFF6;color:#0A0B0E;border-color:#ECEFF6}"
+    },
+    {
+      "name": "Calculator Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Composite input — paper-3 prefix/suffix chips bracket a transparent text input. Focus-within turns the wrap clay.",
+      "html": "<label class=\"ds-calc-group\"><span class=\"ds-calc-label\">Development Budget</span><span class=\"ds-calc-hint\">Total spend to ship — staff + outsourcing + tools + audio + QA.</span><div class=\"ds-calc-input-wrap\"><span class=\"ds-calc-currency\">USD $</span><input class=\"ds-calc-input\" type=\"number\" inputmode=\"decimal\" placeholder=\"500,000\" /><span class=\"ds-calc-suffix\">.00</span></div></label>",
+      "css": ".ds-calc-group{display:flex;flex-direction:column;gap:10px}.ds-calc-label{font-family:\"Bricolage Grotesque\",ui-sans-serif,system-ui,sans-serif;font-weight:500;font-size:clamp(22px,2.4vw,28px);font-variation-settings:\"opsz\" 32;letter-spacing:-0.015em;color:#ECEFF6;line-height:1.15}.ds-calc-hint{font-size:15px;color:#8E95A4;line-height:1.6}.ds-calc-input-wrap{display:flex;align-items:center;background:#12141A;border:1px solid #262A33;border-radius:8px;overflow:hidden;transition:border-color 0.2s}.ds-calc-input-wrap:focus-within{border-color:#E5B415}.ds-calc-currency,.ds-calc-suffix{padding:14px 16px;font-family:\"Bebas Neue\",Impact,sans-serif;font-size:14px;color:#5C6272;background:#1A1D25;flex-shrink:0}.ds-calc-currency{border-right:1px solid #262A33}.ds-calc-suffix{border-left:1px solid #262A33}.ds-calc-input{flex:1;background:transparent;border:none;outline:none;padding:14px 16px;font-family:\"SF Pro Text\",system-ui,sans-serif;font-size:16px;color:#ECEFF6;width:100%}.ds-calc-input::placeholder{color:#5C6272}"
+    },
+    {
+      "name": "Preset Chip",
+      "kind": "chip",
+      "refersTo": "preset-btn",
+      "description": "Quick-select numeric preset under a calculator input. Active state is clay fill.",
+      "html": "<div class=\"ds-calc-presets\"><button class=\"ds-preset-btn\">250K</button><button class=\"ds-preset-btn is-active\">500K</button><button class=\"ds-preset-btn\">1M</button><button class=\"ds-preset-btn\">2M</button></div>",
+      "css": ".ds-calc-presets{display:flex;flex-wrap:wrap;gap:8px}.ds-preset-btn{font-family:\"Bebas Neue\",Impact,sans-serif;font-size:14px;letter-spacing:0.08em;padding:10px 18px;min-height:40px;border-radius:100px;border:1px solid #262A33;background:#1A1D25;color:#ECEFF6;cursor:pointer;transition:border-color 0.2s cubic-bezier(0.16,1,0.3,1),color 0.2s,background 0.2s}.ds-preset-btn:hover{border-color:color-mix(in srgb,#E5B415 70%,#262A33);background:color-mix(in srgb,#E5B415 8%,#1A1D25);color:#E5B415}.ds-preset-btn.is-active{border-color:#E5B415;background:#E5B415;color:#0A0B0E}"
+    },
+    {
+      "name": "Result Panel",
+      "kind": "card",
+      "refersTo": "card-result",
+      "description": "Calculator output — clay-tinted surface, serif Σ-prefixed label with extending rule, oversized tabular-num value.",
+      "html": "<div class=\"ds-calc-result\"><span class=\"ds-calc-result-label\">Marketing budget</span><span class=\"ds-calc-result-value\">$125,000</span><div class=\"ds-calc-result-breakdown\"><div class=\"ds-row\"><span>RATE</span><span>25% OF BUDGET</span></div><div class=\"ds-row\"><span>RECOUP UNITS @ $20</span><span>6,250</span></div></div></div>",
+      "css": ".ds-calc-result{position:relative;background:color-mix(in srgb,#E5B415 6%,#12141A);border:1px solid color-mix(in srgb,#E5B415 28%,#262A33);border-radius:14px;padding:32px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 0 color-mix(in srgb,#E5B415 18%,transparent) inset,0 24px 60px -32px color-mix(in srgb,#E5B415 35%,transparent)}.ds-calc-result-label{display:flex;align-items:center;gap:16px;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:500;font-size:clamp(24px,2.8vw,32px);font-variation-settings:\"opsz\" 36;letter-spacing:-0.02em;color:#ECEFF6;line-height:1.1}.ds-calc-result-label::before{content:\"\\03A3\";font-family:\"Bricolage Grotesque\",serif;font-size:0.9em;color:#E5B415;font-style:italic;font-weight:400}.ds-calc-result-label::after{content:\"\";flex:1;height:1px;background:color-mix(in srgb,#E5B415 35%,transparent)}.ds-calc-result-value{font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-size:clamp(56px,10vw,104px);font-weight:600;color:#ECEFF6;letter-spacing:-0.045em;line-height:0.96;font-variation-settings:\"opsz\" 96;font-variant-numeric:tabular-nums;margin-top:4px}.ds-calc-result-breakdown{font-family:\"Bebas Neue\",Impact,sans-serif;font-size:13px;color:#8E95A4;line-height:1.9;margin-top:16px;padding-top:16px;border-top:1px solid color-mix(in srgb,#E5B415 22%,#262A33);display:grid;gap:4px;font-variant-numeric:tabular-nums}.ds-calc-result-breakdown .ds-row{display:flex;justify-content:space-between;gap:16px}.ds-calc-result-breakdown .ds-row span:first-child{color:#5C6272;letter-spacing:0.06em;text-transform:uppercase;font-size:11px}"
+    },
+    {
+      "name": "TL;DR Card",
+      "kind": "card",
+      "refersTo": "card-tldr",
+      "description": "Article summary block — paper-2 surface, clay pill label, dot-bulleted list with clay markers.",
+      "html": "<aside class=\"ds-tldr\"><span class=\"ds-tldr-label\">TL;DR</span><ul><li>The headline split number is not the deal.</li><li>Recoup terms set who actually earns first.</li><li>Net definitions hide most of the value.</li></ul></aside>",
+      "css": ".ds-tldr{background:#12141A;border:1px solid #262A33;border-radius:14px;padding:32px 34px;margin:64px 0}.ds-tldr-label{display:inline-block;font-family:\"Bebas Neue\",Impact,sans-serif;font-size:12px;letter-spacing:0.16em;color:#0A0B0E;background:#E5B415;padding:5px 12px;border-radius:999px;margin-bottom:20px}.ds-tldr ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}.ds-tldr li{font-size:15px;line-height:1.6;color:#8E95A4;padding-left:16px;position:relative}.ds-tldr li::before{content:\"\\B7\";position:absolute;left:0;color:#E5B415;font-weight:700}"
+    },
+    {
+      "name": "CTA Card",
+      "kind": "card",
+      "refersTo": "card-cta",
+      "description": "Article-end CTA — paper-2 with radial clay wash, scales 1.025 on hover with clay-tinted gradient frame fade-in.",
+      "html": "<a class=\"ds-cta-card\" href=\"#\"><div class=\"ds-cta-card-text\"><div class=\"ds-cta-card-headline\">Sharper read on your deal? Book a call.</div></div><div class=\"ds-cta-card-action\"><span class=\"ds-cta-card-btn\">Get in touch <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7\"/><path d=\"M8 7h9v9\"/></svg></span></div></a>",
+      "css": ".ds-cta-card{position:relative;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;overflow:hidden;border-radius:16px;border:1px solid #262A33;background:#12141A;padding:48px;text-decoration:none;color:inherit;transition:transform 0.3s cubic-bezier(0.22,1,0.36,1),border-color 0.3s ease,box-shadow 0.3s ease}.ds-cta-card::before{content:\"\";position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 100% 50%,color-mix(in srgb,#E5B415 8%,transparent),transparent 70%);pointer-events:none}.ds-cta-card:hover{transform:scale(1.025);border-color:color-mix(in srgb,#E5B415 40%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,#E5B415 20%,transparent),0 8px 32px -8px color-mix(in srgb,#E5B415 20%,transparent)}.ds-cta-card::after{content:\"\";position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,color-mix(in srgb,#E5B415 60%,transparent),transparent 40%,color-mix(in srgb,#E5B415 30%,transparent));opacity:0;transition:opacity 0.3s ease;pointer-events:none;z-index:0}.ds-cta-card:hover::after{opacity:1}.ds-cta-card-text,.ds-cta-card-action{position:relative;z-index:1}.ds-cta-card-headline{font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-size:clamp(20px,3vw,28px);font-weight:600;color:#ECEFF6;letter-spacing:-0.02em;line-height:1.2;font-variation-settings:\"opsz\" 32}.ds-cta-card-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;background:#E5B415;color:#0A0B0E;font-family:\"SF Pro Text\",system-ui,sans-serif;font-weight:500;font-size:14.5px;letter-spacing:0.01em}@media (max-width:640px){.ds-cta-card{grid-template-columns:1fr;padding:32px 24px;gap:24px}}"
+    },
+    {
+      "name": "Resource Card (List Row)",
+      "kind": "card",
+      "refersTo": "card-panel",
+      "description": "Flat divided list row, not a tile. 48px boxed icon + body. Hover tints background 4% clay, title turns clay.",
+      "html": "<a class=\"ds-res-card is-unlocked\" href=\"#\"><div class=\"ds-res-icon\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"2\" y=\"3\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M8 21h8\"/><path d=\"M12 17v4\"/></svg></div><div class=\"ds-res-body\"><div class=\"ds-res-text\"><h3 class=\"ds-res-title\">What a publisher actually reads in your pitch deck</h3><p class=\"ds-res-desc\">A publisher isn't evaluating only your game. They're building a risk model.</p></div><span class=\"ds-res-cta\">Read &rarr;</span></div></a>",
+      "css": ".ds-res-card{display:grid;grid-template-columns:56px 1fr;gap:clamp(16px,3vw,36px);padding:clamp(28px,4vw,44px) 0;border-bottom:1px solid #262A33;align-items:start;text-decoration:none;color:inherit;transition:background-color .25s cubic-bezier(0.16,1,0.3,1)}.ds-res-card:hover{background-color:color-mix(in srgb,#E5B415 4%,transparent)}.ds-res-icon{width:48px;height:48px;border-radius:12px;background:#1A1D25;border:1px solid #262A33;display:flex;align-items:center;justify-content:center;color:#ECEFF6;transition:color .25s,border-color .25s}.ds-res-card.is-unlocked .ds-res-icon{border-color:color-mix(in srgb,#E5B415 30%,transparent);color:#E5B415}.ds-res-body{display:flex;align-items:center;justify-content:space-between;gap:clamp(20px,3vw,40px);min-width:0}.ds-res-text{display:flex;flex-direction:column;gap:12px;min-width:0}.ds-res-title{font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:500;font-size:clamp(22px,2.4vw,32px);font-variation-settings:\"opsz\" 36;line-height:1.15;letter-spacing:-0.015em;color:#ECEFF6;margin:0;transition:color .25s}.ds-res-card:hover .ds-res-title{color:#E5B415}.ds-res-desc{font-size:16px;color:#8E95A4;line-height:1.55;margin:0;max-width:70ch}.ds-res-cta{flex-shrink:0;background:#E5B415;color:#0A0B0E;border-radius:100px;padding:12px 24px;font-family:\"SF Pro Text\",system-ui,sans-serif;font-size:15px;font-weight:600;white-space:nowrap;transition:background-color .25s}.ds-res-card.is-unlocked:hover .ds-res-cta{background:#C4970A}"
+    },
+    {
+      "name": "Primary Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky bar with backdrop-filter. Numbered Bebas links with clay `01`–`04` prefixes; Resources link is opted out, clay with arrow.",
+      "html": "<header class=\"ds-site-header\"><div class=\"ds-bar\"><a class=\"ds-wordmark\" href=\"/\"><span>spritz<span class=\"ds-dot\" aria-hidden=\"true\"></span>consulting</span></a><nav class=\"ds-nav\" aria-label=\"Primary\"><a href=\"#consultancy\"><span class=\"ds-num\">01</span><span>My Experience</span></a><a href=\"#services\"><span class=\"ds-num\">02</span><span>Services</span></a><a href=\"#faq\"><span class=\"ds-num\">03</span><span>FAQ</span></a><a href=\"#contact\" class=\"is-active\"><span class=\"ds-num\">04</span><span>Contact</span></a><a href=\"/resources/\" class=\"ds-resources-link\"><span>Resources</span> &#8599;</a></nav></div></header>",
+      "css": ".ds-site-header{position:sticky;top:0;z-index:40;background:color-mix(in srgb,#0A0B0E 82%,transparent);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid transparent}.ds-bar{display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,56px);max-width:1280px;margin:0 auto;gap:18px}.ds-wordmark{display:inline-flex;align-items:baseline;gap:10px;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:500;font-size:20px;font-variation-settings:\"opsz\" 24;letter-spacing:-0.01em;color:#ECEFF6;text-decoration:none}.ds-dot{width:10px;height:10px;display:inline-block;transform:translateY(-1px);margin:0 4px;background:#E5B415;border-radius:50%;animation:ds-dot-pulse 1.8s ease-in-out infinite}@keyframes ds-dot-pulse{0%,100%{transform:translateY(-1px) scale(1);opacity:1;box-shadow:0 0 0 0 color-mix(in srgb,#E5B415 60%,transparent)}50%{transform:translateY(-1px) scale(1.18);opacity:0.7;box-shadow:0 0 0 6px color-mix(in srgb,#E5B415 0%,transparent)}}.ds-nav{display:flex;align-items:center;gap:4px}.ds-nav a{font-family:\"Bebas Neue\",Impact,sans-serif;font-size:14px;letter-spacing:0.04em;text-transform:uppercase;color:#8E95A4;padding:8px 14px;border-radius:999px;text-decoration:none;display:inline-flex;align-items:center;transition:color .25s cubic-bezier(0.16,1,0.3,1),background-color .25s}.ds-nav a:hover{color:#ECEFF6}.ds-nav a.is-active{background:#E5B415;color:#0A0B0E}.ds-nav a .ds-num{color:#E5B415;margin-right:6px;font-variant-numeric:tabular-nums}.ds-nav a.is-active .ds-num{color:#0A0B0E}.ds-resources-link{color:#E5B415 !important;opacity:0.85;transition:opacity 0.2s}.ds-resources-link:hover{opacity:1}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Production-Side Editorial",
+    "overview": "Voice of a producer who's also a typesetter. The site reads like a printed dossier — generous serif display, tabular monospace tickers, body in a system sans. Near-black surface lit from behind by a slow mustard aurora and a permanent 5% grain, signaling craft over template. The mustard (#E5B415) is the same hue as the founder's portrait backdrop, so the brand color is photographic in origin, not arbitrary. Density is editorial, not SaaS. Cards exist but are reserved for genuine containers; the resources list is a flat divided list, not a grid of icon-tiles. Magenta is present but rare — kicker accents in light theme, danger states only.",
+    "keyCharacteristics": [
+      "Tinted near-black #0A0B0E paper, never #000",
+      "Single saturated accent — clay mustard #E5B415",
+      "Three families: Bricolage Grotesque display, SF Pro body, Bebas Neue mono/label uppercase",
+      "Pill radius 999px for interactive; 8–18px for panels; 4px focus",
+      "Theme-paired: dark mustard-on-near-black, light deep-mustard-on-cream",
+      "Magenta promoted to kicker accents in light theme only"
+    ],
+    "rules": [
+      { "name": "The One Mustard Rule", "body": "Clay is the only chromatic accent on any screen unless the role is semantic (danger = magenta, success = green). If something needs to pop but isn't a CTA, the answer is weight or scale, not a second color.", "section": "colors" },
+      { "name": "The Photographic-Origin Rule", "body": "--portrait-bg: #E5B415 is theme-invariant. The brand color is locked to the portrait's actual backdrop. Don't theme-shift it for variety.", "section": "colors" },
+      { "name": "The Tinted-Black Rule", "body": "Never #000, never #fff. Paper is always tilted toward the brand hue.", "section": "colors" },
+      { "name": "The Italic-Means-Clay Rule", "body": "Italic text is always clay. Never an italic in default ink.", "section": "typography" },
+      { "name": "The Counter-Header Rule", "body": "Article H2 carries a ::before numeral counter (decimal-leading-zero) in clay Bebas above the heading. The number is the marker, the heading is the content.", "section": "typography" },
+      { "name": "The Op-Size Rule", "body": "Bricolage uses font-variation-settings 'opsz' N matched to the rendered size. Don't render a 100px headline at opsz 24.", "section": "typography" },
+      { "name": "The Mono-For-Numbers Rule", "body": "Any numeric value rendered in chrome uses font-variant-numeric: tabular-nums.", "section": "typography" },
+      { "name": "The Flat-At-Rest Rule", "body": "Cards, inputs, list items, filter chips are flat at rest. Shadows respond to state — never decorative.", "section": "elevation" },
+      { "name": "The Clay-Tinted-Shadow Rule", "body": "Every shadow that exists is tinted with the brand mustard at low alpha. No neutral grey shadows.", "section": "elevation" },
+      { "name": "The Ambient-Atmosphere Rule", "body": "Grain and aurora are always-on but barely-on. They produce a printed-and-photographed-slightly-out-of-focus feel without crossing into theme.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do tint every neutral toward the brand hue. Paper #0A0B0E not #000; cream #F4F3ED not #fff.",
+      "Do keep clay (#E5B415) as the single chromatic accent. If light theme, deepen to #8A6600 for legibility.",
+      "Do use Bricolage Grotesque for display and set font-variation-settings 'opsz' N matched to render size.",
+      "Do use Bebas Neue uppercase for labels, kickers, nav, and meta — never for body.",
+      "Do use the ::before counter pattern (decimal-leading-zero in clay Bebas) for article H2 chapter marks.",
+      "Do apply font-variant-numeric: tabular-nums to every chrome number.",
+      "Do italicize the emphasized phrase in headlines in clay (<em>).",
+      "Do keep CTA cards, TL;DR cards, and result cards at radius 14–18px; pills at 999px; inputs at 8px.",
+      "Do clamp display sizes and section padding with clamp().",
+      "Do keep grain + aurora running but barely visible. Pause on prefers-reduced-motion and tab-hidden.",
+      "Do tint shadows with clay at low alpha; black hairline grounds, clay glow signals brand.",
+      "Do apply cubic-bezier(0.16, 1, 0.3, 1) as the default ease."
+    ],
+    "donts": [
+      "Don't use #000 or #fff anywhere.",
+      "Don't introduce a second decorative accent. Magenta is danger and light-theme kicker only; green is success only.",
+      "Don't add gradient text (background-clip: text + gradient).",
+      "Don't use glassmorphism beyond the existing sticky header backdrop-filter.",
+      "Don't add side-stripe borders (border-left: 3px solid clay) on callouts.",
+      "Don't wrap the resource list in icon-tile cards. The flat divided list is intentional.",
+      "Don't nest cards.",
+      "Don't use neutral grey shadows. Every shadow tints toward clay.",
+      "Don't render Bricolage at the wrong opsz.",
+      "Don't use em dashes in UI copy or articles — commas, colons, parens instead.",
+      "Don't let scroll-wheel change number-input values on calculators.",
+      "Don't ship animations that ignore prefers-reduced-motion."
+    ]
+  }
+}

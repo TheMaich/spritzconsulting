@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 0; }
+  #legend-controls label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaa; user-select: none; }
+  #legend-controls label:hover { color: #e0e0e0; }
+  .legend-cb, #select-all-cb { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #3a3a5e; border-radius: 3px; background: #0f0f1a; cursor: pointer; position: relative; flex-shrink: 0; }
+  .legend-cb:checked, #select-all-cb:checked { background: #4E79A7; border-color: #4E79A7; }
+  .legend-cb:checked::after, #select-all-cb:checked::after { content: ''; position: absolute; left: 3.5px; top: 1px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #select-all-cb:indeterminate { background: #4E79A7; border-color: #4E79A7; }
+  #select-all-cb:indeterminate::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #fff; border: none; transform: none; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <label><input type="checkbox" id="select-all-cb" checked onchange="toggleAllCommunities(!this.checked)">Select All</label>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">52 nodes &middot; 78 edges &middot; 8 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "index_spritz_consulting_site", "label": "Spritz Consulting Homepage", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Spritz Consulting Homepage", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "index.html", "file_type": "document", "degree": 19}, {"id": "index_michele_di_nardo", "label": "Michele Di Nardo (Miki)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 22.6, "font": {"size": 12, "color": "#ffffff"}, "title": "Michele Di Nardo (Miki)", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 8}, {"id": "index_spritz_consulting_brand", "label": "Spritz Consulting (Brand)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Spritz Consulting (Brand)", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_hero_section", "label": "Hero Section", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Hero Section", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_consultancy_section", "label": "My Experience Section (01)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "My Experience Section (01)", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 3}, {"id": "index_services_section", "label": "Services Section (02)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 25.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Services Section (02)", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 10}, {"id": "index_faq_section", "label": "FAQ Section (03)", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "FAQ Section (03)", "community": 6, "community_name": "Resources Hub & FAQ", "source_file": "index.html", "file_type": "document", "degree": 3}, {"id": "index_contact_section", "label": "Contact Section (04)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 24.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Contact Section (04)", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "index.html", "file_type": "document", "degree": 9}, {"id": "index_marquee_section", "label": "Studios & Games Marquee", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Studios &amp; Games Marquee", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_testimonials_section", "label": "Testimonials Section", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Testimonials Section", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_contact_form", "label": "Contact Form (mailto)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Contact Form (mailto)", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_i18n_system", "label": "i18n Language System (EN/IT/FR/ES)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "i18n Language System (EN/IT/FR/ES)", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "index.html", "file_type": "rationale", "degree": 2}, {"id": "index_theme_system", "label": "Dark/Light Theme System", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Dark/Light Theme System", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "index.html", "file_type": "rationale", "degree": 1}, {"id": "index_design_system", "label": "Mustard-on-Black Visual Design System", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Mustard-on-Black Visual Design System", "community": 6, "community_name": "Resources Hub & FAQ", "source_file": "index.html", "file_type": "rationale", "degree": 2}, {"id": "index_svc_production_operations", "label": "Service: Production & Project Operations", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: Production &amp; Project Operations", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_svc_platform_release", "label": "Service: Platform & Release Management", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: Platform &amp; Release Management", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 2}, {"id": "index_svc_publishing_support", "label": "Service: Strategic Publishing Support", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Service: Strategic Publishing Support", "community": 5, "community_name": "Revenue Split & 50/50", "source_file": "index.html", "file_type": "document", "degree": 3}, {"id": "index_svc_physical_editions", "label": "Service: Physical & Boxed Editions", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: Physical &amp; Boxed Editions", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 2}, {"id": "index_svc_external_oversight", "label": "Service: External Production Oversight", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: External Production Oversight", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_svc_design_consultancy", "label": "Service: Design Consultancy", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: Design Consultancy", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 2}, {"id": "index_svc_scouting_devrel", "label": "Service: Scouting & Dev Relationships", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: Scouting &amp; Dev Relationships", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_svc_mock_reviews", "label": "Service: Mock Reviews for In-Development Games", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Service: Mock Reviews for In-Development Games", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "document", "degree": 2}, {"id": "index_raw_fury", "label": "Raw Fury", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Raw Fury", "community": 5, "community_name": "Revenue Split & 50/50", "source_file": "index.html", "file_type": "document", "degree": 3}, {"id": "index_rebellion", "label": "Rebellion", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Rebellion", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_34bigthings", "label": "34BigThings", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "34BigThings", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_untold_games", "label": "Untold Games", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Untold Games", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 2}, {"id": "index_city_20", "label": "City 20 (game)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "City 20 (game)", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_scuola_nash", "label": "Scuola Nash", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Scuola Nash", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_indie_arena_booth", "label": "Indie Arena Booth", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Indie Arena Booth", "community": 1, "community_name": "Studios & Track Record", "source_file": "index.html", "file_type": "document", "degree": 1}, {"id": "index_linkedin_company", "label": "Spritz Consulting LinkedIn", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Spritz Consulting LinkedIn", "community": 6, "community_name": "Resources Hub & FAQ", "source_file": "index.html", "file_type": "document", "degree": 2}, {"id": "index_console_certification", "label": "Console Certification (PS/Xbox/Switch)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Console Certification (PS/Xbox/Switch)", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "rationale", "degree": 1}, {"id": "index_age_rating_boards", "label": "Age Rating Submissions (ESRB/PEGI/USK/CERO)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Age Rating Submissions (ESRB/PEGI/USK/CERO)", "community": 0, "community_name": "Publishing Services Catalog", "source_file": "index.html", "file_type": "rationale", "degree": 1}, {"id": "index_discovery_call", "label": "Discovery Call (30 min, free)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Discovery Call (30 min, free)", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "index.html", "file_type": "rationale", "degree": 1}, {"id": "index_engagement_rates", "label": "Engagement Rates & Formats", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Engagement Rates &amp; Formats", "community": 6, "community_name": "Resources Hub & FAQ", "source_file": "index.html", "file_type": "rationale", "degree": 1}, {"id": "robots_txt", "label": "robots.txt", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "robots.txt", "community": 7, "community_name": "SEO / robots.txt", "source_file": "robots.txt", "file_type": "document", "degree": 2}, {"id": "robots_sitemap", "label": "Sitemap Reference", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Sitemap Reference", "community": 7, "community_name": "SEO / robots.txt", "source_file": "robots.txt", "file_type": "document", "degree": 1}, {"id": "dictionary_i18n_architecture", "label": "i18n Architecture Notes (dictionary.md)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "i18n Architecture Notes (dictionary.md)", "community": 3, "community_name": "Site Shell & i18n System", "source_file": "dictionary.md", "file_type": "document", "degree": 2}, {"id": "resources_index", "label": "Resources Index Page", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 28.9, "font": {"size": 12, "color": "#ffffff"}, "title": "Resources Index Page", "community": 6, "community_name": "Resources Hub & FAQ", "source_file": "resources/index.html", "file_type": "document", "degree": 12}, {"id": "resources_what_5050", "label": "Article: What '50/50' Actually Means", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 22.6, "font": {"size": 12, "color": "#ffffff"}, "title": "Article: What &#x27;50/50&#x27; Actually Means", "community": 5, "community_name": "Revenue Split & 50/50", "source_file": "resources/what-5050-means.html", "file_type": "document", "degree": 8}, {"id": "resources_ip_ownership", "label": "Article: You Own the IP. What For?", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 19.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Article: You Own the IP. What For?", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "resources/ip-ownership.html", "file_type": "document", "degree": 6}, {"id": "resources_publisher_quiet", "label": "Article: When Your Publisher Goes Quiet", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.9, "font": {"size": 12, "color": "#ffffff"}, "title": "Article: When Your Publisher Goes Quiet", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "resources/publisher-goes-quiet.html", "file_type": "document", "degree": 5}, {"id": "resources_marketing_invoice", "label": "Article: Marketing is Part of the Deal. So is the Invoice.", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 16.3, "font": {"size": 12, "color": "#ffffff"}, "title": "Article: Marketing is Part of the Deal. So is the Invoice.", "community": 4, "community_name": "Recoupment & Net Revenue", "source_file": "resources/marketing-invoice.html", "file_type": "document", "degree": 4}, {"id": "resources_three_things", "label": "Article: Three Things to Read Before You Sign", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 19.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Article: Three Things to Read Before You Sign", "community": 4, "community_name": "Recoupment & Net Revenue", "source_file": "resources/three-things-before-signing.html", "file_type": "document", "degree": 6}, {"id": "concept_net_revenue", "label": "Net Revenue Definition", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Net Revenue Definition", "community": 4, "community_name": "Recoupment & Net Revenue", "source_file": "resources/what-5050-means.html", "file_type": "rationale", "degree": 3}, {"id": "concept_recoupment", "label": "Recoupment Pool", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Recoupment Pool", "community": 4, "community_name": "Recoupment & Net Revenue", "source_file": "resources/what-5050-means.html", "file_type": "rationale", "degree": 3}, {"id": "concept_revenue_split", "label": "Revenue Split Percentage", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Revenue Split Percentage", "community": 5, "community_name": "Revenue Split & 50/50", "source_file": "resources/what-5050-means.html", "file_type": "rationale", "degree": 1}, {"id": "concept_ip_control_vs_ownership", "label": "IP Ownership vs Control", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "IP Ownership vs Control", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "resources/ip-ownership.html", "file_type": "rationale", "degree": 1}, {"id": "concept_licence_scope_duration_reversion", "label": "Licence: Scope, Duration, Reversion", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 14.7, "font": {"size": 12, "color": "#ffffff"}, "title": "Licence: Scope, Duration, Reversion", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "resources/ip-ownership.html", "file_type": "rationale", "degree": 3}, {"id": "concept_exit_rights", "label": "Contract Exit Rights & Reversion Clauses", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Contract Exit Rights &amp; Reversion Clauses", "community": 2, "community_name": "IP Control & Discovery Call", "source_file": "resources/publisher-goes-quiet.html", "file_type": "rationale", "degree": 2}, {"id": "concept_marketing_recoupment", "label": "Recoverable Marketing Budget", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Recoverable Marketing Budget", "community": 4, "community_name": "Recoupment & Net Revenue", "source_file": "resources/marketing-invoice.html", "file_type": "rationale", "degree": 2}, {"id": "concept_cure_period", "label": "Cure Period & Breach Provisions", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 11.6, "font": {"size": 0, "color": "#ffffff"}, "title": "Cure Period &amp; Breach Provisions", "community": 4, "community_name": "Recoupment & Net Revenue", "source_file": "resources/three-things-before-signing.html", "file_type": "rationale", "degree": 1}, {"id": "concept_full_service_publishing", "label": "Full-Service Publishing Deal", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.2, "font": {"size": 0, "color": "#ffffff"}, "title": "Full-Service Publishing Deal", "community": 5, "community_name": "Revenue Split & 50/50", "source_file": "resources/what-5050-means.html", "file_type": "rationale", "degree": 2}];
+const RAW_EDGES = [{"from": "index_spritz_consulting_site", "to": "index_consultancy_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_services_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_faq_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_hero_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_marquee_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_testimonials_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_linkedin_company", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_i18n_system", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_theme_system", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_site", "to": "index_design_system", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "dictionary_i18n_architecture", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "robots_txt", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_ip_ownership", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_publisher_quiet", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_marketing_invoice", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_three_things", "to": "index_spritz_consulting_site", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_spritz_consulting_brand", "to": "index_michele_di_nardo", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_michele_di_nardo", "to": "index_raw_fury", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_michele_di_nardo", "to": "index_rebellion", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_michele_di_nardo", "to": "index_34bigthings", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_michele_di_nardo", "to": "index_untold_games", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_michele_di_nardo", "to": "index_scuola_nash", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_michele_di_nardo", "to": "index_indie_arena_booth", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_consultancy_section", "to": "index_michele_di_nardo", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_consultancy_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_production_operations", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_platform_release", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_publishing_support", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_physical_editions", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_external_oversight", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_design_consultancy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_scouting_devrel", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_services_section", "to": "index_svc_mock_reviews", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_services_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_faq_section", "to": "index_engagement_rates", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_faq_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_contact_section", "to": "index_contact_form", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_contact_section", "to": "index_discovery_call", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_ip_ownership", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_publisher_quiet", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_marketing_invoice", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_three_things", "to": "index_contact_section", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "dictionary_i18n_architecture", "to": "index_i18n_system", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_design_system", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "index_svc_platform_release", "to": "index_console_certification", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_svc_publishing_support", "to": "index_raw_fury", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_svc_publishing_support", "to": "concept_full_service_publishing", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "index_svc_physical_editions", "to": "index_age_rating_boards", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_svc_mock_reviews", "to": "index_svc_design_consultancy", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "resources_what_5050", "to": "index_raw_fury", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "index_untold_games", "to": "index_city_20", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_index", "to": "index_linkedin_company", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "robots_txt", "to": "robots_sitemap", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "resources_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_ip_ownership", "to": "resources_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_publisher_quiet", "to": "resources_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_marketing_invoice", "to": "resources_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_three_things", "to": "resources_index", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "concept_net_revenue", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "concept_recoupment", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "concept_revenue_split", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_what_5050", "to": "concept_full_service_publishing", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_ip_ownership", "to": "concept_ip_control_vs_ownership", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_ip_ownership", "to": "concept_licence_scope_duration_reversion", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_ip_ownership", "to": "resources_publisher_quiet", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "resources_publisher_quiet", "to": "concept_exit_rights", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_marketing_invoice", "to": "concept_marketing_recoupment", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_three_things", "to": "concept_cure_period", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_three_things", "to": "concept_net_revenue", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "resources_three_things", "to": "concept_licence_scope_duration_reversion", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "concept_net_revenue", "to": "concept_recoupment", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "concept_recoupment", "to": "concept_marketing_recoupment", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "concept_licence_scope_duration_reversion", "to": "concept_exit_rights", "label": "semantically_similar_to", "title": "semantically_similar_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Publishing Services Catalog", "count": 10}, {"cid": 1, "color": "#F28E2B", "label": "Studios &amp; Track Record", "count": 9}, {"cid": 2, "color": "#E15759", "label": "IP Control &amp; Discovery Call", "count": 8}, {"cid": 3, "color": "#76B7B2", "label": "Site Shell &amp; i18n System", "count": 7}, {"cid": 4, "color": "#59A14F", "label": "Recoupment &amp; Net Revenue", "count": 6}, {"cid": 5, "color": "#EDC948", "label": "Revenue Split &amp; 50/50", "count": 5}, {"cid": 6, "color": "#B07AA1", "label": "Resources Hub &amp; FAQ", "count": 5}, {"cid": 7, "color": "#FF9DA7", "label": "SEO / robots.txt", "count": 2}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+const selectAllCb = document.getElementById('select-all-cb');
+
+function updateSelectAllState() {
+  const total = LEGEND.length;
+  const hidden = hiddenCommunities.size;
+  selectAllCb.checked = hidden === 0;
+  selectAllCb.indeterminate = hidden > 0 && hidden < total;
+}
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.legend-cb').forEach(cb => {
+    cb.checked = !hide;
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+  updateSelectAllState();
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'legend-cb';
+  cb.checked = true;
+  cb.addEventListener('change', (e) => {
+    e.stopPropagation();
+    if (cb.checked) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: !cb.checked }));
+    nodesDS.update(updates);
+    updateSelectAllState();
+  });
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.prepend(cb);
+  item.onclick = (e) => {
+    if (e.target === cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [{"id": "he_publishing_contract_traps", "label": "Publishing Contract Pitfalls Cluster", "nodes": ["concept_net_revenue", "concept_recoupment", "concept_marketing_recoupment", "concept_licence_scope_duration_reversion", "concept_exit_rights", "concept_cure_period"], "relation": "participate_in", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "resources/index.html"}, {"id": "he_resources_article_set", "label": "Resources Article Collection", "nodes": ["resources_what_5050", "resources_ip_ownership", "resources_publisher_quiet", "resources_marketing_invoice", "resources_three_things"], "relation": "form", "confidence": "INFERRED", "confidence_score": 0.95, "source_file": "resources/index.html"}, {"id": "he_career_studios", "label": "Michele Di Nardo Career Path Across Studios", "nodes": ["index_michele_di_nardo", "index_34bigthings", "index_rebellion", "index_raw_fury", "index_untold_games"], "relation": "participate_in", "confidence": "INFERRED", "confidence_score": 0.95, "source_file": "index.html"}];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>

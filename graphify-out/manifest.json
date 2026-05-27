@@ -1,0 +1,382 @@
+{
+  "C:\\Users\\MIKI\\Desktop\\Website2\\dictionary.md": {
+    "mtime": 1777891214.8299365,
+    "ast_hash": "d5242e6447d529716571ad3fc94ebda7",
+    "semantic_hash": "d5242e6447d529716571ad3fc94ebda7"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\index.html": {
+    "mtime": 1779273421.1779442,
+    "ast_hash": "fa3a389eb7904332d75315c119ea5446",
+    "semantic_hash": "fa3a389eb7904332d75315c119ea5446"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\robots.txt": {
+    "mtime": 1777412033.1533813,
+    "ast_hash": "938a6f78f0134f22c89be80f886c9207",
+    "semantic_hash": "938a6f78f0134f22c89be80f886c9207"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\resources\\index.html": {
+    "mtime": 1779308070.7347953,
+    "ast_hash": "8d47f6c83d924acdc1deb2858247e641",
+    "semantic_hash": "8d47f6c83d924acdc1deb2858247e641"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\resources\\ip-ownership.html": {
+    "mtime": 1779350357.5498836,
+    "ast_hash": "2ec84548ad5f68043b1fa389dd0ccd72",
+    "semantic_hash": "2ec84548ad5f68043b1fa389dd0ccd72"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\resources\\marketing-invoice.html": {
+    "mtime": 1779350372.1146126,
+    "ast_hash": "9ab52dc60599a80c70e82f9e1946583b",
+    "semantic_hash": "9ab52dc60599a80c70e82f9e1946583b"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\resources\\publisher-goes-quiet.html": {
+    "mtime": 1779350364.786157,
+    "ast_hash": "2e838e5d881ddc9b59ffde694f15fdb0",
+    "semantic_hash": "2e838e5d881ddc9b59ffde694f15fdb0"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\resources\\three-things-before-signing.html": {
+    "mtime": 1779350378.9675915,
+    "ast_hash": "2a1b551375ad6d63848a996b0af35741",
+    "semantic_hash": "2a1b551375ad6d63848a996b0af35741"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\resources\\what-5050-means.html": {
+    "mtime": 1779350315.0350523,
+    "ast_hash": "58c2d33e82456d7c0e0aa64b15a85fe0",
+    "semantic_hash": "58c2d33e82456d7c0e0aa64b15a85fe0"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\android-chrome-192x192.png": {
+    "mtime": 1777683151.5901911,
+    "ast_hash": "fdabe5e0c43bdace0ce4f18403c49f9a",
+    "semantic_hash": "fdabe5e0c43bdace0ce4f18403c49f9a"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\android-chrome-512x512.png": {
+    "mtime": 1777683158.8950129,
+    "ast_hash": "c70b8bcadff222617747d00f2b1b315d",
+    "semantic_hash": "c70b8bcadff222617747d00f2b1b315d"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\apple-touch-icon.png": {
+    "mtime": 1777683146.9626482,
+    "ast_hash": "eec3247ef2460f35c265698ee7a232b7",
+    "semantic_hash": "eec3247ef2460f35c265698ee7a232b7"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\favicon-16x16.png": {
+    "mtime": 1777683129.9504108,
+    "ast_hash": "c151db9a6af220cdc6d7999e38e903f6",
+    "semantic_hash": "c151db9a6af220cdc6d7999e38e903f6"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\favicon-32x32.png": {
+    "mtime": 1777683135.1438978,
+    "ast_hash": "37120ae1b9f9de7cef3372869c9a23ce",
+    "semantic_hash": "37120ae1b9f9de7cef3372869c9a23ce"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\favicon-48x48.png": {
+    "mtime": 1777683142.4752853,
+    "ast_hash": "9d5ad5ca5cab38e90344db37b69ef5d8",
+    "semantic_hash": "9d5ad5ca5cab38e90344db37b69ef5d8"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-34bigthings.png": {
+    "mtime": 1776983889.8306131,
+    "ast_hash": "493a97f62de4157e176622046b1f2d6c",
+    "semantic_hash": "493a97f62de4157e176622046b1f2d6c"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-34bigthings.webp": {
+    "mtime": 1777465520.503,
+    "ast_hash": "1ba71ddf81b7a0c248c61875a6d21e5f",
+    "semantic_hash": "1ba71ddf81b7a0c248c61875a6d21e5f"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-babyrobot.png": {
+    "mtime": 1776983890.093787,
+    "ast_hash": "89b6b1b53b993be3dba18fcbea40ae56",
+    "semantic_hash": "89b6b1b53b993be3dba18fcbea40ae56"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-babyrobot.webp": {
+    "mtime": 1777465520.51,
+    "ast_hash": "1050a023b8165239f9d6deed123f8f56",
+    "semantic_hash": "1050a023b8165239f9d6deed123f8f56"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-bippinbits.png": {
+    "mtime": 1777023392.4899867,
+    "ast_hash": "46f4aad8311c7e0f1d72b10e7408ce0b",
+    "semantic_hash": "46f4aad8311c7e0f1d72b10e7408ce0b"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-bippinbits.webp": {
+    "mtime": 1777465520.524,
+    "ast_hash": "2de93cc04a981fb1ead16a55eaaf6341",
+    "semantic_hash": "2de93cc04a981fb1ead16a55eaaf6341"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-clifftop.png": {
+    "mtime": 1776983889.9817796,
+    "ast_hash": "b6fd05cd63e2a3e1f885f5714fe2e3ad",
+    "semantic_hash": "b6fd05cd63e2a3e1f885f5714fe2e3ad"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-clifftop.webp": {
+    "mtime": 1777465520.533,
+    "ast_hash": "63b497b26a41a428925ff78c9796ca3b",
+    "semantic_hash": "63b497b26a41a428925ff78c9796ca3b"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-firstplayable.png": {
+    "mtime": 1776983890.0479486,
+    "ast_hash": "173aa295daf387b8d74e665016293a96",
+    "semantic_hash": "173aa295daf387b8d74e665016293a96"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-firstplayable.webp": {
+    "mtime": 1777465520.587,
+    "ast_hash": "ed91e93f18b3d954424738aa720d4586",
+    "semantic_hash": "ed91e93f18b3d954424738aa720d4586"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-indiearenabooth.png": {
+    "mtime": 1776983889.9388096,
+    "ast_hash": "354c27da0c295e16846efe0218889d5a",
+    "semantic_hash": "354c27da0c295e16846efe0218889d5a"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-indiearenabooth.webp": {
+    "mtime": 1777465520.61,
+    "ast_hash": "bca17f8c1c417eab8e8284852a205593",
+    "semantic_hash": "bca17f8c1c417eab8e8284852a205593"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-indiedevday.png": {
+    "mtime": 1777023258.6261177,
+    "ast_hash": "aabd2b3cc7f686b6afb11f7f9ccac989",
+    "semantic_hash": "aabd2b3cc7f686b6afb11f7f9ccac989"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-indiedevday.webp": {
+    "mtime": 1777465520.625,
+    "ast_hash": "5c57fdc07939cc20ed98667952378768",
+    "semantic_hash": "5c57fdc07939cc20ed98667952378768"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-milestone.png": {
+    "mtime": 1777023217.7396028,
+    "ast_hash": "acdfccc8ddf510fdceb3f0d006f9c315",
+    "semantic_hash": "acdfccc8ddf510fdceb3f0d006f9c315"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-milestone.webp": {
+    "mtime": 1777465520.638,
+    "ast_hash": "61bae792936cfb1e8648c6d66ba45c98",
+    "semantic_hash": "61bae792936cfb1e8648c6d66ba45c98"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-rawfury.png": {
+    "mtime": 1777024393.9714494,
+    "ast_hash": "b2bbd6e29c7a556fc0dac91aa2747a4b",
+    "semantic_hash": "b2bbd6e29c7a556fc0dac91aa2747a4b"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-rawfury.webp": {
+    "mtime": 1777465520.65,
+    "ast_hash": "6061c2b55469625f96fa0c2af34f4792",
+    "semantic_hash": "6061c2b55469625f96fa0c2af34f4792"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-rebellion.png": {
+    "mtime": 1776983889.8511806,
+    "ast_hash": "25dfe6317b11e974c91c3f26b4da5726",
+    "semantic_hash": "25dfe6317b11e974c91c3f26b4da5726"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-rebellion.webp": {
+    "mtime": 1777465520.675,
+    "ast_hash": "efc2cd8419574bc0e3b253aa1887db21",
+    "semantic_hash": "efc2cd8419574bc0e3b253aa1887db21"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-scuolanash.png": {
+    "mtime": 1776983889.917146,
+    "ast_hash": "d61fa8093c94a1d4e75a58beec33e11e",
+    "semantic_hash": "d61fa8093c94a1d4e75a58beec33e11e"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-scuolanash.webp": {
+    "mtime": 1777465520.721,
+    "ast_hash": "f404f822d247aaed90f2d50dd5b185a4",
+    "semantic_hash": "f404f822d247aaed90f2d50dd5b185a4"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-supersoft.png": {
+    "mtime": 1777545541.7747188,
+    "ast_hash": "b5a3ccd90cea4832859f04e44e9ac13a",
+    "semantic_hash": "b5a3ccd90cea4832859f04e44e9ac13a"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-supersoft.webp": {
+    "mtime": 1777546083.467,
+    "ast_hash": "3eb64ed821194172385fb11d06618b87",
+    "semantic_hash": "3eb64ed821194172385fb11d06618b87"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-untoldgames.png": {
+    "mtime": 1776983889.894798,
+    "ast_hash": "1c7bd8bc07c6c7a9659bde4e1377291e",
+    "semantic_hash": "1c7bd8bc07c6c7a9659bde4e1377291e"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\logo-untoldgames.webp": {
+    "mtime": 1777465520.797,
+    "ast_hash": "08b0d66c0e122d0ca4e84ffef7a8481f",
+    "semantic_hash": "08b0d66c0e122d0ca4e84ffef7a8481f"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\miki-portrait-cutout.png": {
+    "mtime": 1776986301.0773604,
+    "ast_hash": "62ccc22ffe02de6e4d339e9e9259aea9",
+    "semantic_hash": "62ccc22ffe02de6e4d339e9e9259aea9"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\miki-portrait-cutout.webp": {
+    "mtime": 1777465520.93,
+    "ast_hash": "0373bc33a966ca28b71219dbe2b2d18e",
+    "semantic_hash": "0373bc33a966ca28b71219dbe2b2d18e"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\miki-portrait.png": {
+    "mtime": 1777038327.3772972,
+    "ast_hash": "a0eb29d24864d0d397193a05bee5b4b1",
+    "semantic_hash": "a0eb29d24864d0d397193a05bee5b4b1"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\miki-portrait.webp": {
+    "mtime": 1777465521.034,
+    "ast_hash": "bb69fc003607b1dc2bca78d7a08fc1f3",
+    "semantic_hash": "bb69fc003607b1dc2bca78d7a08fc1f3"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets\\og-image.png": {
+    "mtime": 1777962289.853047,
+    "ast_hash": "e8a78034f72cf6da1949143e8acb3b82",
+    "semantic_hash": "e8a78034f72cf6da1949143e8acb3b82"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\city20.jpg": {
+    "mtime": 1777465458.6259658,
+    "ast_hash": "c931c63b9f8007ea08b657ece2ace23e",
+    "semantic_hash": "c931c63b9f8007ea08b657ece2ace23e"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\city20.webp": {
+    "mtime": 1777465521.054,
+    "ast_hash": "202ada855717329c30baf6f198da70cb",
+    "semantic_hash": "202ada855717329c30baf6f198da70cb"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\ereban.jpg": {
+    "mtime": 1777303424.8478718,
+    "ast_hash": "ffc58a165a460ba7dbdd88f903f1f23f",
+    "semantic_hash": "ffc58a165a460ba7dbdd88f903f1f23f"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\ereban.webp": {
+    "mtime": 1777465521.065,
+    "ast_hash": "68f4a59e548a24b32d02933a00cfe4aa",
+    "semantic_hash": "68f4a59e548a24b32d02933a00cfe4aa"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\kathy-rain-2.jpg": {
+    "mtime": 1777303336.0261621,
+    "ast_hash": "1849a1b5284f94c7a7bfe58e64cf5070",
+    "semantic_hash": "1849a1b5284f94c7a7bfe58e64cf5070"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\kathy-rain-2.webp": {
+    "mtime": 1777465521.085,
+    "ast_hash": "230a484dc3ada461bd9ada31893126b1",
+    "semantic_hash": "230a484dc3ada461bd9ada31893126b1"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\logo-01.png": {
+    "mtime": 1777302034.661548,
+    "ast_hash": "b004194353444bce7af1a99e1ce0fc4d",
+    "semantic_hash": "b004194353444bce7af1a99e1ce0fc4d"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\logo-01.webp": {
+    "mtime": 1777465521.105,
+    "ast_hash": "3c22aefc8d3f0646e774915d23194e5f",
+    "semantic_hash": "3c22aefc8d3f0646e774915d23194e5f"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\logo-02.jpg": {
+    "mtime": 1777303108.805297,
+    "ast_hash": "b173d20ab696c87cd013e7e469e3af56",
+    "semantic_hash": "b173d20ab696c87cd013e7e469e3af56"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\logo-02.webp": {
+    "mtime": 1777465521.141,
+    "ast_hash": "61e0d6e411e0ebab1a0601ce8275970a",
+    "semantic_hash": "61e0d6e411e0ebab1a0601ce8275970a"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\mxgp3.jpg": {
+    "mtime": 1777303993.4338799,
+    "ast_hash": "06be4adfa828906328342a02622433ec",
+    "semantic_hash": "06be4adfa828906328342a02622433ec"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\mxgp3.webp": {
+    "mtime": 1777465521.156,
+    "ast_hash": "c94a79b72fb7d5d06f90264317a8afb9",
+    "semantic_hash": "c94a79b72fb7d5d06f90264317a8afb9"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\redout-2.jpg": {
+    "mtime": 1777303376.385047,
+    "ast_hash": "6ea09f6ce4eab942f05e967c5bbe0b50",
+    "semantic_hash": "6ea09f6ce4eab942f05e967c5bbe0b50"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\redout-2.webp": {
+    "mtime": 1777465521.351,
+    "ast_hash": "fe30f349fd198249a9ddb0ed15eca287",
+    "semantic_hash": "fe30f349fd198249a9ddb0ed15eca287"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\redout.jpg": {
+    "mtime": 1777303643.9063916,
+    "ast_hash": "f2e7f26401ac76f1020352432c7edea4",
+    "semantic_hash": "f2e7f26401ac76f1020352432c7edea4"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\redout.webp": {
+    "mtime": 1777465521.37,
+    "ast_hash": "87625501939385fd369e8abb483498dd",
+    "semantic_hash": "87625501939385fd369e8abb483498dd"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\ride.jpg": {
+    "mtime": 1777303975.951334,
+    "ast_hash": "50c765f0b5062180423a1701b916aa7b",
+    "semantic_hash": "50c765f0b5062180423a1701b916aa7b"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\ride.webp": {
+    "mtime": 1777465521.391,
+    "ast_hash": "559e5d51dda551254b3c1c8a7032f6ef",
+    "semantic_hash": "559e5d51dda551254b3c1c8a7032f6ef"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\sniper-elite-4.jpg": {
+    "mtime": 1777303583.5534317,
+    "ast_hash": "fbb6ab4cac3c6f567fe9b541f7b34ae0",
+    "semantic_hash": "fbb6ab4cac3c6f567fe9b541f7b34ae0"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\sniper-elite-4.webp": {
+    "mtime": 1777465521.411,
+    "ast_hash": "5b6869777a3c826217110f2148dc6b09",
+    "semantic_hash": "5b6869777a3c826217110f2148dc6b09"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\sniper-elite-5.jpg": {
+    "mtime": 1777303525.645043,
+    "ast_hash": "a7d1cc130e265c90a83db08d193db39e",
+    "semantic_hash": "a7d1cc130e265c90a83db08d193db39e"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\sniper-elite-5.webp": {
+    "mtime": 1777465521.432,
+    "ast_hash": "9c27307b5d8da923dbd4e5e3e5ed6053",
+    "semantic_hash": "9c27307b5d8da923dbd4e5e3e5ed6053"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\strange-brigade.jpg": {
+    "mtime": 1777303570.9701893,
+    "ast_hash": "1ba0cf5758f979c4cc62815911ac8424",
+    "semantic_hash": "1ba0cf5758f979c4cc62815911ac8424"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\strange-brigade.webp": {
+    "mtime": 1777465521.449,
+    "ast_hash": "ce567a187914cf54b6093239eea31b5d",
+    "semantic_hash": "ce567a187914cf54b6093239eea31b5d"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\super-inefficient-golf.jpg": {
+    "mtime": 1777303845.8129022,
+    "ast_hash": "d84f29d8c96af78a293567355628a306",
+    "semantic_hash": "d84f29d8c96af78a293567355628a306"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\super-inefficient-golf.webp": {
+    "mtime": 1777465521.47,
+    "ast_hash": "366d5ef6d5cd28d63925c7373ce8d463",
+    "semantic_hash": "366d5ef6d5cd28d63925c7373ce8d463"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\valentino-rossi.jpg": {
+    "mtime": 1777304007.985415,
+    "ast_hash": "192a0004c8d86f78f36e9fc2d18b7956",
+    "semantic_hash": "192a0004c8d86f78f36e9fc2d18b7956"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\valentino-rossi.webp": {
+    "mtime": 1777465521.487,
+    "ast_hash": "9a1606051213ad186b6e48994a2b8562",
+    "semantic_hash": "9a1606051213ad186b6e48994a2b8562"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\zombie-army-4.jpg": {
+    "mtime": 1777303553.1393058,
+    "ast_hash": "6d70944c04567f1119e8498fc8d768e4",
+    "semantic_hash": "6d70944c04567f1119e8498fc8d768e4"
+  },
+  "C:\\Users\\MIKI\\Desktop\\Website2\\assets-2\\zombie-army-4.webp": {
+    "mtime": 1777465521.508,
+    "ast_hash": "59b1e8ce6e44fdc5f6340188dd7b3ed4",
+    "semantic_hash": "59b1e8ce6e44fdc5f6340188dd7b3ed4"
+  }
+}
