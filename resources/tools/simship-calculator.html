@@ -2323,7 +2323,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       sel.classList.add('is-open');
       // Reserve space below so the open dropdown does not cover the schedule.
       var group = sel.closest('.calc-group');
-      if (group) group.style.paddingBottom = (dropdown.offsetHeight + 16) + 'px';
+      if (group) group.style.paddingBottom = '200px';
       trigger.setAttribute('aria-expanded', 'true');
 
       // Portal: move the dropdown to <body> so no ancestor stacking context traps it.
