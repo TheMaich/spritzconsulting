@@ -1341,10 +1341,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border-radius: 4px;
   display: flex;
   align-items: center;
+  overflow: hidden;
   box-shadow: var(--shadow-sm);
+}
+.gantt-bar-text{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper);
+  padding: 0 7px;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .gantt.is-store .gantt-bar{ background: var(--accent-2); }
 .gantt-bar.is-check{ background: var(--clay); }
+.gantt-bar.is-fix{
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--ink-3) 70%, transparent);
+  box-shadow: none;
+}
+.gantt-bar.is-fix .gantt-bar-text{ color: var(--ink-2); }
 .gantt-bar.is-final{
   background: var(--clay-deep);
   background-image: repeating-linear-gradient(
@@ -2007,8 +2024,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var bars = '';
       it.bars.forEach(function(b) {
         var l = pct(b.start), w = pct(b.end) - pct(b.start);
-        bars += '<div class="gantt-bar ' + (b.cls || '') + '" title="' + esc(it.title) + '" ' +
-          'style="left:' + l.toFixed(2) + '%;width:' + Math.max(w, 1.5).toFixed(2) + '%"></div>';
+        var lbl = b.label ? '<span class="gantt-bar-text">' + esc(b.label) + '</span>' : '';
+        bars += '<div class="gantt-bar ' + (b.cls || '') + '" title="' + esc(b.tip || it.title) + '" ' +
+          'style="left:' + l.toFixed(2) + '%;width:' + Math.max(w, 1.5).toFixed(2) + '%">' + lbl + '</div>';
       });
       rows += '<div class="gantt-row">' +
         '<div class="gantt-rowlabel">' + esc(it.name) +
@@ -2065,7 +2083,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         name: def.name,
         sub: storeDate,
         title: def.name + '\n' + fmt(storeDate) + '  —  store page submission',
-        bars: [{ start: storeDate, end: release }]
+        bars: [{ start: storeDate, end: release, label: 'Store page in review' }]
       });
 
       if (def.cert) {
@@ -2098,9 +2116,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           sub: sub1,
           title: tip,
           bars: [
-            { start: sub1, end: c1End, cls: 'is-check' },
-            { start: sub2, end: c2End, cls: 'is-check' },
-            { start: sub3, end: release, cls: 'is-final' }
+            { start: sub1, end: c1End, cls: 'is-check', label: 'Sub 1 · cert check', tip: 'Submission 1 cert check (' + c.check + ' working days)' },
+            { start: c1End, end: sub2, cls: 'is-fix', label: 'Fix bugs', tip: 'Fix bugs between submission 1 and 2 (' + c.fix + ' working days)' },
+            { start: sub2, end: c2End, cls: 'is-check', label: 'Sub 2 · cert check', tip: 'Submission 2 cert check (' + c.check + ' working days)' },
+            { start: c2End, end: sub3, cls: 'is-fix', label: 'Fix bugs', tip: 'Fix bugs between submission 2 and 3 (' + c.fix + ' working days)' },
+            { start: sub3, end: release, cls: 'is-final', label: 'Sub 3 · final', tip: 'Submission 3 final check (' + c.last + ' working days) then go-live' }
           ]
         });
       } else {
@@ -2112,7 +2132,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           name: def.name,
           sub: buildDate,
           title: def.name + '\n' + fmt(buildDate) + '  —  release build submission',
-          bars: [{ start: buildDate, end: release }]
+          bars: [{ start: buildDate, end: release, label: 'Build submitted' }]
         });
       }
     });
