@@ -1312,13 +1312,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 /* Experimental ribbon */
 .experimental-ribbon-clip {
   position: fixed;
-  top: 56px;
+  top: 0;
   left: 0;
   width: 200px;
-  height: 200px;
+  height: 260px;
   overflow: hidden;
   pointer-events: none;
   z-index: 49;
+  padding-top: 56px;
 }
 
 .experimental-page-ribbon {
@@ -1343,11 +1344,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
 @media (max-width: 640px) {
   .experimental-ribbon-clip {
-    top: 56px;
+    top: 0;
     left: auto;
     right: 0;
     width: 160px;
-    height: 160px;
+    height: 220px;
+    padding-top: 56px;
   }
   .experimental-page-ribbon {
     top: 36px;
