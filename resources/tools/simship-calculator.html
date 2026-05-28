@@ -1968,14 +1968,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return v;
   }
 
-  // Month gridline ticks from the first of each month inside [minDate, maxDate].
-  function monthTicks(minDate, maxDate) {
+  // Evenly spaced dated ticks across [minDate, maxDate]. Picks a day-step that
+  // keeps the count readable (~6-10 ticks) regardless of how long the span is.
+  function axisTicks(minDate, maxDate) {
+    var spanDays = Math.max(1, Math.round((maxDate.getTime() - minDate.getTime()) / DAY));
+    var steps = [2, 3, 7, 14, 21, 30, 60];
+    var step = steps[steps.length - 1];
+    for (var i = 0; i < steps.length; i++) {
+      if (spanDays / steps[i] <= 9) { step = steps[i]; break; }
+    }
     var ticks = [];
-    var d = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
-    if (d < minDate) d = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 1);
-    while (d <= maxDate) {
+    for (var d = new Date(minDate.getTime()); d <= maxDate; d = addDays(d, step)) {
       ticks.push(new Date(d));
-      d = new Date(d.getFullYear(), d.getMonth() + 1, 1);
     }
     return ticks;
   }
@@ -1989,10 +1993,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return Math.max(0, Math.min(100, p));
     }
 
-    var ticks = monthTicks(minDate, maxDate);
+    var ticks = axisTicks(minDate, maxDate);
     var axis = '', grid = '';
     ticks.forEach(function(t) {
-      var label = MONTHS[t.getMonth()] + (t.getMonth() === 0 ? " '" + String(t.getFullYear()).slice(-2) : '');
+      var label = ('0' + t.getDate()).slice(-2) + ' ' + MONTHS[t.getMonth()];
       axis += '<span class="gantt-month" style="left:' + pct(t).toFixed(2) + '%">' + label + '</span>';
       grid += '<span class="gantt-gridline" style="left:' + pct(t).toFixed(2) + '%"></span>';
     });
