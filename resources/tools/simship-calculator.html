@@ -2322,6 +2322,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var rect = trigger.getBoundingClientRect();
       dropdown.hidden = false;
       sel.classList.add('is-open');
+      var group = sel.closest('.calc-group');
+      if (group) group.style.paddingBottom = (dropdown.offsetHeight + 16) + 'px';
       trigger.setAttribute('aria-expanded', 'true');
 
       // Portal: sposta dropdown a body
@@ -2346,6 +2348,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     function closeSel() {
       dropdown.hidden = true;
       sel.classList.remove('is-open');
+      var group = sel.closest('.calc-group');
+      if (group) group.style.paddingBottom = '';
       trigger.setAttribute('aria-expanded', 'false');
 
       // Riporta dropdown nella posizione originale
