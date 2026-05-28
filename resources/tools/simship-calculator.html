@@ -1062,7 +1062,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 /* Custom select — matches the date picker chrome */
 .custom-select{ position: relative; max-width: 320px; }
-.custom-select.is-open{ z-index: 200; }
 .cs-trigger{
   width: 100%;
   display: flex;
@@ -1617,6 +1616,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
 
       <div class="calc-group">
+        <span class="calc-label">External QA</span>
+        <div class="calc-hint">If you're using an external QA house, their window needs to sit before your cert build.</div>
+        <div class="seg" role="radiogroup" aria-label="External QA">
+          <label class="seg-btn"><input type="radio" name="qa" value="no" checked> No</label>
+          <label class="seg-btn"><input type="radio" name="qa" value="yes"> Yes</label>
+        </div>
+      </div>
+
+      <div class="calc-group">
         <span class="calc-label">Localisation</span>
         <div class="calc-hint">Localised builds need to be integrated before content lock. More languages means more lead time.</div>
         <div class="seg" role="radiogroup" aria-label="Localisation">
@@ -1635,15 +1643,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
               <button type="button" class="cs-option" role="option" data-value="56">10+ languages</button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="calc-group">
-        <span class="calc-label">External QA</span>
-        <div class="calc-hint">If you're using an external QA house, their window needs to sit before your cert build.</div>
-        <div class="seg" role="radiogroup" aria-label="External QA">
-          <label class="seg-btn"><input type="radio" name="qa" value="no" checked> No</label>
-          <label class="seg-btn"><input type="radio" name="qa" value="yes"> Yes</label>
         </div>
       </div>
 
@@ -2322,16 +2321,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var rect = trigger.getBoundingClientRect();
       dropdown.hidden = false;
       sel.classList.add('is-open');
+      // Reserve space below so the open dropdown does not cover the schedule.
       var group = sel.closest('.calc-group');
       if (group) group.style.paddingBottom = (dropdown.offsetHeight + 16) + 'px';
       trigger.setAttribute('aria-expanded', 'true');
 
-      // Portal: sposta dropdown a body
+      // Portal: move the dropdown to <body> so no ancestor stacking context traps it.
       originalParent = dropdown.parentNode;
       originalNextSibling = dropdown.nextSibling;
       document.body.appendChild(dropdown);
-
-      // Posiziona dropdown sotto il trigger
       dropdown.style.position = 'fixed';
       dropdown.style.top = (rect.bottom + 8) + 'px';
       dropdown.style.left = rect.left + 'px';
@@ -2352,7 +2350,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       if (group) group.style.paddingBottom = '';
       trigger.setAttribute('aria-expanded', 'false');
 
-      // Riporta dropdown nella posizione originale
+      // Restore the dropdown to its original position.
       if (originalParent) {
         if (originalNextSibling) {
           originalParent.insertBefore(dropdown, originalNextSibling);
@@ -2362,8 +2360,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         originalParent = null;
         originalNextSibling = null;
       }
-
-      // Resetta stili inline
       dropdown.style.position = '';
       dropdown.style.top = '';
       dropdown.style.left = '';
