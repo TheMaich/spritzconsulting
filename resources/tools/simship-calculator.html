@@ -1303,6 +1303,33 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     transparent 4px, transparent 8px
   );
 }
+.gantt-scroll-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--clay) var(--paper-3);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.gantt-scroll-wrap:last-of-type {
+  margin-bottom: 0;
+}
+.gantt-scroll-wrap .gantt {
+  margin-bottom: 0;
+  min-width: 640px;
+}
+.gantt-scroll-wrap::-webkit-scrollbar {
+  height: 6px;
+}
+.gantt-scroll-wrap::-webkit-scrollbar-track {
+  background: var(--paper-3);
+  border-radius: 3px;
+}
+.gantt-scroll-wrap::-webkit-scrollbar-thumb {
+  background: var(--clay);
+  border-radius: 3px;
+}
 /* Chronological recap list under the charts */
 .gantt-extra{ margin-top: 22px; }
 .gantt-extra-label{
@@ -1929,11 +1956,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       '</div>';
     });
 
-    return '<div class="gantt ' + (extraClass || '') + '">' +
+    return '<div class="gantt-scroll-wrap"><div class="gantt ' + (extraClass || '') + '">' +
       '<div class="gantt-title">' + esc(title) + '</div>' +
       '<div class="gantt-axis"><div class="gantt-rowlabel"></div><div class="gantt-track">' + axis + '</div></div>' +
       rows +
-      '</div>';
+      '</div></div>';
   }
 
   function render() {
