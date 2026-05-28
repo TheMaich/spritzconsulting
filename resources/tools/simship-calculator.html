@@ -1252,6 +1252,157 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-size: 15px;
 }
 
+/* Gantt charts */
+.gantt{
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--paper-2);
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.gantt:last-of-type{ margin-bottom: 0; }
+.gantt-title{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 18px;
+}
+.gantt.is-store .gantt-title{ color: var(--accent-2); }
+
+.gantt-axis,
+.gantt-row{
+  display: grid;
+  grid-template-columns: 168px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.gantt-axis{ margin-bottom: 10px; }
+.gantt-axis .gantt-track{
+  position: relative;
+  height: 16px;
+  background: transparent;
+  border: 0;
+}
+.gantt-month{
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--mono-data);
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.gantt-release-tick{
+  transform: translateX(-100%);
+  color: var(--clay);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.gantt.is-store .gantt-release-tick{ color: var(--accent-2); }
+
+.gantt-row{ min-height: 40px; }
+.gantt-rowlabel{
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
+  line-height: 1.25;
+}
+.gantt-rowlabel-date{
+  display: block;
+  font-family: var(--mono-data);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.gantt-track{
+  position: relative;
+  height: 28px;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.gantt-gridline{
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: var(--rule-soft);
+}
+.gantt-bar{
+  position: absolute;
+  top: 4px; bottom: 4px;
+  min-width: 4px;
+  background: var(--clay);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.gantt.is-store .gantt-bar{ background: var(--accent-2); }
+.gantt-bar.is-pulled{
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 5px,
+    transparent 5px, transparent 10px
+  );
+}
+/* Shared milestones list under the charts */
+.gantt-extra{ margin-top: 22px; }
+.gantt-extra-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+}
+.gantt-extra ul{ list-style: none; margin: 0; padding: 0; }
+.gantt-extra li{
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 10px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.gantt-extra li:last-child{ margin-bottom: 0; }
+.gantt-extra li.is-lock{
+  border-color: color-mix(in srgb, var(--clay) 45%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 10%, var(--paper-2));
+}
+.gantt-extra .ge-date{
+  font-family: var(--mono-data);
+  font-size: 13px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gantt-extra li.is-lock .ge-date,
+.gantt-extra li.is-lock .ge-label{ color: var(--clay); }
+.gantt-extra .ge-label{ font-size: 14px; color: var(--ink); font-weight: 500; }
+.gantt-extra .ge-note{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+@media (max-width: 640px){
+  .gantt-axis,
+  .gantt-row{ grid-template-columns: 96px 1fr; gap: 10px; }
+  .gantt-rowlabel{ font-size: 12px; }
+  .gantt-bar-label{ font-size: 10px; padding: 0 5px; }
+  .gantt-extra li{ grid-template-columns: 1fr; gap: 2px; }
+}
+
 .calc-nav-wrap {
   display: flex;
   justify-content: space-between;
@@ -1746,28 +1897,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   // Each platform's milestones as day-offsets working back from release.
   var PLATFORMS = {
     pc: { name: 'PC / Steam', rcOff: null, milestones: [
-      { label: 'Steam store page submission deadline', off: 14 },
-      { label: 'Release build submission (uploaded to Steam)', off: 7 }
+      { label: 'Steam store page submission deadline', off: 14, role: 'store' },
+      { label: 'Release build submission (uploaded to Steam)', off: 7, role: 'build' }
     ]},
     switch: { name: 'Nintendo Switch', rcOff: 49, milestones: [
       { label: 'Gold / release build ready', off: 14 },
       { label: 'Switch cert approval target', off: 21 },
-      { label: 'eShop store page submission deadline', off: 35 },
-      { label: 'Switch build submission deadline', off: 42 },
+      { label: 'eShop store page submission deadline', off: 35, role: 'store' },
+      { label: 'Switch build submission deadline', off: 42, role: 'build' },
       { label: 'RC build (cert-ready)', off: 49 }
     ]},
     ps: { name: 'PlayStation', rcOff: 42, milestones: [
       { label: 'Gold / release build ready', off: 14 },
       { label: 'PS cert approval target', off: 21 },
-      { label: 'PS Store page submission deadline', off: 28 },
-      { label: 'PS build submission deadline', off: 35 },
+      { label: 'PS Store page submission deadline', off: 28, role: 'store' },
+      { label: 'PS build submission deadline', off: 35, role: 'build' },
       { label: 'RC build (cert-ready)', off: 42 }
     ]},
     xbox: { name: 'Xbox', rcOff: 35, milestones: [
       { label: 'Gold / release build ready', off: 14 },
       { label: 'Xbox cert approval target', off: 21 },
-      { label: 'Microsoft Store page submission deadline', off: 24 },
-      { label: 'Xbox build submission deadline', off: 28 },
+      { label: 'Microsoft Store page submission deadline', off: 24, role: 'store' },
+      { label: 'Xbox build submission deadline', off: 28, role: 'build' },
       { label: 'RC build (cert-ready)', off: 35 }
     ]}
   };
@@ -1834,6 +1985,57 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return v;
   }
 
+  // Month gridline ticks from the first of each month inside [minDate, maxDate].
+  function monthTicks(minDate, maxDate) {
+    var ticks = [];
+    var d = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+    if (d < minDate) d = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 1);
+    while (d <= maxDate) {
+      ticks.push(new Date(d));
+      d = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+    }
+    return ticks;
+  }
+
+  // Build one Gantt: Y axis = platforms, X axis = months, bars = submission → release.
+  function ganttChart(title, items, minDate, maxDate, extraClass) {
+    if (!items.length) return '';
+    var span = maxDate.getTime() - minDate.getTime() || 1;
+    function pct(dt) {
+      var p = (dt.getTime() - minDate.getTime()) / span * 100;
+      return Math.max(0, Math.min(100, p));
+    }
+
+    var ticks = monthTicks(minDate, maxDate);
+    var axis = '', grid = '';
+    ticks.forEach(function(t) {
+      var label = MONTHS[t.getMonth()] + (t.getMonth() === 0 ? " '" + String(t.getFullYear()).slice(-2) : '');
+      axis += '<span class="gantt-month" style="left:' + pct(t).toFixed(2) + '%">' + label + '</span>';
+      grid += '<span class="gantt-gridline" style="left:' + pct(t).toFixed(2) + '%"></span>';
+    });
+    axis += '<span class="gantt-month gantt-release-tick" style="left:100%">Release</span>';
+
+    var rows = '';
+    items.forEach(function(it) {
+      var l = pct(it.start), w = pct(it.end) - pct(it.start);
+      rows += '<div class="gantt-row">' +
+        '<div class="gantt-rowlabel">' + esc(it.name) +
+          '<span class="gantt-rowlabel-date">' + fmt(it.start) + '</span>' +
+        '</div>' +
+        '<div class="gantt-track">' + grid +
+          '<div class="gantt-bar' + (it.pulled ? ' is-pulled' : '') + '" title="' + esc(it.title) + '" ' +
+            'style="left:' + l.toFixed(2) + '%;width:' + Math.max(w, 1.5).toFixed(2) + '%"></div>' +
+        '</div>' +
+      '</div>';
+    });
+
+    return '<div class="gantt ' + (extraClass || '') + '">' +
+      '<div class="gantt-title">' + esc(title) + '</div>' +
+      '<div class="gantt-axis"><div class="gantt-rowlabel"></div><div class="gantt-track">' + axis + '</div></div>' +
+      rows +
+      '</div>';
+  }
+
   function render() {
     var locOn = radioValue(locRadios) === 'yes';
     var qaOn = radioValue(qaRadios) === 'yes';
@@ -1856,9 +2058,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return;
     }
 
-    var rows = [];
     var rcDates = [];
     var allOffs = [];
+    var allDates = [];          // every milestone date, drives freeze alerts
+    var buildItems = [];        // one bar per platform — build submission window
+    var storeItems = [];        // one bar per platform — store page submission window
     var origHolidayHit = isHoliday(release);
     var origSummerHit = isSummer(release);
     var adjustedAny = false;
@@ -1876,13 +2080,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       var res = adjustOffsets(release, baseOffs);
       if (res.delta > 0) adjustedAny = true;
-      var note = def.name + (res.delta > 0 ? ' · pulled before freeze' : '');
+      var pulled = res.delta > 0;
 
+      // Adjusted date for each milestone + a per-platform tooltip with the lot.
+      var buildOff = null, storeOff = null, tipLines = [];
       def.milestones.forEach(function(m, i) {
+        var date = addDays(release, -res.offs[i]);
         allOffs.push(res.offs[i]);
-        rows.push({ date: addDays(release, -res.offs[i]), label: m.label, note: note });
+        allDates.push(date);
+        tipLines.push(fmt(date) + '  —  ' + m.label);
+        if (m.role === 'build') buildOff = res.offs[i];
+        if (m.role === 'store') storeOff = res.offs[i];
       });
+      var tip = def.name + (pulled ? ' (pulled before freeze)' : '') + '\n' + tipLines.join('\n');
       if (def.rcOff != null) rcDates.push(addDays(release, -(def.rcOff + res.delta)));
+
+      if (buildOff != null) {
+        buildItems.push({ name: def.name, start: addDays(release, -buildOff), end: release, pulled: pulled, title: tip });
+      }
+      if (storeOff != null) {
+        storeItems.push({ name: def.name, start: addDays(release, -storeOff), end: release, pulled: pulled, title: tip });
+      }
     });
 
     // Anchor = earliest RC build across console platforms (the driving milestone).
@@ -1894,40 +2112,45 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       anchor = addDays(release, -Math.max.apply(null, allOffs));
     }
 
+    // Shared (non-platform) milestones — listed below the charts.
+    var shared = [];
     var contentLock = addDays(anchor, -14);
-    rows.push({ date: contentLock, label: 'Content lock / feature complete', note: 'All platforms', lock: true });
-
+    shared.push({ date: contentLock, label: 'Content lock / feature complete', note: 'Effective content lock', lock: true });
     if (qaOn) {
-      rows.push({ date: anchor, label: 'External QA end', note: 'QA window' });
-      rows.push({ date: addDays(anchor, -21), label: 'External QA start', note: 'QA window' });
+      shared.push({ date: addDays(anchor, -21), label: 'External QA start', note: 'QA window' });
+      shared.push({ date: anchor, label: 'External QA end', note: 'QA window' });
     }
-
     if (locOn) {
       var integration = addDays(contentLock, -7);
-      rows.push({ date: integration, label: 'Localisation integration complete', note: 'Localisation' });
       var handoffOff = parseInt(locSelect.dataset.value, 10) || 28;
-      rows.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', note: 'Localisation' });
+      shared.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', note: 'Localisation' });
+      shared.push({ date: integration, label: 'Localisation integration complete', note: 'Localisation' });
     }
+    shared.forEach(function(s) { allDates.push(s.date); });
+    shared.sort(function(a, b) { return a.date - b.date; });
 
-    rows.sort(function(a, b) { return a.date - b.date; });
+    // Shared time axis for both charts so the bars line up visually.
+    var starts = buildItems.concat(storeItems).map(function(it) { return it.start; });
+    var minDate = starts.reduce(function(a, b) { return a < b ? a : b; }, release);
+    var maxDate = release;
 
-    var html = '<div class="timeline">';
-    html += '<div class="tl-row tl-head"><span>Milestone</span><span>Date</span><span>Platform / Notes</span></div>';
-    rows.forEach(function(r) {
-      var tag = r.lock ? '<span class="tl-lock-tag">← your effective content lock</span>' : '';
-      html += '<div class="tl-row' + (r.lock ? ' is-lock' : '') + '">' +
-        '<span class="tl-milestone">' + esc(r.label) + tag + '</span>' +
-        '<span class="tl-date">' + fmt(r.date) + '</span>' +
-        '<span class="tl-note">' + esc(r.note) + '</span>' +
-        '</div>';
-    });
-    html += '</div>';
+    var html = ganttChart('Build submission', buildItems, minDate, maxDate, '');
+    html += ganttChart('Store page submission', storeItems, minDate, maxDate, 'is-store');
+    if (shared.length) {
+      html += '<div class="gantt-extra"><div class="gantt-extra-label">Shared milestones</div><ul>';
+      shared.forEach(function(s) {
+        html += '<li' + (s.lock ? ' class="is-lock"' : '') + '><span class="ge-date">' + fmt(s.date) + '</span>' +
+          '<span class="ge-label">' + esc(s.label) + '</span>' +
+          '<span class="ge-note">' + esc(s.note) + '</span></li>';
+      });
+      html += '</ul></div>';
+    }
     timelineWrap.innerHTML = html;
 
     // Alerts reflect proximity to a freeze on the ORIGINAL schedule (plus any
     // milestone still inside one after shifting, e.g. shared dev milestones).
-    var holidayHit = origHolidayHit || rows.some(function(r) { return isHoliday(r.date); });
-    var summerHit = origSummerHit || rows.some(function(r) { return isSummer(r.date); });
+    var holidayHit = origHolidayHit || allDates.some(function(d) { return isHoliday(d); });
+    var summerHit = origSummerHit || allDates.some(function(d) { return isSummer(d); });
     holidayEl.hidden = !holidayHit;
     summerEl.hidden = !summerHit;
 
