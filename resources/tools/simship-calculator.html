@@ -1057,72 +1057,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .seg-btn:has(input:checked){ background: var(--ink); color: var(--paper); }
 .seg-btn:has(input:focus-visible){ outline: 2px solid var(--clay); outline-offset: 3px; }
 
-.calc-subgroup{ margin-top: 16px; overflow: visible; }
-.calc-subgroup[hidden]{ display: none; }
-
-/* Custom select — matches the date picker chrome */
-.custom-select{ position: relative; max-width: 320px; }
-.cs-trigger{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 14px 16px;
-  font-family: var(--sans);
-  font-size: 16px;
-  color: var(--ink);
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.cs-trigger:hover{ border-color: color-mix(in srgb, var(--clay) 50%, var(--rule)); }
-.custom-select.is-open .cs-trigger{ border-color: var(--clay); }
-.cs-chevron{
-  width: 16px; height: 16px;
-  stroke: var(--ink-3); stroke-width: 1.8;
-  fill: none; stroke-linecap: round; stroke-linejoin: round;
-  flex-shrink: 0;
-  transition: transform 0.2s, stroke 0.2s;
-}
-.custom-select.is-open .cs-chevron{ transform: rotate(180deg); stroke: var(--clay); }
-.cs-dropdown{
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0; right: 0;
-  z-index: 200;
-  background: var(--paper-3);
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 6px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.cs-option{
-  text-align: left;
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--ink-2);
-  background: transparent;
-  border: 1px solid transparent;
-  padding: 10px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-.cs-option:hover{ background: var(--paper-2); color: var(--ink); }
-.cs-option.is-selected{
-  background: var(--clay);
-  color: var(--paper);
-  font-weight: 600;
-  border-color: var(--clay);
-}
-.cs-option.is-selected:hover{ background: var(--clay-deep); color: var(--paper); }
-
 /* Primary driving input — Target Release Date */
 .calc-group-primary{
   position: relative;
@@ -1624,28 +1558,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </div>
       </div>
 
-      <div class="calc-group">
-        <span class="calc-label">Localisation</span>
-        <div class="calc-hint">Localised builds need to be integrated before content lock. More languages means more lead time.</div>
-        <div class="seg" role="radiogroup" aria-label="Localisation">
-          <label class="seg-btn"><input type="radio" name="loc" value="no" checked> No</label>
-          <label class="seg-btn"><input type="radio" name="loc" value="yes"> Yes</label>
-        </div>
-        <div class="calc-subgroup" id="loc-langs" hidden>
-          <div class="custom-select" id="loc-select" data-value="28">
-            <button type="button" class="cs-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Number of languages">
-              <span class="cs-value">1–4 languages</span>
-              <svg class="cs-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="cs-dropdown" role="listbox" hidden>
-              <button type="button" class="cs-option is-selected" role="option" data-value="28">1–4 languages</button>
-              <button type="button" class="cs-option" role="option" data-value="42">5–10 languages</button>
-              <button type="button" class="cs-option" role="option" data-value="56">10+ languages</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div>
         <div class="calc-result-label">Your Work-Back Schedule</div>
         <div class="holiday-warn" id="holiday-warn" hidden role="alert">
@@ -1909,9 +1821,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 (function() {
   var releaseInput = document.getElementById('release');
   var platformBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="platform"]'));
-  var locRadios = document.querySelectorAll('input[name="loc"]');
-  var locLangs = document.getElementById('loc-langs');
-  var locSelect = document.getElementById('loc-select');
   var qaRadios = document.querySelectorAll('input[name="qa"]');
   var timelineWrap = document.getElementById('timeline-wrap');
   var holidayEl = document.getElementById('holiday-warn');
@@ -2028,9 +1937,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
 
   function render() {
-    var locOn = radioValue(locRadios) === 'yes';
     var qaOn = radioValue(qaRadios) === 'yes';
-    locLangs.hidden = !locOn;
 
     var iso = releaseInput.dataset.iso || '';
     var release = iso ? new Date(iso + 'T00:00:00') : null;
@@ -2134,12 +2041,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (qaOn) {
       recap.push({ date: addDays(anchor, -21), label: 'External QA start', plat: 'All platforms', note: 'QA window' });
       recap.push({ date: anchor, label: 'External QA end', plat: 'All platforms', note: 'QA window' });
-    }
-    if (locOn) {
-      var integration = addDays(contentLock, -7);
-      var handoffOff = parseInt(locSelect.dataset.value, 10) || 28;
-      recap.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', plat: 'All platforms', note: 'Localisation' });
-      recap.push({ date: integration, label: 'Localisation integration complete', plat: 'All platforms', note: 'Localisation' });
     }
     recap.forEach(function(r) { allDates.push(r.date); });
     recap.sort(function(a, b) { return a.date - b.date; });
@@ -2305,89 +2206,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   releaseInput.addEventListener('input', render);
   releaseInput.addEventListener('change', render);
   platformBoxes.forEach(function(b) { b.addEventListener('change', render); });
-  locRadios.forEach(function(r) { r.addEventListener('change', render); });
   qaRadios.forEach(function(r) { r.addEventListener('change', render); });
-
-  (function initCustomSelect(sel) {
-    var trigger = sel.querySelector('.cs-trigger');
-    var valueEl = sel.querySelector('.cs-value');
-    var dropdown = sel.querySelector('.cs-dropdown');
-    var options = sel.querySelectorAll('.cs-option');
-
-    var originalParent = null;
-    var originalNextSibling = null;
-
-    function openSel() {
-      var rect = trigger.getBoundingClientRect();
-      dropdown.hidden = false;
-      sel.classList.add('is-open');
-      // Reserve space below so the open dropdown does not cover the schedule.
-      var group = sel.closest('.calc-group');
-      if (group) group.style.paddingBottom = '200px';
-      trigger.setAttribute('aria-expanded', 'true');
-
-      // Portal: move the dropdown to <body> so no ancestor stacking context traps it.
-      originalParent = dropdown.parentNode;
-      originalNextSibling = dropdown.nextSibling;
-      document.body.appendChild(dropdown);
-      dropdown.style.position = 'fixed';
-      dropdown.style.top = (rect.bottom + 8) + 'px';
-      dropdown.style.left = rect.left + 'px';
-      dropdown.style.width = rect.width + 'px';
-      dropdown.style.zIndex = '99999';
-      dropdown.style.margin = '0';
-
-      setTimeout(function() {
-        document.addEventListener('click', handleOutside);
-        document.addEventListener('keydown', handleKey);
-      }, 0);
-    }
-
-    function closeSel() {
-      dropdown.hidden = true;
-      sel.classList.remove('is-open');
-      var group = sel.closest('.calc-group');
-      if (group) group.style.paddingBottom = '';
-      trigger.setAttribute('aria-expanded', 'false');
-
-      // Restore the dropdown to its original position.
-      if (originalParent) {
-        if (originalNextSibling) {
-          originalParent.insertBefore(dropdown, originalNextSibling);
-        } else {
-          originalParent.appendChild(dropdown);
-        }
-        originalParent = null;
-        originalNextSibling = null;
-      }
-      dropdown.style.position = '';
-      dropdown.style.top = '';
-      dropdown.style.left = '';
-      dropdown.style.width = '';
-      dropdown.style.zIndex = '';
-      dropdown.style.margin = '';
-
-      document.removeEventListener('click', handleOutside);
-      document.removeEventListener('keydown', handleKey);
-    }
-    function handleOutside(e) { if (!sel.contains(e.target) && !dropdown.contains(e.target)) closeSel(); }
-    function handleKey(e) { if (e.key === 'Escape') closeSel(); }
-
-    trigger.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (dropdown.hidden) openSel(); else closeSel();
-    });
-    options.forEach(function(opt) {
-      opt.addEventListener('click', function(e) {
-        e.stopPropagation();
-        sel.dataset.value = opt.dataset.value;
-        valueEl.textContent = opt.textContent;
-        options.forEach(function(o) { o.classList.toggle('is-selected', o === opt); });
-        closeSel();
-        render();
-      });
-    });
-  })(locSelect);
 
   var tracked = false;
   document.addEventListener('input', function() {
