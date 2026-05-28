@@ -1236,8 +1236,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   text-transform: uppercase;
   color: var(--ink-3);
 }
-.ge-plat-icon{ display: flex; align-items: center; color: var(--ink-3); }
-.ge-type-icon{ display: flex; align-items: center; color: var(--ink-3); }
+.ge-plat-icon,
+.ge-type-icon{ display: flex; align-items: center; justify-content: center; color: var(--ink-3); }
 .gantt-extra li.is-lock .ge-plat-icon,
 .gantt-extra li.is-lock .ge-type-icon{ color: var(--clay); }
 
@@ -1843,19 +1843,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var p = (plat || '').toLowerCase();
       var color = '8E95A4';
       if (p.indexOf('switch') > -1 || p.indexOf('nintendo') > -1)
-        return '<img src="https://cdn.simpleicons.org/nintendoswitch/' + color + '" width="16" height="16" alt="Nintendo Switch">';
+        return '<img src="https://cdn.simpleicons.org/nintendoswitch/' + color + '" width="16" height="16" alt="NSW" onerror="this.outerHTML=\'<span style=\\\'font-size:10px;font-family:var(--mono)\\\'>NSW</span>\'">';
       if (p.indexOf('playstation') > -1 || p.indexOf('ps') > -1)
-        return '<img src="https://cdn.simpleicons.org/playstation/' + color + '" width="16" height="16" alt="PlayStation">';
+        return '<img src="https://cdn.simpleicons.org/playstation/' + color + '" width="16" height="16" alt="PS" onerror="this.outerHTML=\'<span style=\\\'font-size:10px;font-family:var(--mono)\\\'>PS</span>\'">';
       if (p.indexOf('xbox') > -1)
-        return '<img src="https://cdn.simpleicons.org/xbox/' + color + '" width="16" height="16" alt="Xbox">';
-      return '<img src="https://cdn.simpleicons.org/steam/' + color + '" width="16" height="16" alt="Steam">';
+        return '<img src="https://cdn.simpleicons.org/xbox/' + color + '" width="16" height="16" alt="XB" onerror="this.outerHTML=\'<span style=\\\'font-size:10px;font-family:var(--mono)\\\'>XB</span>\'">';
+      return '<img src="https://cdn.simpleicons.org/steam/' + color + '" width="16" height="16" alt="PC" onerror="this.outerHTML=\'<span style=\\\'font-size:10px;font-family:var(--mono)\\\'>PC</span>\'">';
     }
     function typeIcon(note) {
       var n = (note || '').toLowerCase();
       var color = '8E95A4';
       if (n.indexOf('store') > -1)
-        return '<img src="https://cdn.simpleicons.org/shopify/' + color + '" width="16" height="16" alt="Store">';
-      return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="12" rx="3"/><path d="M8 8V6a2 2 0 0 1 4 0v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/><circle cx="17" cy="14" r="1" fill="currentColor" stroke="none"/></svg>';
+        return '<img src="https://cdn.simpleicons.org/appleappstore/' + color + '" width="16" height="16" alt="Store">';
+      return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="10" rx="3"/><circle cx="8" cy="15" r="1.5" fill="currentColor" stroke="none"/><circle cx="16" cy="15" r="1.5" fill="currentColor" stroke="none"/><path d="M12 6v4M10 8h4"/></svg>';
     }
 
     var html = '';
