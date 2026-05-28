@@ -1326,9 +1326,20 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   text-align: center;
   transform: rotate(-45deg);
   transform-origin: center;
-  z-index: 99999;
+  z-index: 39;
   pointer-events: none;
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+@media (max-width: 640px) {
+  .experimental-page-ribbon {
+    left: auto;
+    right: -42px;
+    top: 28px;
+    width: 160px;
+    font-size: 9px;
+    padding: 7px 0;
+    transform: rotate(45deg);
+  }
 }
 </style>
 </head>
