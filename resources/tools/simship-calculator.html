@@ -1065,9 +1065,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .custom-select.is-open{ z-index: 200; }
 .calc-group.is-select-open{
   position: relative;
-  z-index: 300;
-  transform: none !important;
-  animation: none !important;
+  z-index: 1000;
+  isolation: isolate;
+}
+.calc-group.is-select-open .cs-dropdown{
+  z-index: 1001;
 }
 .cs-trigger{
   width: 100%;
