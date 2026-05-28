@@ -1121,9 +1121,44 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
   .calc-result-wrap.is-sticky-mobile .confidence-row { display: none; }
 }
+
+/* Experimental ribbon */
+.experimental-ribbon-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 8px 0 0 0;
+}
+.experimental-ribbon {
+  position: absolute;
+  top: 28px;
+  left: -32px;
+  width: 140px;
+  padding: 5px 0;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  line-height: 1;
+}
 </style>
 </head>
 <body>
+
+<div class="experimental-ribbon-wrap" style="position: fixed; border-radius: 0;">
+  <div class="experimental-ribbon">Experimental</div>
+</div>
 
 <a class="skip" href="#main">Skip to content</a>
 <div class="bg-aurora" aria-hidden="true">
@@ -1334,6 +1369,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
+          <li><strong>Experimental tool.</strong> This calculator is based on publicly available industry data, but the underlying metrics are subject to significant variance, genre-specific differences, and market conditions that no dataset fully captures. Use it to explore possible scenarios and pressure-test assumptions. Do not use it as a basis for financial decisions without cross-referencing with your own data and professional advice.</li>
           <li><strong>Where 15% comes from, and why it is a shaky number.</strong> GameDiscoverCo analysis of Steam launches from September 2024 to September 2025 puts the median Week 1 conversion at 0.15x of launch wishlists for games with 25,000+ wishlists. For games priced above $10, that drops to 0.10x. But the distribution varies by 10 to 20x between worst and best performers. The median is a reference point, not a prediction. Sources: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a> and <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
           <li><strong>What actually drives outperformance.</strong> The games that converted best in 2024 to 2025 shared two patterns: they went viral with influencers and friend groups (co-op titles especially), or they were major franchises where casual players showed up without wishlisting first. Single-player games that blew up on social video also outperformed. None of these are things you can model in advance. Source: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a></li>
           <li><strong>Where 27% Month 1 comes from.</strong> Gamalytic analysis of 5,744 Steam games released after June 2024 puts median Month 1 sales at 27% of launch wishlists. Same caveat as above: wide distribution, treat as directional. Source: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>

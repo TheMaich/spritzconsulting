@@ -1308,9 +1308,44 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   .calc-notes { padding: 22px 20px; }
   .preset-btn { min-height: 44px; padding: 12px 18px; font-size: 14px; }
 }
+
+/* Experimental ribbon */
+.experimental-ribbon-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 8px 0 0 0;
+}
+.experimental-ribbon {
+  position: absolute;
+  top: 28px;
+  left: -32px;
+  width: 140px;
+  padding: 5px 0;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  line-height: 1;
+}
 </style>
 </head>
 <body>
+
+<div class="experimental-ribbon-wrap" style="position: fixed; border-radius: 0;">
+  <div class="experimental-ribbon">Experimental</div>
+</div>
 
 <a class="skip" href="#main">Skip to content</a>
 <div class="bg-aurora" aria-hidden="true">
@@ -1500,6 +1535,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
+          <li><strong>Experimental tool.</strong> This calculator is based on publicly available industry data, but the underlying metrics are subject to significant variance, genre-specific differences, and market conditions that no dataset fully captures. Use it to explore possible scenarios and pressure-test assumptions. Do not use it as a basis for financial decisions without cross-referencing with your own data and professional advice.</li>
           <li><strong>Where the follower multiplier comes from, and why it keeps changing.</strong> The follower-to-wishlist ratio has increased over time as marketers focus more on wishlist calls-to-action than follower growth. In 2021, the median was 9.6x (range 5x to 14x). By June 2023, it had risen to 12x (range 7x to 20x). GameDiscoverCo data from May 2026 puts the median at 16.1x for games with more than 50,000 wishlists at launch, suggesting the ratio continues to drift upward, especially for larger titles. This calculator uses 12x as the default, which is appropriate for most indie games in active pre-launch. If your game has broad social reach or has been featured in multiple Next Fest events, consider using 14x to 16x. Sources: <a href="https://newsletter.gamediscover.co/p/why-your-steam-follower-to-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Jun 2023</a> &middot; <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
           <li><strong>Where 10x comes from.</strong> GameDiscoverCo surveys of unreleased Steam games show a median of 9.6x to 12x wishlists per follower, with a range of 7x to 20x depending on genre, festival exposure, and marketing activity. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> · <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a></li>
           <li><strong>Followers are a proxy, not a promise.</strong> Publishers and algorithm alike use follower counts as a visible signal of pre-launch interest. But follower velocity matters more than the absolute number. A game gaining 200 followers per day is a different conversation from one with 10,000 followers accumulated over three years.</li>
