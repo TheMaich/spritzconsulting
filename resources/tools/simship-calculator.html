@@ -1473,11 +1473,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-result-label">Your Work-Back Schedule</div>
         <div class="holiday-warn" id="holiday-warn" hidden role="alert">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <p>Your release date falls near the end-of-year period. <strong>Nintendo and Sony typically freeze cert review from late December.</strong> Verify your submission window directly with your platform contacts before locking this schedule.</p>
+          <p>Your release date falls near the end-of-year period. <strong>Nintendo and Sony typically freeze cert review from late December.</strong> Verify your submission window directly with your platform contacts before locking this schedule.<span class="adj-note" hidden> Affected cert milestones below have been pulled earlier to land before offices close.</span></p>
         </div>
         <div class="holiday-warn" id="summer-warn" hidden role="alert">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <p>Your schedule runs through the European summer period. <strong>Studios and first-party cert teams often run reduced staffing from mid-July through August.</strong> Review and submission turnaround can stretch. Confirm holiday coverage with your platform contacts before locking this schedule.</p>
+          <p>Your schedule runs through the European summer period. <strong>Studios and first-party cert teams often run reduced staffing from mid-July through August.</strong> Review and submission turnaround can stretch. Confirm holiday coverage with your platform contacts before locking this schedule.<span class="adj-note" hidden> Affected cert milestones below have been pulled earlier to land before offices close.</span></p>
         </div>
         <div id="timeline-wrap">
           <div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>
@@ -1785,6 +1785,44 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var m = d.getMonth(), day = d.getDate();
     return (m === 6 && day >= 15) || (m === 7);
   }
+  function inFreeze(d) { return isHoliday(d) || isSummer(d); }
+
+  // Last working day BEFORE the freeze window that contains d.
+  function clearDateFor(d) {
+    var y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
+    var target;
+    if (m === 11 && day >= 20) {            // 20-31 Dec -> 19 Dec
+      target = new Date(y, 11, 19);
+    } else if (m === 0 && day <= 10) {      // 1-10 Jan -> 19 Dec prev year
+      target = new Date(y - 1, 11, 19);
+    } else {                                 // 15 Jul - 31 Aug -> 14 Jul
+      target = new Date(y, 6, 14);
+    }
+    // Back off weekends so submission lands on a working day.
+    while (target.getDay() === 0 || target.getDay() === 6) {
+      target = addDays(target, -1);
+    }
+    return target;
+  }
+
+  // Pull a platform's whole pipeline earlier (in lockstep) until none of its
+  // milestones land in a freeze window. Returns the shifted offsets + delta.
+  function adjustOffsets(release, baseOffs) {
+    var offs = baseOffs.slice();
+    for (var iter = 0; iter < 8; iter++) {
+      var worst = 0;
+      for (var i = 0; i < offs.length; i++) {
+        var date = addDays(release, -offs[i]);
+        if (!inFreeze(date)) continue;
+        var clear = clearDateFor(date);
+        var need = Math.round((date.getTime() - clear.getTime()) / DAY);
+        if (need > worst) worst = need;
+      }
+      if (worst <= 0) break;
+      for (var j = 0; j < offs.length; j++) offs[j] += worst;
+    }
+    return { offs: offs, delta: offs[0] - baseOffs[0] };
+  }
 
   function radioValue(list) {
     var v = 'no';
@@ -1817,14 +1855,30 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var rows = [];
     var rcDates = [];
     var allOffs = [];
+    var origHolidayHit = isHoliday(release);
+    var origSummerHit = isSummer(release);
+    var adjustedAny = false;
 
     selected.forEach(function(key) {
       var def = PLATFORMS[key];
-      def.milestones.forEach(function(m) {
-        allOffs.push(m.off);
-        rows.push({ date: addDays(release, -m.off), label: m.label, note: def.name });
+      var baseOffs = def.milestones.map(function(m) { return m.off; });
+
+      // Flag freeze hits on the ORIGINAL dates (drives the alert), then shift.
+      baseOffs.forEach(function(off) {
+        var d = addDays(release, -off);
+        if (isHoliday(d)) origHolidayHit = true;
+        if (isSummer(d)) origSummerHit = true;
       });
-      if (def.rcOff != null) rcDates.push(addDays(release, -def.rcOff));
+
+      var res = adjustOffsets(release, baseOffs);
+      if (res.delta > 0) adjustedAny = true;
+      var note = def.name + (res.delta > 0 ? ' · pulled before freeze' : '');
+
+      def.milestones.forEach(function(m, i) {
+        allOffs.push(res.offs[i]);
+        rows.push({ date: addDays(release, -res.offs[i]), label: m.label, note: note });
+      });
+      if (def.rcOff != null) rcDates.push(addDays(release, -(def.rcOff + res.delta)));
     });
 
     // Anchor = earliest RC build across console platforms (the driving milestone).
@@ -1866,12 +1920,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     html += '</div>';
     timelineWrap.innerHTML = html;
 
-    // End-of-year freeze: release date, or any milestone (cert submission etc.), in window.
-    var holidayHit = isHoliday(release) || rows.some(function(r) { return isHoliday(r.date); });
+    // Alerts reflect proximity to a freeze on the ORIGINAL schedule (plus any
+    // milestone still inside one after shifting, e.g. shared dev milestones).
+    var holidayHit = origHolidayHit || rows.some(function(r) { return isHoliday(r.date); });
+    var summerHit = origSummerHit || rows.some(function(r) { return isSummer(r.date); });
     holidayEl.hidden = !holidayHit;
-    // Summer slowdown: release date, or any milestone, lands in the window.
-    var summerHit = isSummer(release) || rows.some(function(r) { return isSummer(r.date); });
     summerEl.hidden = !summerHit;
+
+    var holidayAdj = holidayEl.querySelector('.adj-note');
+    var summerAdj = summerEl.querySelector('.adj-note');
+    if (holidayAdj) holidayAdj.hidden = !adjustedAny;
+    if (summerAdj) summerAdj.hidden = !adjustedAny;
   }
 
   function buildDatePicker(input) {
