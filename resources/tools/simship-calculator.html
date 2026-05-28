@@ -1063,7 +1063,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Custom select — matches the date picker chrome */
 .custom-select{ position: relative; max-width: 320px; }
 .custom-select.is-open{ z-index: 200; }
-.calc-group.is-select-open{ position: relative; z-index: 300; }
+.calc-group.is-select-open{
+  position: relative;
+  z-index: 300;
+  transform: none !important;
+  animation: none !important;
+}
 .cs-trigger{
   width: 100%;
   display: flex;
