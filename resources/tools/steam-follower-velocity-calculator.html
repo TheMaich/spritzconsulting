@@ -1312,35 +1312,30 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 /* Experimental ribbon */
 .experimental-page-ribbon {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 38px;
+  left: -52px;
+  width: 220px;
+  padding: 10px 0;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  transform: rotate(-45deg);
+  transform-origin: center;
   z-index: 99999;
   pointer-events: none;
-}
-.experimental-page-ribbon svg {
-  display: block;
-  width: 220px;
-  height: 220px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
 </style>
 </head>
 <body>
 
 <div class="experimental-page-ribbon" aria-label="Experimental tool">
-  <svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="0,0 220,0 0,220" fill="#E5B415"/>
-    <text
-      x="0"
-      y="0"
-      transform="translate(75, 75) rotate(-45)"
-      fill="#0A0B0E"
-      font-family="'Bricolage Grotesque', sans-serif"
-      font-size="13"
-      font-weight="800"
-      letter-spacing="2"
-      text-anchor="middle"
-    >EXPERIMENTAL</text>
-  </svg>
+  Experimental
 </div>
 
 <a class="skip" href="#main">Skip to content</a>
