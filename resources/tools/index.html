@@ -558,35 +558,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transition: background-color .25s var(--ease);
 }
 
-/* Experimental ribbon */
-.experimental-ribbon-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 10;
-  border-radius: 8px 0 0 0;
-}
-.experimental-ribbon {
-  position: absolute;
-  top: 28px;
-  left: -32px;
-  width: 140px;
-  padding: 5px 0;
-  background: var(--clay);
-  color: var(--paper);
+/* Experimental badge */
+.experimental-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  text-align: center;
-  transform: rotate(-45deg);
-  transform-origin: center;
-  line-height: 1;
+  color: var(--clay);
+  margin-bottom: 10px;
 }
 .tool-card:hover{
   background-color: color-mix(in srgb, var(--clay) 4%, transparent);
@@ -770,15 +753,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     </a>
 
     <a href="/resources/tools/steam-follower-velocity-calculator.html" class="tool-card" data-group="publishing">
-      <div class="experimental-ribbon-wrap">
-        <div class="experimental-ribbon">Experimental</div>
-      </div>
       <div class="tool-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       </div>
       <div class="tool-body">
         <h2 class="tool-title">Steam Follower Velocity Calculator</h2>
         <p class="tool-desc">Enter your current Steam followers and launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
+        <div class="experimental-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Experimental
+        </div>
       </div>
       <span class="tool-cta">
         Open
@@ -787,15 +771,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     </a>
 
     <a href="/resources/tools/steam-sales-forecast-calculator.html" class="tool-card" data-group="publishing">
-      <div class="experimental-ribbon-wrap">
-        <div class="experimental-ribbon">Experimental</div>
-      </div>
       <div class="tool-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg>
       </div>
       <div class="tool-body">
         <h2 class="tool-title">Steam Sales Forecast Calculator</h2>
         <p class="tool-desc">Estimate launch sales from your wishlist and follower count. After launch, track your actual numbers against industry benchmarks.</p>
+        <div class="experimental-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Experimental
+        </div>
       </div>
       <span class="tool-cta">
         Open
