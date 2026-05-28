@@ -1061,8 +1061,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 /* Custom select — matches the date picker chrome */
 .custom-select{ position: relative; max-width: 320px; }
-.custom-select.is-open{ z-index: 200; }
-.calc-group.is-select-open{ position: relative; z-index: 300; }
+.custom-select.is-open{ z-index: 400; }
+.calc-group.is-select-open{ position: relative; z-index: 400; }
+.calc-subgroup{ position: relative; }
+.calc-group.is-select-open .calc-subgroup{ z-index: 400; }
 .cs-trigger{
   width: 100%;
   display: flex;
@@ -1093,7 +1095,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   position: absolute;
   top: calc(100% + 8px);
   left: 0; right: 0;
-  z-index: 200;
+  z-index: 400;
   background: var(--paper-3);
   border: 1px solid var(--rule);
   border-radius: 8px;
@@ -1370,29 +1372,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     transparent 4px, transparent 8px
   );
 }
-/* Submission rounds + shared milestones lists under the charts */
-.rounds-block{ margin-top: 22px; }
-.sub-rounds{ margin-bottom: 18px; }
-.sub-rounds:last-child{ margin-bottom: 0; }
-.sub-rounds-plat{
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 8px;
-}
-.sub-rounds ul{ list-style: none; margin: 0; padding: 0; }
-.sub-rounds li{
-  display: grid;
-  grid-template-columns: 130px 150px 1fr;
-  gap: 16px;
-  align-items: baseline;
-  padding: 8px 14px;
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  margin-bottom: 6px;
-}
-.sub-rounds li:last-child{ margin-bottom: 0; }
-
+/* Chronological recap list under the charts */
 .gantt-extra{ margin-top: 22px; }
 .gantt-extra-label{
   font-family: var(--mono);
@@ -1428,6 +1408,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .gantt-extra li.is-lock .ge-date,
 .gantt-extra li.is-lock .ge-label{ color: var(--clay); }
 .ge-label{ font-size: 14px; color: var(--ink); font-weight: 500; }
+.ge-plat{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 400;
+}
 .ge-note{
   font-family: var(--mono);
   font-size: 11px;
@@ -1441,8 +1429,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .gantt-row{ grid-template-columns: 96px 1fr; gap: 10px; }
   .gantt-rowlabel{ font-size: 12px; }
   .gantt-bar-label{ font-size: 10px; padding: 0 5px; }
-  .gantt-extra li,
-  .sub-rounds li{ grid-template-columns: 1fr; gap: 2px; }
+  .gantt-extra li{ grid-template-columns: 1fr; gap: 2px; }
 }
 
 .calc-nav-wrap {
@@ -2068,7 +2055,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var allDates = [];          // every computed date, drives freeze alerts
     var buildItems = [];        // build Gantt — segmented cert rounds per console
     var storeItems = [];        // store Gantt — single store-page submission bar
-    var subRounds = [];         // per-console submission round breakdown
+    var recap = [];             // every dated milestone, rendered as one chronological list
     var anchorDates = [];       // earliest submission per platform → drives content lock
     var origHolidayHit = isHoliday(release);
     var origSummerHit = isSummer(release);
@@ -2085,6 +2072,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         title: def.name + '\n' + fmt(storeDate) + '  —  store page submission',
         bars: [{ start: storeDate, end: release, label: 'Store page in review' }]
       });
+      recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: 'Store review track' });
 
       if (def.cert) {
         // Three cert rounds, working back from release. Each round = a cert
@@ -2105,7 +2093,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           { n: 2, date: sub2, note: c.check + ' working days cert check, then fix bugs' },
           { n: 3, date: sub3, note: c.last + ' working days final check then go-live' }
         ];
-        subRounds.push({ name: def.name, rounds: rounds });
+        rounds.forEach(function(r) {
+          recap.push({ date: r.date, label: 'Submission ' + r.n + (r.n === 3 ? ' (final)' : ''), plat: def.name, note: r.note });
+        });
 
         var tip = def.name + '\n' + rounds.map(function(r) {
           return fmt(r.date) + '  —  Submission ' + r.n + (r.n === 3 ? ' (final)' : '');
@@ -2134,28 +2124,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           title: def.name + '\n' + fmt(buildDate) + '  —  release build submission',
           bars: [{ start: buildDate, end: release, label: 'Build submitted' }]
         });
+        recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check' });
       }
     });
 
     // Anchor = earliest first submission across platforms → drives content lock.
     var anchor = anchorDates.reduce(function(a, b) { return a < b ? a : b; }, release);
 
-    // Shared (non-platform) milestones — listed below the charts.
-    var shared = [];
+    // Shared (non-platform) milestones — folded into the same recap list.
     var contentLock = addDays(anchor, -14);
-    shared.push({ date: contentLock, label: 'Content lock / feature complete', note: 'Effective content lock', lock: true });
+    recap.push({ date: contentLock, label: 'Content lock / feature complete', plat: 'All platforms', note: 'Effective content lock', lock: true });
     if (qaOn) {
-      shared.push({ date: addDays(anchor, -21), label: 'External QA start', note: 'QA window' });
-      shared.push({ date: anchor, label: 'External QA end', note: 'QA window' });
+      recap.push({ date: addDays(anchor, -21), label: 'External QA start', plat: 'All platforms', note: 'QA window' });
+      recap.push({ date: anchor, label: 'External QA end', plat: 'All platforms', note: 'QA window' });
     }
     if (locOn) {
       var integration = addDays(contentLock, -7);
       var handoffOff = parseInt(locSelect.dataset.value, 10) || 28;
-      shared.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', note: 'Localisation' });
-      shared.push({ date: integration, label: 'Localisation integration complete', note: 'Localisation' });
+      recap.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', plat: 'All platforms', note: 'Localisation' });
+      recap.push({ date: integration, label: 'Localisation integration complete', plat: 'All platforms', note: 'Localisation' });
     }
-    shared.forEach(function(s) { allDates.push(s.date); });
-    shared.sort(function(a, b) { return a.date - b.date; });
+    recap.forEach(function(r) { allDates.push(r.date); });
+    recap.sort(function(a, b) { return a.date - b.date; });
 
     // Shared time axis for both charts so the bars line up visually.
     var starts = buildItems.concat(storeItems).map(function(it) { return it.sub; });
@@ -2165,26 +2155,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var html = ganttChart('Build submission — 3 cert rounds per console', buildItems, minDate, maxDate, '');
     html += ganttChart('Store page submission', storeItems, minDate, maxDate, 'is-store');
 
-    if (subRounds.length) {
-      html += '<div class="rounds-block"><div class="gantt-extra-label">Console submission rounds</div>';
-      subRounds.forEach(function(p) {
-        html += '<div class="sub-rounds"><div class="sub-rounds-plat">' + esc(p.name) + '</div><ul>';
-        p.rounds.forEach(function(r) {
-          html += '<li><span class="ge-date">' + fmt(r.date) + '</span>' +
-            '<span class="ge-label">Submission ' + r.n + (r.n === 3 ? ' (final)' : '') + '</span>' +
-            '<span class="ge-note">' + esc(r.note) + '</span></li>';
-        });
-        html += '</ul></div>';
-      });
-      html += '</div>';
-    }
-
-    if (shared.length) {
-      html += '<div class="gantt-extra"><div class="gantt-extra-label">Shared milestones</div><ul>';
-      shared.forEach(function(s) {
-        html += '<li' + (s.lock ? ' class="is-lock"' : '') + '><span class="ge-date">' + fmt(s.date) + '</span>' +
-          '<span class="ge-label">' + esc(s.label) + '</span>' +
-          '<span class="ge-note">' + esc(s.note) + '</span></li>';
+    if (recap.length) {
+      html += '<div class="gantt-extra"><div class="gantt-extra-label">Schedule recap — chronological</div><ul>';
+      recap.forEach(function(r) {
+        html += '<li' + (r.lock ? ' class="is-lock"' : '') + '><span class="ge-date">' + fmt(r.date) + '</span>' +
+          '<span class="ge-label">' + esc(r.label) + ' <span class="ge-plat">' + esc(r.plat) + '</span></span>' +
+          '<span class="ge-note">' + esc(r.note) + '</span></li>';
       });
       html += '</ul></div>';
     }
