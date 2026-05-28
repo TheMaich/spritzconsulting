@@ -1185,156 +1185,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-size: 15px;
 }
 
-/* Gantt charts */
-.gantt{
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: var(--paper-2);
-  padding: 22px 24px;
-  margin-bottom: 20px;
-}
-.gantt:last-of-type{ margin-bottom: 0; }
-.gantt-title{
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--clay);
-  margin-bottom: 18px;
-}
-.gantt.is-store .gantt-title{ color: var(--accent-2); }
-
-.gantt-axis,
-.gantt-row{
-  display: grid;
-  grid-template-columns: 168px 1fr;
-  gap: 16px;
-  align-items: center;
-}
-.gantt-axis{ margin-bottom: 10px; }
-.gantt-axis .gantt-track{
-  position: relative;
-  height: 16px;
-  background: transparent;
-  border: 0;
-}
-.gantt-month{
-  position: absolute;
-  transform: translateX(-50%);
-  font-family: var(--mono-data);
-  font-size: 11px;
-  color: var(--ink-3);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-.gantt-release-tick{
-  transform: translateX(-100%);
-  color: var(--clay);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.gantt.is-store .gantt-release-tick{ color: var(--accent-2); }
-
-.gantt-row{ min-height: 40px; }
-.gantt-rowlabel{
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-  text-align: right;
-  line-height: 1.25;
-}
-.gantt-rowlabel-date{
-  display: block;
-  font-family: var(--mono-data);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--ink-3);
-  margin-top: 3px;
-  font-variant-numeric: tabular-nums;
-}
-.gantt-track{
-  position: relative;
-  height: 28px;
-  background: var(--paper-3);
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.gantt-gridline{
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 1px;
-  background: var(--rule-soft);
-}
-.gantt-bar{
-  position: absolute;
-  top: 4px; bottom: 4px;
-  min-width: 4px;
-  background: var(--clay);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-.gantt-bar-text{
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--paper);
-  padding: 0 7px;
-  white-space: nowrap;
-  pointer-events: none;
-}
-.gantt.is-store .gantt-bar{ background: var(--accent-2); }
-.gantt-bar.is-check{ background: var(--clay); }
-.gantt-bar.is-fix{
-  background: transparent;
-  border: 1px dashed color-mix(in srgb, var(--ink-3) 70%, transparent);
-  box-shadow: none;
-}
-.gantt-bar.is-fix .gantt-bar-text{ color: var(--ink-2); }
-.gantt-bar.is-final{
-  background: var(--clay-deep);
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255,255,255,0.22) 0, rgba(255,255,255,0.22) 4px,
-    transparent 4px, transparent 8px
-  );
-}
-.gantt-scroll-wrap {
-  overflow-x: auto;
-  overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--clay) var(--paper-3);
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-.gantt-scroll-wrap:last-of-type {
-  margin-bottom: 0;
-}
-.gantt-scroll-wrap .gantt {
-  margin-bottom: 0;
-  min-width: 1200px;
-}
-/* Keep the flex/block chain from expanding to the chart width, so the
-   scroll-wrap stays bounded and the chart overflows inside it. */
-.calculator > div { min-width: 0; }
-#timeline-wrap { min-width: 0; }
-.gantt-scroll-wrap::-webkit-scrollbar {
-  height: 6px;
-}
-.gantt-scroll-wrap::-webkit-scrollbar-track {
-  background: var(--paper-3);
-  border-radius: 3px;
-}
-.gantt-scroll-wrap::-webkit-scrollbar-thumb {
-  background: var(--clay);
-  border-radius: 3px;
-}
-/* Chronological recap list under the charts */
+/* Chronological schedule recap list */
 .gantt-extra{ margin-top: 22px; }
 .gantt-extra-label{
   font-family: var(--mono);
@@ -1387,10 +1238,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 @media (max-width: 640px){
-  .gantt-axis,
-  .gantt-row{ grid-template-columns: 96px 1fr; gap: 10px; }
-  .gantt-rowlabel{ font-size: 12px; }
-  .gantt-bar-label{ font-size: 10px; padding: 0 5px; }
   .gantt-extra li{ grid-template-columns: 1fr; gap: 2px; }
 }
 
@@ -1613,7 +1460,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-notes-label">Notes</div>
         <ul>
           <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4–6 weeks for Nintendo Lot Check, ~3–4 weeks for PlayStation TRC, ~2–3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
-          <li><strong>First submissions rarely pass — plan for three rounds.</strong> The build chart above schedules three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
+          <li><strong>First submissions rarely pass — plan for three rounds.</strong> The schedule above lists three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
           <li><strong>Store submission and build submission are two separate deadlines.</strong> The store page (eShop, PS Store, Microsoft Store, Steam) goes through its own review track, independent of the build cert. Your release build can still be in cert while the store page is already live. Miss the store page deadline and your product simply will not be visible or pre-orderable on launch day, even if the build passed.</li>
           <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
@@ -1909,64 +1756,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return v;
   }
 
-  // Evenly spaced dated ticks across [minDate, maxDate]. Picks a day-step that
-  // keeps the count readable (~6-10 ticks) regardless of how long the span is.
-  function axisTicks(minDate, maxDate) {
-    var spanDays = Math.max(1, Math.round((maxDate.getTime() - minDate.getTime()) / DAY));
-    var steps = [2, 3, 7, 14, 21, 30, 60];
-    var step = steps[steps.length - 1];
-    for (var i = 0; i < steps.length; i++) {
-      if (spanDays / steps[i] <= 9) { step = steps[i]; break; }
-    }
-    var ticks = [];
-    for (var d = new Date(minDate.getTime()); d <= maxDate; d = addDays(d, step)) {
-      ticks.push(new Date(d));
-    }
-    return ticks;
-  }
-
-  // Build one Gantt: Y axis = platforms, X axis = months, bars = submission → release.
-  function ganttChart(title, items, minDate, maxDate, extraClass) {
-    if (!items.length) return '';
-    var span = maxDate.getTime() - minDate.getTime() || 1;
-    function pct(dt) {
-      var p = (dt.getTime() - minDate.getTime()) / span * 100;
-      return Math.max(0, Math.min(100, p));
-    }
-
-    var ticks = axisTicks(minDate, maxDate);
-    var axis = '', grid = '';
-    ticks.forEach(function(t) {
-      var label = ('0' + t.getDate()).slice(-2) + ' ' + MONTHS[t.getMonth()];
-      axis += '<span class="gantt-month" style="left:' + pct(t).toFixed(2) + '%">' + label + '</span>';
-      grid += '<span class="gantt-gridline" style="left:' + pct(t).toFixed(2) + '%"></span>';
-    });
-    axis += '<span class="gantt-month gantt-release-tick" style="left:100%">Release</span>';
-
-    var rows = '';
-    items.forEach(function(it) {
-      var bars = '';
-      it.bars.forEach(function(b) {
-        var l = pct(b.start), w = pct(b.end) - pct(b.start);
-        var lbl = b.label ? '<span class="gantt-bar-text">' + esc(b.label) + '</span>' : '';
-        bars += '<div class="gantt-bar ' + (b.cls || '') + '" title="' + esc(b.tip || it.title) + '" ' +
-          'style="left:' + l.toFixed(2) + '%;width:' + Math.max(w, 1.5).toFixed(2) + '%">' + lbl + '</div>';
-      });
-      rows += '<div class="gantt-row">' +
-        '<div class="gantt-rowlabel">' + esc(it.name) +
-          '<span class="gantt-rowlabel-date">' + fmt(it.sub) + '</span>' +
-        '</div>' +
-        '<div class="gantt-track">' + grid + bars + '</div>' +
-      '</div>';
-    });
-
-    return '<div class="gantt-scroll-wrap"><div class="gantt ' + (extraClass || '') + '">' +
-      '<div class="gantt-title">' + esc(title) + '</div>' +
-      '<div class="gantt-axis"><div class="gantt-rowlabel"></div><div class="gantt-track">' + axis + '</div></div>' +
-      rows +
-      '</div></div>';
-  }
-
   function render() {
     var qaOn = radioValue(qaRadios) === 'yes';
 
@@ -1988,8 +1777,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
 
     var allDates = [];          // every computed date, drives freeze alerts
-    var buildItems = [];        // build Gantt — segmented cert rounds per console
-    var storeItems = [];        // store Gantt — single store-page submission bar
     var recap = [];             // every dated milestone, rendered as one chronological list
     var anchorDates = [];       // earliest submission per platform → drives content lock
     var origHolidayHit = isHoliday(release);
@@ -2001,12 +1788,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       // Store page submission — single calendar-day deadline on every platform.
       var storeDate = addDays(release, -def.store);
       allDates.push(storeDate);
-      storeItems.push({
-        name: def.name,
-        sub: storeDate,
-        title: def.name + '\n' + fmt(storeDate) + '  —  store page submission',
-        bars: [{ start: storeDate, end: release, label: 'Store page in review' }]
-      });
       recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: 'Store review track' });
 
       if (def.cert) {
@@ -2031,34 +1812,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         rounds.forEach(function(r) {
           recap.push({ date: r.date, label: 'Submission ' + r.n + (r.n === 3 ? ' (final)' : ''), plat: def.name, note: r.note });
         });
-
-        var tip = def.name + '\n' + rounds.map(function(r) {
-          return fmt(r.date) + '  —  Submission ' + r.n + (r.n === 3 ? ' (final)' : '');
-        }).join('\n');
-
-        buildItems.push({
-          name: def.name,
-          sub: sub1,
-          title: tip,
-          bars: [
-            { start: sub1, end: c1End, cls: 'is-check', label: 'Sub 1 · cert check', tip: 'Submission 1 cert check (' + c.check + ' working days)' },
-            { start: c1End, end: sub2, cls: 'is-fix', label: 'Fix bugs', tip: 'Fix bugs between submission 1 and 2 (' + c.fix + ' working days)' },
-            { start: sub2, end: c2End, cls: 'is-check', label: 'Sub 2 · cert check', tip: 'Submission 2 cert check (' + c.check + ' working days)' },
-            { start: c2End, end: sub3, cls: 'is-fix', label: 'Fix bugs', tip: 'Fix bugs between submission 2 and 3 (' + c.fix + ' working days)' },
-            { start: sub3, end: release, cls: 'is-final', label: 'Sub 3 · final', tip: 'Submission 3 final check (' + c.last + ' working days) then go-live' }
-          ]
-        });
       } else {
         // PC / Steam — no lot check, single build submission.
         var buildDate = addDays(release, -def.build);
         allDates.push(buildDate);
         anchorDates.push(buildDate);
-        buildItems.push({
-          name: def.name,
-          sub: buildDate,
-          title: def.name + '\n' + fmt(buildDate) + '  —  release build submission',
-          bars: [{ start: buildDate, end: release, label: 'Build submitted' }]
-        });
         recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check' });
       }
     });
@@ -2076,14 +1834,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     recap.forEach(function(r) { allDates.push(r.date); });
     recap.sort(function(a, b) { return a.date - b.date; });
 
-    // Shared time axis for both charts so the bars line up visually.
-    var starts = buildItems.concat(storeItems).map(function(it) { return it.sub; });
-    var minDate = starts.reduce(function(a, b) { return a < b ? a : b; }, release);
-    var maxDate = release;
-
-    var html = ganttChart('Build submission — 3 cert rounds per console', buildItems, minDate, maxDate, '');
-    html += ganttChart('Store page submission', storeItems, minDate, maxDate, 'is-store');
-
+    var html = '';
     if (recap.length) {
       html += '<div class="gantt-extra"><div class="gantt-extra-label">Schedule recap — chronological</div><ul>';
       recap.forEach(function(r) {
