@@ -817,6 +817,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: visible;
 }
 
 .calc-label {
@@ -1056,7 +1057,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .seg-btn:has(input:checked){ background: var(--ink); color: var(--paper); }
 .seg-btn:has(input:focus-visible){ outline: 2px solid var(--clay); outline-offset: 3px; }
 
-.calc-subgroup{ margin-top: 16px; }
+.calc-subgroup{ margin-top: 16px; overflow: visible; }
 .calc-subgroup[hidden]{ display: none; }
 
 /* Custom select — matches the date picker chrome */
