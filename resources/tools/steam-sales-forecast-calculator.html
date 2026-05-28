@@ -1123,34 +1123,52 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 /* Experimental ribbon */
-.experimental-page-ribbon {
+.experimental-ribbon-clip {
   position: fixed;
-  top: 38px;
-  left: -52px;
-  width: 220px;
-  padding: 10px 0;
+  top: 56px;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 49;
+}
+
+.experimental-page-ribbon {
+  position: absolute;
+  top: 52px;
+  left: -58px;
+  width: 240px;
+  padding: 14px 0;
   background: var(--clay);
   color: var(--paper);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
   transform: rotate(-45deg);
   transform-origin: center;
-  z-index: 39;
-  pointer-events: none;
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  pointer-events: none;
 }
+
 @media (max-width: 640px) {
-  .experimental-page-ribbon {
+  .experimental-ribbon-clip {
+    top: 56px;
     left: auto;
-    right: -42px;
-    top: 28px;
+    right: 0;
     width: 160px;
-    font-size: 9px;
-    padding: 7px 0;
+    height: 160px;
+  }
+  .experimental-page-ribbon {
+    top: 36px;
+    left: auto;
+    right: -52px;
+    width: 200px;
+    padding: 11px 0;
+    font-size: 11px;
     transform: rotate(45deg);
   }
 }
@@ -1158,8 +1176,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 </head>
 <body>
 
-<div class="experimental-page-ribbon" aria-label="Experimental tool">
-  Experimental
+<div class="experimental-ribbon-clip" aria-label="Experimental tool">
+  <div class="experimental-page-ribbon">Experimental</div>
 </div>
 
 <a class="skip" href="#main">Skip to content</a>
