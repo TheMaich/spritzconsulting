@@ -1058,7 +1058,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 .calc-subgroup{ margin-top: 16px; }
 .calc-subgroup[hidden]{ display: none; }
-.calc-select{
+
+/* Custom select — matches the date picker chrome */
+.custom-select{ position: relative; max-width: 320px; }
+.custom-select.is-open{ z-index: 200; }
+.calc-group.is-select-open{ position: relative; z-index: 300; }
+.cs-trigger{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   background: var(--paper-2);
   border: 1px solid var(--rule);
   border-radius: 8px;
@@ -1066,11 +1076,77 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-family: var(--sans);
   font-size: 16px;
   color: var(--ink);
-  width: 100%;
-  max-width: 320px;
   cursor: pointer;
+  transition: border-color 0.2s;
 }
-.calc-select:focus{ outline: 0; border-color: var(--clay); }
+.cs-trigger:hover{ border-color: color-mix(in srgb, var(--clay) 50%, var(--rule)); }
+.custom-select.is-open .cs-trigger{ border-color: var(--clay); }
+.cs-chevron{
+  width: 16px; height: 16px;
+  stroke: var(--ink-3); stroke-width: 1.8;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform 0.2s, stroke 0.2s;
+}
+.custom-select.is-open .cs-chevron{ transform: rotate(180deg); stroke: var(--clay); }
+.cs-dropdown{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  z-index: 200;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cs-option{
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cs-option:hover{ background: var(--paper-2); color: var(--ink); }
+.cs-option.is-selected{
+  background: var(--clay);
+  color: var(--paper);
+  font-weight: 600;
+  border-color: var(--clay);
+}
+.cs-option.is-selected:hover{ background: var(--clay-deep); color: var(--paper); }
+
+/* Primary driving input — Target Release Date */
+.calc-group-primary{
+  position: relative;
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  border: 1px solid color-mix(in srgb, var(--clay) 28%, var(--rule));
+  border-radius: 14px;
+  padding: 26px 28px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--clay) 18%, transparent) inset,
+    0 22px 54px -34px color-mix(in srgb, var(--clay) 40%, transparent);
+}
+.calc-group-primary .calc-input-wrap{ max-width: none; }
+.calc-badge{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+  border: 1px solid color-mix(in srgb, var(--clay) 40%, var(--rule));
+  border-radius: 100px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
 
 /* Result section label */
 .calc-result-label {
@@ -1339,9 +1415,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="calc-wrap">
     <div class="calculator">
 
-      <div class="calc-group">
-        <label class="calc-label" for="release">Target Release Date</label>
-        <div class="calc-hint">The date your game goes live on all selected platforms simultaneously.</div>
+      <div class="calc-group calc-group-primary">
+        <label class="calc-label" for="release">Target Release Date <span class="calc-badge">Drives every date</span></label>
+        <div class="calc-hint">The date your game goes live on all selected platforms simultaneously. Every milestone below is calculated backwards from here.</div>
         <div class="calc-input-wrap date-picker-wrap">
           <input type="text" id="release" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
           <button type="button" class="date-picker-toggle" aria-label="Open calendar">
@@ -1370,11 +1446,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <label class="seg-btn"><input type="radio" name="loc" value="yes"> Yes</label>
         </div>
         <div class="calc-subgroup" id="loc-langs" hidden>
-          <select id="loc-tier" class="calc-select" aria-label="Number of languages">
-            <option value="28">1–4 languages</option>
-            <option value="42">5–10 languages</option>
-            <option value="56">10+ languages</option>
-          </select>
+          <div class="custom-select" id="loc-select" data-value="28">
+            <button type="button" class="cs-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Number of languages">
+              <span class="cs-value">1–4 languages</span>
+              <svg class="cs-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="cs-dropdown" role="listbox" hidden>
+              <button type="button" class="cs-option is-selected" role="option" data-value="28">1–4 languages</button>
+              <button type="button" class="cs-option" role="option" data-value="42">5–10 languages</button>
+              <button type="button" class="cs-option" role="option" data-value="56">10+ languages</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1651,7 +1733,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var platformBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="platform"]'));
   var locRadios = document.querySelectorAll('input[name="loc"]');
   var locLangs = document.getElementById('loc-langs');
-  var locTier = document.getElementById('loc-tier');
+  var locSelect = document.getElementById('loc-select');
   var qaRadios = document.querySelectorAll('input[name="qa"]');
   var timelineWrap = document.getElementById('timeline-wrap');
   var holidayEl = document.getElementById('holiday-warn');
@@ -1765,7 +1847,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (locOn) {
       var integration = addDays(contentLock, -7);
       rows.push({ date: integration, label: 'Localisation integration complete', note: 'Localisation' });
-      var handoffOff = parseInt(locTier.value, 10) || 28;
+      var handoffOff = parseInt(locSelect.dataset.value, 10) || 28;
       rows.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', note: 'Localisation' });
     }
 
@@ -1924,7 +2006,51 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   platformBoxes.forEach(function(b) { b.addEventListener('change', render); });
   locRadios.forEach(function(r) { r.addEventListener('change', render); });
   qaRadios.forEach(function(r) { r.addEventListener('change', render); });
-  locTier.addEventListener('change', render);
+
+  (function initCustomSelect(sel) {
+    var trigger = sel.querySelector('.cs-trigger');
+    var valueEl = sel.querySelector('.cs-value');
+    var dropdown = sel.querySelector('.cs-dropdown');
+    var options = sel.querySelectorAll('.cs-option');
+
+    function openSel() {
+      dropdown.hidden = false;
+      sel.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      var group = sel.closest('.calc-group');
+      if (group) group.classList.add('is-select-open');
+      setTimeout(function() {
+        document.addEventListener('click', handleOutside);
+        document.addEventListener('keydown', handleKey);
+      }, 0);
+    }
+    function closeSel() {
+      dropdown.hidden = true;
+      sel.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      var group = sel.closest('.calc-group');
+      if (group) group.classList.remove('is-select-open');
+      document.removeEventListener('click', handleOutside);
+      document.removeEventListener('keydown', handleKey);
+    }
+    function handleOutside(e) { if (!sel.contains(e.target)) closeSel(); }
+    function handleKey(e) { if (e.key === 'Escape') closeSel(); }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (dropdown.hidden) openSel(); else closeSel();
+    });
+    options.forEach(function(opt) {
+      opt.addEventListener('click', function(e) {
+        e.stopPropagation();
+        sel.dataset.value = opt.dataset.value;
+        valueEl.textContent = opt.textContent;
+        options.forEach(function(o) { o.classList.toggle('is-selected', o === opt); });
+        closeSel();
+        render();
+      });
+    });
+  })(locSelect);
 
   var tracked = false;
   document.addEventListener('input', function() {
