@@ -1063,14 +1063,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Custom select — matches the date picker chrome */
 .custom-select{ position: relative; max-width: 320px; }
 .custom-select.is-open{ z-index: 200; }
-.calc-group.is-select-open{
-  position: relative;
-  z-index: 1000;
-  isolation: isolate;
-}
-.calc-group.is-select-open .cs-dropdown{
-  z-index: 1001;
-}
 .cs-trigger{
   width: 100%;
   display: flex;
@@ -2323,27 +2315,62 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var dropdown = sel.querySelector('.cs-dropdown');
     var options = sel.querySelectorAll('.cs-option');
 
+    var originalParent = null;
+    var originalNextSibling = null;
+
     function openSel() {
+      var rect = trigger.getBoundingClientRect();
       dropdown.hidden = false;
       sel.classList.add('is-open');
       trigger.setAttribute('aria-expanded', 'true');
-      var group = sel.closest('.calc-group');
-      if (group) group.classList.add('is-select-open');
+
+      // Portal: sposta dropdown a body
+      originalParent = dropdown.parentNode;
+      originalNextSibling = dropdown.nextSibling;
+      document.body.appendChild(dropdown);
+
+      // Posiziona dropdown sotto il trigger
+      dropdown.style.position = 'fixed';
+      dropdown.style.top = (rect.bottom + 8) + 'px';
+      dropdown.style.left = rect.left + 'px';
+      dropdown.style.width = rect.width + 'px';
+      dropdown.style.zIndex = '99999';
+      dropdown.style.margin = '0';
+
       setTimeout(function() {
         document.addEventListener('click', handleOutside);
         document.addEventListener('keydown', handleKey);
       }, 0);
     }
+
     function closeSel() {
       dropdown.hidden = true;
       sel.classList.remove('is-open');
       trigger.setAttribute('aria-expanded', 'false');
-      var group = sel.closest('.calc-group');
-      if (group) group.classList.remove('is-select-open');
+
+      // Riporta dropdown nella posizione originale
+      if (originalParent) {
+        if (originalNextSibling) {
+          originalParent.insertBefore(dropdown, originalNextSibling);
+        } else {
+          originalParent.appendChild(dropdown);
+        }
+        originalParent = null;
+        originalNextSibling = null;
+      }
+
+      // Resetta stili inline
+      dropdown.style.position = '';
+      dropdown.style.top = '';
+      dropdown.style.left = '';
+      dropdown.style.width = '';
+      dropdown.style.zIndex = '';
+      dropdown.style.margin = '';
+
       document.removeEventListener('click', handleOutside);
       document.removeEventListener('keydown', handleKey);
     }
-    function handleOutside(e) { if (!sel.contains(e.target)) closeSel(); }
+    function handleOutside(e) { if (!sel.contains(e.target) && !dropdown.contains(e.target)) closeSel(); }
     function handleKey(e) { if (e.key === 'Escape') closeSel(); }
 
     trigger.addEventListener('click', function(e) {
