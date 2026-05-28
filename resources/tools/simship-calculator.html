@@ -1198,9 +1198,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .gantt-extra ul{ list-style: none; margin: 0; padding: 0; }
 .gantt-extra li{
   display: grid;
-  grid-template-columns: 130px 1fr auto;
-  gap: 16px;
-  align-items: baseline;
+  grid-template-columns: 130px 24px 1fr 24px auto;
+  gap: 12px;
+  align-items: center;
   padding: 10px 14px;
   border: 1px solid var(--rule);
   border-radius: 8px;
@@ -1236,9 +1236,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   text-transform: uppercase;
   color: var(--ink-3);
 }
+.ge-plat-icon{ display: flex; align-items: center; color: var(--ink-3); }
+.ge-type-icon{ display: flex; align-items: center; color: var(--ink-3); }
+.gantt-extra li.is-lock .ge-plat-icon,
+.gantt-extra li.is-lock .ge-type-icon{ color: var(--clay); }
 
 @media (max-width: 640px){
   .gantt-extra li{ grid-template-columns: 1fr; gap: 2px; }
+  .ge-plat-icon, .ge-type-icon{ display: none; }
 }
 
 .calc-nav-wrap {
@@ -1834,13 +1839,30 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     recap.forEach(function(r) { allDates.push(r.date); });
     recap.sort(function(a, b) { return a.date - b.date; });
 
+    function platIcon(plat) {
+      var p = (plat || '').toLowerCase();
+      if (p.indexOf('switch') > -1 || p.indexOf('nintendo') > -1) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="16" rx="3"/><rect x="13" y="4" width="8" height="16" rx="3"/><circle cx="7" cy="9" r="1.5" fill="currentColor" stroke="none"/><circle cx="17" cy="15" r="1.5" fill="currentColor" stroke="none"/></svg>';
+      if (p.indexOf('playstation') > -1 || p.indexOf('ps') > -1) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8.985 2.596v17.548l3.915 1.261V6.688c0-.69.304-1.151.794-.991.636.181.762.814.762 1.504v5.876c2.441 1.193 4.286-.181 4.286-3.333 0-3.241-1.12-4.764-4.376-5.817-1.458-.455-3.596-.95-5.381-1.331zM2 17.526l4.656 1.331c1.431.424 1.884 1.131 1.884 1.868 0 .85-.741 1.336-1.884.817L2 19.617v1.797l4.376 1.523C8.49 23.817 9.61 23 9.61 21.333c0-1.541-.963-2.684-3.21-3.419L2 16.519v1.007z"/></svg>';
+      if (p.indexOf('xbox') > -1) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 14.5c-1.93-1.63-4.5-4.5-4.5-7 0-.83.67-1.5 1.5-1.5.55 0 1.04.3 1.3.75C9.5 10.42 11 12.5 12 13.5c1-1 2.5-3.08 3.2-4.75.26-.45.75-.75 1.3-.75.83 0 1.5.67 1.5 1.5 0 2.5-2.57 5.37-4.5 7l-1.5 1-1.5-1z"/></svg>';
+      return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29l2.3-4.77a3 3 0 1 1 3.92-3.92l4.77-2.3C17.86 4.65 15.24 2 12 2z"/></svg>';
+    }
+    function typeIcon(note) {
+      var n = (note || '').toLowerCase();
+      if (n.indexOf('store') > -1) return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+      return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="12" rx="3"/><path d="M8 8V6a2 2 0 0 1 4 0v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/><circle cx="17" cy="14" r="1" fill="currentColor" stroke="none"/></svg>';
+    }
+
     var html = '';
     if (recap.length) {
       html += '<div class="gantt-extra"><div class="gantt-extra-label">Schedule recap — chronological</div><ul>';
       recap.forEach(function(r) {
-        html += '<li' + (r.lock ? ' class="is-lock"' : '') + '><span class="ge-date">' + fmt(r.date) + '</span>' +
-          '<span class="ge-label">' + esc(r.label) + ' <span class="ge-plat">' + esc(r.plat) + '</span></span>' +
-          '<span class="ge-note">' + esc(r.note) + '</span></li>';
+        html += '<li' + (r.lock ? ' class="is-lock"' : '') + '>' +
+          '<span class="ge-date">' + fmt(r.date) + '</span>' +
+          '<span class="ge-plat-icon">' + platIcon(r.plat) + '</span>' +
+          '<span class="ge-label">' + esc(r.label) + '</span>' +
+          '<span class="ge-type-icon">' + typeIcon(r.note) + '</span>' +
+          '<span class="ge-note">' + esc(r.note) + '</span>' +
+          '</li>';
       });
       html += '</ul></div>';
     }
