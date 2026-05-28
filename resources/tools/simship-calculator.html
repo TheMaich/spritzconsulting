@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>What a publisher actually reads in your pitch deck — Spritz Consulting</title>
+<title>Simship Work-Back Schedule Calculator — Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -11,9 +11,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="A publisher isn't just evaluating your game. They're building a risk model. The five categories of risk every pitch deck is read against." />
+<meta name="theme-color" content="#8A6600">
+<meta name="description" content="Enter your release date and target platforms. Get a complete work-back schedule with all key production milestone dates." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
@@ -37,6 +36,7 @@
 :root{
   --sans: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   --mono: "Bebas Neue", "Impact", "Haettenschweiler", "Arial Narrow", sans-serif;
+  --mono-data: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
   --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -322,35 +322,6 @@ html{
 }
 .theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
 
-.lang-toggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  background: var(--paper-3);
-  border-radius: 999px;
-}
-.lang-toggle button{
-  padding: 6px 12px;
-  min-height: 38px;
-  display: inline-flex; align-items: center;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  border-radius: 999px;
-  transition: color .25s var(--ease), background .25s var(--ease);
-  white-space: nowrap;
-}
-.lang-toggle button[aria-pressed="true"]{
-  background: var(--ink);
-  color: var(--paper);
-}
-.lang-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
-.lang-toggle button[hidden]{ display: none; }
-
 .footer-settings{
   display: inline-flex;
   align-items: center;
@@ -592,10 +563,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 </style>
 <style>
 .article-wrap{
-  max-width: 860px;
+  max-width: 1180px;
   margin: 0 auto;
   margin-bottom: 0;
-  padding: 64px 32px 0;
+  padding: 28px clamp(20px, 4vw, 56px) 0;
 }
 .article-wrap article{ font-size: 18px; line-height: 1.78; }
 .article-wrap .category{
@@ -603,7 +574,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-size: 13px;
   letter-spacing: 0.14em;
   color: var(--clay);
-  margin-bottom: 20px;
+  margin: 0 0 12px;
 }
 .article-wrap h1{
   font-family: var(--serif, var(--sans));
@@ -643,81 +614,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .article-wrap p{ margin-bottom: 26px; color: var(--ink-2); }
 .article-wrap p strong{ color: var(--ink); font-weight: 500; }
 .article-wrap p em{ color: var(--clay); font-style: italic; }
-.article-wrap h2{
-  font-family: var(--serif);
-  font-size: clamp(26px, 3.4vw, 40px);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  font-variation-settings: "opsz" 40;
-  color: var(--ink);
-  text-transform: none;
-  margin: 72px 0 20px;
-  line-height: 1.12;
-  padding-top: 28px;
-  border-top: 1px solid var(--rule);
-}
-.article-wrap .note{
-  font-family: var(--serif);
-  font-size: clamp(22px, 2.8vw, 32px);
-  font-weight: 500;
-  line-height: 1.32;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin: 56px 0;
-  padding: 0;
-}
-.article-wrap .note::before{
-  content: "";
-  display: block;
-  width: 44px;
-  height: 3px;
-  background: var(--clay);
-  margin-bottom: 24px;
-}
-.tldr {
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-  padding: 32px 34px;
-  margin: 64px 0;
-}
-
-.tldr-label {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  color: var(--paper);
-  background: var(--clay);
-  padding: 5px 12px;
-  border-radius: 999px;
-  margin-bottom: 20px;
-}
-
-.tldr ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.tldr li {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--ink-2);
-  padding-left: 16px;
-  position: relative;
-}
-
-.tldr li::before {
-  content: "·";
-  position: absolute;
-  left: 0;
-  color: var(--clay);
-  font-weight: 700;
-}
 
 .cta-card {
   position: relative;
@@ -726,7 +622,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border: 1px solid var(--rule);
   background: var(--paper-2);
   padding: 48px;
-  margin: 64px auto 0;
+  margin: 36px auto 0;
   max-width: 860px;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -859,16 +755,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 /* Bolder pass: editorial amplification */
-.article-wrap .deck + p::first-letter{
-  font-family: var(--serif);
-  font-size: 5.6em;
-  font-weight: 600;
-  line-height: 0.74;
-  float: left;
-  margin: 8px 14px 0 0;
-  color: var(--clay);
-}
-
 .reading-progress{
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -899,8 +785,377 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .article-wrap article > *:nth-child(4){ animation-delay: .20s; }
 .article-wrap article > *:nth-child(5){ animation-delay: .25s; }
 .article-wrap article > *:nth-child(n+6){ animation-delay: .30s; }
+.calculator > *{
+  animation: article-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.calculator > *:nth-child(1){ animation-delay: .30s; }
+.calculator > *:nth-child(2){ animation-delay: .35s; }
+.calculator > *:nth-child(3){ animation-delay: .40s; }
+.calculator > *:nth-child(4){ animation-delay: .45s; }
+.calculator > *:nth-child(5){ animation-delay: .55s; }
+.calculator > *:nth-child(n+6){ animation-delay: .60s; }
 @media (prefers-reduced-motion: reduce){
-  .article-wrap article > *{ animation: none; }
+  .article-wrap article > *,
+  .calculator > *{ animation: none; }
+}
+
+/* Calculator */
+.calc-wrap{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 4vw, 56px);
+}
+.calculator {
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.calc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calc-label {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-transform: none;
+  line-height: 1.15;
+}
+
+.calc-hint {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.calc-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  max-width: 320px;
+}
+
+.calc-input-wrap:focus-within {
+  border-color: var(--clay);
+}
+
+.calc-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  width: 100%;
+}
+.calc-input::placeholder { color: var(--ink-3); }
+
+input[type="date"].calc-input{ color-scheme: dark; }
+html[data-theme="light"] input[type="date"].calc-input{ color-scheme: light; }
+
+/* Platform checkbox chips */
+.opt-grid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.opt-chip{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  padding: 11px 18px;
+  min-height: 44px;
+  border-radius: 100px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.opt-chip input{ position: absolute; opacity: 0; width: 0; height: 0; }
+.opt-chip:hover{
+  border-color: color-mix(in srgb, var(--clay) 70%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 8%, var(--paper-3));
+  color: var(--clay);
+}
+.opt-chip:has(input:checked){
+  border-color: var(--clay);
+  background: var(--clay);
+  color: var(--paper);
+}
+.opt-chip:has(input:focus-visible){
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+}
+
+/* Yes / No segmented toggle */
+.seg{
+  display: inline-flex;
+  gap: 0;
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  padding: 3px;
+  background: var(--paper-3);
+  width: max-content;
+  margin-top: 4px;
+}
+.seg-btn{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 78px;
+  min-height: 38px;
+  padding: 6px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.seg-btn input{ position: absolute; opacity: 0; width: 0; height: 0; }
+.seg-btn:has(input:checked){ background: var(--ink); color: var(--paper); }
+.seg-btn:has(input:focus-visible){ outline: 2px solid var(--clay); outline-offset: 3px; }
+
+.calc-subgroup{ margin-top: 16px; }
+.calc-subgroup[hidden]{ display: none; }
+.calc-select{
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  width: 100%;
+  max-width: 320px;
+  cursor: pointer;
+}
+.calc-select:focus{ outline: 0; border-color: var(--clay); }
+
+/* Result section label */
+.calc-result-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-variation-settings: "opsz" 30;
+  letter-spacing: -0.015em;
+  color: var(--clay);
+  text-transform: none;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.calc-result-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--clay);
+}
+
+/* Holiday freeze callout */
+.holiday-warn{
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid color-mix(in srgb, var(--clay) 50%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 9%, var(--paper-2));
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+.holiday-warn[hidden]{ display: none; }
+.holiday-warn svg{
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  stroke: var(--clay); stroke-width: 2;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+  margin-top: 2px;
+}
+.holiday-warn p{ margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+.holiday-warn strong{ color: var(--ink); font-weight: 500; }
+
+/* Timeline table */
+.timeline{
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+.tl-row{
+  display: grid;
+  grid-template-columns: 1fr auto 190px;
+  gap: 18px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--rule);
+  align-items: baseline;
+}
+.tl-row:last-child{ border-bottom: none; }
+.tl-head{ background: var(--paper-3); }
+.tl-head span{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.tl-milestone{ color: var(--ink); font-weight: 500; font-size: 15px; }
+.tl-date{
+  font-family: var(--mono-data);
+  font-size: 14px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tl-note{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.tl-row.is-lock{ background: color-mix(in srgb, var(--clay) 12%, var(--paper-2)); }
+.tl-row.is-lock .tl-milestone,
+.tl-row.is-lock .tl-date{ color: var(--clay); }
+.tl-lock-tag{
+  display: inline-block;
+  margin-left: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--clay);
+  text-transform: none;
+}
+.tl-empty{
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--ink-3);
+  border: 1px dashed var(--rule);
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.calc-nav-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  gap: 16px;
+}
+.calc-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay);
+  color: var(--paper);
+  border-radius: 100px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.calc-nav-btn:hover {
+  background: var(--clay-deep);
+  text-decoration: none;
+}
+
+.calc-notes {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 8px 0 0;
+  margin-top: 8px;
+}
+.calc-notes-label {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-variation-settings: "opsz" 28;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 20px;
+  line-height: 1.15;
+}
+.calc-notes-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.calc-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.calc-notes li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.calc-notes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 8px;
+  height: 1px;
+  background: var(--clay);
+}
+.calc-notes li strong{ color: var(--ink); font-weight: 500; }
+.calc-notes a, .calc-hint a{
+  color: var(--clay);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s var(--ease);
+}
+.calc-notes a:hover, .calc-hint a:hover{ color: var(--clay-deep); }
+
+@media (max-width: 640px) {
+  .calculator { padding: 0; }
+  .calc-notes { padding: 22px 0 0; }
+  .tl-row{ grid-template-columns: 1fr; gap: 4px; padding: 14px 18px; }
+  .tl-head{ display: none; }
+  .calc-nav-wrap { flex-direction: column; align-items: stretch; }
+  .calc-nav-btn { width: 100%; justify-content: center; }
 }
 </style>
 </head>
@@ -957,75 +1212,91 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <main id="main">
   <div class="article-wrap">
     <article>
-      <p class="category">Publishing Strategy</p>
-      <h1>What a publisher <em>actually reads</em> in your pitch deck</h1>
+      <p class="category">Tools</p>
+      <h1>Simship <em>Work-Back</em> Schedule Calculator</h1>
       <div class="meta">
-        <div>Topic <b>Pitching</b></div>
-        <div>Level <b>Practical</b></div>
-        <div>Read time <b>~6 min</b></div>
+        <div>Type <b>Calculator</b></div>
+        <div>Topic <b>Production Planning</b></div>
         <div>Updated <b>2026</b></div>
       </div>
-      <p class="deck">A publisher isn't just evaluating your game. They're building a risk model. Most developers present their pitch as a story about the game. The publisher reads it as a story about what can go wrong.</p>
+      <p class="deck">Enter your release date and the platforms you're shipping on. The calculator works <em>backwards</em> and gives you the key milestone dates for your production calendar.</p>
+    </article>
+  </div>
 
-      <p>When a pitch came in at Raw Fury, the conversation around it was rarely about whether the game looked interesting. It usually did. The question was whether there was a viable path from that deck to a shipped game, and how much risk sat between here and there.</p>
+  <div class="calc-wrap">
+    <div class="calculator">
 
-      <p>There are five categories of risk that come up in some form on almost every project. Knowing what they are doesn't change whether your game is a good pitch. But it changes how you prepare, and it changes which gaps in your deck are going to generate the most questions.</p>
-
-      <h2>Creative risk</h2>
-
-      <p>Every game has a few things it absolutely has to get right to reach its potential. The publisher is trying to work out what those are, and whether the team has identified them.</p>
-
-      <p>For one game it's the core loop: if the base gameplay isn't satisfying in the first ten minutes, nothing else matters. For another it's the writing, or the visual identity, or the pacing of the mid-game. A publisher reading a deck is looking for evidence that the team knows which parts need to be exceptional, not just which features will be in the game at launch.</p>
-
-      <p>A prototype or vertical slice that demonstrates exactly the part of the game that needs to work is very useful at this stage. Not as proof that the whole thing is built. As proof that the team knows what the concept actually is and has already tested whether it lands.</p>
-
-      <div class="note">
-        The question that came up most in the evaluations I was part of wasn't "can you build this?" It was "do you know what this game needs to be?" Those are different questions, and the answer to the second one is usually visible in the deck.
+      <div class="calc-group">
+        <label class="calc-label" for="release">Target Release Date</label>
+        <div class="calc-hint">The date your game goes live on all selected platforms simultaneously.</div>
+        <div class="calc-input-wrap">
+          <input type="date" id="release" class="calc-input" required>
+        </div>
       </div>
 
-      <h2>Team and execution</h2>
+      <div class="calc-group">
+        <span class="calc-label">Platforms</span>
+        <div class="calc-hint">Select every platform included in the simship. Each adds its own cert pipeline to the schedule.</div>
+        <div class="opt-grid">
+          <label class="opt-chip"><input type="checkbox" name="platform" value="pc"> PC / Steam</label>
+          <label class="opt-chip"><input type="checkbox" name="platform" value="switch"> Nintendo Switch</label>
+          <label class="opt-chip"><input type="checkbox" name="platform" value="ps"> PlayStation (PS4 / PS5)</label>
+          <label class="opt-chip"><input type="checkbox" name="platform" value="xbox"> Xbox (Series X|S / One)</label>
+        </div>
+      </div>
 
-      <p>The first question isn't about the game. It's about whether the team can make it.</p>
+      <div class="calc-group">
+        <span class="calc-label">Localisation</span>
+        <div class="calc-hint">Localised builds need to be integrated before content lock. More languages means more lead time.</div>
+        <div class="seg" role="radiogroup" aria-label="Localisation">
+          <label class="seg-btn"><input type="radio" name="loc" value="no" checked> No</label>
+          <label class="seg-btn"><input type="radio" name="loc" value="yes"> Yes</label>
+        </div>
+        <div class="calc-subgroup" id="loc-langs" hidden>
+          <select id="loc-tier" class="calc-select" aria-label="Number of languages">
+            <option value="28">1–4 languages</option>
+            <option value="42">5–10 languages</option>
+            <option value="56">10+ languages</option>
+          </select>
+        </div>
+      </div>
 
-      <p>Has this team shipped something of similar scope before, in this engine, together? Not separately at previous studios. Not on projects that never released. Together. A team that has shipped once, even something small, has already solved most of the hard coordination problems. A team pitching their first project at this scale is asking the publisher to carry execution risk that doesn't show up anywhere in the budget.</p>
+      <div class="calc-group">
+        <span class="calc-label">External QA</span>
+        <div class="calc-hint">If you're using an external QA house, their window needs to sit before your cert build.</div>
+        <div class="seg" role="radiogroup" aria-label="External QA">
+          <label class="seg-btn"><input type="radio" name="qa" value="no" checked> No</label>
+          <label class="seg-btn"><input type="radio" name="qa" value="yes"> Yes</label>
+        </div>
+      </div>
 
-      <p>Processes matter here too, though not in an abstract way. The publisher is trying to work out whether milestone updates will be reliable, whether scope decisions get made or argued about for months, and whether the people in the room will still be working together eighteen months from now. A clear lead with actual decision-making authority and a team that has functioned under pressure before is a different risk profile from a collaborative structure where no one is obviously accountable.</p>
+      <div>
+        <div class="calc-result-label">Your Work-Back Schedule</div>
+        <div class="holiday-warn" id="holiday-warn" hidden role="alert">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <p>Your release date falls near the end-of-year period. <strong>Nintendo and Sony typically freeze cert review from late December.</strong> Verify your submission window directly with your platform contacts before locking this schedule.</p>
+        </div>
+        <div id="timeline-wrap">
+          <div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>
+        </div>
+      </div>
 
-      <p>Team conflicts, unresolved co-founder dynamics, key dependencies on one person who is also the lead programmer and the art director. These things come out eventually. Better to surface them before the advance is signed.</p>
+      <div class="calc-nav-wrap">
+        <a href="/resources/" class="calc-nav-btn calc-nav-back">← Back to Resources</a>
+        <a href="/resources/tools/" class="calc-nav-btn">More tools →</a>
+      </div>
 
-      <h2>Financial viability</h2>
+      <div class="calc-notes">
+        <div class="calc-notes-label">Notes</div>
+        <ul>
+          <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4–6 weeks for Nintendo Lot Check, ~3–4 weeks for PlayStation TRC, ~2–3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
+          <li><strong>First submissions rarely pass.</strong> Budget for at least one iteration on every platform, especially Nintendo. A Switch submission that passes Lot Check on the first attempt is the exception. Build your schedule around two rounds, and treat a first-pass approval as a bonus.</li>
+          <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
+          <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
+          <li><strong>Estimation only.</strong> This calculator gives you a planning framework, not a production guarantee. Real schedules depend on build stability, team capacity, first-party feedback cycles, and factors outside your control. Use it to structure your thinking and stress-test your timeline, not as a substitute for working with an experienced producer.</li>
+        </ul>
+      </div>
 
-      <p>Every publishing deal is a bet on whether the total cost to bring the game to market makes sense relative to the revenue opportunity. The publisher is doing that math before they get excited about the concept.</p>
-
-      <p>The proposed development budget, the publisher's own service costs (porting, QA, localisation, marketing), and a realistic projection of what the game can earn need to be in the right order of magnitude relative to each other. A game with a realistic lifetime revenue ceiling of 500,000 euros probably can't support a development budget of 400,000 euros plus full publishing services. The math doesn't close, and a publisher who has been doing this for a while can see that in about thirty seconds.</p>
-
-      <p>This is also where market awareness matters. A deck that includes comparable titles, their sales performance, and what the game is positioning against is a different conversation from one that relies on the game being good. Publishers have seen a lot of pitches that rely on the game being good.</p>
-
-      <h2>Commercial opportunity</h2>
-
-      <p>Is there an audience for this game, and is that audience reachable at a cost that makes the deal work?</p>
-
-      <p>Some genres are crowded in a way that makes break-through genuinely difficult and expensive. Others have clear player appetite and not many good options. A game in a saturated space needs a specific answer to why someone would buy this instead of the ten similar titles already available on sale. A game in a cleaner space has more room, though "cleaner space" can also mean "smaller audience," which is its own problem.</p>
-
-      <p>The timing and positioning questions matter here. Who is this game for? Where do those players go to find new games? Is there a community that already exists, or does one need to be built from nothing? A game that fits naturally into an existing conversation is cheaper and easier to launch than one that needs to create its own context first.</p>
-
-      <h2>Technical risk</h2>
-
-      <p>New technology, networked multiplayer, custom engine work, large open worlds, procedural generation at scale. All of these carry execution risk that's hard to assess from the outside and easy to underestimate from the inside.</p>
-
-      <p>A team pushing an engine well beyond its comfortable range, or implementing a technology they haven't used before, will hit unknowns. That's fine if it's accounted for in the schedule and the team has the experience to navigate it. It's a problem if the plan assumes everything goes smoothly, because it won't.</p>
-
-      <p>What publishers respond well to is honesty about the hard parts. A deck that names the technical challenges and explains how the team is approaching them is more credible than one that doesn't mention them. Everyone who has shipped a game knows the difficult parts always show up. A team that knows that too is easier to work with than one that's still finding out.</p>
-    </article>
-
-    <div class="tldr">
-      <div class="tldr-label">TL;DR</div>
-      <ul>
-        <li>Publishers evaluate five risk categories: team execution, financial viability, commercial opportunity, creative risk, and technical risk.</li>
-        <li>A team that has shipped once together is a fundamentally different risk profile from one that hasn't.</li>
-        <li>A deck with comparable titles and realistic revenue projections is a different conversation from one that relies on the game being good.</li>
-        <li>A deck that names the hard parts honestly is more credible than one that doesn't mention them.</li>
-      </ul>
     </div>
 
     <div class="cta-card">
@@ -1065,12 +1336,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
           <span data-i18n="theme.night">Dark</span>
         </button>
-      </div>
-      <div class="lang-toggle notranslate" translate="no" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
-        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
-        <button type="button" data-lang-target="fr" aria-pressed="false" aria-label="Passer en français" hidden>FR</button>
-        <button type="button" data-lang-target="es" aria-pressed="false" aria-label="Cambiar a español" hidden>ES</button>
       </div>
     </div>
     <span class="copy" data-i18n="footer.copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
@@ -1120,20 +1385,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'footer.linkedin': 'LinkedIn',
     'footer.linkedin.aria': 'Profilo LinkedIn',
     'footer.copy': '© 2026 Spritz Consulting · Tutti i diritti riservati',
-    'res.kicker': '05 RISORSE',
-    'res.h1': 'Guide dal lato produzione.',
-    'res.deck': 'Articoli pratici su contratti di publishing, produzione e platform delivery. Scritti per esperienza, non da template.',
-    'res.read': 'Leggi →',
-    'res.card1.title': 'Cosa significa davvero \'50/50\'',
-    'res.card1.desc': 'La revenue split è il numero di cui tutti parlano nel pitch. È anche probabilmente il numero meno utile dell\'intero contratto.',
-    'res.card2.title': 'L\'IP è tuo. Per fare cosa?',
-    'res.card2.desc': 'Esiste una versione di \'tieni il tuo gioco\' che nella pratica non significa quasi nulla. Possesso e controllo sono cose diverse.',
-    'res.card3.title': 'Quando il publisher diventa silenzioso',
-    'res.card3.desc': 'Nessuno negozia pensando al terzo anno. È di solito lì che la struttura del contratto inizia a contare.',
-    'res.card4.title': 'Titolo articolo qui',
-    'res.card4.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
-    'res.card5.title': 'Titolo articolo qui',
-    'res.card5.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
   };
 
   const FR = {
@@ -1154,20 +1405,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'footer.linkedin': 'LinkedIn',
     'footer.linkedin.aria': 'LinkedIn Spritz Consulting',
     'footer.copy': '© 2026 Spritz Consulting · Tous droits réservés',
-    'res.kicker': '05 RESSOURCES',
-    'res.h1': 'Des guides côté production.',
-    'res.deck': 'Des articles pratiques sur les contrats de publishing, la production et le release management. Écrits depuis l\'expérience, pas depuis un template.',
-    'res.read': 'Lire →',
-    'res.card1.title': 'Ce que \'50/50\' veut vraiment dire',
-    'res.card1.desc': 'Le partage des revenus est le chiffre dont tout le monde parle dans le pitch. C\'est aussi probablement le moins utile de tout le contrat.',
-    'res.card2.title': 'Vous gardez l\'IP. Pour quoi faire?',
-    'res.card2.desc': 'Il existe une version de \'vous gardez votre jeu\' qui en pratique ne veut presque rien dire. Possession et contrôle sont deux choses différentes.',
-    'res.card3.title': 'Quand le publisher devient silencieux',
-    'res.card3.desc': 'Personne ne négocie en pensant à la troisième année. C\'est généralement là que la structure du contrat commence à compter.',
-    'res.card4.title': 'Titre de l\'article ici',
-    'res.card4.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
-    'res.card5.title': 'Titre de l\'article ici',
-    'res.card5.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
   };
 
   const ES = {
@@ -1188,20 +1425,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'footer.linkedin': 'LinkedIn',
     'footer.linkedin.aria': 'LinkedIn de Spritz Consulting',
     'footer.copy': '© 2026 Spritz Consulting · Todos los derechos reservados',
-    'res.kicker': '05 RECURSOS',
-    'res.h1': 'Guías desde el lado de la producción.',
-    'res.deck': 'Artículos prácticos sobre contratos de publishing, producción y platform delivery. Escritos desde la experiencia, no desde una plantilla.',
-    'res.read': 'Leer →',
-    'res.card1.title': 'Qué significa realmente \'50/50\'',
-    'res.card1.desc': 'El reparto de ingresos es el número del que todos hablan en el pitch. También es probablemente el número menos útil de todo el contrato.',
-    'res.card2.title': 'Tienes la IP. ¿Para qué?',
-    'res.card2.desc': 'Hay una versión de \'te quedas con tu juego\' que en la práctica no significa casi nada. Propiedad y control son cosas distintas.',
-    'res.card3.title': 'Cuando tu publisher se queda en silencio',
-    'res.card3.desc': 'Nadie negocia pensando en el tercer año. Suele ser ahí donde la estructura del contrato empieza a importar.',
-    'res.card4.title': 'Título del artículo aquí',
-    'res.card4.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
-    'res.card5.title': 'Título del artículo aquí',
-    'res.card5.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
   };
 
   const DICTS = { it: IT, fr: FR, es: ES };
@@ -1245,14 +1468,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
     });
   };
-
-  document.querySelectorAll('[data-lang-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const l = btn.dataset.langTarget;
-      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-      applyLang(l);
-    });
-  });
 
   // Sticky header shadow on scroll
   const header = document.getElementById('site-header');
@@ -1306,6 +1521,162 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   } else {
     applyLang('en');
   }
+})();
+</script>
+
+<script>
+(function() {
+  var releaseInput = document.getElementById('release');
+  var platformBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="platform"]'));
+  var locRadios = document.querySelectorAll('input[name="loc"]');
+  var locLangs = document.getElementById('loc-langs');
+  var locTier = document.getElementById('loc-tier');
+  var qaRadios = document.querySelectorAll('input[name="qa"]');
+  var timelineWrap = document.getElementById('timeline-wrap');
+  var holidayEl = document.getElementById('holiday-warn');
+
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DAY = 86400000;
+
+  // Each platform's milestones as day-offsets working back from release.
+  var PLATFORMS = {
+    pc: { name: 'PC / Steam', rcOff: null, milestones: [
+      { label: 'Store page assets locked', off: 14 },
+      { label: 'Build uploaded to Steam', off: 7 }
+    ]},
+    switch: { name: 'Nintendo Switch', rcOff: 49, milestones: [
+      { label: 'Gold / release build ready', off: 14 },
+      { label: 'Switch cert approval target', off: 21 },
+      { label: 'Switch submission deadline', off: 42 },
+      { label: 'RC build (cert-ready)', off: 49 }
+    ]},
+    ps: { name: 'PlayStation', rcOff: 42, milestones: [
+      { label: 'Gold / release build ready', off: 14 },
+      { label: 'PS cert approval target', off: 21 },
+      { label: 'PS submission deadline', off: 35 },
+      { label: 'RC build (cert-ready)', off: 42 }
+    ]},
+    xbox: { name: 'Xbox', rcOff: 35, milestones: [
+      { label: 'Gold / release build ready', off: 14 },
+      { label: 'Xbox cert approval target', off: 21 },
+      { label: 'Xbox submission deadline', off: 28 },
+      { label: 'RC build (cert-ready)', off: 35 }
+    ]}
+  };
+
+  function fmt(d) {
+    var day = ('0' + d.getDate()).slice(-2);
+    return day + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function addDays(base, n) { return new Date(base.getTime() + n * DAY); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  // Holiday freeze window: 20 Dec through 10 Jan, ignoring year.
+  function isHoliday(d) {
+    var m = d.getMonth(), day = d.getDate();
+    return (m === 11 && day >= 20) || (m === 0 && day <= 10);
+  }
+
+  function radioValue(list) {
+    var v = 'no';
+    list.forEach(function(r) { if (r.checked) v = r.value; });
+    return v;
+  }
+
+  function render() {
+    var locOn = radioValue(locRadios) === 'yes';
+    var qaOn = radioValue(qaRadios) === 'yes';
+    locLangs.hidden = !locOn;
+
+    var val = releaseInput.value;
+    var release = val ? new Date(val + 'T00:00:00') : null;
+    var selected = platformBoxes.filter(function(b) { return b.checked; }).map(function(b) { return b.value; });
+
+    if (!release || isNaN(release.getTime())) {
+      timelineWrap.innerHTML = '<div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>';
+      holidayEl.hidden = true;
+      return;
+    }
+    if (selected.length === 0) {
+      timelineWrap.innerHTML = '<div class="tl-empty">Select at least one platform to build the schedule.</div>';
+      holidayEl.hidden = true;
+      return;
+    }
+
+    var rows = [];
+    var rcDates = [];
+    var allOffs = [];
+
+    selected.forEach(function(key) {
+      var def = PLATFORMS[key];
+      def.milestones.forEach(function(m) {
+        allOffs.push(m.off);
+        rows.push({ date: addDays(release, -m.off), label: m.label, note: def.name });
+      });
+      if (def.rcOff != null) rcDates.push(addDays(release, -def.rcOff));
+    });
+
+    // Anchor = earliest RC build across console platforms (the driving milestone).
+    // PC-only: fall back to the earliest milestone on the calendar.
+    var anchor;
+    if (rcDates.length) {
+      anchor = rcDates.reduce(function(a, b) { return a < b ? a : b; });
+    } else {
+      anchor = addDays(release, -Math.max.apply(null, allOffs));
+    }
+
+    var contentLock = addDays(anchor, -14);
+    rows.push({ date: contentLock, label: 'Content lock / feature complete', note: 'All platforms', lock: true });
+
+    if (qaOn) {
+      rows.push({ date: anchor, label: 'External QA end', note: 'QA window' });
+      rows.push({ date: addDays(anchor, -21), label: 'External QA start', note: 'QA window' });
+    }
+
+    if (locOn) {
+      var integration = addDays(contentLock, -7);
+      rows.push({ date: integration, label: 'Localisation integration complete', note: 'Localisation' });
+      var handoffOff = parseInt(locTier.value, 10) || 28;
+      rows.push({ date: addDays(integration, -handoffOff), label: 'Localisation handoff', note: 'Localisation' });
+    }
+
+    rows.sort(function(a, b) { return a.date - b.date; });
+
+    var html = '<div class="timeline">';
+    html += '<div class="tl-row tl-head"><span>Milestone</span><span>Date</span><span>Platform / Notes</span></div>';
+    rows.forEach(function(r) {
+      var tag = r.lock ? '<span class="tl-lock-tag">← your effective content lock</span>' : '';
+      html += '<div class="tl-row' + (r.lock ? ' is-lock' : '') + '">' +
+        '<span class="tl-milestone">' + esc(r.label) + tag + '</span>' +
+        '<span class="tl-date">' + fmt(r.date) + '</span>' +
+        '<span class="tl-note">' + esc(r.note) + '</span>' +
+        '</div>';
+    });
+    html += '</div>';
+    timelineWrap.innerHTML = html;
+
+    // Holiday callout: release in freeze window with a console cert platform in play.
+    var consoleSel = selected.indexOf('switch') !== -1 || selected.indexOf('ps') !== -1;
+    holidayEl.hidden = !(isHoliday(release) && consoleSel);
+  }
+
+  releaseInput.addEventListener('input', render);
+  releaseInput.addEventListener('change', render);
+  platformBoxes.forEach(function(b) { b.addEventListener('change', render); });
+  locRadios.forEach(function(r) { r.addEventListener('change', render); });
+  qaRadios.forEach(function(r) { r.addEventListener('change', render); });
+  locTier.addEventListener('change', render);
+
+  var tracked = false;
+  document.addEventListener('input', function() {
+    if (tracked) return;
+    tracked = true;
+    if (window.cf && window.cf.beacon) {
+      window.cf.beacon({ name: 'tool_used', data: { tool: 'simship_calculator' } });
+    }
+  }, true);
+
+  render();
 })();
 </script>
 
