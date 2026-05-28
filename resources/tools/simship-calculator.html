@@ -1495,6 +1495,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4–6 weeks for Nintendo Lot Check, ~3–4 weeks for PlayStation TRC, ~2–3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
           <li><strong>First submissions rarely pass.</strong> Budget for at least one iteration on every platform, especially Nintendo. A Switch submission that passes Lot Check on the first attempt is the exception. Build your schedule around two rounds, and treat a first-pass approval as a bonus.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
+          <li><strong>Store submission and build submission are two separate deadlines.</strong> The store page (eShop, PS Store, Microsoft Store, Steam) goes through its own review track, independent of the build cert. Your release build can still be in cert while the store page is already live. Miss the store page deadline and your product simply will not be visible or pre-orderable on launch day, even if the build passed.</li>
           <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
           <li><strong>Estimation only.</strong> This calculator gives you a planning framework, not a production guarantee. Real schedules depend on build stability, team capacity, first-party feedback cycles, and factors outside your control. Use it to structure your thinking and stress-test your timeline, not as a substitute for working with an experienced producer.</li>
         </ul>
@@ -1745,25 +1746,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   // Each platform's milestones as day-offsets working back from release.
   var PLATFORMS = {
     pc: { name: 'PC / Steam', rcOff: null, milestones: [
-      { label: 'Store page assets locked', off: 14 },
-      { label: 'Build uploaded to Steam', off: 7 }
+      { label: 'Steam store page submission deadline', off: 14 },
+      { label: 'Release build submission (uploaded to Steam)', off: 7 }
     ]},
     switch: { name: 'Nintendo Switch', rcOff: 49, milestones: [
       { label: 'Gold / release build ready', off: 14 },
       { label: 'Switch cert approval target', off: 21 },
-      { label: 'Switch submission deadline', off: 42 },
+      { label: 'eShop store page submission deadline', off: 35 },
+      { label: 'Switch build submission deadline', off: 42 },
       { label: 'RC build (cert-ready)', off: 49 }
     ]},
     ps: { name: 'PlayStation', rcOff: 42, milestones: [
       { label: 'Gold / release build ready', off: 14 },
       { label: 'PS cert approval target', off: 21 },
-      { label: 'PS submission deadline', off: 35 },
+      { label: 'PS Store page submission deadline', off: 28 },
+      { label: 'PS build submission deadline', off: 35 },
       { label: 'RC build (cert-ready)', off: 42 }
     ]},
     xbox: { name: 'Xbox', rcOff: 35, milestones: [
       { label: 'Gold / release build ready', off: 14 },
       { label: 'Xbox cert approval target', off: 21 },
-      { label: 'Xbox submission deadline', off: 28 },
+      { label: 'Microsoft Store page submission deadline', off: 24 },
+      { label: 'Xbox build submission deadline', off: 28 },
       { label: 'RC build (cert-ready)', off: 35 }
     ]}
   };
