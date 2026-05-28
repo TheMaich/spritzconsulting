@@ -1310,41 +1310,35 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 
 /* Experimental ribbon */
-.experimental-ribbon-wrap {
-  position: absolute;
+.experimental-page-ribbon {
+  position: fixed;
   top: 0;
   left: 0;
-  width: 120px;
-  height: 120px;
-  overflow: hidden;
+  z-index: 99999;
   pointer-events: none;
-  z-index: 10;
-  border-radius: 8px 0 0 0;
 }
-.experimental-ribbon {
-  position: absolute;
-  top: 28px;
-  left: -32px;
-  width: 140px;
-  padding: 5px 0;
-  background: var(--clay);
-  color: var(--paper);
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-align: center;
-  transform: rotate(-45deg);
-  transform-origin: center;
-  line-height: 1;
+.experimental-page-ribbon svg {
+  display: block;
 }
 </style>
 </head>
 <body>
 
-<div class="experimental-ribbon-wrap" style="position: fixed; border-radius: 0; z-index: 45;">
-  <div class="experimental-ribbon">Experimental</div>
+<div class="experimental-page-ribbon" aria-label="Experimental tool">
+  <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="0,0 96,0 0,96" fill="#E5B415"/>
+    <text
+      x="10"
+      y="38"
+      transform="rotate(-45, 32, 32)"
+      fill="#0A0B0E"
+      font-family="'Bricolage Grotesque', sans-serif"
+      font-size="9"
+      font-weight="800"
+      letter-spacing="1.5"
+      text-anchor="middle"
+    >EXPERIMENTAL</text>
+  </svg>
 </div>
 
 <a class="skip" href="#main">Skip to content</a>
