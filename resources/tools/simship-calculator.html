@@ -1095,7 +1095,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   position: absolute;
   top: calc(100% + 8px);
   left: 0; right: 0;
-  z-index: 400;
+  z-index: 1000;
   background: var(--paper-3);
   border: 1px solid var(--rule);
   border-radius: 8px;
@@ -2317,12 +2317,26 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var dropdown = sel.querySelector('.cs-dropdown');
     var options = sel.querySelectorAll('.cs-option');
 
+    // Position the dropdown with fixed coordinates from the trigger so it
+    // escapes every ancestor stacking context (animated calc-groups create
+    // their own contexts and would otherwise trap it behind later fields).
+    function positionDropdown() {
+      var r = trigger.getBoundingClientRect();
+      dropdown.style.position = 'fixed';
+      dropdown.style.top = (r.bottom + 8) + 'px';
+      dropdown.style.left = r.left + 'px';
+      dropdown.style.width = r.width + 'px';
+      dropdown.style.right = 'auto';
+    }
     function openSel() {
       dropdown.hidden = false;
       sel.classList.add('is-open');
       trigger.setAttribute('aria-expanded', 'true');
       var group = sel.closest('.calc-group');
       if (group) group.classList.add('is-select-open');
+      positionDropdown();
+      window.addEventListener('scroll', positionDropdown, true);
+      window.addEventListener('resize', positionDropdown);
       setTimeout(function() {
         document.addEventListener('click', handleOutside);
         document.addEventListener('keydown', handleKey);
@@ -2332,12 +2346,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       dropdown.hidden = true;
       sel.classList.remove('is-open');
       trigger.setAttribute('aria-expanded', 'false');
+      dropdown.style.position = '';
+      dropdown.style.top = '';
+      dropdown.style.left = '';
+      dropdown.style.width = '';
+      dropdown.style.right = '';
       var group = sel.closest('.calc-group');
       if (group) group.classList.remove('is-select-open');
+      window.removeEventListener('scroll', positionDropdown, true);
+      window.removeEventListener('resize', positionDropdown);
       document.removeEventListener('click', handleOutside);
       document.removeEventListener('keydown', handleKey);
     }
-    function handleOutside(e) { if (!sel.contains(e.target)) closeSel(); }
+    function handleOutside(e) { if (!sel.contains(e.target) && !dropdown.contains(e.target)) closeSel(); }
     function handleKey(e) { if (e.key === 'Escape') closeSel(); }
 
     trigger.addEventListener('click', function(e) {
