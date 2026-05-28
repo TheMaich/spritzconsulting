@@ -1319,6 +1319,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-bottom: 0;
   min-width: 1200px;
 }
+/* Keep the flex/block chain from expanding to the chart width, so the
+   scroll-wrap stays bounded and the chart overflows inside it. */
+.calculator > div { min-width: 0; }
+#timeline-wrap { min-width: 0; }
 .gantt-scroll-wrap::-webkit-scrollbar {
   height: 6px;
 }
