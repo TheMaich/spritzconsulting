@@ -1344,14 +1344,38 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   box-shadow: var(--shadow-sm);
 }
 .gantt.is-store .gantt-bar{ background: var(--accent-2); }
-.gantt-bar.is-pulled{
+.gantt-bar.is-check{ background: var(--clay); }
+.gantt-bar.is-final{
+  background: var(--clay-deep);
   background-image: repeating-linear-gradient(
     45deg,
-    rgba(0,0,0,0.18) 0, rgba(0,0,0,0.18) 5px,
-    transparent 5px, transparent 10px
+    rgba(255,255,255,0.22) 0, rgba(255,255,255,0.22) 4px,
+    transparent 4px, transparent 8px
   );
 }
-/* Shared milestones list under the charts */
+/* Submission rounds + shared milestones lists under the charts */
+.rounds-block{ margin-top: 22px; }
+.sub-rounds{ margin-bottom: 18px; }
+.sub-rounds:last-child{ margin-bottom: 0; }
+.sub-rounds-plat{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.sub-rounds ul{ list-style: none; margin: 0; padding: 0; }
+.sub-rounds li{
+  display: grid;
+  grid-template-columns: 130px 150px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding: 8px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+.sub-rounds li:last-child{ margin-bottom: 0; }
+
 .gantt-extra{ margin-top: 22px; }
 .gantt-extra-label{
   font-family: var(--mono);
@@ -1377,7 +1401,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border-color: color-mix(in srgb, var(--clay) 45%, var(--rule));
   background: color-mix(in srgb, var(--clay) 10%, var(--paper-2));
 }
-.gantt-extra .ge-date{
+.ge-date{
   font-family: var(--mono-data);
   font-size: 13px;
   color: var(--ink);
@@ -1386,8 +1410,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .gantt-extra li.is-lock .ge-date,
 .gantt-extra li.is-lock .ge-label{ color: var(--clay); }
-.gantt-extra .ge-label{ font-size: 14px; color: var(--ink); font-weight: 500; }
-.gantt-extra .ge-note{
+.ge-label{ font-size: 14px; color: var(--ink); font-weight: 500; }
+.ge-note{
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.06em;
@@ -1400,7 +1424,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .gantt-row{ grid-template-columns: 96px 1fr; gap: 10px; }
   .gantt-rowlabel{ font-size: 12px; }
   .gantt-bar-label{ font-size: 10px; padding: 0 5px; }
-  .gantt-extra li{ grid-template-columns: 1fr; gap: 2px; }
+  .gantt-extra li,
+  .sub-rounds li{ grid-template-columns: 1fr; gap: 2px; }
 }
 
 .calc-nav-wrap {
@@ -1644,7 +1669,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-notes-label">Notes</div>
         <ul>
           <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4–6 weeks for Nintendo Lot Check, ~3–4 weeks for PlayStation TRC, ~2–3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
-          <li><strong>First submissions rarely pass.</strong> Budget for at least one iteration on every platform, especially Nintendo. A Switch submission that passes Lot Check on the first attempt is the exception. Build your schedule around two rounds, and treat a first-pass approval as a bonus.</li>
+          <li><strong>First submissions rarely pass — plan for three rounds.</strong> The build chart above schedules three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
           <li><strong>Store submission and build submission are two separate deadlines.</strong> The store page (eShop, PS Store, Microsoft Store, Steam) goes through its own review track, independent of the build cert. Your release build can still be in cert while the store page is already live. Miss the store page deadline and your product simply will not be visible or pre-orderable on launch day, even if the build passed.</li>
           <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
@@ -1894,33 +1919,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DAY = 86400000;
 
-  // Each platform's milestones as day-offsets working back from release.
+  // Platforms. Consoles plan for THREE cert submission rounds, because a
+  // first-pass approval is the exception. Each round has a cert-check window
+  // (working days), a bug-fix buffer between rounds (working days), and a
+  // short final check. PC/Steam has no lot check, so it keeps a single build
+  // submission. `store` = calendar days before release for the store page.
   var PLATFORMS = {
-    pc: { name: 'PC / Steam', rcOff: null, milestones: [
-      { label: 'Steam store page submission deadline', off: 14, role: 'store' },
-      { label: 'Release build submission (uploaded to Steam)', off: 7, role: 'build' }
-    ]},
-    switch: { name: 'Nintendo Switch', rcOff: 49, milestones: [
-      { label: 'Gold / release build ready', off: 14 },
-      { label: 'Switch cert approval target', off: 21 },
-      { label: 'eShop store page submission deadline', off: 35, role: 'store' },
-      { label: 'Switch build submission deadline', off: 42, role: 'build' },
-      { label: 'RC build (cert-ready)', off: 49 }
-    ]},
-    ps: { name: 'PlayStation', rcOff: 42, milestones: [
-      { label: 'Gold / release build ready', off: 14 },
-      { label: 'PS cert approval target', off: 21 },
-      { label: 'PS Store page submission deadline', off: 28, role: 'store' },
-      { label: 'PS build submission deadline', off: 35, role: 'build' },
-      { label: 'RC build (cert-ready)', off: 42 }
-    ]},
-    xbox: { name: 'Xbox', rcOff: 35, milestones: [
-      { label: 'Gold / release build ready', off: 14 },
-      { label: 'Xbox cert approval target', off: 21 },
-      { label: 'Microsoft Store page submission deadline', off: 24, role: 'store' },
-      { label: 'Xbox build submission deadline', off: 28, role: 'build' },
-      { label: 'RC build (cert-ready)', off: 35 }
-    ]}
+    pc:     { name: 'PC / Steam',      store: 14, build: 7 },
+    switch: { name: 'Nintendo Switch', store: 35, cert: { check: 10, fix: 5, last: 3 } },
+    ps:     { name: 'PlayStation',     store: 28, cert: { check: 8,  fix: 5, last: 3 } },
+    xbox:   { name: 'Xbox',            store: 24, cert: { check: 6,  fix: 5, last: 3 } }
   };
 
   function fmt(d) {
@@ -1929,6 +1937,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
   function addDays(base, n) { return new Date(base.getTime() + n * DAY); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function isWorkday(d) { var g = d.getDay(); return g !== 0 && g !== 6; }
+  // n working days BEFORE base, landing on a working day.
+  function subWorkdays(base, n) {
+    var d = new Date(base.getTime()), left = n;
+    while (left > 0) { d = addDays(d, -1); if (isWorkday(d)) left--; }
+    return d;
+  }
+  // n working days AFTER base, landing on a working day.
+  function addWorkdays(base, n) {
+    var d = new Date(base.getTime()), left = n;
+    while (left > 0) { d = addDays(d, 1); if (isWorkday(d)) left--; }
+    return d;
+  }
 
   // End-of-year freeze window: 20 Dec through 10 Jan, ignoring year.
   function isHoliday(d) {
@@ -1939,44 +1960,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   function isSummer(d) {
     var m = d.getMonth(), day = d.getDate();
     return (m === 6 && day >= 15) || (m === 7);
-  }
-  function inFreeze(d) { return isHoliday(d) || isSummer(d); }
-
-  // Last working day BEFORE the freeze window that contains d.
-  function clearDateFor(d) {
-    var y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
-    var target;
-    if (m === 11 && day >= 20) {            // 20-31 Dec -> 19 Dec
-      target = new Date(y, 11, 19);
-    } else if (m === 0 && day <= 10) {      // 1-10 Jan -> 19 Dec prev year
-      target = new Date(y - 1, 11, 19);
-    } else {                                 // 15 Jul - 31 Aug -> 14 Jul
-      target = new Date(y, 6, 14);
-    }
-    // Back off weekends so submission lands on a working day.
-    while (target.getDay() === 0 || target.getDay() === 6) {
-      target = addDays(target, -1);
-    }
-    return target;
-  }
-
-  // Pull a platform's whole pipeline earlier (in lockstep) until none of its
-  // milestones land in a freeze window. Returns the shifted offsets + delta.
-  function adjustOffsets(release, baseOffs) {
-    var offs = baseOffs.slice();
-    for (var iter = 0; iter < 8; iter++) {
-      var worst = 0;
-      for (var i = 0; i < offs.length; i++) {
-        var date = addDays(release, -offs[i]);
-        if (!inFreeze(date)) continue;
-        var clear = clearDateFor(date);
-        var need = Math.round((date.getTime() - clear.getTime()) / DAY);
-        if (need > worst) worst = need;
-      }
-      if (worst <= 0) break;
-      for (var j = 0; j < offs.length; j++) offs[j] += worst;
-    }
-    return { offs: offs, delta: offs[0] - baseOffs[0] };
   }
 
   function radioValue(list) {
@@ -2017,15 +2000,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     var rows = '';
     items.forEach(function(it) {
-      var l = pct(it.start), w = pct(it.end) - pct(it.start);
+      var bars = '';
+      it.bars.forEach(function(b) {
+        var l = pct(b.start), w = pct(b.end) - pct(b.start);
+        bars += '<div class="gantt-bar ' + (b.cls || '') + '" title="' + esc(it.title) + '" ' +
+          'style="left:' + l.toFixed(2) + '%;width:' + Math.max(w, 1.5).toFixed(2) + '%"></div>';
+      });
       rows += '<div class="gantt-row">' +
         '<div class="gantt-rowlabel">' + esc(it.name) +
-          '<span class="gantt-rowlabel-date">' + fmt(it.start) + '</span>' +
+          '<span class="gantt-rowlabel-date">' + fmt(it.sub) + '</span>' +
         '</div>' +
-        '<div class="gantt-track">' + grid +
-          '<div class="gantt-bar' + (it.pulled ? ' is-pulled' : '') + '" title="' + esc(it.title) + '" ' +
-            'style="left:' + l.toFixed(2) + '%;width:' + Math.max(w, 1.5).toFixed(2) + '%"></div>' +
-        '</div>' +
+        '<div class="gantt-track">' + grid + bars + '</div>' +
       '</div>';
     });
 
@@ -2058,59 +2043,78 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return;
     }
 
-    var rcDates = [];
-    var allOffs = [];
-    var allDates = [];          // every milestone date, drives freeze alerts
-    var buildItems = [];        // one bar per platform — build submission window
-    var storeItems = [];        // one bar per platform — store page submission window
+    var allDates = [];          // every computed date, drives freeze alerts
+    var buildItems = [];        // build Gantt — segmented cert rounds per console
+    var storeItems = [];        // store Gantt — single store-page submission bar
+    var subRounds = [];         // per-console submission round breakdown
+    var anchorDates = [];       // earliest submission per platform → drives content lock
     var origHolidayHit = isHoliday(release);
     var origSummerHit = isSummer(release);
-    var adjustedAny = false;
 
     selected.forEach(function(key) {
       var def = PLATFORMS[key];
-      var baseOffs = def.milestones.map(function(m) { return m.off; });
 
-      // Flag freeze hits on the ORIGINAL dates (drives the alert), then shift.
-      baseOffs.forEach(function(off) {
-        var d = addDays(release, -off);
-        if (isHoliday(d)) origHolidayHit = true;
-        if (isSummer(d)) origSummerHit = true;
+      // Store page submission — single calendar-day deadline on every platform.
+      var storeDate = addDays(release, -def.store);
+      allDates.push(storeDate);
+      storeItems.push({
+        name: def.name,
+        sub: storeDate,
+        title: def.name + '\n' + fmt(storeDate) + '  —  store page submission',
+        bars: [{ start: storeDate, end: release }]
       });
 
-      var res = adjustOffsets(release, baseOffs);
-      if (res.delta > 0) adjustedAny = true;
-      var pulled = res.delta > 0;
+      if (def.cert) {
+        // Three cert rounds, working back from release. Each round = a cert
+        // check window; a bug-fix buffer sits between rounds; the final round
+        // gets a short re-check.
+        var c = def.cert;
+        var sub3 = subWorkdays(release, c.last);
+        var sub2 = subWorkdays(sub3, c.check + c.fix);
+        var sub1 = subWorkdays(sub2, c.check + c.fix);
+        var c1End = addWorkdays(sub1, c.check);
+        var c2End = addWorkdays(sub2, c.check);
 
-      // Adjusted date for each milestone + a per-platform tooltip with the lot.
-      var buildOff = null, storeOff = null, tipLines = [];
-      def.milestones.forEach(function(m, i) {
-        var date = addDays(release, -res.offs[i]);
-        allOffs.push(res.offs[i]);
-        allDates.push(date);
-        tipLines.push(fmt(date) + '  —  ' + m.label);
-        if (m.role === 'build') buildOff = res.offs[i];
-        if (m.role === 'store') storeOff = res.offs[i];
-      });
-      var tip = def.name + (pulled ? ' (pulled before freeze)' : '') + '\n' + tipLines.join('\n');
-      if (def.rcOff != null) rcDates.push(addDays(release, -(def.rcOff + res.delta)));
+        [sub1, sub2, sub3, c1End, c2End].forEach(function(d) { allDates.push(d); });
+        anchorDates.push(sub1);
 
-      if (buildOff != null) {
-        buildItems.push({ name: def.name, start: addDays(release, -buildOff), end: release, pulled: pulled, title: tip });
-      }
-      if (storeOff != null) {
-        storeItems.push({ name: def.name, start: addDays(release, -storeOff), end: release, pulled: pulled, title: tip });
+        var rounds = [
+          { n: 1, date: sub1, note: c.check + ' working days cert check, then fix bugs' },
+          { n: 2, date: sub2, note: c.check + ' working days cert check, then fix bugs' },
+          { n: 3, date: sub3, note: c.last + ' working days final check then go-live' }
+        ];
+        subRounds.push({ name: def.name, rounds: rounds });
+
+        var tip = def.name + '\n' + rounds.map(function(r) {
+          return fmt(r.date) + '  —  Submission ' + r.n + (r.n === 3 ? ' (final)' : '');
+        }).join('\n');
+
+        buildItems.push({
+          name: def.name,
+          sub: sub1,
+          title: tip,
+          bars: [
+            { start: sub1, end: c1End, cls: 'is-check' },
+            { start: sub2, end: c2End, cls: 'is-check' },
+            { start: sub3, end: release, cls: 'is-final' }
+          ]
+        });
+      } else {
+        // PC / Steam — no lot check, single build submission.
+        var buildDate = addDays(release, -def.build);
+        allDates.push(buildDate);
+        anchorDates.push(buildDate);
+        buildItems.push({
+          name: def.name,
+          sub: buildDate,
+          title: def.name + '\n' + fmt(buildDate) + '  —  release build submission',
+          bars: [{ start: buildDate, end: release }]
+        });
       }
     });
 
-    // Anchor = earliest RC build across console platforms (the driving milestone).
-    // PC-only: fall back to the earliest milestone on the calendar.
-    var anchor;
-    if (rcDates.length) {
-      anchor = rcDates.reduce(function(a, b) { return a < b ? a : b; });
-    } else {
-      anchor = addDays(release, -Math.max.apply(null, allOffs));
-    }
+    // Anchor = earliest first submission across platforms → drives content lock.
+    var anchor = anchorDates.reduce(function(a, b) { return a < b ? a : b; }, release);
 
     // Shared (non-platform) milestones — listed below the charts.
     var shared = [];
@@ -2130,12 +2134,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     shared.sort(function(a, b) { return a.date - b.date; });
 
     // Shared time axis for both charts so the bars line up visually.
-    var starts = buildItems.concat(storeItems).map(function(it) { return it.start; });
+    var starts = buildItems.concat(storeItems).map(function(it) { return it.sub; });
     var minDate = starts.reduce(function(a, b) { return a < b ? a : b; }, release);
     var maxDate = release;
 
-    var html = ganttChart('Build submission', buildItems, minDate, maxDate, '');
+    var html = ganttChart('Build submission — 3 cert rounds per console', buildItems, minDate, maxDate, '');
     html += ganttChart('Store page submission', storeItems, minDate, maxDate, 'is-store');
+
+    if (subRounds.length) {
+      html += '<div class="rounds-block"><div class="gantt-extra-label">Console submission rounds</div>';
+      subRounds.forEach(function(p) {
+        html += '<div class="sub-rounds"><div class="sub-rounds-plat">' + esc(p.name) + '</div><ul>';
+        p.rounds.forEach(function(r) {
+          html += '<li><span class="ge-date">' + fmt(r.date) + '</span>' +
+            '<span class="ge-label">Submission ' + r.n + (r.n === 3 ? ' (final)' : '') + '</span>' +
+            '<span class="ge-note">' + esc(r.note) + '</span></li>';
+        });
+        html += '</ul></div>';
+      });
+      html += '</div>';
+    }
+
     if (shared.length) {
       html += '<div class="gantt-extra"><div class="gantt-extra-label">Shared milestones</div><ul>';
       shared.forEach(function(s) {
@@ -2147,8 +2166,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
     timelineWrap.innerHTML = html;
 
-    // Alerts reflect proximity to a freeze on the ORIGINAL schedule (plus any
-    // milestone still inside one after shifting, e.g. shared dev milestones).
+    // Alerts reflect proximity to a freeze on any computed date.
     var holidayHit = origHolidayHit || allDates.some(function(d) { return isHoliday(d); });
     var summerHit = origSummerHit || allDates.some(function(d) { return isSummer(d); });
     holidayEl.hidden = !holidayHit;
@@ -2156,8 +2174,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     var holidayAdj = holidayEl.querySelector('.adj-note');
     var summerAdj = summerEl.querySelector('.adj-note');
-    if (holidayAdj) holidayAdj.hidden = !adjustedAny;
-    if (summerAdj) summerAdj.hidden = !adjustedAny;
+    if (holidayAdj) holidayAdj.hidden = true;
+    if (summerAdj) summerAdj.hidden = true;
   }
 
   function buildDatePicker(input) {
