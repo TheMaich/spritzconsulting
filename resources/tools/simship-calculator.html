@@ -1497,6 +1497,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-top: 32px;
 }
 .gantt-section[hidden]{ display: none; }
+.gantt-mobile-notice{
+  display: none;
+  margin: 0;
+  padding: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-align: left;
+}
 .gantt-card{
   border: 1px solid var(--rule);
   border-radius: 12px;
@@ -1609,7 +1618,73 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 @media (max-width: 640px){
   .gantt-label{ flex-basis: 120px; width: 120px; }
+
+  /* Hide both Gantt charts, show a desktop notice in their place */
+  .gantt-section{ display: none; }
+  .gantt-mobile-notice{ display: block; }
+
+  /* Schedule table -> stacked cards (no horizontal scroll) */
+  .wbs-table-wrap{ overflow-x: visible; border: 0; border-radius: 0; background: transparent; }
+  .wbs-table{ min-width: 0; }
+  .wbs-table thead{ display: none; }
+  .wbs-table, .wbs-table tbody, .wbs-table tr, .wbs-table td{ display: block; width: 100%; }
+  .wbs-table tr{
+    border: 1px solid var(--rule); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 10px;
+    background: var(--paper-2);
+  }
+  .wbs-table tbody tr:last-child td{ border: none; }
+  .wbs-table tr.is-lock{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
+  .wbs-table tr.is-release{ border-color: color-mix(in srgb, var(--clay) 60%, var(--rule)); }
+  .wbs-table td,
+  .wbs-table td.wbs-date,
+  .wbs-table td.wbs-note{
+    padding: 4px 0; border: none; text-align: left;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    white-space: normal; overflow-wrap: anywhere; min-width: 0;
+  }
+  .wbs-table td::before{
+    content: attr(data-label);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-3); flex: none;
+  }
+  .wbs-table td.wbs-milestone{ font-weight: 500; }
+  .wbs-table td .wbs-badge{ margin-left: auto; }
 }
+
+/* Mobile "better on desktop" modal */
+.sim-modal{
+  position:fixed; inset:0; z-index:1000;
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.sim-modal[hidden]{ display:none; }
+.sim-modal-backdrop{
+  position:absolute; inset:0;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+.sim-modal-card{
+  position:relative;
+  max-width:360px; width:100%;
+  background:var(--paper-2); border:1px solid var(--rule); border-radius:14px;
+  padding:24px;
+}
+.sim-modal-title{
+  font-family:var(--serif); font-weight:500; font-size:24px; line-height:1.1;
+  color:var(--ink); margin:0 0 12px;
+}
+.sim-modal-title em{ font-style:italic; color:var(--clay); }
+.sim-modal-body{
+  font-family:var(--sans); font-size:15px; line-height:1.55;
+  color:var(--ink-2); margin:0 0 20px;
+}
+.sim-modal-btn{
+  font-family:var(--sans); font-size:15px; font-weight:500;
+  background:var(--clay); color:var(--paper);
+  border:none; border-radius:100px; padding:11px 22px; cursor:pointer;
+}
+.sim-modal-btn:hover{ background:var(--clay-deep); }
+/* belt-and-suspenders: never on desktop, even if JS misfires */
+@media (min-width:641px){ .sim-modal{ display:none !important; } }
 </style>
 </head>
 <body>
@@ -1743,6 +1818,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>
         </div>
         <div id="gantt-wrap" class="gantt-section" hidden></div>
+        <p class="gantt-mobile-notice">The timeline charts are optimised for desktop. Open this tool on a larger screen to see the Build and Store Gantt charts.</p>
       </div>
 
       <div class="calc-nav-wrap">
@@ -2271,12 +2347,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var rowsHtml = '';
     recap.forEach(function(r) {
       var dateText = r.endDate ? (fmt(r.date) + ' → ' + fmt(r.endDate)) : fmt(r.date);
-      rowsHtml += '<tr' + ((r.lock || r.release) ? ' class="is-lock"' : '') + '>' +
-        '<td class="wbs-date">' + dateText + '</td>' +
-        '<td class="wbs-col-icon">' + platIcon(r.plat) + '</td>' +
-        '<td class="wbs-milestone">' + esc(r.label) + '</td>' +
-        '<td class="wbs-col-icon wbs-col-type">' + typeIcon(r.note) + '</td>' +
-        '<td class="wbs-note">' + esc(r.note) + '</td>' +
+      var rowClass = r.release ? ' class="is-lock is-release"' : (r.lock ? ' class="is-lock"' : '');
+      rowsHtml += '<tr' + rowClass + '>' +
+        '<td class="wbs-date" data-label="' + esc(L.date) + '">' + dateText + '</td>' +
+        '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '">' + platIcon(r.plat) + '</td>' +
+        '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + '</td>' +
+        '<td class="wbs-col-icon wbs-col-type" data-label="' + esc(L.type) + '">' + typeIcon(r.note) + '</td>' +
+        '<td class="wbs-note" data-label="' + esc(L.note) + '">' + esc(r.note) + '</td>' +
         '</tr>';
     });
     timelineWrap.innerHTML =
@@ -2586,6 +2663,47 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }, true);
 
   render();
+})();
+</script>
+
+<div class="sim-modal" id="sim-mobile-modal" role="dialog" aria-modal="true" aria-labelledby="sim-modal-title" hidden>
+  <div class="sim-modal-backdrop" data-close></div>
+  <div class="sim-modal-card" role="document">
+    <h2 class="sim-modal-title" id="sim-modal-title">Better on <em>desktop</em></h2>
+    <p class="sim-modal-body">This tool is built for a wide screen. On mobile the schedule is
+    cramped and the Gantt timelines are hidden. For the full work-back schedule and both Gantt
+    views, open it on a desktop or laptop. Ciao, anytime.</p>
+    <button type="button" class="sim-modal-btn" id="sim-modal-dismiss">Got it</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('sim-mobile-modal');
+  if (!modal) return;
+  var KEY = 'simship_mobile_notice_dismissed';
+  var isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+  var seen = false;
+  try { seen = sessionStorage.getItem(KEY) === '1'; } catch(e){ seen = false; }
+
+  function open(){
+    modal.hidden = false;
+    var btn = document.getElementById('sim-modal-dismiss');
+    if (btn) btn.focus();
+  }
+  function close(){
+    modal.hidden = true;
+    try { sessionStorage.setItem(KEY, '1'); } catch(e){}
+  }
+
+  if (isMobile && !seen) open();
+
+  document.getElementById('sim-modal-dismiss').addEventListener('click', close);
+  modal.querySelector('[data-close]').addEventListener('click', close);   // tap backdrop
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !modal.hidden) close();
+  });
 })();
 </script>
 
