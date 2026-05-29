@@ -869,6 +869,32 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .calc-input::placeholder { color: var(--ink-3); }
 
+.calc-select-wrap{ position: relative; max-width: 320px; }
+.calc-select{
+  appearance: none; -webkit-appearance: none;
+  width: 100%;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 14px 42px 14px 16px;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.calc-select:hover{ border-color: color-mix(in srgb, var(--clay) 50%, var(--rule)); }
+.calc-select:focus{ border-color: var(--clay); }
+.calc-select:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
+.calc-select-wrap::after{
+  content: ""; position: absolute; right: 18px; top: 50%;
+  width: 8px; height: 8px;
+  border-right: 2px solid var(--ink-3);
+  border-bottom: 2px solid var(--ink-3);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
 .date-picker-wrap { position: relative; overflow: visible; z-index: 1; }
 .date-picker-wrap.is-open { z-index: 200; }
 .calc-group.is-picker-open { position: relative; z-index: 300; }
@@ -984,6 +1010,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border-color: var(--clay);
 }
 .dp-day.is-selected:hover { background: var(--clay-deep); }
+.dp-day.is-disabled {
+  color: var(--ink-3);
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+.dp-day.is-disabled:hover { background: transparent; }
 
 /* Platform checkbox chips */
 .opt-grid{
@@ -1480,9 +1512,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   padding: 16px 18px;
   border-bottom: 1px solid var(--rule);
 }
+.gantt-legend{ display:flex; flex-wrap:wrap; gap:16px; margin:14px 0 2px; padding:0 18px; }
+.gl-item{ display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--ink-2); }
+.gl-swatch{ display:inline-block; width:18px; height:12px; border-radius:3px; flex:none; }
+.gl-bar{ background:var(--clay); }
+.gl-qa{ background:color-mix(in srgb, var(--ink-2) 12%, transparent);
+  border:1px dashed var(--ink-2); border-radius:2px; }
+.gl-lock{ width:2px; height:14px; border-radius:0; background:var(--accent-2); }
+.gl-loc{ width:0; height:14px; border-radius:0; background:none; border-left:2px dashed var(--ink-2); }
+.gl-release{ width:2px; height:14px; border-radius:0; background:var(--clay); }
 .gantt-scroll{ overflow-x: auto; overflow-y: hidden; }
 .gantt-scroll:focus-visible{ outline: 2px solid var(--clay); outline-offset: -2px; }
-.gantt-body{ width: max-content; min-width: 100%; }
+.gantt-body{ width: max-content; min-width: 100%; padding-bottom: 14px; }
 .gantt-row{ display: flex; align-items: stretch; border-top: 1px solid var(--rule-soft); }
 .gantt-row.gantt-axis{ border-top: 0; }
 .gantt-label{
@@ -1505,9 +1548,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .gantt-label span{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gantt-label .gl-icon{ display: inline-flex; color: var(--ink-3); flex-shrink: 0; }
 .gantt-axis .gantt-label{ background: var(--paper-3); }
-.gantt-track{ position: relative; flex: 0 0 auto; }
+.gantt-track{ position: relative; flex: 0 0 auto; overflow: hidden; }
 .gantt-row:not(.gantt-axis) .gantt-track{ height: 46px; }
-.gantt-axis .gantt-track{ height: 48px; background: var(--paper-3); }
+.gantt-axis .gantt-track{ height: 64px; background: var(--paper-3); }
 .g-tick{ position: absolute; top: 0; bottom: 0; width: 1px; background: var(--rule-soft); }
 .g-month{
   position: absolute; top: 6px;
@@ -1516,8 +1559,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-3); white-space: nowrap;
   transform: translateX(4px);
 }
+.gantt-axis-week{
+  position: absolute; top: 21px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+  color: var(--ink-3); white-space: nowrap;
+  transform: translateX(3px);
+}
 .g-release-line{ position: absolute; top: 0; bottom: 0; width: 2px; background: var(--clay); z-index: 4; }
 .g-lock-line{ position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent-2); z-index: 4; }
+.g-loc-line{ position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed var(--ink-2); z-index: 4; }
 .gantt-band-qa{
   position: absolute; top: 0; bottom: 0;
   background: color-mix(in srgb, var(--ink-2) 12%, transparent);
@@ -1527,18 +1577,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   z-index: 1;
 }
 .g-guide-label{
-  position: absolute; top: 18px;
+  position: absolute; top: 38px;
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 0.06em; text-transform: uppercase;
-  white-space: nowrap; transform: translateX(5px); z-index: 5;
+  white-space: nowrap; transform: translateX(5px); z-index: 2;
 }
 .g-guide-label.is-release{ color: var(--clay); }
 .g-guide-label.is-lock{ color: var(--accent-2); }
-.g-guide-label.is-qa{ color: var(--ink-2); top: 32px; }
+.g-guide-label.is-qa{ color: var(--ink-2); top: 52px; }
+.g-guide-label.is-loc{ color: var(--ink-2); top: 52px; }
 .g-qa-band{ position: absolute; top: 0; bottom: 0; background: var(--ink-3); opacity: 0.10; z-index: 1; }
 .g-bar{
   position: absolute; top: 50%; transform: translateY(-50%);
   height: 18px; border-radius: 5px; z-index: 2;
+  overflow: hidden;
+}
+.g-bar-label{
+  display: block; height: 100%;
+  padding: 0 6px; line-height: 18px;
+  color: var(--paper);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .g-bar.is-check{ background: var(--clay); }
 .g-bar.is-fix{ background: var(--clay-soft); border: 1px solid color-mix(in srgb, var(--clay) 30%, var(--rule)); }
@@ -1649,6 +1708,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="seg" role="radiogroup" aria-label="External QA">
           <label class="seg-btn"><input type="radio" name="qa" value="no" checked> No</label>
           <label class="seg-btn"><input type="radio" name="qa" value="yes"> Yes</label>
+        </div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="loc-tier">Localization</label>
+        <div class="calc-hint">How many languages you're shipping. More languages means an earlier loc delivery, since final text and LQA must be integrated before content lock.</div>
+        <div class="calc-select-wrap">
+          <select id="loc-tier" class="calc-select">
+            <option value="efigs" selected>EFIGS (5 languages)</option>
+            <option value="7-8">7-8 languages</option>
+            <option value="10+">10+ languages</option>
+          </select>
         </div>
       </div>
 
@@ -1933,6 +2004,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var releaseInput = document.getElementById('release');
   var platformBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="platform"]'));
   var qaRadios = document.querySelectorAll('input[name="qa"]');
+  var locSelect = document.getElementById('loc-tier');
   var timelineWrap = document.getElementById('timeline-wrap');
   var holidayEl = document.getElementById('holiday-warn');
   var summerEl = document.getElementById('summer-warn');
@@ -1944,13 +2016,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DAY = 86400000;
   var SAFETY_PCT = 0.20; // total buffer as a fraction of pipeline length; split 50/50 below
+  var LOC_LEAD = { 'efigs': 14, '7-8': 21, '10+': 35 }; // calendar days before content lock
 
   // UI strings, picked up from the saved language. FR/ES mirror EN.
   var WBS_LANG = '';
   try { WBS_LANG = localStorage.getItem('mdn-lang') || ''; } catch (e) {}
   var WBS_STR = {
-    en: { date: 'Date', platform: 'Platform', milestone: 'Milestone', type: 'Type', note: 'Note', ganttBuild: 'Build submissions', ganttStore: 'Store submissions', copy: 'Copy', copied: 'Copied', release: 'Release', contentLock: 'Content lock', internalQA: 'Internal QA' },
-    it: { date: 'Data', platform: 'Piattaforma', milestone: 'Milestone', type: 'Tipo', note: 'Note', ganttBuild: 'Invii build', ganttStore: 'Invii store', copy: 'Copia', copied: 'Copiato', release: 'Uscita', contentLock: 'Blocco contenuti', internalQA: 'Internal QA' }
+    en: { date: 'Date', platform: 'Platform', milestone: 'Milestone', type: 'Type', note: 'Note', ganttBuild: 'Build submissions', ganttStore: 'Store submissions', copy: 'Copy', copied: 'Copied', release: 'Release', contentLock: 'Content lock', internalQA: 'Internal QA', locDelivery: 'Loc delivery' },
+    it: { date: 'Data', platform: 'Piattaforma', milestone: 'Milestone', type: 'Tipo', note: 'Note', ganttBuild: 'Invii build', ganttStore: 'Invii store', copy: 'Copia', copied: 'Copiato', release: 'Uscita', contentLock: 'Blocco contenuti', internalQA: 'Internal QA', locDelivery: 'Consegna loc' }
   };
   var L = WBS_STR[WBS_LANG] || WBS_STR.en;
 
@@ -2025,6 +2098,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     if (!release || isNaN(release.getTime())) {
       timelineWrap.innerHTML = '<div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>';
+      holidayEl.hidden = true;
+      summerEl.hidden = true;
+      clearExtras();
+      return;
+    }
+    var midnightToday = new Date(); midnightToday.setHours(0, 0, 0, 0);
+    if (release < midnightToday) {
+      timelineWrap.innerHTML = '<div class="tl-empty">Pick a release date in the future.</div>';
       holidayEl.hidden = true;
       summerEl.hidden = true;
       clearExtras();
@@ -2108,11 +2189,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       // Gantt A row: solid clay cert-check windows, lighter clay-soft fix buffers.
       // Final check ends at this platform's approval; the gap to release is its slack.
       buildRows.push({ plat: def.name, segments: [
-        { start: sub1, end: c1End, cls: 'is-check', name: 'Cert 1 check' },
+        { start: sub1, end: c1End, cls: 'is-check', name: 'Cert 1 check', label: 'Submission 1' },
         { start: c1End, end: sub2, cls: 'is-fix', name: 'Fix' },
-        { start: sub2, end: c2End, cls: 'is-check', name: 'Cert 2 check' },
+        { start: sub2, end: c2End, cls: 'is-check', name: 'Cert 2 check', label: 'Submission 2' },
         { start: c2End, end: sub3, cls: 'is-fix', name: 'Fix' },
-        { start: sub3, end: approval, cls: 'is-check', name: 'Final check' }
+        { start: sub3, end: approval, cls: 'is-check', name: 'Final check', label: 'Submission 3' }
       ], markers: [sub1, sub2, sub3] });
 
       var rounds = [
@@ -2132,7 +2213,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       approvals.push(buildDate);                                       // PC approval == its submission
       allDates.push(buildDate);
       recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check', kind: 'build' });
-      buildRows.push({ plat: def.name, segments: [{ start: buildDate, end: release, cls: 'is-check', name: 'Build submission' }], markers: [buildDate] });
+      buildRows.push({ plat: def.name, segments: [{ start: buildDate, end: release, cls: 'is-check', name: 'Build submission', label: 'Build' }], markers: [buildDate] });
     });
 
     // Content lock is anchored to the cluster start (fallback: earliest submission if no consoles).
@@ -2142,6 +2223,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var contentLock = addDays(anchorStart, -14);
     var qaStart = addDays(anchorStart, -21);
     recap.push({ date: contentLock, label: 'Content lock / feature complete', plat: 'All platforms', note: 'Effective content lock', lock: true, kind: 'lock' });
+    // Localization delivery: calendar days before content lock (more languages = earlier), so it
+    // rides along with content lock and keeps its offset across any freeze shift.
+    var locTier = locSelect ? locSelect.value : 'efigs';
+    var locDelivery = addDays(contentLock, -(LOC_LEAD[locTier] || 14));
+    recap.push({ date: locDelivery, label: 'Localization delivery', plat: 'All platforms', note: 'Final loc integrated and LQA passed', loc: true, kind: 'loc' });
     // Internal QA phase: fills the gap between feature complete and first submission.
     // Cert working-day stepping, so it stretches across any summer/Christmas freeze.
     var iqaStart = addWorkdays(contentLock, 1);   // day after feature complete
@@ -2174,6 +2260,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       if (n.indexOf('release') > -1)                              return '<span class="wbs-badge">RELEASE</span>';
       if (n.indexOf('approv') > -1)                               return '<span class="wbs-badge">APPROVED</span>';
       if (n.indexOf('internal qa') > -1)                          return '<span class="wbs-badge">QA</span>';
+      if (n.indexOf('loc integrated') > -1)                       return '<span class="wbs-badge">LOC</span>';
       if (n.indexOf('store') > -1)                                return '<span class="wbs-badge">STORE</span>';
       if (n.indexOf('lock') > -1)                                 return '<span class="wbs-badge">LOCK</span>';
       if (n.indexOf('qa') > -1)                                   return '';
@@ -2205,7 +2292,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     // --- clipboard payload: tab-separated, fixed English headers for clean Sheets paste ---
     function typeTextEN(kind) {
       return kind === 'store' ? 'Store' : kind === 'lock' ? 'Content lock' : kind === 'qa' ? 'QA'
-           : kind === 'qapass' ? 'QA pass' : kind === 'approved' ? 'Approved' : kind === 'release' ? 'Release' : 'Build';
+           : kind === 'qapass' ? 'QA pass' : kind === 'approved' ? 'Approved' : kind === 'release' ? 'Release'
+           : kind === 'loc' ? 'Localization' : 'Build';
     }
     var tsv = ['Date\tPlatform\tMilestone\tType\tNote'];
     recap.forEach(function(r) {
@@ -2223,9 +2311,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var chartW = totalDays * PX + PAD;
       function x(d) { return ((d - startDate) / DAY) * PX; }
 
-      var ticks = '';
+      var ticks = '', weekNums = '';
       for (var t = 0; t <= totalDays; t += 7) {
         ticks += '<div class="g-tick" style="left:' + (t * PX) + 'px"></div>';
+        var wd = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + t);
+        weekNums += '<div class="gantt-axis-week" style="left:' + (t * PX) + 'px">' + wd.getDate() + '</div>';
       }
       var months = '';
       var cur = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
@@ -2255,12 +2345,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       var body = '<div class="gantt-body">';
       body += '<div class="gantt-row gantt-axis"><div class="gantt-label"></div>' +
-        '<div class="gantt-track" style="width:' + chartW + 'px">' + ticks + months + bandsHtml + linesHtml + labelsHtml + bandLabelsHtml + '</div></div>';
+        '<div class="gantt-track" style="width:' + chartW + 'px">' + ticks + months + weekNums + bandsHtml + linesHtml + labelsHtml + bandLabelsHtml + '</div></div>';
       rows.forEach(function(r) {
         var bars = '';
         r.segments.forEach(function(s) {
           var bx = x(s.start), bw = Math.max(6, x(s.end) - x(s.start));
-          bars += '<div class="g-bar ' + s.cls + '" style="left:' + bx + 'px;width:' + bw + 'px" title="' + esc(s.name) + '" aria-label="' + esc(r.plat + ': ' + s.name) + '"></div>';
+          var lbl = s.label ? '<span class="g-bar-label">' + esc(s.label) + '</span>' : '';
+          bars += '<div class="g-bar ' + s.cls + '" style="left:' + bx + 'px;width:' + bw + 'px" title="' + esc(s.name) + '" aria-label="' + esc(r.plat + ': ' + s.name) + '">' + lbl + '</div>';
         });
         (r.markers || []).forEach(function(m) {
           bars += '<div class="g-marker" style="left:' + x(m) + 'px" title="Submission" aria-label="' + esc(r.plat + ': submission') + '"></div>';
@@ -2275,6 +2366,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var buildDates = [];
     buildRows.forEach(function(r) { r.segments.forEach(function(s) { buildDates.push(s.start); }); });
     buildDates.push(contentLock);
+    buildDates.push(locDelivery);
     if (qaOn) buildDates.push(qaStart);
     var buildStart = minD(buildDates);
 
@@ -2285,18 +2377,35 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     // Internal QA phase: translucent background band, drawn behind rows on BOTH charts.
     var iqaBand = { start: iqaStart, end: iqaEnd, cls: 'gantt-band-qa', label: L.internalQA, labelCls: 'is-qa' };
-    var buildLines = [{ date: contentLock, cls: 'g-lock-line', label: L.contentLock, labelCls: 'is-lock' }];
+    var buildLines = [
+      { date: locDelivery, cls: 'g-loc-line', label: L.locDelivery, labelCls: 'is-loc' },
+      { date: contentLock, cls: 'g-lock-line', label: L.contentLock, labelCls: 'is-lock' }
+    ];
     // External QA (the QA house), if enabled, is a separate fainter band.
     var buildBands = qaOn ? [iqaBand, { start: qaStart, end: anchorStart }] : [iqaBand];
     var storeBands = [iqaBand];
 
+    var buildLegend = '<div class="gantt-legend">' +
+      '<span class="gl-item"><span class="gl-swatch gl-bar"></span>Cert / build</span>' +
+      '<span class="gl-item"><span class="gl-swatch gl-qa"></span>' + esc(L.internalQA) + '</span>' +
+      '<span class="gl-item"><span class="gl-swatch gl-lock"></span>' + esc(L.contentLock) + '</span>' +
+      '<span class="gl-item"><span class="gl-swatch gl-loc"></span>' + esc(L.locDelivery) + '</span>' +
+      '<span class="gl-item"><span class="gl-swatch gl-release"></span>' + esc(L.release) + '</span>' +
+      '</div>';
+    var storeLegend = '<div class="gantt-legend">' +
+      '<span class="gl-item"><span class="gl-swatch gl-bar"></span>Store review</span>' +
+      '<span class="gl-item"><span class="gl-swatch gl-release"></span>' + esc(L.release) + '</span>' +
+      '</div>';
+
     ganttWrap.innerHTML =
       '<div class="gantt-card"><div class="gantt-kicker">' + esc(L.ganttBuild) + '</div>' +
       '<div class="gantt-scroll" tabindex="0" role="group" aria-label="' + esc(L.ganttBuild) + '">' +
-      buildChart(buildRows, buildStart, buildLines, buildBands) + '</div></div>' +
+      buildChart(buildRows, buildStart, buildLines, buildBands) + '</div>' +
+      buildLegend + '</div>' +
       '<div class="gantt-card"><div class="gantt-kicker">' + esc(L.ganttStore) + '</div>' +
       '<div class="gantt-scroll" tabindex="0" role="group" aria-label="' + esc(L.ganttStore) + '">' +
-      buildChart(storeRows, storeStart, [], storeBands) + '</div></div>';
+      buildChart(storeRows, storeStart, [], storeBands) + '</div>' +
+      storeLegend + '</div>';
     ganttWrap.hidden = false;
 
     // Alerts reflect proximity to a freeze on any computed date.
@@ -2341,10 +2450,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       function dayCell(date, outside) {
         var classes = ['dp-day'];
+        var isPast = date < today;
         if (outside) classes.push('is-outside');
         if (sameDay(date, today)) classes.push('is-today');
         if (selected && sameDay(date, selected)) classes.push('is-selected');
-        return '<button type="button" class="' + classes.join(' ') + '" data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
+        if (isPast) classes.push('is-disabled');
+        return '<button type="button" class="' + classes.join(' ') + '"' + (isPast ? ' disabled' : '') + ' data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
       }
 
       var html = ''
@@ -2443,6 +2554,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   releaseInput.addEventListener('change', render);
   platformBoxes.forEach(function(b) { b.addEventListener('change', render); });
   qaRadios.forEach(function(r) { r.addEventListener('change', render); });
+  if (locSelect) locSelect.addEventListener('change', render);
 
   if (copyBtn) {
     var copyLabelEl = copyBtn.querySelector('.wbs-copy-label');
