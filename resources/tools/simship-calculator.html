@@ -1016,6 +1016,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   cursor: not-allowed;
 }
 .dp-day.is-disabled:hover { background: transparent; }
+.dp-nav.is-disabled, .dp-nav:disabled{ opacity: 0.3; cursor: default; pointer-events: none; }
 
 /* Platform checkbox chips */
 .opt-grid{
@@ -2535,9 +2536,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         return '<button type="button" class="' + classes.join(' ') + '"' + (isPast ? ' disabled' : '') + ' data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
       }
 
+      var atCurrentMonth = (viewYear === today.getFullYear() && viewMonth === today.getMonth());
+
       var html = ''
         + '<div class="dp-header">'
-        + '<button type="button" class="dp-nav dp-prev" aria-label="Previous month">&lsaquo;</button>'
+        + '<button type="button" class="dp-nav dp-prev' + (atCurrentMonth ? ' is-disabled' : '') + '"' + (atCurrentMonth ? ' disabled' : '') + ' aria-label="Previous month">&lsaquo;</button>'
         + '<div class="dp-title">' + months[viewMonth] + ' ' + viewYear + '</div>'
         + '<button type="button" class="dp-nav dp-next" aria-label="Next month">&rsaquo;</button>'
         + '</div>'
@@ -2562,6 +2565,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       dropdown.querySelector('.dp-prev').addEventListener('click', function(e){
         e.stopPropagation();
+        if (atCurrentMonth) return;          // never page before the current month
         viewMonth--;
         if (viewMonth < 0) { viewMonth = 11; viewYear--; }
         renderCal();
