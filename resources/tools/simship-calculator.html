@@ -1342,6 +1342,215 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .calc-nav-wrap { flex-direction: column; align-items: stretch; }
   .calc-nav-btn { width: 100%; justify-content: center; }
 }
+
+/* Work-back schedule: header + copy button */
+.calc-result-head{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.calc-result-head .calc-result-label{ margin-bottom: 0; flex: 1; min-width: 0; }
+.calc-copy-btn{
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  min-height: 38px;
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
+}
+.calc-copy-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.calc-copy-btn.is-copied{
+  border-color: var(--clay);
+  color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 10%, var(--paper-3));
+}
+.calc-copy-btn[hidden]{ display: none; }
+.calc-copy-btn svg{
+  width: 14px; height: 14px;
+  stroke: currentColor; stroke-width: 2;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Work-back schedule table */
+.wbs-table-wrap{
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--paper-2);
+}
+.wbs-table{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+  font-size: 14px;
+}
+.wbs-table thead th{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 400;
+  text-align: left;
+  padding: 12px 16px;
+  background: var(--paper-3);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.wbs-table thead th.wbs-col-icon{ text-align: center; }
+.wbs-table tbody td{
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+.wbs-table tbody tr:last-child td{ border-bottom: 0; }
+.wbs-col-icon{ width: 1%; text-align: center; white-space: nowrap; }
+.wbs-date{
+  font-family: var(--mono-data);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.wbs-milestone{ color: var(--ink); font-weight: 500; }
+.wbs-note{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.wbs-icon{ display: inline-flex; align-items: center; justify-content: center; color: var(--ink-3); }
+.wbs-icon svg{ display: block; }
+.wbs-col-type{ width: 120px; }
+.wbs-badge{
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  padding: 5px 10px 4px;
+  min-width: 38px;
+  text-align: center;
+}
+.wbs-table tr.is-lock .wbs-badge{
+  color: var(--clay);
+  border-color: color-mix(in srgb, var(--clay) 45%, var(--rule));
+}
+.wbs-table tbody tr.is-lock{ background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
+.wbs-table tbody tr.is-lock .wbs-date,
+.wbs-table tbody tr.is-lock .wbs-milestone,
+.wbs-table tbody tr.is-lock .wbs-icon{ color: var(--clay); }
+
+/* Gantt charts */
+.gantt-section{
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 32px;
+}
+.gantt-section[hidden]{ display: none; }
+.gantt-card{
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--paper-2);
+  overflow: hidden;
+}
+.gantt-kicker{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.gantt-scroll{ overflow-x: auto; overflow-y: hidden; }
+.gantt-scroll:focus-visible{ outline: 2px solid var(--clay); outline-offset: -2px; }
+.gantt-body{ width: max-content; min-width: 100%; }
+.gantt-row{ display: flex; align-items: stretch; border-top: 1px solid var(--rule-soft); }
+.gantt-row.gantt-axis{ border-top: 0; }
+.gantt-label{
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  flex: 0 0 150px;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  background: var(--paper-2);
+  border-right: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.gantt-label span{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gantt-label .gl-icon{ display: inline-flex; color: var(--ink-3); flex-shrink: 0; }
+.gantt-axis .gantt-label{ background: var(--paper-3); }
+.gantt-track{ position: relative; flex: 0 0 auto; }
+.gantt-row:not(.gantt-axis) .gantt-track{ height: 46px; }
+.gantt-axis .gantt-track{ height: 48px; background: var(--paper-3); }
+.g-tick{ position: absolute; top: 0; bottom: 0; width: 1px; background: var(--rule-soft); }
+.g-month{
+  position: absolute; top: 6px;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3); white-space: nowrap;
+  transform: translateX(4px);
+}
+.g-release-line{ position: absolute; top: 0; bottom: 0; width: 2px; background: var(--clay); z-index: 4; }
+.g-lock-line{ position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent-2); z-index: 4; }
+.gantt-band-qa{
+  position: absolute; top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--ink-2) 12%, transparent);
+  border-left: 1px dashed var(--ink-2);
+  border-right: 1px dashed var(--ink-2);
+  pointer-events: none;
+  z-index: 1;
+}
+.g-guide-label{
+  position: absolute; top: 18px;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  white-space: nowrap; transform: translateX(5px); z-index: 5;
+}
+.g-guide-label.is-release{ color: var(--clay); }
+.g-guide-label.is-lock{ color: var(--accent-2); }
+.g-guide-label.is-qa{ color: var(--ink-2); top: 32px; }
+.g-qa-band{ position: absolute; top: 0; bottom: 0; background: var(--ink-3); opacity: 0.10; z-index: 1; }
+.g-bar{
+  position: absolute; top: 50%; transform: translateY(-50%);
+  height: 18px; border-radius: 5px; z-index: 2;
+}
+.g-bar.is-check{ background: var(--clay); }
+.g-bar.is-fix{ background: var(--clay-soft); border: 1px solid color-mix(in srgb, var(--clay) 30%, var(--rule)); }
+.g-bar.is-store{ background: var(--clay-soft); border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule)); }
+.g-marker{
+  position: absolute; top: 50%; transform: translate(-50%, -50%);
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--clay-deep); border: 2px solid var(--paper-2); z-index: 3;
+}
+@media (max-width: 640px){
+  .gantt-label{ flex-basis: 120px; width: 120px; }
+}
 </style>
 </head>
 <body>
@@ -1444,18 +1653,25 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
 
       <div>
-        <div class="calc-result-label">Your Work-Back Schedule</div>
+        <div class="calc-result-head">
+          <div class="calc-result-label">Your Work-Back Schedule</div>
+          <button type="button" class="calc-copy-btn" id="wbs-copy-btn" hidden aria-label="Copy schedule to clipboard">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="wbs-copy-label">Copy</span>
+          </button>
+        </div>
         <div class="holiday-warn" id="holiday-warn" hidden role="alert">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <p>Your release date falls near the end-of-year period. <strong>Nintendo and Sony typically freeze cert review from late December.</strong> Verify your submission window directly with your platform contacts before locking this schedule.<span class="adj-note" hidden> Affected cert milestones below have been pulled earlier to land before offices close.</span></p>
+          <p>Your release date falls near the end-of-year period. <strong>Nintendo and Sony typically freeze cert review from late December.</strong> Verify your submission window directly with your platform contacts before locking this schedule.<span class="adj-note" hidden> Cert windows crossing this freeze have been extended to account for the review pause.</span></p>
         </div>
         <div class="holiday-warn" id="summer-warn" hidden role="alert">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <p>Your schedule runs through the European summer period. <strong>Studios and first-party cert teams often run reduced staffing from mid-July through August.</strong> Review and submission turnaround can stretch. Confirm holiday coverage with your platform contacts before locking this schedule.<span class="adj-note" hidden> Affected cert milestones below have been pulled earlier to land before offices close.</span></p>
+          <p>Your schedule runs through the European summer period. <strong>Studios and first-party cert teams often run reduced staffing from mid-July through August.</strong> Review and submission turnaround can stretch. Confirm holiday coverage with your platform contacts before locking this schedule.<span class="adj-note" hidden> Cert windows crossing this freeze have been extended to account for the review pause.</span></p>
         </div>
         <div id="timeline-wrap">
           <div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>
         </div>
+        <div id="gantt-wrap" class="gantt-section" hidden></div>
       </div>
 
       <div class="calc-nav-wrap">
@@ -1563,6 +1779,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     'footer.linkedin': 'LinkedIn',
     'footer.linkedin.aria': 'Profilo LinkedIn',
     'footer.copy': '© 2026 Spritz Consulting · Tutti i diritti riservati',
+    'wbs.copy': 'Copia',
+    'wbs.gantt.build': 'Invii build',
+    'wbs.gantt.store': 'Invii store',
+    'wbs.col.date': 'Data',
+    'wbs.col.platform': 'Piattaforma',
+    'wbs.col.milestone': 'Milestone',
+    'wbs.col.type': 'Tipo',
+    'wbs.col.note': 'Note',
+    'wbs.release': 'Uscita',
+    'wbs.contentlock': 'Blocco contenuti',
   };
 
   const FR = {
@@ -1710,9 +1936,30 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var timelineWrap = document.getElementById('timeline-wrap');
   var holidayEl = document.getElementById('holiday-warn');
   var summerEl = document.getElementById('summer-warn');
+  var copyBtn = document.getElementById('wbs-copy-btn');
+  var ganttWrap = document.getElementById('gantt-wrap');
+  var lastTSV = '';
+  var COPY_ICON = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
 
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DAY = 86400000;
+  var SAFETY_PCT = 0.20; // total buffer as a fraction of pipeline length; split 50/50 below
+
+  // UI strings, picked up from the saved language. FR/ES mirror EN.
+  var WBS_LANG = '';
+  try { WBS_LANG = localStorage.getItem('mdn-lang') || ''; } catch (e) {}
+  var WBS_STR = {
+    en: { date: 'Date', platform: 'Platform', milestone: 'Milestone', type: 'Type', note: 'Note', ganttBuild: 'Build submissions', ganttStore: 'Store submissions', copy: 'Copy', copied: 'Copied', release: 'Release', contentLock: 'Content lock', internalQA: 'Internal QA' },
+    it: { date: 'Data', platform: 'Piattaforma', milestone: 'Milestone', type: 'Tipo', note: 'Note', ganttBuild: 'Invii build', ganttStore: 'Invii store', copy: 'Copia', copied: 'Copiato', release: 'Uscita', contentLock: 'Blocco contenuti', internalQA: 'Internal QA' }
+  };
+  var L = WBS_STR[WBS_LANG] || WBS_STR.en;
+
+  // Reset the copy button + Gantt section when there is nothing to show.
+  function clearExtras() {
+    if (copyBtn) copyBtn.hidden = true;
+    if (ganttWrap) { ganttWrap.hidden = true; ganttWrap.innerHTML = ''; }
+    lastTSV = '';
+  }
 
   // Platforms. Consoles plan for THREE cert submission rounds, because a
   // first-pass approval is the exception. Each round has a cert-check window
@@ -1733,16 +1980,22 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   function addDays(base, n) { return new Date(base.getTime() + n * DAY); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function isWorkday(d) { var g = d.getDay(); return g !== 0 && g !== 6; }
-  // n working days BEFORE base, landing on a working day.
+  // Cert review pauses during freezes, so freeze days are not cert working days.
+  function isFreeze(d) { return isHoliday(d) || isSummer(d); }
+  function isCertWorkday(d) {
+    var g = d.getDay();
+    return g !== 0 && g !== 6 && !isFreeze(d);
+  }
+  // n cert working days BEFORE base, landing on a cert working day.
   function subWorkdays(base, n) {
     var d = new Date(base.getTime()), left = n;
-    while (left > 0) { d = addDays(d, -1); if (isWorkday(d)) left--; }
+    while (left > 0) { d = addDays(d, -1); if (isCertWorkday(d)) left--; }
     return d;
   }
-  // n working days AFTER base, landing on a working day.
+  // n cert working days AFTER base, landing on a cert working day.
   function addWorkdays(base, n) {
     var d = new Date(base.getTime()), left = n;
-    while (left > 0) { d = addDays(d, 1); if (isWorkday(d)) left--; }
+    while (left > 0) { d = addDays(d, 1); if (isCertWorkday(d)) left--; }
     return d;
   }
 
@@ -1774,105 +2027,277 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       timelineWrap.innerHTML = '<div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>';
       holidayEl.hidden = true;
       summerEl.hidden = true;
+      clearExtras();
       return;
     }
     if (selected.length === 0) {
       timelineWrap.innerHTML = '<div class="tl-empty">Select at least one platform to build the schedule.</div>';
       holidayEl.hidden = true;
       summerEl.hidden = true;
+      clearExtras();
       return;
     }
 
     var allDates = [];          // every computed date, drives freeze alerts
     var recap = [];             // every dated milestone, rendered as one chronological list
-    var anchorDates = [];       // earliest submission per platform → drives content lock
+    var buildRows = [];         // per-platform build/cert rows for Gantt A
+    var storeRows = [];         // per-platform store rows for Gantt B
     var origHolidayHit = isHoliday(release);
     var origSummerHit = isSummer(release);
 
+    // Buffered pipeline helpers (working days). latestSub1 = the latest a console
+    // could safely start if it worked back from release on its own.
+    function pipelineDays(c) { return (c.check + c.fix) * 2 + c.last; }
+    function latestSub1(c) {
+      var pipeline = pipelineDays(c);
+      var halfBuf  = Math.max(1, Math.round(pipeline * SAFETY_PCT / 2));
+      var goLive   = subWorkdays(release, halfBuf);
+      var cushion  = Math.max(1, Math.round(halfBuf / 2));
+      var s3 = subWorkdays(goLive, c.last);
+      var s2 = subWorkdays(s3, c.check + c.fix + cushion);
+      var s1 = subWorkdays(s2, c.check + c.fix + cushion);
+      return { s1: s1, cushion: cushion, goLive: goLive };
+    }
+
+    var consoleKeys = selected.filter(function(k) { return PLATFORMS[k].cert; });
+    var pcKeys      = selected.filter(function(k) { return !PLATFORMS[k].cert; });
+    var approvals   = [];
+
+    // Store page submission — single calendar-day deadline on every platform,
+    // pulled earlier by 10% (half the safety buffer), in calendar days. Unchanged.
     selected.forEach(function(key) {
       var def = PLATFORMS[key];
-
-      // Store page submission — single calendar-day deadline on every platform.
-      var storeDate = addDays(release, -def.store);
+      var storeBuf = Math.max(1, Math.round(def.store * SAFETY_PCT / 2));
+      var storeDate = addDays(release, -(def.store + storeBuf));
       allDates.push(storeDate);
-      recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: 'Store review track' });
-
-      if (def.cert) {
-        // Three cert rounds, working back from release. Each round = a cert
-        // check window; a bug-fix buffer sits between rounds; the final round
-        // gets a short re-check.
-        var c = def.cert;
-        var sub3 = subWorkdays(release, c.last);
-        var sub2 = subWorkdays(sub3, c.check + c.fix);
-        var sub1 = subWorkdays(sub2, c.check + c.fix);
-        var c1End = addWorkdays(sub1, c.check);
-        var c2End = addWorkdays(sub2, c.check);
-
-        [sub1, sub2, sub3, c1End, c2End].forEach(function(d) { allDates.push(d); });
-        anchorDates.push(sub1);
-
-        var rounds = [
-          { n: 1, date: sub1, note: c.check + ' working days cert check, then fix bugs' },
-          { n: 2, date: sub2, note: c.check + ' working days cert check, then fix bugs' },
-          { n: 3, date: sub3, note: c.last + ' working days final check then go-live' }
-        ];
-        rounds.forEach(function(r) {
-          recap.push({ date: r.date, label: 'Submission ' + r.n + (r.n === 3 ? ' (final)' : ''), plat: def.name, note: r.note });
-        });
-      } else {
-        // PC / Steam — no lot check, single build submission.
-        var buildDate = addDays(release, -def.build);
-        allDates.push(buildDate);
-        anchorDates.push(buildDate);
-        recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check' });
-      }
+      recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: 'Store review track', kind: 'store' });
+      storeRows.push({ plat: def.name, segments: [{ start: storeDate, end: release, cls: 'is-store', name: 'Store review window' }], markers: [storeDate] });
     });
 
-    // Anchor = earliest first submission across platforms → drives content lock.
-    var anchor = anchorDates.reduce(function(a, b) { return a < b ? a : b; }, release);
+    // Consoles start together in a cluster just after content lock, then each
+    // pipeline runs FORWARD and finishes when it finishes. The slowest console
+    // (longest pipeline) anchors the cluster at offset 0; shorter ones finish
+    // early with slack.
+    var consolesByLen = consoleKeys.slice().sort(function(a, b) {
+      return pipelineDays(PLATFORMS[b].cert) - pipelineDays(PLATFORMS[a].cert);
+    });
+    var anchorStart = null;
+    consolesByLen.forEach(function(k) {
+      var s = latestSub1(PLATFORMS[k].cert).s1;
+      if (anchorStart === null || s < anchorStart) anchorStart = s;
+    });
 
-    // Shared (non-platform) milestones — folded into the same recap list.
-    var contentLock = addDays(anchor, -14);
-    recap.push({ date: contentLock, label: 'Content lock / feature complete', plat: 'All platforms', note: 'Effective content lock', lock: true });
-    if (qaOn) {
-      recap.push({ date: addDays(anchor, -21), label: 'External QA start', plat: 'All platforms', note: 'QA window' });
-      recap.push({ date: anchor, label: 'External QA end', plat: 'All platforms', note: 'QA window' });
+    consolesByLen.forEach(function(key, i) {
+      var def = PLATFORMS[key], c = def.cert;
+      var info = latestSub1(c);
+      var clusterStart = addWorkdays(anchorStart, i);                 // ~1 working day stagger
+      var safeStart    = info.s1;
+      var sub1    = clusterStart < safeStart ? clusterStart : safeStart; // never start later than safe
+      var cushion = info.cushion;
+
+      // Run the pipeline forward from sub1 (not back from release).
+      var c1End    = addWorkdays(sub1, c.check);
+      var sub2     = addWorkdays(c1End, c.fix + cushion);
+      var c2End    = addWorkdays(sub2, c.check);
+      var sub3     = addWorkdays(c2End, c.fix + cushion);
+      var approval = addWorkdays(sub3, c.last);                        // this platform's build-approval date
+      approvals.push(approval);
+
+      [sub1, sub2, sub3, c1End, c2End, approval].forEach(function(d) { allDates.push(d); });
+
+      // Gantt A row: solid clay cert-check windows, lighter clay-soft fix buffers.
+      // Final check ends at this platform's approval; the gap to release is its slack.
+      buildRows.push({ plat: def.name, segments: [
+        { start: sub1, end: c1End, cls: 'is-check', name: 'Cert 1 check' },
+        { start: c1End, end: sub2, cls: 'is-fix', name: 'Fix' },
+        { start: sub2, end: c2End, cls: 'is-check', name: 'Cert 2 check' },
+        { start: c2End, end: sub3, cls: 'is-fix', name: 'Fix' },
+        { start: sub3, end: approval, cls: 'is-check', name: 'Final check' }
+      ], markers: [sub1, sub2, sub3] });
+
+      var rounds = [
+        { n: 1, date: sub1, note: c.check + ' working days cert check, then fix bugs' },
+        { n: 2, date: sub2, note: c.check + ' working days cert check, then fix bugs' },
+        { n: 3, date: sub3, note: c.last + ' working days final check then go-live' }
+      ];
+      rounds.forEach(function(r) {
+        recap.push({ date: r.date, label: 'Submission ' + r.n + (r.n === 3 ? ' (final)' : ''), plat: def.name, note: r.note, kind: 'build' });
+      });
+    });
+
+    // PC / Steam — outside the cluster, build to Valve ~1 working week before launch.
+    pcKeys.forEach(function(key) {
+      var def = PLATFORMS[key];
+      var buildDate = subWorkdays(release, 5);
+      approvals.push(buildDate);                                       // PC approval == its submission
+      allDates.push(buildDate);
+      recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check', kind: 'build' });
+      buildRows.push({ plat: def.name, segments: [{ start: buildDate, end: release, cls: 'is-check', name: 'Build submission' }], markers: [buildDate] });
+    });
+
+    // Content lock is anchored to the cluster start (fallback: earliest submission if no consoles).
+    if (anchorStart === null) {
+      anchorStart = approvals.reduce(function(a, b) { return a < b ? a : b; }, release);
     }
+    var contentLock = addDays(anchorStart, -14);
+    var qaStart = addDays(anchorStart, -21);
+    recap.push({ date: contentLock, label: 'Content lock / feature complete', plat: 'All platforms', note: 'Effective content lock', lock: true, kind: 'lock' });
+    // Internal QA phase: fills the gap between feature complete and first submission.
+    // Cert working-day stepping, so it stretches across any summer/Christmas freeze.
+    var iqaStart = addWorkdays(contentLock, 1);   // day after feature complete
+    var iqaEnd   = subWorkdays(anchorStart, 1);   // day before the first (cluster) submission
+    recap.push({ date: iqaStart, endDate: iqaEnd, label: 'Final internal QA', plat: 'All platforms', note: 'Internal QA window before submission', qa: true, kind: 'qapass' });
+    if (qaOn) {
+      recap.push({ date: qaStart, label: 'External QA start', plat: 'All platforms', note: 'QA window', kind: 'qa' });
+      recap.push({ date: anchorStart, label: 'External QA end', plat: 'All platforms', note: 'QA window', kind: 'qa' });
+    }
+
+    // Single build-approval gate = the latest approval across platforms (slowest console).
+    var allApproved = approvals.reduce(function(a, b) { return a > b ? a : b; });
+    recap.push({ date: allApproved, label: 'Build approval deadline', plat: 'All platforms', note: 'Build approved and ready', kind: 'approved' });
+    // Simship: one go-live shared by every platform. Sort places it last.
+    recap.push({ date: release, label: 'Release date', plat: 'All platforms', note: 'Release, all platforms', kind: 'release', release: true });
     recap.forEach(function(r) { allDates.push(r.date); });
     recap.sort(function(a, b) { return a.date - b.date; });
 
     function platIcon(plat) {
       var p = (plat || '').toLowerCase();
-      if (p.indexOf('switch') > -1 || p.indexOf('nintendo') > -1)
-        return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 6a3 3 0 0 1 3-3h3v18H6a3 3 0 0 1-3-3V6zm7-3h5a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-5V3zM7 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm10 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm0-2a1 1 0 0 0-1 1h2a1 1 0 0 0-1-1zm-1 3v2h2v-2h-2z"/></svg>';
-      if (p.indexOf('playstation') > -1 || p.indexOf('ps') > -1)
-        return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3v13.3l3 1V6.7c0-.5.2-.8.5-.7.4.1.5.5.5 1v4.2c1.7.8 3-.1 3-2.4 0-2.3-.8-3.4-3.1-4.2C11.9 4.3 10.4 3.9 9 3zM3 17l3.3.9c1 .3 1.3.8 1.3 1.3 0 .6-.5.9-1.3.6L3 18.7v1.3l3.1 1.1C7.7 21.7 8.5 21 8.5 19.9c0-1.1-.7-1.9-2.3-2.5L3 16.5V17z"/></svg>';
-      if (p.indexOf('xbox') > -1)
-        return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.54 17.5C5.9 16.1 4.9 14.2 4.9 12c0-1.5.5-2.9 1.3-4 .7.7 2.2 2.4 3.8 4.7-1.2 1.8-2 3.4-2.44 4.8zm4.46.9c-1 0-1.9-.7-2.9-2.1 1-1.5 2-2.9 2.9-4 .9 1.1 1.9 2.5 2.9 4-1 1.4-1.9 2.1-2.9 2.1zm5-1c-.44-1.4-1.24-3-2.44-4.8 1.6-2.3 3.1-4 3.8-4.7.8 1.1 1.3 2.5 1.3 4 0 2.2-1 4.1-2.66 5.5z"/></svg>';
-      return '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm5.8 6.4-1.57 7.33a.5.5 0 0 1-.6.37l-3.12-.67-1.76 1.76a.5.5 0 0 1-.85-.35v-2.1l-3.35-.72a.5.5 0 0 1-.2-.88l10-6.67a.5.5 0 0 1 .45-.07.5.5 0 0 1 .3.3.5.5 0 0 1 0 .7z"/></svg>';
+      var code = 'ALL';
+      if (p.indexOf('switch') > -1 || p.indexOf('nintendo') > -1) code = 'NSW';
+      else if (p.indexOf('playstation') > -1 || p.indexOf('ps') > -1) code = 'PS';
+      else if (p.indexOf('xbox') > -1) code = 'XB';
+      else if (p.indexOf('pc') > -1 || p.indexOf('steam') > -1) code = 'PC';
+      return '<span class="wbs-badge">' + code + '</span>';
     }
     function typeIcon(note) {
       var n = (note || '').toLowerCase();
-      if (n.indexOf('store') > -1)
-        return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(0,-1.5)"><path d="M16 11V7a4 4 0 0 0-8 0v4"/><rect x="3" y="11" width="18" height="11" rx="2"/></g></svg>';
-      return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="10" rx="3"/><path d="M11 15h2M15 15h.01M17 15h.01"/><path d="M12 6v4M10 8h4"/></svg>';
+      if (n.indexOf('release') > -1)                              return '<span class="wbs-badge">RELEASE</span>';
+      if (n.indexOf('approv') > -1)                               return '<span class="wbs-badge">APPROVED</span>';
+      if (n.indexOf('internal qa') > -1)                          return '<span class="wbs-badge">QA</span>';
+      if (n.indexOf('store') > -1)                                return '<span class="wbs-badge">STORE</span>';
+      if (n.indexOf('lock') > -1)                                 return '<span class="wbs-badge">LOCK</span>';
+      if (n.indexOf('qa') > -1)                                   return '';
+      return '<span class="wbs-badge">BUILD</span>';
     }
 
-    var html = '';
-    if (recap.length) {
-      html += '<div class="gantt-extra"><div class="gantt-extra-label">Schedule recap — chronological</div><ul>';
-      recap.forEach(function(r) {
-        html += '<li' + (r.lock ? ' class="is-lock"' : '') + '>' +
-          '<span class="ge-date">' + fmt(r.date) + '</span>' +
-          '<span class="ge-plat-icon">' + platIcon(r.plat) + '</span>' +
-          '<span class="ge-label">' + esc(r.label) + '</span>' +
-          '<span class="ge-type-icon">' + typeIcon(r.note) + '</span>' +
-          '<span class="ge-note">' + esc(r.note) + '</span>' +
-          '</li>';
-      });
-      html += '</ul></div>';
+    // --- 5-column work-back table (recap is already sorted by date) ---
+    var rowsHtml = '';
+    recap.forEach(function(r) {
+      var dateText = r.endDate ? (fmt(r.date) + ' → ' + fmt(r.endDate)) : fmt(r.date);
+      rowsHtml += '<tr' + ((r.lock || r.release) ? ' class="is-lock"' : '') + '>' +
+        '<td class="wbs-date">' + dateText + '</td>' +
+        '<td class="wbs-col-icon">' + platIcon(r.plat) + '</td>' +
+        '<td class="wbs-milestone">' + esc(r.label) + '</td>' +
+        '<td class="wbs-col-icon wbs-col-type">' + typeIcon(r.note) + '</td>' +
+        '<td class="wbs-note">' + esc(r.note) + '</td>' +
+        '</tr>';
+    });
+    timelineWrap.innerHTML =
+      '<div class="wbs-table-wrap"><table class="wbs-table">' +
+      '<thead><tr>' +
+      '<th>' + esc(L.date) + '</th>' +
+      '<th class="wbs-col-icon">' + esc(L.platform) + '</th>' +
+      '<th>' + esc(L.milestone) + '</th>' +
+      '<th class="wbs-col-icon wbs-col-type">' + esc(L.type) + '</th>' +
+      '<th>' + esc(L.note) + '</th>' +
+      '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+
+    // --- clipboard payload: tab-separated, fixed English headers for clean Sheets paste ---
+    function typeTextEN(kind) {
+      return kind === 'store' ? 'Store' : kind === 'lock' ? 'Content lock' : kind === 'qa' ? 'QA'
+           : kind === 'qapass' ? 'QA pass' : kind === 'approved' ? 'Approved' : kind === 'release' ? 'Release' : 'Build';
     }
-    timelineWrap.innerHTML = html;
+    var tsv = ['Date\tPlatform\tMilestone\tType\tNote'];
+    recap.forEach(function(r) {
+      tsv.push([fmt(r.date), r.plat, r.label, typeTextEN(r.kind), r.note].join('\t'));
+    });
+    lastTSV = tsv.join('\n');
+    if (copyBtn) copyBtn.hidden = false;
+
+    // --- two horizontally-scrollable Gantt charts (same px/day so they compare) ---
+    function minD(arr) { return arr.reduce(function(a, b) { return a < b ? a : b; }); }
+
+    function buildChart(rows, startDate, lines, bands) {
+      var PX = 14, PAD = 56;
+      var totalDays = Math.max(1, Math.round((release - startDate) / DAY));
+      var chartW = totalDays * PX + PAD;
+      function x(d) { return ((d - startDate) / DAY) * PX; }
+
+      var ticks = '';
+      for (var t = 0; t <= totalDays; t += 7) {
+        ticks += '<div class="g-tick" style="left:' + (t * PX) + 'px"></div>';
+      }
+      var months = '';
+      var cur = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+      while (cur <= release) {
+        months += '<div class="g-month" style="left:' + Math.max(0, x(cur)) + 'px">' + MONTHS[cur.getMonth()] + " '" + String(cur.getFullYear()).slice(-2) + '</div>';
+        cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
+      }
+
+      var bandsHtml = '', bandLabelsHtml = '';
+      bands.forEach(function(b) {
+        var bx = x(b.start), bw = Math.max(2, x(b.end) - x(b.start));
+        bandsHtml += '<div class="' + (b.cls || 'g-qa-band') + '" style="left:' + bx + 'px;width:' + bw + 'px"></div>';
+        if (b.label) {
+          bandLabelsHtml += '<div class="g-guide-label ' + (b.labelCls || '') + '" style="left:' + bx + 'px">' + esc(b.label) + '</div>';
+        }
+      });
+
+      // Release line is shared by both charts; extra guide lines are passed in.
+      var allLines = lines.concat([{ date: release, cls: 'g-release-line', label: L.release, labelCls: 'is-release' }]);
+      var linesHtml = '', labelsHtml = '';
+      allLines.forEach(function(g) {
+        linesHtml += '<div class="' + g.cls + '" style="left:' + x(g.date) + 'px"></div>';
+        labelsHtml += '<div class="g-guide-label ' + g.labelCls + '" style="left:' + x(g.date) + 'px">' + esc(g.label) + '</div>';
+      });
+
+      var bg = ticks + bandsHtml + linesHtml; // repeated per row so bands/lines read continuous
+
+      var body = '<div class="gantt-body">';
+      body += '<div class="gantt-row gantt-axis"><div class="gantt-label"></div>' +
+        '<div class="gantt-track" style="width:' + chartW + 'px">' + ticks + months + bandsHtml + linesHtml + labelsHtml + bandLabelsHtml + '</div></div>';
+      rows.forEach(function(r) {
+        var bars = '';
+        r.segments.forEach(function(s) {
+          var bx = x(s.start), bw = Math.max(6, x(s.end) - x(s.start));
+          bars += '<div class="g-bar ' + s.cls + '" style="left:' + bx + 'px;width:' + bw + 'px" title="' + esc(s.name) + '" aria-label="' + esc(r.plat + ': ' + s.name) + '"></div>';
+        });
+        (r.markers || []).forEach(function(m) {
+          bars += '<div class="g-marker" style="left:' + x(m) + 'px" title="Submission" aria-label="' + esc(r.plat + ': submission') + '"></div>';
+        });
+        body += '<div class="gantt-row"><div class="gantt-label"><span>' + esc(r.plat) + '</span></div>' +
+          '<div class="gantt-track" style="width:' + chartW + 'px">' + bg + bars + '</div></div>';
+      });
+      body += '</div>';
+      return body;
+    }
+
+    var buildDates = [];
+    buildRows.forEach(function(r) { r.segments.forEach(function(s) { buildDates.push(s.start); }); });
+    buildDates.push(contentLock);
+    if (qaOn) buildDates.push(qaStart);
+    var buildStart = minD(buildDates);
+
+    var storeDates = [];
+    storeRows.forEach(function(r) { r.segments.forEach(function(s) { storeDates.push(s.start); }); });
+    storeDates.push(iqaStart);   // keep the internal-QA band inside the store chart's range
+    var storeStart = minD(storeDates);
+
+    // Internal QA phase: translucent background band, drawn behind rows on BOTH charts.
+    var iqaBand = { start: iqaStart, end: iqaEnd, cls: 'gantt-band-qa', label: L.internalQA, labelCls: 'is-qa' };
+    var buildLines = [{ date: contentLock, cls: 'g-lock-line', label: L.contentLock, labelCls: 'is-lock' }];
+    // External QA (the QA house), if enabled, is a separate fainter band.
+    var buildBands = qaOn ? [iqaBand, { start: qaStart, end: anchorStart }] : [iqaBand];
+    var storeBands = [iqaBand];
+
+    ganttWrap.innerHTML =
+      '<div class="gantt-card"><div class="gantt-kicker">' + esc(L.ganttBuild) + '</div>' +
+      '<div class="gantt-scroll" tabindex="0" role="group" aria-label="' + esc(L.ganttBuild) + '">' +
+      buildChart(buildRows, buildStart, buildLines, buildBands) + '</div></div>' +
+      '<div class="gantt-card"><div class="gantt-kicker">' + esc(L.ganttStore) + '</div>' +
+      '<div class="gantt-scroll" tabindex="0" role="group" aria-label="' + esc(L.ganttStore) + '">' +
+      buildChart(storeRows, storeStart, [], storeBands) + '</div></div>';
+    ganttWrap.hidden = false;
 
     // Alerts reflect proximity to a freeze on any computed date.
     var holidayHit = origHolidayHit || allDates.some(function(d) { return isHoliday(d); });
@@ -1880,10 +2305,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     holidayEl.hidden = !holidayHit;
     summerEl.hidden = !summerHit;
 
+    // Show the "windows extended" note whenever its freeze alert is showing.
     var holidayAdj = holidayEl.querySelector('.adj-note');
     var summerAdj = summerEl.querySelector('.adj-note');
-    if (holidayAdj) holidayAdj.hidden = true;
-    if (summerAdj) summerAdj.hidden = true;
+    if (holidayAdj) holidayAdj.hidden = !holidayHit;
+    if (summerAdj) summerAdj.hidden = !summerHit;
   }
 
   function buildDatePicker(input) {
@@ -2017,6 +2443,26 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   releaseInput.addEventListener('change', render);
   platformBoxes.forEach(function(b) { b.addEventListener('change', render); });
   qaRadios.forEach(function(r) { r.addEventListener('change', render); });
+
+  if (copyBtn) {
+    var copyLabelEl = copyBtn.querySelector('.wbs-copy-label');
+    if (copyLabelEl) copyLabelEl.textContent = L.copy;
+    var copyTimer = null;
+    copyBtn.addEventListener('click', function() {
+      if (!lastTSV || !navigator.clipboard) return;
+      navigator.clipboard.writeText(lastTSV).then(function() {
+        copyBtn.classList.add('is-copied');
+        if (copyLabelEl) copyLabelEl.textContent = L.copied;
+        copyBtn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        if (copyTimer) clearTimeout(copyTimer);
+        copyTimer = setTimeout(function() {
+          copyBtn.classList.remove('is-copied');
+          if (copyLabelEl) copyLabelEl.textContent = L.copy;
+          copyBtn.querySelector('svg').innerHTML = COPY_ICON;
+        }, 2000);
+      });
+    });
+  }
 
   var tracked = false;
   document.addEventListener('input', function() {
