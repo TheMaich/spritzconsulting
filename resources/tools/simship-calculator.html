@@ -2335,20 +2335,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
     function typeIcon(note) {
       var n = (note || '').toLowerCase();
-      if (n.indexOf('release') > -1)                              return '<span class="wbs-badge">RELEASE</span>';
-      if (n.indexOf('approv') > -1)                               return '<span class="wbs-badge">APPROVED</span>';
-      if (n.indexOf('internal qa') > -1)                          return '<span class="wbs-badge">QA</span>';
-      if (n.indexOf('loc integrated') > -1)                       return '<span class="wbs-badge">LOC</span>';
-      if (n.indexOf('store') > -1)                                return '<span class="wbs-badge">STORE</span>';
-      if (n.indexOf('lock') > -1)                                 return '<span class="wbs-badge">LOCK</span>';
-      if (n.indexOf('qa') > -1)                                   return '';
+      if (n.indexOf('release') > -1)        return '<span class="wbs-badge">RELEASE</span>';
+      if (n.indexOf('approv') > -1)         return '<span class="wbs-badge">APPROVED</span>';
+      if (n.indexOf('loc integrated') > -1) return '<span class="wbs-badge">LOC</span>';
+      if (n.indexOf('store') > -1)          return '<span class="wbs-badge">STORE</span>';
+      if (n.indexOf('lock') > -1)           return '<span class="wbs-badge">LOCK</span>';
+      if (n.indexOf('qa') > -1)             return '<span class="wbs-badge">QA</span>';
       return '<span class="wbs-badge">BUILD</span>';
     }
 
     // --- 5-column work-back table (recap is already sorted by date) ---
     var rowsHtml = '';
     recap.forEach(function(r) {
-      var dateText = r.endDate ? (fmt(r.date) + ' → ' + fmt(r.endDate)) : fmt(r.date);
+      var dateText = fmt(r.date);
       var rowClass = r.release ? ' class="is-lock is-release"' : (r.lock ? ' class="is-lock"' : '');
       rowsHtml += '<tr' + rowClass + '>' +
         '<td class="wbs-date" data-label="' + esc(L.date) + '">' + dateText + '</td>' +
