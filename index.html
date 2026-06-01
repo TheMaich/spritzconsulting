@@ -3823,40 +3823,33 @@ body.is-tab-hidden .dot{
 </script>
 
 <script>
-/* Geo-personalised placeholders for name & company (Cloudflare /cdn-cgi/trace) */
-(async function() {
-  const placeholders = {
-    IT: { name: 'Alessia Morandi', company: 'Driftline Studios' },
-    US: { name: 'Jordan Reeves', company: 'Hollow Pine Games' },
-    GB: { name: 'Owen Mitchell', company: 'Cliffside Games' },
-    DE: { name: 'Lena Hoffmann', company: 'Nordwald Studios' },
-    FR: { name: 'Camille Lefèvre', company: 'Atelier Sept' },
-    ES: { name: 'Marina Vega', company: 'Solana Games' },
-    SE: { name: 'Astrid Lindberg', company: 'Frostlake Games' }
-  };
-  const defaultPlaceholder = { name: 'Sam Carter', company: 'Driftline Studios' };
+/* Random UK/US-sounding placeholders for name & company (no geo, picked per load) */
+(function() {
+  const names = [
+    'Jordan Reeves', 'Owen Mitchell', 'Sam Carter', 'Ava Whitfield', 'Mason Brooks',
+    'Ellie Harper', 'Cole Bennett', 'Grace Sullivan', 'Riley Hayes', 'Noah Pemberton',
+    'Maya Sinclair', 'Dylan Foster', 'Hannah Clarke', 'Lucas Reed', 'Sophie Lambert',
+    'Ethan Wallace', 'Chloe Dawson', 'Marcus Hale', 'Isla Townsend', 'Ryan Caldwell'
+  ];
+  const companies = [
+    'Hollow Pine Games', 'Cliffside Games', 'Driftline Studios', 'Frostlake Games',
+    'Ironwood Interactive', 'Paper Lantern Games', 'Northstar Studios', 'Saltmarsh Games',
+    'Copperfield Interactive', 'Lighthouse Pixel', 'Redhill Games', 'Tidewater Studios',
+    'Brackenwood Games', 'Silverpine Interactive', 'Lowtide Games', 'Halcyon Forge',
+    'Amber Hollow Studios', 'Westgate Games', 'Quietfox Games', 'Stormpetrel Studios'
+  ];
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
-  try {
-    const response = await fetch('/cdn-cgi/trace', { cache: 'no-store' });
-    if (!response.ok) throw new Error('trace fetch failed');
-    const text = await response.text();
-    const match = text.match(/^loc=([A-Z]{2})$/m);
-    const country = match ? match[1] : null;
-    const data = (country && placeholders[country]) || defaultPlaceholder;
+  const nameInput = document.querySelector('#f-name');
+  const companyInput = document.querySelector('#f-company');
 
-    const nameInput = document.querySelector('#f-name');
-    const companyInput = document.querySelector('#f-company');
-
-    if (nameInput) {
-      nameInput.placeholder = data.name;
-      nameInput.removeAttribute('data-i18n-placeholder');
-    }
-    if (companyInput) {
-      companyInput.placeholder = data.company;
-      companyInput.removeAttribute('data-i18n-placeholder');
-    }
-  } catch (err) {
-    console.debug('Geo placeholder fallback:', err.message);
+  if (nameInput) {
+    nameInput.placeholder = pick(names);
+    nameInput.removeAttribute('data-i18n-placeholder');   // keep i18n from overwriting it
+  }
+  if (companyInput) {
+    companyInput.placeholder = pick(companies);
+    companyInput.removeAttribute('data-i18n-placeholder');
   }
 })();
 
