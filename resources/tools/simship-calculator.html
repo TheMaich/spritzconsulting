@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <link rel="canonical" href="https://spritzconsulting.com/resources/tools/simship-calculator.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Simship Work-Back Schedule Calculator — Spritz Consulting</title>
+<title>Simship Work-Back Schedule Calculator | Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -522,7 +522,7 @@ html{
   .footer-meta{ font-size: 12px; }
 }
 
-/* Aurora — drifting lime washes behind content */
+/* Aurora, drifting lime washes behind content */
 .bg-aurora{
   position: fixed;
   inset: 0;
@@ -1091,7 +1091,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .seg-btn:has(input:checked){ background: var(--ink); color: var(--paper); }
 .seg-btn:has(input:focus-visible){ outline: 2px solid var(--clay); outline-offset: 3px; }
 
-/* Primary driving input — Target Release Date */
+/* Primary driving input, Target Release Date */
 .calc-group-primary{
   position: relative;
   background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
@@ -1831,8 +1831,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4–6 weeks for Nintendo Lot Check, ~3–4 weeks for PlayStation TRC, ~2–3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
-          <li><strong>First submissions rarely pass — plan for three rounds.</strong> The schedule above lists three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
+          <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4 to 6 weeks for Nintendo Lot Check, ~3 to 4 weeks for PlayStation TRC, ~2 to 3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
+          <li><strong>First submissions rarely pass, so plan for three rounds.</strong> The schedule above lists three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
           <li><strong>Store submission and build submission are two separate deadlines.</strong> The store page (eShop, PS Store, Microsoft Store, Steam) goes through its own review track, independent of the build cert. Your release build can still be in cert while the store page is already live. Miss the store page deadline and your product simply will not be visible or pre-orderable on launch day, even if the build passed.</li>
           <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
@@ -2222,7 +2222,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var pcKeys      = selected.filter(function(k) { return !PLATFORMS[k].cert; });
     var approvals   = [];
 
-    // Store page submission — single calendar-day deadline on every platform,
+    // Store page submission, single calendar-day deadline on every platform,
     // pulled earlier by 10% (half the safety buffer), in calendar days. Unchanged.
     selected.forEach(function(key) {
       var def = PLATFORMS[key];
@@ -2284,7 +2284,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       });
     });
 
-    // PC / Steam — outside the cluster, build to Valve ~1 working week before launch.
+    // PC / Steam, outside the cluster, build to Valve ~1 working week before launch.
     pcKeys.forEach(function(key) {
       var def = PLATFORMS[key];
       var buildDate = subWorkdays(release, 5);
