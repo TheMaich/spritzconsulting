@@ -1816,6 +1816,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <p>Your schedule runs through the European summer period. <strong>Studios and first-party cert teams often run reduced staffing from mid-July through August.</strong> Review and submission turnaround can stretch. Confirm holiday coverage with your platform contacts before locking this schedule.<span class="adj-note" hidden> Cert windows crossing this freeze have been extended to account for the review pause.</span></p>
         </div>
+        <div class="holiday-warn" id="switch-store-warn" hidden role="alert">
+          <p><strong>Tight Switch store window.</strong> On Switch the eShop page can only be submitted after the build passes lot check, which leaves limited time before launch for Nintendo to review the store page. Verify the eShop page can be reviewed in time, or pull the Switch cert earlier, before locking this schedule.</p>
+        </div>
         <div id="timeline-wrap">
           <div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>
         </div>
@@ -1834,7 +1837,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4 to 6 weeks for Nintendo Lot Check, ~3 to 4 weeks for PlayStation TRC, ~2 to 3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
           <li><strong>First submissions rarely pass, so plan for three rounds.</strong> The schedule above lists three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
-          <li><strong>Store submission and build submission are two separate deadlines.</strong> The store page (eShop, PS Store, Microsoft Store, Steam) goes through its own review track, independent of the build cert. Your release build can still be in cert while the store page is already live. Miss the store page deadline and your product simply will not be visible or pre-orderable on launch day, even if the build passed.</li>
+          <li><strong>Store and build are separate tracks, with one exception.</strong> On Steam, Xbox and PlayStation the coming-soon store page can go live before the build is even submitted. On Nintendo Switch it cannot: the eShop page is gated by lot check, so the store page is tied to the build passing cert. On every platform the store page must carry a final price and release date and time before it will be accepted for launch. Miss that and the product will not be visible or pre-orderable, even if the build passed.</li>
           <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
           <li><strong>Estimation only.</strong> This calculator gives you a planning framework, not a production guarantee. Real schedules depend on build stability, team capacity, first-party feedback cycles, and factors outside your control. Use it to structure your thinking and stress-test your timeline, not as a substitute for working with an experienced producer.</li>
         </ul>
@@ -2086,6 +2089,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var timelineWrap = document.getElementById('timeline-wrap');
   var holidayEl = document.getElementById('holiday-warn');
   var summerEl = document.getElementById('summer-warn');
+  var switchStoreEl = document.getElementById('switch-store-warn');
   var copyBtn = document.getElementById('wbs-copy-btn');
   var ganttWrap = document.getElementById('gantt-wrap');
   var lastTSV = '';
@@ -2178,6 +2182,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       timelineWrap.innerHTML = '<div class="tl-empty">Pick a target release date to generate your work-back schedule.</div>';
       holidayEl.hidden = true;
       summerEl.hidden = true;
+      switchStoreEl.hidden = true;
       clearExtras();
       return;
     }
@@ -2186,6 +2191,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       timelineWrap.innerHTML = '<div class="tl-empty">Pick a release date in the future.</div>';
       holidayEl.hidden = true;
       summerEl.hidden = true;
+      switchStoreEl.hidden = true;
       clearExtras();
       return;
     }
@@ -2193,12 +2199,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       timelineWrap.innerHTML = '<div class="tl-empty">Select at least one platform to build the schedule.</div>';
       holidayEl.hidden = true;
       summerEl.hidden = true;
+      switchStoreEl.hidden = true;
       clearExtras();
       return;
     }
 
     var allDates = [];          // every computed date, drives freeze alerts
     var recap = [];             // every dated milestone, rendered as one chronological list
+    var switchStoreTight = false;
     var buildRows = [];         // per-platform build/cert rows for Gantt A
     var storeRows = [];         // per-platform store rows for Gantt B
     var origHolidayHit = isHoliday(release);
@@ -2221,17 +2229,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var consoleKeys = selected.filter(function(k) { return PLATFORMS[k].cert; });
     var pcKeys      = selected.filter(function(k) { return !PLATFORMS[k].cert; });
     var approvals   = [];
-
-    // Store page submission, single calendar-day deadline on every platform,
-    // pulled earlier by 10% (half the safety buffer), in calendar days. Unchanged.
-    selected.forEach(function(key) {
-      var def = PLATFORMS[key];
-      var storeBuf = Math.max(1, Math.round(def.store * SAFETY_PCT / 2));
-      var storeDate = addDays(release, -(def.store + storeBuf));
-      allDates.push(storeDate);
-      recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: 'Store review track', kind: 'store' });
-      storeRows.push({ plat: def.name, segments: [{ start: storeDate, end: release, cls: 'is-store', name: 'Store review window' }], markers: [storeDate] });
-    });
+    var approvalByKey = {};
 
     // Consoles start together in a cluster just after content lock, then each
     // pipeline runs FORWARD and finishes when it finishes. The slowest console
@@ -2261,6 +2259,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var sub3     = addWorkdays(c2End, c.fix + cushion);
       var approval = addWorkdays(sub3, c.last);                        // this platform's build-approval date
       approvals.push(approval);
+      approvalByKey[key] = approval;
 
       [sub1, sub2, sub3, c1End, c2End, approval].forEach(function(d) { allDates.push(d); });
 
@@ -2292,6 +2291,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       allDates.push(buildDate);
       recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check', kind: 'build' });
       buildRows.push({ plat: def.name, segments: [{ start: buildDate, end: release, cls: 'is-check', name: 'Build submission', label: 'Build' }], markers: [buildDate] });
+    });
+
+    // Store page — one milestone per platform.
+    // Switch: gated by lot check (cannot submit until the build passes cert), so clamp to its build
+    // approval. Steam/Xbox/PS: coming-soon page can go up earlier, independent of the build. All:
+    // final price and release date/time required before launch.
+    selected.forEach(function(key) {
+      var def = PLATFORMS[key];
+      var storeBuf = Math.max(1, Math.round(def.store * SAFETY_PCT / 2));
+      var storeDate = addDays(release, -(def.store + storeBuf));
+      var note;
+      if (key === 'switch') {
+        var swApproval = approvalByKey['switch'];
+        if (swApproval && storeDate < swApproval) storeDate = swApproval; // gate: after lot check pass
+        var availDays = Math.round((release - storeDate) / 86400000);
+        if (availDays < def.store) switchStoreTight = true;               // less review time than nominal
+        note = 'Store page gated by lot check: submit only after the build passes cert. Set price and release date and time before launch.';
+      } else {
+        note = 'Store page can go up earlier as coming-soon, independent of the build. Set price and release date and time before launch.';
+      }
+      allDates.push(storeDate);
+      recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: note, kind: 'store' });
+      storeRows.push({ plat: def.name, segments: [{ start: storeDate, end: release, cls: 'is-store', name: 'Store review window' }], markers: [storeDate] });
     });
 
     // Content lock is anchored to the cluster start (fallback: earliest submission if no consoles).
@@ -2335,10 +2357,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
     function typeIcon(note) {
       var n = (note || '').toLowerCase();
+      if (n.indexOf('store') > -1)          return '<span class="wbs-badge">STORE</span>';   // before "release"
       if (n.indexOf('release') > -1)        return '<span class="wbs-badge">RELEASE</span>';
       if (n.indexOf('approv') > -1)         return '<span class="wbs-badge">APPROVED</span>';
       if (n.indexOf('loc integrated') > -1) return '<span class="wbs-badge">LOC</span>';
-      if (n.indexOf('store') > -1)          return '<span class="wbs-badge">STORE</span>';
       if (n.indexOf('lock') > -1)           return '<span class="wbs-badge">LOCK</span>';
       if (n.indexOf('qa') > -1)             return '<span class="wbs-badge">QA</span>';
       return '<span class="wbs-badge">BUILD</span>';
@@ -2491,6 +2513,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var summerHit = origSummerHit || allDates.some(function(d) { return isSummer(d); });
     holidayEl.hidden = !holidayHit;
     summerEl.hidden = !summerHit;
+    switchStoreEl.hidden = !switchStoreTight;
 
     // Show the "windows extended" note whenever its freeze alert is showing.
     var holidayAdj = holidayEl.querySelector('.adj-note');
