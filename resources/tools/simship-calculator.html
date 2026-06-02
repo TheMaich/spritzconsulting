@@ -2099,6 +2099,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var DAY = 86400000;
   var SAFETY_PCT = 0.20; // total buffer as a fraction of pipeline length; split 50/50 below
   var SWITCH_STORE_REVIEW = 10; // working days the Switch eShop page needs before launch (store is gated by lot check)
+  var LAUNCH_BUFFER = 2; // working days everything must be approved before the actual go-live (launch cushion)
   var LOC_LEAD = { 'efigs': 14, '7-8': 21, '10+': 35 }; // calendar days before content lock
 
   // UI strings, picked up from the saved language. FR/ES mirror EN.
@@ -2215,14 +2216,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     // Buffered pipeline helpers (working days). latestSub1 = the latest a console
     // could safely start if it worked back from release on its own.
+    // Everything (builds approved + store pages accepted) must be locked LAUNCH_BUFFER working days
+    // before go-live. The whole tail is anchored to this gate, not to the release date itself.
+    var approvalGate = subWorkdays(release, LAUNCH_BUFFER);
+
     function pipelineDays(c) { return (c.check + c.fix) * 2 + c.last; }
     function latestSub1(c, key) {
       var pipeline = pipelineDays(c);
       var halfBuf  = Math.max(1, Math.round(pipeline * SAFETY_PCT / 2));
       // Switch store is gated by lot check and needs its own eShop review window before launch, so the
-      // final check (lot check pass) must end at least SWITCH_STORE_REVIEW working days before release.
+      // final check (lot check pass) must end at least SWITCH_STORE_REVIEW working days before the gate.
       var lead     = (key === 'switch') ? Math.max(halfBuf, SWITCH_STORE_REVIEW) : halfBuf;
-      var goLive   = subWorkdays(release, lead);
+      var goLive   = subWorkdays(approvalGate, lead);
       var cushion  = Math.max(1, Math.round(halfBuf / 2));
       var s3 = subWorkdays(goLive, c.last);
       var s2 = subWorkdays(s3, c.check + c.fix + cushion);
@@ -2304,12 +2309,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     selected.forEach(function(key) {
       var def = PLATFORMS[key];
       var storeBuf = Math.max(1, Math.round(def.store * SAFETY_PCT / 2));
-      var storeDate = addDays(release, -(def.store + storeBuf));
+      var storeDate = addDays(approvalGate, -(def.store + storeBuf));
       var note;
       if (key === 'switch') {
         var swApproval = approvalByKey['switch'];
         if (swApproval && storeDate < swApproval) storeDate = swApproval; // gate: after lot check pass
-        var latestStore = subWorkdays(release, SWITCH_STORE_REVIEW);      // eShop needs >= 10 working days review
+        var latestStore = subWorkdays(approvalGate, SWITCH_STORE_REVIEW); // eShop needs >= 10 working days review
         if (storeDate > latestStore) switchStoreTight = true;             // safety net: lot check still left too little time
         note = 'Store review track';
       } else {
@@ -2317,7 +2322,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
       allDates.push(storeDate);
       recap.push({ date: storeDate, label: 'Store page submission', plat: def.name, note: note, kind: 'store' });
-      storeRows.push({ plat: def.name, segments: [{ start: storeDate, end: release, cls: 'is-store', name: 'Store review window' }], markers: [storeDate] });
+      storeRows.push({ plat: def.name, segments: [{ start: storeDate, end: approvalGate, cls: 'is-store', name: 'Store review window' }], markers: [storeDate] });
     });
 
     // Content lock is anchored to the cluster start (fallback: earliest submission if no consoles).
@@ -2342,9 +2347,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       recap.push({ date: anchorStart, label: 'External QA end', plat: 'All platforms', note: 'QA window', kind: 'qa' });
     }
 
-    // Single build-approval gate = the latest approval across platforms (slowest console).
-    var allApproved = approvals.reduce(function(a, b) { return a > b ? a : b; });
-    recap.push({ date: allApproved, label: 'Build approval deadline', plat: 'All platforms', note: 'Build approved and ready', kind: 'approved' });
+    // Full content approval gate = everything (all builds approved, all store pages accepted) locked
+    // LAUNCH_BUFFER working days before go-live. Builds and stores of every platform fold into this.
+    allDates.push(approvalGate);
+    recap.push({ date: approvalGate, label: 'Full content approval deadline', plat: 'All platforms', note: 'Everything approved and ready for launch', kind: 'approved' });
     // Simship: one go-live shared by every platform. Sort places it last.
     recap.push({ date: release, label: 'Release date', plat: 'All platforms', note: 'Release, all platforms', kind: 'release', release: true });
     recap.forEach(function(r) { allDates.push(r.date); });
