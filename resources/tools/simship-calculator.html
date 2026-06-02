@@ -2098,6 +2098,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DAY = 86400000;
   var SAFETY_PCT = 0.20; // total buffer as a fraction of pipeline length; split 50/50 below
+  var SWITCH_STORE_REVIEW = 10; // working days the Switch eShop page needs before launch (store is gated by lot check)
   var LOC_LEAD = { 'efigs': 14, '7-8': 21, '10+': 35 }; // calendar days before content lock
 
   // UI strings, picked up from the saved language. FR/ES mirror EN.
@@ -2215,10 +2216,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     // Buffered pipeline helpers (working days). latestSub1 = the latest a console
     // could safely start if it worked back from release on its own.
     function pipelineDays(c) { return (c.check + c.fix) * 2 + c.last; }
-    function latestSub1(c) {
+    function latestSub1(c, key) {
       var pipeline = pipelineDays(c);
       var halfBuf  = Math.max(1, Math.round(pipeline * SAFETY_PCT / 2));
-      var goLive   = subWorkdays(release, halfBuf);
+      // Switch store is gated by lot check and needs its own eShop review window before launch, so the
+      // final check (lot check pass) must end at least SWITCH_STORE_REVIEW working days before release.
+      var lead     = (key === 'switch') ? Math.max(halfBuf, SWITCH_STORE_REVIEW) : halfBuf;
+      var goLive   = subWorkdays(release, lead);
       var cushion  = Math.max(1, Math.round(halfBuf / 2));
       var s3 = subWorkdays(goLive, c.last);
       var s2 = subWorkdays(s3, c.check + c.fix + cushion);
@@ -2240,13 +2244,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     });
     var anchorStart = null;
     consolesByLen.forEach(function(k) {
-      var s = latestSub1(PLATFORMS[k].cert).s1;
+      var s = latestSub1(PLATFORMS[k].cert, k).s1;
       if (anchorStart === null || s < anchorStart) anchorStart = s;
     });
 
     consolesByLen.forEach(function(key, i) {
       var def = PLATFORMS[key], c = def.cert;
-      var info = latestSub1(c);
+      var info = latestSub1(c, key);
       var clusterStart = addWorkdays(anchorStart, i);                 // ~1 working day stagger
       var safeStart    = info.s1;
       var sub1    = clusterStart < safeStart ? clusterStart : safeStart; // never start later than safe
@@ -2305,9 +2309,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       if (key === 'switch') {
         var swApproval = approvalByKey['switch'];
         if (swApproval && storeDate < swApproval) storeDate = swApproval; // gate: after lot check pass
-        var availDays = Math.round((release - storeDate) / 86400000);
-        if (availDays < def.store) switchStoreTight = true;               // less review time than nominal
-        note = 'Store page gated by lot check: submit only after the build passes cert. Set price and release date and time before launch.';
+        var latestStore = subWorkdays(release, SWITCH_STORE_REVIEW);      // eShop needs >= 10 working days review
+        if (storeDate > latestStore) switchStoreTight = true;             // safety net: lot check still left too little time
+        note = 'Store page gated by lot check: submit only after the build passes cert, and the eShop page needs at least ' + SWITCH_STORE_REVIEW + ' working days of review, so the build approval is pulled that far ahead of launch. Set price and release date and time before launch.';
       } else {
         note = 'Store page can go up earlier as coming-soon, independent of the build. Set price and release date and time before launch.';
       }
