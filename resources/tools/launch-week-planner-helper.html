@@ -2421,7 +2421,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 9);
     add('Upload and verify the launch build', addDays(rel, -2), hasPub ? ['Developer','Publisher'] : ['Developer'], 10);
     add('Schedule the day-zero social posts', addDays(rel, -1), ['Developer','Publisher'], 11);
-    add('Go-live check: store pages and pricing', rel, ['Developer'], 12, { launch: true, dateNote: 'morning' });
+    add('Go-live check: store pages and pricing', rel, hasPub ? ['Developer','Publisher'] : ['Developer'], 12, { launch: true, dateNote: 'morning' });
     add('Launch day social push', rel, ['Developer','Publisher'], 13, { launch: true });
     add('Day-one patch window closes', addDays(rel, 3), hasPub ? ['Developer','Publisher'] : ['Developer'], 14);
     add('Round up the post-launch reviews', addDays(rel, 7), ['PRAgency','Publisher'], 15);
