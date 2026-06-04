@@ -1691,6 +1691,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (max-width: 640px){
   .lwt-questions{ grid-template-columns: 1fr; }
 }
+/* While the embargo picker is open, lift the whole questions block above the
+   timeline box and Notes so the calendar popup overlays them instead of being
+   stacked beneath. No offsets, so layout is unchanged when closed. */
+.lwt-questions:has(.date-picker-wrap.is-open){
+  position: relative;
+  z-index: 400;
+}
 
 .lwt-conditional[hidden]{ display: none; }
 .lwt-callout[hidden], .lwt-timeline[hidden], #timeline-empty[hidden]{ display: none !important; }
