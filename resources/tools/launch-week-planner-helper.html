@@ -2408,7 +2408,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     // story-heavy titles) may bump this to 10 so reviewers can finish in time.
     var PRESS_KEYS_LEAD_DAYS = 7;
     add('Send the first wave of press review keys', addDays(rel, -PRESS_KEYS_LEAD_DAYS), ['PRAgency','Publisher'], 1);
-    add('Finish the store page', addDays(rel, -14), ['Developer'], 2);
+    add('Finish the store page', addDays(rel, -14), hasPub ? ['Publisher'] : ['Developer'], 2);
     if (embargoOn) add('Review embargo lifts', emb, ['PRAgency'], 4);
     // The trailer goes live on launch day within the "Launch day social push".
     // If it is already ready there is nothing left to finish, so show no finish
@@ -2418,12 +2418,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     add('Start the social content calendar', addDays(rel, -7), ['Developer','Publisher'], 6);
     add('Send the second wave of keys to creators', addDays(rel, -5), ['PRAgency','Publisher'], 7);
     if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 8);
-    if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), ['Developer'], 9);
-    add('Upload and verify the launch build', addDays(rel, -2), ['Developer'], 10);
+    if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 9);
+    add('Upload and verify the launch build', addDays(rel, -2), hasPub ? ['Developer','Publisher'] : ['Developer'], 10);
     add('Schedule the day-zero social posts', addDays(rel, -1), ['Developer','Publisher'], 11);
     add('Go-live check: store pages and pricing', rel, ['Developer'], 12, { launch: true, dateNote: 'morning' });
     add('Launch day social push', rel, ['Developer','Publisher'], 13, { launch: true });
-    add('Day-one patch window closes', addDays(rel, 3), ['Developer'], 14);
+    add('Day-one patch window closes', addDays(rel, 3), hasPub ? ['Developer','Publisher'] : ['Developer'], 14);
     add('Round up the post-launch reviews', addDays(rel, 7), ['PRAgency','Publisher'], 15);
 
     actions.sort(function(a, b){ return (a.date.getTime() - b.date.getTime()) || (a.order - b.order); });
