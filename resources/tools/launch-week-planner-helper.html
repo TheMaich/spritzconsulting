@@ -2,9 +2,9 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
-<link rel="canonical" href="https://spritzconsulting.com/resources/tools/launch-week-timeline.html">
+<link rel="canonical" href="https://spritzconsulting.com/resources/tools/launch-week-planner-helper.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Launch Week Timeline | Spritz Consulting</title>
+<title>Launch Week Planner Helper | Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -998,32 +998,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   box-shadow: none;
 }
 
-.calc-copy-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink-3);
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  padding: 0;
-}
-.calc-copy-btn:hover {
-  border-color: var(--ink-2);
-  color: var(--ink);
-}
-.calc-copy-btn.is-copied {
-  border-color: var(--clay);
-  color: var(--clay);
-}
-
 .calc-nav-wrap {
   display: flex;
   justify-content: space-between;
@@ -1470,7 +1444,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 </style>
 <style>
-/* Launch Week Timeline */
+/* Launch Week Planner Helper */
 .lwt-date-input{ max-width: 320px; }
 .lwt-date-input .calc-input{ font-family: var(--mono-data); }
 
@@ -1845,7 +1819,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="article-wrap">
     <article>
       <p class="category">Calculator</p>
-      <h1>Launch Week <em>Timeline</em></h1>
+      <h1>Launch Week <em>Planner Helper</em></h1>
       <div class="meta">
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Launch Planning</b></div>
@@ -2269,6 +2243,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     x.setDate(x.getDate() + n);
     return x;
   }
+  function isoOf(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function isoToDisplay(iso){ var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+
+  // Embargo lift must sit inside the launch date's calendar month. Set the
+  // picker's min/max to the first and last day of that month, then clamp any
+  // out-of-range embargo value back in so the schedule stays consistent.
+  function applyEmbargoRange(rel){
+    if (!rel){
+      delete embargoInput.dataset.min;
+      delete embargoInput.dataset.max;
+      return;
+    }
+    var y = rel.getFullYear(), m = rel.getMonth();
+    var minIso = isoOf(new Date(y, m, 1));
+    var maxIso = isoOf(new Date(y, m + 1, 0));
+    embargoInput.dataset.min = minIso;
+    embargoInput.dataset.max = maxIso;
+    var cur = embargoInput.dataset.iso;
+    if (cur){
+      if (cur < minIso){ embargoInput.dataset.iso = minIso; embargoInput.value = isoToDisplay(minIso); }
+      else if (cur > maxIso){ embargoInput.dataset.iso = maxIso; embargoInput.value = isoToDisplay(maxIso); }
+    }
+  }
 
   function getToggle(name){
     var group = document.querySelector('[data-toggle="' + name + '"]');
@@ -2313,6 +2310,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var hasPR = getToggle('pragency') === 'yes';
     var embargoOn = getToggle('embargo') === 'yes';
     var trailerReady = getToggle('trailer') === 'yes';
+
+    // Lock the embargo picker to the launch month and clamp any stale value.
+    applyEmbargoRange(rel);
     var emb = readISO(embargoInput);
 
     // Callout when neither a publisher nor a PR agency is involved.
@@ -2428,23 +2428,35 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
       var weekdays = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 
+      // Optional range bounds, read live from the input (used by the embargo
+      // picker to lock selection to the launch month). Empty means unbounded.
+      var minIso = input.dataset.min || '';
+      var maxIso = input.dataset.max || '';
+      function monthAtOrBeforeMin(){ var p = minIso.split('-'); return (viewYear < +p[0]) || (viewYear === +p[0] && viewMonth <= +p[1] - 1); }
+      function monthAtOrAfterMax(){ var p = maxIso.split('-'); return (viewYear > +p[0]) || (viewYear === +p[0] && viewMonth >= +p[1] - 1); }
+
       function dayCell(date, outside) {
         var classes = ['dp-day'];
+        var iso = formatISO(date);
         var isPast = date < today;
+        var outOfRange = (minIso && iso < minIso) || (maxIso && iso > maxIso);
+        var disabled = isPast || outOfRange;
         if (outside) classes.push('is-outside');
         if (sameDay(date, today)) classes.push('is-today');
         if (selected && sameDay(date, selected)) classes.push('is-selected');
-        if (isPast) classes.push('is-disabled');
-        return '<button type="button" class="' + classes.join(' ') + '"' + (isPast ? ' disabled' : '') + ' data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
+        if (disabled) classes.push('is-disabled');
+        return '<button type="button" class="' + classes.join(' ') + '"' + (disabled ? ' disabled' : '') + ' data-iso="' + iso + '">' + date.getDate() + '</button>';
       }
 
       var atCurrentMonth = (viewYear === today.getFullYear() && viewMonth === today.getMonth());
+      var prevDisabled = atCurrentMonth || (minIso && monthAtOrBeforeMin());
+      var nextDisabled = !!maxIso && monthAtOrAfterMax();
 
       var html = ''
         + '<div class="dp-header">'
-        + '<button type="button" class="dp-nav dp-prev' + (atCurrentMonth ? ' is-disabled' : '') + '"' + (atCurrentMonth ? ' disabled' : '') + ' aria-label="Previous month">&lsaquo;</button>'
+        + '<button type="button" class="dp-nav dp-prev' + (prevDisabled ? ' is-disabled' : '') + '"' + (prevDisabled ? ' disabled' : '') + ' aria-label="Previous month">&lsaquo;</button>'
         + '<div class="dp-title">' + months[viewMonth] + ' ' + viewYear + '</div>'
-        + '<button type="button" class="dp-nav dp-next" aria-label="Next month">&rsaquo;</button>'
+        + '<button type="button" class="dp-nav dp-next' + (nextDisabled ? ' is-disabled' : '') + '"' + (nextDisabled ? ' disabled' : '') + ' aria-label="Next month">&rsaquo;</button>'
         + '</div>'
         + '<div class="dp-weekdays">'
         + weekdays.map(function(w){ return '<div class="dp-weekday">' + w + '</div>'; }).join('')
@@ -2467,13 +2479,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       dropdown.querySelector('.dp-prev').addEventListener('click', function(e){
         e.stopPropagation();
-        if (atCurrentMonth) return;          // never page before the current month
+        if (prevDisabled) return;            // never page before the current month or the min bound
         viewMonth--;
         if (viewMonth < 0) { viewMonth = 11; viewYear--; }
         renderCal();
       });
       dropdown.querySelector('.dp-next').addEventListener('click', function(e){
         e.stopPropagation();
+        if (nextDisabled) return;            // never page past the max bound
         viewMonth++;
         if (viewMonth > 11) { viewMonth = 0; viewYear++; }
         renderCal();
@@ -2498,6 +2511,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         selected = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
       }
       var base = selected || today;
+      var minIso = input.dataset.min || '', maxIso = input.dataset.max || '';
+      if (minIso) { var mn = new Date(minIso + 'T00:00:00'); if (base < mn) base = mn; }
+      if (maxIso) { var mx = new Date(maxIso + 'T00:00:00'); if (base > mx) base = mx; }
       viewYear = base.getFullYear();
       viewMonth = base.getMonth();
       renderCal();
