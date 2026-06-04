@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <link rel="canonical" href="https://spritzconsulting.com/resources/tools/launch-week-timeline.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Launch Week Timeline — Spritz Consulting</title>
+<title>Launch Week Timeline | Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -527,7 +527,7 @@ html{
   .footer-meta{ font-size: 12px; }
 }
 
-/* Aurora — drifting lime washes behind content */
+/* Aurora, drifting lime washes behind content */
 .bg-aurora{
   position: fixed;
   inset: 0;
@@ -1474,6 +1474,170 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .lwt-date-input{ max-width: 320px; }
 .lwt-date-input .calc-input{ font-family: var(--mono-data); }
 
+/* Custom calendar date picker (ported from simship-calculator) */
+.date-picker-wrap { position: relative; overflow: visible; z-index: 1; }
+.date-picker-wrap.is-open { z-index: 200; }
+.calc-group.is-picker-open { position: relative; z-index: 300; }
+.lwt-conditional.is-picker-open { position: relative; z-index: 300; }
+.date-picker-input { cursor: pointer; }
+.date-picker-toggle {
+  background: var(--paper-3);
+  border: 0;
+  border-left: 1px solid var(--rule);
+  padding: 0 16px;
+  color: var(--ink-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  transition: color 0.2s;
+}
+.date-picker-toggle:hover { color: var(--clay); }
+.date-picker-toggle svg {
+  width: 18px; height: 18px;
+  stroke: currentColor; stroke-width: 1.6;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.date-picker-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  z-index: 200;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  width: 304px;
+  max-width: calc(100vw - 32px);
+}
+.dp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+.dp-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  font-variation-settings: "opsz" 20;
+}
+.dp-nav {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--clay);
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+.dp-nav:hover {
+  border-color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 10%, transparent);
+}
+.dp-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  font-family: var(--mono-data);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.dp-weekday { padding: 4px 0; }
+.dp-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.dp-day {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.dp-day:hover { background: var(--paper-2); }
+.dp-day.is-outside {
+  color: var(--ink-3);
+  opacity: 0.4;
+}
+.dp-day.is-today {
+  border-color: var(--clay);
+}
+.dp-day.is-selected {
+  background: var(--clay);
+  color: var(--paper);
+  font-weight: 700;
+  border-color: var(--clay);
+}
+.dp-day.is-selected:hover { background: var(--clay-deep); }
+.dp-day.is-disabled {
+  color: var(--ink-3);
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+.dp-day.is-disabled:hover { background: transparent; }
+.dp-nav.is-disabled, .dp-nav:disabled{ opacity: 0.3; cursor: default; pointer-events: none; }
+
+/* Result header + copy button (ported from simship-calculator) */
+.calc-result-head{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.calc-result-head .calc-result-label{ margin-bottom: 0; flex: 1; min-width: 0; }
+.calc-copy-btn{
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  min-height: 38px;
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
+}
+.calc-copy-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.calc-copy-btn.is-copied{
+  border-color: var(--clay);
+  color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 10%, var(--paper-3));
+}
+.calc-copy-btn[hidden]{ display: none; }
+.calc-copy-btn svg{
+  width: 14px; height: 14px;
+  stroke: currentColor; stroke-width: 2;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+
 .lwt-options{
   display: flex;
   flex-wrap: wrap;
@@ -1561,7 +1725,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .lwt-timeline thead th{
   text-align: left;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--clay);
@@ -1572,20 +1737,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   padding: 16px;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
-  font-size: 15px;
+  font-family: var(--sans);
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink-2);
 }
-.lwt-timeline .lwt-act{ color: var(--ink); font-weight: 500; }
+.lwt-timeline .lwt-act{ font-family: var(--sans); color: var(--ink); font-weight: 500; }
 .lwt-timeline .lwt-date-cell{
   font-family: var(--mono-data);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   white-space: nowrap;
 }
 .lwt-timeline .lwt-owner{
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-3);
@@ -1685,7 +1851,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Topic <b>Launch Planning</b></div>
         <div>Updated <b>2026</b></div>
       </div>
-      <p class="deck">Enter your release date and tell the tool who's running what. It works backwards and gives you a dated checklist of every action that needs to happen — from press keys to day-one patch window.</p>
+      <p class="deck">Tell me your release date and who is running what. I count <em>backwards</em> from launch day and hand you a dated checklist, every action from the first press keys to the day-one patch window.</p>
     </article>
   </div>
 
@@ -1694,16 +1860,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="release-date">Release date</label>
-        <div class="calc-hint">When the game goes live. Every action below is planned backwards from this date.</div>
-        <div class="calc-input-wrap lwt-date-input">
-          <input type="date" id="release-date" class="calc-input" required aria-describedby="release-error">
+        <div class="calc-hint">The day your game goes live. Every date below counts back from here.</div>
+        <div class="calc-input-wrap lwt-date-input date-picker-wrap">
+          <input type="text" id="release-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off" aria-describedby="release-error">
+          <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </button>
+          <div class="date-picker-dropdown" hidden></div>
         </div>
-        <div class="lwt-error" id="release-error">Pick a release date to generate your timeline.</div>
+        <div class="lwt-error" id="release-error">Pick a release date and the timeline builds itself.</div>
       </div>
 
       <div class="calc-group">
         <label class="calc-label">Platforms</label>
-        <div class="calc-hint">Adds the store-specific checks for each platform you ship on. Select all that apply.</div>
+        <div class="calc-hint">Pick every platform you are shipping on. Each one adds its own store checks to the timeline.</div>
         <div class="lwt-options" role="group" aria-label="Platforms">
           <button type="button" class="lwt-opt" data-platform="steam" aria-pressed="false"><svg class="lwt-tick" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>PC / Steam</button>
           <button type="button" class="lwt-opt" data-platform="switch" aria-pressed="false"><svg class="lwt-tick" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Nintendo Switch</button>
@@ -1735,11 +1905,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button type="button" class="lwt-opt" data-val="no" aria-pressed="true">No</button>
         </div>
         <div class="lwt-conditional" id="embargo-date-field" hidden>
-          <div class="calc-hint" style="margin-top:14px;">Embargo lift date — must be before your release date.</div>
-          <div class="calc-input-wrap lwt-date-input">
-            <input type="date" id="embargo-date" class="calc-input" aria-describedby="embargo-error">
+          <div class="calc-hint" style="margin-top:14px;">Embargo lift date. It has to fall before your release date.</div>
+          <div class="calc-input-wrap lwt-date-input date-picker-wrap">
+            <input type="text" id="embargo-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off" aria-describedby="embargo-error">
+            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+            <div class="date-picker-dropdown" hidden></div>
           </div>
-          <div class="lwt-error" id="embargo-error">The embargo lift date must be before the release date.</div>
+          <div class="lwt-error" id="embargo-error">The embargo lift date has to fall before your release date.</div>
         </div>
       </div>
 
@@ -1753,14 +1927,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="lwt-callout" id="internal-callout" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-        <p>You're handling all of this internally. That's doable, but review key distribution, embargo management, and creator outreach will all land on your team. <strong>Make sure someone owns each of these explicitly before launch week.</strong></p>
+        <p>You are running all of this in house. That works, but review key distribution, embargo management, and creator outreach all land on your team. <strong>Give each one a named owner before launch week.</strong></p>
       </div>
 
       <div class="calc-result-wrap">
         <div class="calc-result calc-result-recoup" aria-live="polite" id="timeline-card">
-          <div class="calc-result-label">Your launch timeline</div>
+          <div class="calc-result-head">
+            <div class="calc-result-label">Your launch timeline</div>
+            <button type="button" class="calc-copy-btn" id="lwt-copy-btn" hidden aria-label="Copy timeline to clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="lwt-copy-label">Copy</span>
+            </button>
+          </div>
           <div class="lwt-timeline-wrap">
-            <div class="calc-hint" id="timeline-empty">Pick a release date above and the full backwards-planned checklist appears here.</div>
+            <div class="calc-hint" id="timeline-empty">Pick a release date above and your full checklist appears here, in order.</div>
             <table class="lwt-timeline" id="timeline-table" hidden>
               <thead>
                 <tr><th scope="col">Action</th><th scope="col">Date</th><th scope="col">Owner</th></tr>
@@ -1774,10 +1954,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Review keys need more lead time than you think.</strong> Three weeks before launch sounds like a lot. In practice, journalists need time to actually play the game and file before embargo. If your game is longer than 5–6 hours, press keys should go out even earlier — sometimes 4–5 weeks out for narrative or RPG titles. This timeline uses 21 days as a baseline. Adjust based on your game's length and genre.</li>
-          <li><strong>Embargo lift and trailer timing should be coordinated.</strong> If you're running a review embargo, the trailer and any major marketing assets should go live at the same time as the embargo lifts — not before. Releasing the trailer early and then going quiet while reviews are embargoed kills momentum. If there's no embargo, the trailer should go out 7–10 days before launch to give the algorithm time to work.</li>
-          <li><strong>Day-one patches are a launch decision, not a technical one.</strong> If you know there's a significant fix coming, plan the patch window explicitly. A patch that goes live 3 days after launch still catches most of the review traffic. A patch that goes live 2 weeks after launch doesn't. Decide before launch week, not during it.</li>
-          <li><strong>Estimation only.</strong> Timelines vary significantly by genre, team size, publisher involvement, and platform mix. Use this as a planning scaffold, not a production contract.</li>
+          <li><strong>Press keys need more lead time than most teams give them.</strong> Three weeks before launch sounds like plenty. In practice, a journalist needs time to play the game and file the piece before the embargo. If your game runs longer than 5 to 6 hours, send keys earlier, sometimes 4 to 5 weeks out for a narrative game or an RPG. This timeline uses 21 days as a baseline. Move it to fit your game's length and genre.</li>
+          <li><strong>Line up the embargo lift and the trailer.</strong> When you run a review embargo, push the trailer and your big marketing beats live the moment the embargo lifts. Drop the trailer early, then go quiet while reviews sit under embargo, and you bleed your own momentum. With no embargo, send the trailer 7 to 10 days before launch so the algorithm has time to work.</li>
+          <li><strong>A day-one patch is a launch decision, so make it before launch week.</strong> If you know a real fix is coming, plan the patch window now. A patch that lands 3 days after launch still catches most of the review traffic. A patch that lands 2 weeks out misses it. Decide this in advance, not in the middle of launch day.</li>
+          <li><strong>Treat this as an estimate.</strong> Real dates move with your genre, team size, publisher involvement, and platform mix. Use this as a planning scaffold, then confirm the hard dates with the people who own them.</li>
         </ul>
       </div>
 
@@ -2060,20 +2240,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var table          = document.getElementById('timeline-table');
   var body           = document.getElementById('timeline-body');
   var emptyMsg       = document.getElementById('timeline-empty');
+  var copyBtn        = document.getElementById('lwt-copy-btn');
 
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var COPY_ICON = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
+  var lastTSV = '';
+
+  // UI strings, picked up from the saved language. FR/ES mirror EN.
+  var LWT_LANG = '';
+  try { LWT_LANG = localStorage.getItem('mdn-lang') || ''; } catch (e) {}
+  var LWT_STR = {
+    en: { copy: 'Copy', copied: 'Copied' },
+    it: { copy: 'Copia', copied: 'Copiato' }
+  };
+  var L = LWT_STR[LWT_LANG] || LWT_STR.en;
 
   function pad(n){ return n < 10 ? '0' + n : '' + n; }
   function fmtDate(d){ return pad(d.getDate()) + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear(); }
 
-  // Parse a YYYY-MM-DD value as a local date (avoids UTC off-by-one).
-  function parseDate(str){
-    if (!str) return null;
-    var p = str.split('-');
-    if (p.length !== 3) return null;
-    var y = parseInt(p[0], 10), m = parseInt(p[1], 10), d = parseInt(p[2], 10);
-    if (isNaN(y) || isNaN(m) || isNaN(d)) return null;
-    return new Date(y, m - 1, d);
+  // The custom picker stores the canonical date in input.dataset.iso (YYYY-MM-DD).
+  // Empty dataset.iso means "not set".
+  function readISO(el){
+    var iso = el.dataset.iso || '';
+    return iso ? new Date(iso + 'T00:00:00') : null;
   }
   function addDays(d, n){
     var x = new Date(d.getTime());
@@ -2107,19 +2296,24 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return out.join(' / ');
   }
 
-  function showEmpty(msg){
+  function clearOutput(){
     table.hidden = true;
+    if (copyBtn) copyBtn.hidden = true;
+    lastTSV = '';
+  }
+  function showEmpty(msg){
+    clearOutput();
     emptyMsg.hidden = false;
     emptyMsg.textContent = msg;
   }
 
   function render(){
-    var rel = parseDate(releaseInput.value);
+    var rel = readISO(releaseInput);
     var hasPub = getToggle('publisher') === 'yes';
     var hasPR = getToggle('pragency') === 'yes';
     var embargoOn = getToggle('embargo') === 'yes';
     var trailerReady = getToggle('trailer') === 'yes';
-    var emb = parseDate(embargoInput.value);
+    var emb = readISO(embargoInput);
 
     // Callout when neither a publisher nor a PR agency is involved.
     internalCallout.hidden = !(!hasPub && !hasPR);
@@ -2129,7 +2323,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     embargoError.classList.remove('is-shown');
 
     if (!rel){
-      showEmpty('Pick a release date above and the full backwards-planned checklist appears here.');
+      showEmpty('Pick a release date above and your full checklist appears here, in order.');
       return;
     }
 
@@ -2137,13 +2331,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       if (!emb){
         embargoError.textContent = 'Pick an embargo lift date.';
         embargoError.classList.add('is-shown');
-        showEmpty('Set a valid embargo lift date to generate the timeline.');
+        showEmpty('Set the embargo lift date and the timeline appears here.');
         return;
       }
       if (emb.getTime() >= rel.getTime()){
-        embargoError.textContent = 'The embargo lift date must be before the release date.';
+        embargoError.textContent = 'The embargo lift date has to fall before your release date.';
         embargoError.classList.add('is-shown');
-        showEmpty('Fix the embargo lift date to generate the timeline.');
+        showEmpty('Fix the embargo lift date and the timeline appears here.');
         return;
       }
     }
@@ -2160,40 +2354,186 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       });
     }
 
-    add('Press/media review keys — first wave', addDays(rel, -21), ['PRAgency','Publisher'], 1);
-    add('Store page fully updated', addDays(rel, -14), ['Developer'], 2);
-    add('Launch trailer published', embargoOn ? emb : addDays(rel, -10), ['Developer','Publisher'], 3);
-    if (embargoOn) add('Review embargo lift', emb, ['PRAgency'], 4);
-    if (!trailerReady) add('Trailer publish (if not ready)', addDays(rel, -10), ['Developer'], 5);
-    add('Social content calendar starts', addDays(rel, -7), ['Developer','Publisher'], 6);
-    add('Review keys — second wave (creators)', addDays(rel, -5), ['PRAgency','Publisher'], 7);
-    if (steam) add('Steam broadcast / widget enabled', addDays(rel, -3), ['Developer'], 8);
-    if (anyConsole) add('Console store page live check', addDays(rel, -3), ['Developer'], 9);
-    add('Launch build uploaded and verified', addDays(rel, -2), ['Developer'], 10);
-    add('Day-0 social posts scheduled', addDays(rel, -1), ['Developer','Publisher'], 11);
-    add('Go live check: store pages, pricing', rel, ['Developer'], 12, { launch: true, dateNote: 'morning' });
+    add('Send the first wave of press review keys', addDays(rel, -21), ['PRAgency','Publisher'], 1);
+    add('Finish the store page', addDays(rel, -14), ['Developer'], 2);
+    add('Publish the launch trailer', embargoOn ? emb : addDays(rel, -10), ['Developer','Publisher'], 3);
+    if (embargoOn) add('Review embargo lifts', emb, ['PRAgency'], 4);
+    if (!trailerReady) add('Finish the trailer and publish it', addDays(rel, -10), ['Developer'], 5);
+    add('Start the social content calendar', addDays(rel, -7), ['Developer','Publisher'], 6);
+    add('Send the second wave of keys to creators', addDays(rel, -5), ['PRAgency','Publisher'], 7);
+    if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), ['Developer'], 8);
+    if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), ['Developer'], 9);
+    add('Upload and verify the launch build', addDays(rel, -2), ['Developer'], 10);
+    add('Schedule the day-zero social posts', addDays(rel, -1), ['Developer','Publisher'], 11);
+    add('Go-live check: store pages and pricing', rel, ['Developer'], 12, { launch: true, dateNote: 'morning' });
     add('Launch day social push', rel, ['Developer','Publisher'], 13, { launch: true });
-    add('Day-1 patch window closes', addDays(rel, 3), ['Developer'], 14);
-    add('Post-launch review roundup', addDays(rel, 7), ['PRAgency','Publisher'], 15);
+    add('Day-one patch window closes', addDays(rel, 3), ['Developer'], 14);
+    add('Round up the post-launch reviews', addDays(rel, 7), ['PRAgency','Publisher'], 15);
 
     actions.sort(function(a, b){ return (a.date.getTime() - b.date.getTime()) || (a.order - b.order); });
 
-    var html = actions.map(function(a){
-      var owner = resolveOwner(a.roles, hasPub, hasPR);
-      var dateTxt = fmtDate(a.date) + (a.dateNote ? (' · ' + a.dateNote) : '');
-      return '<tr' + (a.launch ? ' class="lwt-launch"' : '') + '>'
-        + '<td class="lwt-act">' + a.label + '</td>'
-        + '<td class="lwt-date-cell">' + dateTxt + '</td>'
-        + '<td class="lwt-owner">' + owner + '</td>'
+    var rowObjs = actions.map(function(a){
+      return {
+        label: a.label,
+        launch: a.launch,
+        dateTxt: fmtDate(a.date) + (a.dateNote ? (' · ' + a.dateNote) : ''),
+        dateClean: fmtDate(a.date),
+        owner: resolveOwner(a.roles, hasPub, hasPR)
+      };
+    });
+
+    body.innerHTML = rowObjs.map(function(r){
+      return '<tr' + (r.launch ? ' class="lwt-launch"' : '') + '>'
+        + '<td class="lwt-act">' + r.label + '</td>'
+        + '<td class="lwt-date-cell">' + r.dateTxt + '</td>'
+        + '<td class="lwt-owner">' + r.owner + '</td>'
         + '</tr>';
     }).join('');
 
-    body.innerHTML = html;
+    // Clipboard payload: tab-separated, fixed English headers for clean Sheets paste.
+    var tsv = ['Action\tDate\tOwner'];
+    rowObjs.forEach(function(r){ tsv.push([r.label, r.dateClean, r.owner].join('\t')); });
+    lastTSV = tsv.join('\n');
+
     emptyMsg.hidden = true;
     table.hidden = false;
+    if (copyBtn) copyBtn.hidden = false;
   }
 
-  // Wire date inputs.
+  // Custom calendar date picker (ported verbatim from simship-calculator).
+  function buildDatePicker(input) {
+    var wrap = input.closest('.date-picker-wrap');
+    if (!wrap) return;
+    var toggle = wrap.querySelector('.date-picker-toggle');
+    var dropdown = wrap.querySelector('.date-picker-dropdown');
+    var viewYear, viewMonth;
+    var selected = null;
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function formatDisplay(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
+    function formatISO(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear()
+        && a.getMonth() === b.getMonth()
+        && a.getDate() === b.getDate();
+    }
+
+    function renderCal() {
+      var first = new Date(viewYear, viewMonth, 1);
+      var startDay = first.getDay();
+      var offset = (startDay + 6) % 7;
+      var prevMonthLast = new Date(viewYear, viewMonth, 0).getDate();
+      var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var weekdays = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+      function dayCell(date, outside) {
+        var classes = ['dp-day'];
+        var isPast = date < today;
+        if (outside) classes.push('is-outside');
+        if (sameDay(date, today)) classes.push('is-today');
+        if (selected && sameDay(date, selected)) classes.push('is-selected');
+        if (isPast) classes.push('is-disabled');
+        return '<button type="button" class="' + classes.join(' ') + '"' + (isPast ? ' disabled' : '') + ' data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
+      }
+
+      var atCurrentMonth = (viewYear === today.getFullYear() && viewMonth === today.getMonth());
+
+      var html = ''
+        + '<div class="dp-header">'
+        + '<button type="button" class="dp-nav dp-prev' + (atCurrentMonth ? ' is-disabled' : '') + '"' + (atCurrentMonth ? ' disabled' : '') + ' aria-label="Previous month">&lsaquo;</button>'
+        + '<div class="dp-title">' + months[viewMonth] + ' ' + viewYear + '</div>'
+        + '<button type="button" class="dp-nav dp-next" aria-label="Next month">&rsaquo;</button>'
+        + '</div>'
+        + '<div class="dp-weekdays">'
+        + weekdays.map(function(w){ return '<div class="dp-weekday">' + w + '</div>'; }).join('')
+        + '</div>'
+        + '<div class="dp-grid">';
+
+      for (var i = offset - 1; i >= 0; i--) {
+        html += dayCell(new Date(viewYear, viewMonth - 1, prevMonthLast - i), true);
+      }
+      for (var d = 1; d <= daysInMonth; d++) {
+        html += dayCell(new Date(viewYear, viewMonth, d), false);
+      }
+      var totalRendered = offset + daysInMonth;
+      var trailing = (7 - (totalRendered % 7)) % 7;
+      for (var n = 1; n <= trailing; n++) {
+        html += dayCell(new Date(viewYear, viewMonth + 1, n), true);
+      }
+      html += '</div>';
+      dropdown.innerHTML = html;
+
+      dropdown.querySelector('.dp-prev').addEventListener('click', function(e){
+        e.stopPropagation();
+        if (atCurrentMonth) return;          // never page before the current month
+        viewMonth--;
+        if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+        renderCal();
+      });
+      dropdown.querySelector('.dp-next').addEventListener('click', function(e){
+        e.stopPropagation();
+        viewMonth++;
+        if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+        renderCal();
+      });
+      dropdown.querySelectorAll('.dp-day').forEach(function(btn){
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var iso = btn.dataset.iso;
+          var parts = iso.split('-');
+          selected = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          input.value = formatDisplay(selected);
+          input.dataset.iso = iso;
+          close();
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      });
+    }
+
+    function open() {
+      if (input.dataset.iso) {
+        var parts = input.dataset.iso.split('-');
+        selected = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      }
+      var base = selected || today;
+      viewYear = base.getFullYear();
+      viewMonth = base.getMonth();
+      renderCal();
+      dropdown.hidden = false;
+      wrap.classList.add('is-open');
+      var group = wrap.closest('.calc-group');
+      if (group) group.classList.add('is-picker-open');
+      setTimeout(function(){
+        document.addEventListener('click', handleOutside);
+        document.addEventListener('keydown', handleKey);
+      }, 0);
+    }
+
+    function close() {
+      dropdown.hidden = true;
+      wrap.classList.remove('is-open');
+      var group = wrap.closest('.calc-group');
+      if (group) group.classList.remove('is-picker-open');
+      document.removeEventListener('click', handleOutside);
+      document.removeEventListener('keydown', handleKey);
+    }
+
+    function handleOutside(e) {
+      if (!wrap.contains(e.target)) close();
+    }
+    function handleKey(e) {
+      if (e.key === 'Escape') close();
+    }
+
+    input.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
+    toggle.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
+  }
+
+  document.querySelectorAll('.date-picker-input').forEach(buildDatePicker);
+
+  // Wire date inputs. The picker dispatches a 'change' event on selection.
   [releaseInput, embargoInput].forEach(function(el){
     ['input', 'change'].forEach(function(evt){ el.addEventListener(evt, render); });
   });
@@ -2218,6 +2558,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       });
     });
   });
+
+  // Copy the whole timeline as tab-separated text for clean Sheets paste.
+  if (copyBtn) {
+    var copyLabelEl = copyBtn.querySelector('.lwt-copy-label');
+    if (copyLabelEl) copyLabelEl.textContent = L.copy;
+    var copyTimer = null;
+    copyBtn.addEventListener('click', function() {
+      if (!lastTSV || !navigator.clipboard) return;
+      navigator.clipboard.writeText(lastTSV).then(function() {
+        copyBtn.classList.add('is-copied');
+        if (copyLabelEl) copyLabelEl.textContent = L.copied;
+        copyBtn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        if (copyTimer) clearTimeout(copyTimer);
+        copyTimer = setTimeout(function() {
+          copyBtn.classList.remove('is-copied');
+          if (copyLabelEl) copyLabelEl.textContent = L.copy;
+          copyBtn.querySelector('svg').innerHTML = COPY_ICON;
+        }, 2000);
+      });
+    });
+  }
 
   var tracked = false;
   ['input', 'click'].forEach(function(evt){
