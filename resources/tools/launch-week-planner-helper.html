@@ -14,7 +14,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Enter your release date and a few launch details. Get a backwards-planned timeline of every marketing and ops action you need to hit before and after launch." />
+<meta name="description" content="Enter your release date and a few launch details. The tool works backwards from launch and lists the key things worth sorting out early, so they do not get forgotten in the rush." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
@@ -1871,7 +1871,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Topic <b>Launch Planning</b></div>
         <div>Updated <b>2026</b></div>
       </div>
-      <p class="deck">Tell me your release date and who is running what. I count <em>backwards</em> from launch day and hand you a dated checklist, every action from the first press keys to the day-one patch window.</p>
+      <p class="deck">Enter your release date and tell the tool who's running what. It works <em>backwards</em> from launch and surfaces the things worth planning early, so the important ones do not slip. Use it as a starting point and adapt it to your game.</p>
     </article>
   </div>
 
@@ -1880,7 +1880,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group calc-group-primary">
         <label class="calc-label" for="release-date">Release date</label>
-        <div class="calc-hint">The day your game goes live. Every date below counts back from here.</div>
+        <div class="calc-hint">The day your game goes live. The dates below are planned backwards from this one.</div>
         <div class="calc-input-wrap date-picker-wrap">
           <input type="text" id="release-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off" aria-describedby="release-error">
           <button type="button" class="date-picker-toggle" aria-label="Open calendar">
@@ -1967,7 +1967,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </button>
           </div>
           <div class="lwt-timeline-wrap">
-            <div class="calc-hint" id="timeline-empty">Pick a release date above and your full checklist appears here, in order.</div>
+            <div class="calc-hint" id="timeline-empty">Pick a release date above and your launch timeline appears here, in order.</div>
             <table class="lwt-timeline" id="timeline-table" hidden>
               <thead>
                 <tr><th scope="col">Action</th><th scope="col">Date</th><th scope="col">Owner</th></tr>
@@ -2380,7 +2380,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     embargoError.classList.remove('is-shown');
 
     if (!rel){
-      showEmpty('Pick a release date above and your full checklist appears here, in order.');
+      showEmpty('Pick a release date above and your launch timeline appears here, in order.');
       return;
     }
 
@@ -2415,7 +2415,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     // story-heavy titles) may bump this to 10 so reviewers can finish in time.
     var PRESS_KEYS_LEAD_DAYS = 7;
     add('Send the first wave of press review keys', addDays(rel, -PRESS_KEYS_LEAD_DAYS), ['PRAgency','Publisher'], 1);
-    add('Finish the store page', addDays(rel, -14), hasPub ? ['Publisher'] : ['Developer'], 2);
+    add('Store page updated: copy, screenshots, and launch trailer', addDays(rel, -14), hasPub ? ['Publisher'] : ['Developer'], 2);
     if (embargoOn) add('Review embargo lifts', emb, ['PRAgency'], 4);
     // The trailer goes live on launch day within the "Launch day social push".
     // If it is already ready there is nothing left to finish, so show no finish
@@ -2432,6 +2432,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     add('Launch day social push', rel, ['Developer','Publisher'], 13, { launch: true });
     add('Day-one patch window closes', addDays(rel, 3), hasPub ? ['Developer','Publisher'] : ['Developer'], 14);
     add('Round up the post-launch reviews', addDays(rel, 7), ['PRAgency','Publisher'], 15);
+    add('Pricing and launch discount set', addDays(rel, -14), ['Developer','Publisher'], 16);
+    add('Press release sent', embargoOn ? emb : rel, ['PRAgency','Publisher'], 17);
+    add('Launch announcement posted (Steam news, Discord)', rel, ['Developer','Publisher'], 18);
 
     actions.sort(function(a, b){ return (a.date.getTime() - b.date.getTime()) || (a.order - b.order); });
 
