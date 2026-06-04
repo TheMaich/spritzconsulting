@@ -1448,6 +1448,30 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .lwt-date-input{ max-width: 320px; }
 .lwt-date-input .calc-input{ font-family: var(--mono-data); }
 
+/* Primary release-date field (ported from simship-calculator) */
+.calc-group-primary{
+  position: relative;
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  border: 1px solid color-mix(in srgb, var(--clay) 28%, var(--rule));
+  border-radius: 14px;
+  padding: 26px 28px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--clay) 18%, transparent) inset,
+    0 22px 54px -34px color-mix(in srgb, var(--clay) 40%, transparent);
+}
+.calc-group-primary .calc-input-wrap{ max-width: none; }
+.calc-badge{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+  border: 1px solid color-mix(in srgb, var(--clay) 40%, var(--rule));
+  border-radius: 100px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
 /* Custom calendar date picker (ported from simship-calculator) */
 .date-picker-wrap { position: relative; overflow: visible; z-index: 1; }
 .date-picker-wrap.is-open { z-index: 200; }
@@ -1631,7 +1655,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
   transition: border-color 0.2s var(--ease), color 0.2s var(--ease), background 0.2s var(--ease);
 }
 .lwt-opt:hover{
@@ -1645,13 +1671,26 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--paper);
 }
 .lwt-opt .lwt-tick{
-  width: 14px; height: 14px;
+  width: 0; height: 14px;
+  margin-right: 0;
+  flex: 0 0 auto;
+  overflow: hidden;
   stroke: currentColor; stroke-width: 2.5;
   fill: none; stroke-linecap: round; stroke-linejoin: round;
   opacity: 0;
-  transition: opacity 0.2s var(--ease);
+  transition: opacity 0.2s var(--ease), width 0.2s var(--ease), margin 0.2s var(--ease);
 }
-.lwt-opt[aria-pressed="true"] .lwt-tick{ opacity: 1; }
+.lwt-opt[aria-pressed="true"] .lwt-tick{ opacity: 1; width: 14px; margin-right: 8px; }
+
+/* Yes/No questions: two-column grid, single column on narrow viewports */
+.lwt-questions{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+}
+@media (max-width: 640px){
+  .lwt-questions{ grid-template-columns: 1fr; }
+}
 
 .lwt-conditional[hidden]{ display: none; }
 .lwt-callout[hidden], .lwt-timeline[hidden], #timeline-empty[hidden]{ display: none !important; }
@@ -1832,10 +1871,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="calc-wrap">
     <div class="calculator">
 
-      <div class="calc-group">
+      <div class="calc-group calc-group-primary">
         <label class="calc-label" for="release-date">Release date</label>
         <div class="calc-hint">The day your game goes live. Every date below counts back from here.</div>
-        <div class="calc-input-wrap lwt-date-input date-picker-wrap">
+        <div class="calc-input-wrap date-picker-wrap">
           <input type="text" id="release-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off" aria-describedby="release-error">
           <button type="button" class="date-picker-toggle" aria-label="Open calendar">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1856,6 +1895,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </div>
       </div>
 
+      <div class="lwt-questions">
       <div class="calc-group">
         <label class="calc-label">Do you have a publisher managing PR?</label>
         <div class="lwt-options" role="group" data-toggle="publisher" aria-label="Publisher managing PR">
@@ -1897,6 +1937,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button type="button" class="lwt-opt" data-val="yes" aria-pressed="true">Yes</button>
           <button type="button" class="lwt-opt" data-val="no" aria-pressed="false">No</button>
         </div>
+      </div>
       </div>
 
       <div class="lwt-callout" id="internal-callout" hidden>
