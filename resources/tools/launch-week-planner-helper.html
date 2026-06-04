@@ -1904,7 +1904,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="lwt-questions">
       <div class="calc-group">
-        <label class="calc-label">Do you have a publisher managing PR?</label>
+        <label class="calc-label">Do you have a publisher?</label>
         <div class="lwt-options" role="group" data-toggle="publisher" aria-label="Publisher managing PR">
           <button type="button" class="lwt-opt" data-val="yes" aria-pressed="false">Yes</button>
           <button type="button" class="lwt-opt" data-val="no" aria-pressed="true">No</button>
@@ -1947,6 +1947,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
       </div>
 
+      <div class="lwt-callout" id="owners-callout" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <p><strong>Owners here are an assumption.</strong> The owner column shows one likely split, and your real one depends on the deal. Stronger, more established publishers tend to handle almost everything on this list. Younger or smaller publishers often leave some of it with the developer. Settle who owns what early, well before launch week, so nobody is guessing once the dates get tight.</p>
+      </div>
+
       <div class="lwt-callout" id="internal-callout" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
         <p>You are running all of this in house. That works, but review key distribution, embargo management, and creator outreach all land on your team. <strong>Give each one a named owner before launch week.</strong></p>
@@ -1976,7 +1981,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Owners here are an assumption.</strong> The owner column shows one likely split, and your real one depends on the deal. Stronger, more established publishers tend to handle almost everything on this list. Younger or smaller publishers often leave some of it with the developer. Settle who owns what early, well before launch week, so nobody is guessing once the dates get tight.</li>
           <li><strong>Press keys need more lead time than most teams give them.</strong> Three weeks before launch sounds like plenty. In practice, a journalist needs time to play the game and file the piece before the embargo. If your game runs longer than 5 to 6 hours, send keys earlier, sometimes 4 to 5 weeks out for a narrative game or an RPG. This timeline uses 21 days as a baseline. Move it to fit your game's length and genre.</li>
           <li><strong>Line up the embargo lift and the trailer.</strong> When you run a review embargo, push the trailer and your big marketing beats live the moment the embargo lifts. Drop the trailer early, then go quiet while reviews sit under embargo, and you bleed your own momentum. With no embargo, send the trailer 7 to 10 days before launch so the algorithm has time to work.</li>
           <li><strong>A day-one patch is a launch decision, so make it before launch week.</strong> If you know a real fix is coming, plan the patch window now. A patch that lands 3 days after launch still catches most of the review traffic. A patch that lands 2 weeks out misses it. Decide this in advance, not in the middle of launch day.</li>
@@ -2260,6 +2264,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var embargoField   = document.getElementById('embargo-date-field');
   var embargoError   = document.getElementById('embargo-error');
   var internalCallout = document.getElementById('internal-callout');
+  var ownersCallout  = document.getElementById('owners-callout');
   var table          = document.getElementById('timeline-table');
   var body           = document.getElementById('timeline-body');
   var emptyMsg       = document.getElementById('timeline-empty');
@@ -2365,7 +2370,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     applyEmbargoRange(rel);
     var emb = readISO(embargoInput);
 
-    // Callout when neither a publisher nor a PR agency is involved.
+    // Owners note when a publisher or PR agency is involved; the in-house note
+    // when neither is. Exactly one is visible at any time.
+    ownersCallout.hidden = !(hasPub || hasPR);
     internalCallout.hidden = !(!hasPub && !hasPR);
 
     // Embargo lift date field only matters when an embargo is planned.
