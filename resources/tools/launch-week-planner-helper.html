@@ -2404,9 +2404,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     add('Send the first wave of press review keys', addDays(rel, -21), ['PRAgency','Publisher'], 1);
     add('Finish the store page', addDays(rel, -14), ['Developer'], 2);
-    add('Publish the launch trailer', embargoOn ? emb : addDays(rel, -10), ['Developer','Publisher'], 3);
     if (embargoOn) add('Review embargo lifts', emb, ['PRAgency'], 4);
-    if (!trailerReady) add('Finish the trailer and publish it', addDays(rel, -10), ['Developer'], 5);
+    // The trailer goes live on launch day within the "Launch day social push".
+    // If it is already ready there is nothing left to finish, so show no finish
+    // item. If it is not ready, add the finish deadline at release minus 3 days
+    // (the 2 day launch buffer plus padding) to have it done in time.
+    if (!trailerReady) add('Finish the trailer', addDays(rel, -3), ['Developer'], 5);
     add('Start the social content calendar', addDays(rel, -7), ['Developer','Publisher'], 6);
     add('Send the second wave of keys to creators', addDays(rel, -5), ['PRAgency','Publisher'], 7);
     if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), ['Developer'], 8);
