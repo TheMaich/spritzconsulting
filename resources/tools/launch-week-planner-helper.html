@@ -1783,6 +1783,31 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .lwt-timeline tr.lwt-launch .lwt-date-cell,
 .lwt-timeline tr.lwt-launch .lwt-act{ color: var(--clay); }
 
+/* Holiday-freeze warning banner (same look as the simship freeze warning) */
+.holiday-warn{
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border: 1px solid color-mix(in srgb, var(--clay) 50%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 9%, var(--paper-2));
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+.holiday-warn[hidden]{ display: none; }
+.holiday-warn p{ margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+.holiday-warn strong{ color: var(--ink); font-weight: 500; }
+
+/* At-risk rows: magenta alert accent, used only on flagged rows */
+.lwt-timeline tr.is-holiday-risk .lwt-date-cell{ color: var(--accent-2); }
+.lwt-holiday-tag{
+  display:inline-block; margin-left:8px;
+  font-family:var(--mono); font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--accent-2);
+  border:1px solid color-mix(in srgb, var(--accent-2) 50%, transparent);
+  border-radius:100px; padding:2px 7px; vertical-align:middle;
+}
+
 @media (max-width: 640px){
   .lwt-timeline, .lwt-timeline thead, .lwt-timeline tbody,
   .lwt-timeline tr, .lwt-timeline th, .lwt-timeline td{ display: block; }
@@ -1965,6 +1990,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               <span class="lwt-copy-label">Copy</span>
             </button>
+          </div>
+          <div class="holiday-warn" id="lwt-holiday-warn" hidden role="alert">
+            <p><strong>Part of this plan lands in the end-of-year break.</strong> Between 20 December and 10 January, press, creators, and most studios are largely offline, so outreach, coverage, and wishlist momentum slow right down. Move the key beats (review keys, press release, trailer) to before the break, or take another look at the release date.</p>
           </div>
           <div class="lwt-timeline-wrap">
             <div class="calc-hint" id="timeline-empty">Pick a release date above and your launch timeline appears here, in order.</div>
@@ -2278,8 +2306,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var LWT_LANG = '';
   try { LWT_LANG = localStorage.getItem('mdn-lang') || ''; } catch (e) {}
   var LWT_STR = {
-    en: { copy: 'Copy', copied: 'Copied' },
-    it: { copy: 'Copia', copied: 'Copiato' }
+    en: {
+      copy: 'Copy', copied: 'Copied',
+      holidayTag: 'holiday window',
+      holidayWarn: '<p><strong>Part of this plan lands in the end-of-year break.</strong> Between 20 December and 10 January, press, creators, and most studios are largely offline, so outreach, coverage, and wishlist momentum slow right down. Move the key beats (review keys, press release, trailer) to before the break, or take another look at the release date.</p>'
+    },
+    it: {
+      copy: 'Copia', copied: 'Copiato',
+      holidayTag: 'periodo festivo',
+      holidayWarn: '<p><strong>Parte di questo piano cade nella pausa di fine anno.</strong> Tra il 20 dicembre e il 10 gennaio stampa, creator e gran parte degli studi sono in gran parte offline, quindi contatti, copertura e slancio delle wishlist rallentano molto. Sposta i passaggi chiave (chiavi recensione, comunicato stampa, trailer) a prima della pausa, oppure rivedi la data di uscita.</p>'
+    }
   };
   var L = LWT_STR[LWT_LANG] || LWT_STR.en;
 
@@ -2296,6 +2332,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var x = new Date(d.getTime());
     x.setDate(x.getDate() + n);
     return x;
+  }
+  // End-of-year freeze: 20 Dec to 10 Jan, spanning the year boundary.
+  function isHolidayFreeze(d){
+    var m = d.getMonth(), day = d.getDate();
+    return (m === 11 && day >= 20) || (m === 0 && day <= 10);
   }
   function isoOf(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function isoToDisplay(iso){ var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
@@ -2355,6 +2396,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
   function showEmpty(msg){
     clearOutput();
+    document.getElementById('lwt-holiday-warn').hidden = true;
     emptyMsg.hidden = false;
     emptyMsg.textContent = msg;
   }
@@ -2444,14 +2486,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         launch: a.launch,
         dateTxt: fmtDate(a.date) + (a.dateNote ? (' · ' + a.dateNote) : ''),
         dateClean: fmtDate(a.date),
-        owner: resolveOwner(a.roles, hasPub, hasPR)
+        owner: resolveOwner(a.roles, hasPub, hasPR),
+        risk: isHolidayFreeze(a.date)
       };
     });
 
+    // Flag rows that fall in the end-of-year freeze. Dates are not shifted.
+    var holidayHit = false;
     body.innerHTML = rowObjs.map(function(r){
-      return '<tr' + (r.launch ? ' class="lwt-launch"' : '') + '>'
+      if (r.risk) holidayHit = true;
+      var cls = (r.launch ? 'lwt-launch' : '') + (r.risk ? (r.launch ? ' is-holiday-risk' : 'is-holiday-risk') : '');
+      var tag = r.risk ? ' <span class="lwt-holiday-tag">' + L.holidayTag + '</span>' : '';
+      return '<tr' + (cls ? ' class="' + cls.trim() + '"' : '') + '>'
         + '<td class="lwt-act">' + r.label + '</td>'
-        + '<td class="lwt-date-cell">' + r.dateTxt + '</td>'
+        + '<td class="lwt-date-cell">' + r.dateTxt + tag + '</td>'
         + '<td class="lwt-owner">' + r.owner + '</td>'
         + '</tr>';
     }).join('');
@@ -2460,6 +2508,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var tsv = ['Action\tDate\tOwner'];
     rowObjs.forEach(function(r){ tsv.push([r.label, r.dateClean, r.owner].join('\t')); });
     lastTSV = tsv.join('\n');
+
+    document.getElementById('lwt-holiday-warn').hidden = !holidayHit;
 
     emptyMsg.hidden = true;
     table.hidden = false;
@@ -2640,6 +2690,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       });
     });
   });
+
+  // Localise the holiday banner copy (FR/ES fall back to EN).
+  document.getElementById('lwt-holiday-warn').innerHTML = L.holidayWarn;
 
   // Copy the whole timeline as tab-separated text for clean Sheets paste.
   if (copyBtn) {
