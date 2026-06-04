@@ -2294,9 +2294,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   function isoOf(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function isoToDisplay(iso){ var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
 
-  // Embargo lift must sit inside the launch date's calendar month. Set the
-  // picker's min/max to the first and last day of that month, then clamp any
-  // out-of-range embargo value back in so the schedule stays consistent.
+  // Embargo lift must sit inside the launch date's calendar month and cannot be
+  // after launch day. Set the picker's min to the first day of that month and
+  // its max to the release date itself, then clamp any out-of-range embargo
+  // value back in so the schedule stays consistent.
   function applyEmbargoRange(rel){
     if (!rel){
       delete embargoInput.dataset.min;
@@ -2305,7 +2306,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
     var y = rel.getFullYear(), m = rel.getMonth();
     var minIso = isoOf(new Date(y, m, 1));
-    var maxIso = isoOf(new Date(y, m + 1, 0));
+    var maxIso = isoOf(rel);
     embargoInput.dataset.min = minIso;
     embargoInput.dataset.max = maxIso;
     var cur = embargoInput.dataset.iso;
@@ -2402,7 +2403,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       });
     }
 
-    add('Send the first wave of press review keys', addDays(rel, -21), ['PRAgency','Publisher'], 1);
+    // Press keys go out a week before launch. Particularly long games (RPGs,
+    // story-heavy titles) may bump this to 10 so reviewers can finish in time.
+    var PRESS_KEYS_LEAD_DAYS = 7;
+    add('Send the first wave of press review keys', addDays(rel, -PRESS_KEYS_LEAD_DAYS), ['PRAgency','Publisher'], 1);
     add('Finish the store page', addDays(rel, -14), ['Developer'], 2);
     if (embargoOn) add('Review embargo lifts', emb, ['PRAgency'], 4);
     // The trailer goes live on launch day within the "Launch day social push".
@@ -2412,7 +2416,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (!trailerReady) add('Finish the trailer', addDays(rel, -3), ['Developer'], 5);
     add('Start the social content calendar', addDays(rel, -7), ['Developer','Publisher'], 6);
     add('Send the second wave of keys to creators', addDays(rel, -5), ['PRAgency','Publisher'], 7);
-    if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), ['Developer'], 8);
+    if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 8);
     if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), ['Developer'], 9);
     add('Upload and verify the launch build', addDays(rel, -2), ['Developer'], 10);
     add('Schedule the day-zero social posts', addDays(rel, -1), ['Developer','Publisher'], 11);
