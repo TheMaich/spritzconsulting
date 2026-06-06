@@ -2437,8 +2437,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       el.addEventListener('input', calculate);
       el.addEventListener('change', calculate);
     });
-    // Spike dates use the same custom picker as the velocity fields, today minimum.
-    buildDatePicker(row.querySelector('.spike-date'), { minToday: true });
+    // Spike dates use the same custom picker, today maximum (past only, no future), like Page Open Since.
+    buildDatePicker(row.querySelector('.spike-date'), { maxToday: true });
     addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
   }
 
