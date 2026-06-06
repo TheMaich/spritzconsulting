@@ -1874,12 +1874,20 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var viewYear, viewMonth;
     var selected = null;
     var today = new Date(); today.setHours(0,0,0,0);
-    // Selectable range, using the local "today" (same basis as the velocity calc).
-    var minDate = opts.minToday ? today : null;
-    var maxDate = opts.maxToday ? today : null;
+    // Selectable range. Bounds may be fixed (today flags) or dynamic via getMin/getMax
+    // functions, evaluated live so a picker can track another field (spike min = page open).
+    function currentMin() {
+      if (opts.getMin) return opts.getMin();
+      return opts.minToday ? today : null;
+    }
+    function currentMax() {
+      if (opts.getMax) return opts.getMax();
+      return opts.maxToday ? today : null;
+    }
     function inRange(d) {
-      if (minDate && d < minDate) return false;
-      if (maxDate && d > maxDate) return false;
+      var mn = currentMin(), mx = currentMax();
+      if (mn && d < mn) return false;
+      if (mx && d > mx) return false;
       return true;
     }
 
@@ -2001,22 +2009,38 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     input.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
     toggle.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
 
-    // Guard a value that lands out of range (e.g. set programmatically): clamp to today.
-    // Registered before the recompute listener so the calc reads the clamped value.
-    input.addEventListener('change', function() {
-      if (!input.dataset.iso) return;
+    // Guard a value outside the live [min, max] range (typed, programmatic, or left
+    // stale after a bound moves): clamp to the nearest bound. Exposed as _clampRange so
+    // an external bound change (e.g. page-open date) can re-validate before recompute.
+    function clampRange() {
+      if (!input.dataset.iso) return false;
       var parts = input.dataset.iso.split('-');
       var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-      if (inRange(d)) return;
-      var clamped = (minDate && d < minDate) ? minDate : maxDate;
-      selected = new Date(clamped.getFullYear(), clamped.getMonth(), clamped.getDate());
+      var mn = currentMin(), mx = currentMax();
+      var c = null;
+      if (mn && d < mn) c = mn;
+      else if (mx && d > mx) c = mx;
+      if (!c) return false;
+      selected = new Date(c.getFullYear(), c.getMonth(), c.getDate());
       input.value = formatDisplay(selected);
       input.dataset.iso = formatISO(selected);
-    });
+      return true;
+    }
+    input._clampRange = clampRange;
+    // Registered before the recompute listener so the calc reads the clamped value.
+    input.addEventListener('change', clampRange);
   }
 
   buildDatePicker(pageOpenInput, { maxToday: true });
   buildDatePicker(launchInput, { minToday: true });
+
+  // When the page-open lower bound moves, re-validate every spike date against it
+  // before the recompute reads them, so none stay below the new page-open date.
+  pageOpenInput.addEventListener('change', function() {
+    document.querySelectorAll('.spike-date').forEach(function(si) {
+      if (si._clampRange) si._clampRange();
+    });
+  });
 
   function daysBetween(d1, d2) {
     return Math.max(0, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
@@ -2450,8 +2474,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       el.addEventListener('input', calculate);
       el.addEventListener('change', calculate);
     });
-    // Spike dates use the same custom picker, today maximum (past only, no future), like Page Open Since.
-    buildDatePicker(row.querySelector('.spike-date'), { maxToday: true });
+    // Spike dates: max today, min = the live Steam Page Open Since date (no lower bound if empty).
+    buildDatePicker(row.querySelector('.spike-date'), {
+      maxToday: true,
+      getMin: function() { return parseDate(pageOpenInput); }
+    });
     addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
   }
 
