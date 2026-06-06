@@ -2285,14 +2285,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) }
         ], { duration: 900, easing: 'ease-out' });
       } else {
-        /* Single settling wobble, max ~2deg, ~550ms ease-out. Not a continuous shake. */
+        /* Single settling wobble, max ~1deg, ~450ms ease-out. Not a continuous shake. */
         card.animate([
           { transform: 'rotate(0deg)' },
-          { transform: 'rotate(-2deg)', offset: 0.25 },
-          { transform: 'rotate(2deg)', offset: 0.55 },
-          { transform: 'rotate(-1deg)', offset: 0.8 },
+          { transform: 'rotate(-1deg)', offset: 0.25 },
+          { transform: 'rotate(1deg)', offset: 0.55 },
+          { transform: 'rotate(-0.5deg)', offset: 0.8 },
           { transform: 'rotate(0deg)' }
-        ], { duration: 550, easing: 'ease-out' });
+        ], { duration: 450, easing: 'ease-out' });
       }
     }
 
