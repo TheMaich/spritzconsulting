@@ -653,6 +653,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   gap: 10px;
 }
 
+.calc-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
 .calc-label {
   display: flex;
   align-items: baseline;
@@ -1304,6 +1311,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
 @media (max-width: 640px) {
   .calculator { padding: 0; }
+  .calc-row { grid-template-columns: 1fr; }
   .calc-result-value { font-size: clamp(48px, 14vw, 72px); }
   .calc-result { padding: 24px; }
   .calc-notes { padding: 22px 20px; }
@@ -1404,19 +1412,42 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   <div class="calc-wrap">
     <div class="calculator">
 
-      <div class="calc-group">
-        <label class="calc-label" for="current-followers">Current Steam Followers</label>
-        <div class="calc-hint">Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.</div>
-        <div class="calc-input-wrap">
-          <input type="number" id="current-followers" class="calc-input" placeholder="0" min="0" step="1">
-          <span class="calc-suffix">FOLLOWERS</span>
+      <div class="calc-row">
+        <div class="calc-group">
+          <label class="calc-label" for="current-followers">Current Steam Followers</label>
+          <div class="calc-hint">Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.</div>
+          <div class="calc-input-wrap">
+            <input type="number" id="current-followers" class="calc-input" placeholder="0" min="0" step="1">
+            <span class="calc-suffix">FOLLOWERS</span>
+          </div>
+          <div class="calc-presets" data-target="current-followers">
+            <button type="button" class="preset-btn" data-value="500">500</button>
+            <button type="button" class="preset-btn" data-value="1000">1K</button>
+            <button type="button" class="preset-btn" data-value="5000">5K</button>
+            <button type="button" class="preset-btn" data-value="10000">10K</button>
+          </div>
         </div>
-        <div class="calc-presets" data-target="current-followers">
-          <button type="button" class="preset-btn" data-value="500">500</button>
-          <button type="button" class="preset-btn" data-value="1000">1K</button>
-          <button type="button" class="preset-btn" data-value="5000">5K</button>
-          <button type="button" class="preset-btn" data-value="10000">10K</button>
+
+        <div class="calc-group">
+          <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
+          <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure. This multiplier applies across the whole tool, including Followers Needed.</div>
+          <div class="calc-input-wrap">
+            <input type="number" id="multiplier" class="calc-input" placeholder="12" min="1" max="30" step="0.1" value="12">
+            <span class="calc-suffix">X</span>
+          </div>
+          <div class="calc-presets" data-target="multiplier">
+            <button type="button" class="preset-btn" data-value="7">7x</button>
+            <button type="button" class="preset-btn" data-value="10">10x</button>
+            <button type="button" class="preset-btn is-active" data-value="12">12x</button>
+            <button type="button" class="preset-btn" data-value="16">16x</button>
+          </div>
         </div>
+      </div>
+
+      <div class="calc-secondary-card" aria-live="polite">
+        <div class="calc-secondary-label">Estimated Wishlists Today</div>
+        <div class="calc-secondary-value" id="wishlists-today">0</div>
+        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
       </div>
 
       <div class="calc-group">
@@ -1459,21 +1490,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
-        <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure.</div>
-        <div class="calc-input-wrap">
-          <input type="number" id="multiplier" class="calc-input" placeholder="12" min="1" max="30" step="0.1" value="12">
-          <span class="calc-suffix">X</span>
-        </div>
-        <div class="calc-presets" data-target="multiplier">
-          <button type="button" class="preset-btn" data-value="7">7x</button>
-          <button type="button" class="preset-btn" data-value="10">10x</button>
-          <button type="button" class="preset-btn is-active" data-value="12">12x</button>
-          <button type="button" class="preset-btn" data-value="16">16x</button>
-        </div>
-      </div>
-
-      <div class="calc-group">
         <label class="calc-label" for="wishlist-target">Wishlist Target at Launch</label>
         <div class="calc-hint">Paste the figure from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a>, or enter your target manually.</div>
         <div class="calc-input-wrap">
@@ -1501,12 +1517,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
             <span class="calc-copy-label" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Copy</span>
           </button>
         </div>
-      </div>
-
-      <div class="calc-secondary-card" aria-live="polite">
-        <div class="calc-secondary-label">Estimated Wishlists Today</div>
-        <div class="calc-secondary-value" id="wishlists-today">0</div>
-        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
       </div>
 
       <div class="trajectory-card">
