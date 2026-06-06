@@ -657,7 +657,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 36px;
-  align-items: start;
+  align-items: stretch;
+}
+/* Bottom-align the input bar and its chips so both columns line up despite
+   helper text of differing length. .calc-group is already a flex column. */
+.calc-row .calc-input-wrap {
+  margin-top: auto;
 }
 
 .calc-label {
