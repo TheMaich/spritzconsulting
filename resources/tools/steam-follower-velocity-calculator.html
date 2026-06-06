@@ -688,6 +688,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   line-height: 1.15;
 }
 
+/* Top-level section title: outranks the field titles (.calc-label) above. Mirrors
+   the h1 heading language (serif, 600, ink), no trailing rule. Spacing comes from
+   the .calculator flex gap. */
+.calc-section-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(30px, 3.4vw, 42px);
+  font-variation-settings: "opsz" 48;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
 .calc-hint {
   font-size: 15px;
   color: var(--ink-2);
@@ -1505,7 +1518,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   <div class="calc-wrap">
     <div class="calculator">
 
-      <div class="calc-notes-label">Where you are today</div>
+      <div class="calc-section-title">Where you are today</div>
 
       <div class="calc-row">
         <div class="calc-group">
@@ -1547,7 +1560,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-divider" role="presentation"></div>
 
-      <div class="calc-notes-label">Project to launch</div>
+      <div class="calc-section-title">Project to launch</div>
 
       <div class="calc-row">
         <div class="calc-group">
