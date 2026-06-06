@@ -1025,25 +1025,37 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   margin-top: 4px;
 }
 
-.calc-copy-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  display: flex;
+/* Copy button, ported verbatim from launch-week-planner-helper. */
+.calc-copy-btn{
+  flex-shrink: 0;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  gap: 8px;
+  padding: 8px 14px;
+  min-height: 38px;
   border: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink-3);
+  border-radius: 100px;
+  background: var(--paper-3);
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  padding: 0;
+  transition: border-color .2s var(--ease), color .2s var(--ease), background .2s var(--ease);
 }
-.calc-copy-btn:hover { border-color: var(--ink-2); color: var(--ink); }
-.calc-copy-btn.is-copied { border-color: var(--clay); color: var(--clay); }
+.calc-copy-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.calc-copy-btn.is-copied{
+  border-color: var(--clay);
+  color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 10%, var(--paper-3));
+}
+.calc-copy-btn[hidden]{ display: none; }
+.calc-copy-btn svg{
+  width: 14px; height: 14px;
+  stroke: currentColor; stroke-width: 2;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
 
 .calc-result-breakdown {
   font-family: var(--mono-data);
@@ -1127,6 +1139,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 /* Title-to-content gap matching the section heading scale (.calc-notes-label). */
 .outlook-card .trajectory-label { margin-bottom: 20px; }
+.outlook-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
 .outlook-window {
   background: var(--paper-2);
   border: 1px solid var(--rule);
@@ -1742,7 +1760,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="outlook-card">
         <div class="trajectory-label">Launch Outlook</div>
         <div class="outlook-grid">
-          <div class="calc-result-breakdown" id="breakdown"></div>
+          <div class="outlook-readout">
+            <div class="calc-result-breakdown" id="breakdown"></div>
+            <button type="button" class="calc-copy-btn" id="proj-copy-btn" aria-label="Copy projection data to clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="proj-copy-label">Copy Projection Data</span>
+            </button>
+          </div>
           <div class="outlook-window">
             <div class="outlook-window-title">Expected Outcome</div>
             <ul class="outlook-levels" id="outlook-levels">
@@ -2637,6 +2661,38 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   document.addEventListener('themechange', function() {
     setTimeout(calculate, 50);
   });
+
+  // Copy the Launch Outlook readout as plain text, one "Label: value" per line,
+  // reading the rendered breakdown rows (no recompute). Feedback ported from source.
+  var projCopyBtn = document.getElementById('proj-copy-btn');
+  if (projCopyBtn) {
+    var PROJ_COPY_ICON = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
+    var projCopyLabel = projCopyBtn.querySelector('.proj-copy-label');
+    var projCopyTimer = null;
+    projCopyBtn.addEventListener('click', function() {
+      if (!navigator.clipboard) return;
+      var lines = [];
+      breakdownEl.querySelectorAll('.row').forEach(function(row) {
+        var spans = row.querySelectorAll('span');
+        if (spans.length >= 2) {
+          lines.push(spans[0].textContent.trim() + ': ' + spans[spans.length - 1].textContent.trim());
+        }
+      });
+      var payload = lines.join('\n');
+      if (!payload) return;
+      navigator.clipboard.writeText(payload).then(function() {
+        projCopyBtn.classList.add('is-copied');
+        if (projCopyLabel) projCopyLabel.textContent = 'Copied';
+        projCopyBtn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        if (projCopyTimer) clearTimeout(projCopyTimer);
+        projCopyTimer = setTimeout(function() {
+          projCopyBtn.classList.remove('is-copied');
+          if (projCopyLabel) projCopyLabel.textContent = 'Copy Projection Data';
+          projCopyBtn.querySelector('svg').innerHTML = PROJ_COPY_ICON;
+        }, 2000);
+      });
+    });
+  }
 
   calculate();
 })();
