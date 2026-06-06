@@ -1258,6 +1258,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .spike-row .spike-date-wrap .date-picker-toggle svg { width: 14px; height: 14px; }
 /* Lift the open spike row above the rows below it so its calendar overlays them. */
 .spike-row:has(.date-picker-wrap.is-open) { position: relative; z-index: 300; }
+/* The spike calendar overflows past the bottom of .trajectory-card, which is its
+   own stacking context (entrance animation, fill: both). The row lift only reorders
+   within the card, so the spilled-over lower rows were painted under the sections
+   below and could not be clicked. Lift the whole card while a spike picker is open. */
+.trajectory-card:has(.date-picker-wrap.is-open) { position: relative; z-index: 300; }
 .spike-remove {
   background: transparent;
   border: 1px solid var(--rule);
@@ -1791,6 +1796,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var spikeTotalBoostEl = document.getElementById('spike-total-boost');
   var spikeTotalProjEl = document.getElementById('spike-total-projection');
   var MAX_SPIKES = 5;
+  // Days over which a spike's follower boost ramps in (spikes are not instantaneous).
+  var RAMP_DAYS = 5;
 
   var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -2044,22 +2051,39 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     var sortedSpikes = state.spikes.slice().sort(function(a, b){ return a.day - b.day; });
 
-    var points = [{ day: 0, followers: state.currentFollowers }];
-    var running = state.currentFollowers;
-    var lastDay = 0;
-    for (var s = 0; s < sortedSpikes.length; s++) {
-      var sp = sortedSpikes[s];
-      if (sp.day <= 0 || sp.day > totalDays) continue;
-      running += state.velocity * (sp.day - lastDay);
-      points.push({ day: sp.day, followers: running });
-      running += sp.boost;
-      points.push({ day: sp.day, followers: running });
-      lastDay = sp.day;
+    // Spikes are not instantaneous: each boost ramps linearly over RAMP_DAYS days
+    // starting on the spike date, applied as additive per-day deltas so overlapping
+    // windows simply sum and the line slopes steeply instead of going vertical.
+    var activeSpikes = sortedSpikes.filter(function(sp) {
+      return sp.day > 0 && sp.day <= totalDays;
+    });
+    function boostAt(day) {
+      var sum = 0;
+      for (var b = 0; b < activeSpikes.length; b++) {
+        var t = day - activeSpikes[b].day;
+        if (t <= 0) continue;
+        sum += (t >= RAMP_DAYS) ? activeSpikes[b].boost : activeSpikes[b].boost * (t / RAMP_DAYS);
+      }
+      return sum;
     }
-    running += state.velocity * (totalDays - lastDay);
-    points.push({ day: totalDays, followers: running });
+    function followersAt(day) {
+      return state.currentFollowers + state.velocity * day + boostAt(day);
+    }
+    // Sample day 0, the launch day, and every day inside a ramp window so the slope
+    // renders with intermediate points; flat stretches stay straight.
+    var dayMarks = {};
+    function markDay(d) { dayMarks[Math.max(0, Math.min(totalDays, Math.round(d)))] = true; }
+    markDay(0);
+    markDay(totalDays);
+    for (var m = 0; m < activeSpikes.length; m++) {
+      for (var k = 0; k <= RAMP_DAYS; k++) markDay(activeSpikes[m].day + k);
+    }
+    var sortedDays = Object.keys(dayMarks).map(Number).sort(function(a, b){ return a - b; });
+    var points = sortedDays.map(function(d) {
+      return { day: d, followers: followersAt(d) };
+    });
 
-    var finalProjection = running;
+    var finalProjection = followersAt(totalDays);
     var maxY = Math.max(finalProjection, state.targetEquiv, state.currentFollowers + 100) * 1.15;
     if (maxY <= 0) maxY = 100;
 
