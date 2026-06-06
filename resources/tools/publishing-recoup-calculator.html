@@ -666,6 +666,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
    as the next step, distinct from the plain .cta-card at the page bottom. */
 .context-cta {
   transform-origin: center;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease-out;
   margin: 28px 0 0;
   padding: 28px 32px;
   border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
@@ -713,6 +716,30 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .context-cta-btn:hover { background: var(--clay-deep); }
 .context-cta-btn svg { transition: transform 0.3s ease-out; }
 .context-cta-btn:hover svg { transform: translate(2px, -2px); }
+/* Lift content above the spotlight layer so the glow sits behind text/button. */
+.context-cta-text,
+.context-cta-btn { position: relative; z-index: 1; }
+/* Cursor-following spotlight. Separate layer so it coexists with any other card
+   effects; pointer position arrives via --mx/--my (set in JS). */
+.cta-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  background: radial-gradient(circle 220px at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--clay) 22%, transparent), transparent 60%);
+}
+.context-cta:hover .cta-spotlight { opacity: 1; }
+.context-cta:hover { border-color: var(--clay); }
+@media (prefers-reduced-motion: reduce) {
+  /* No pointer tracking: static centered clay glow on hover. */
+  .cta-spotlight {
+    background: radial-gradient(circle 220px at 50% 50%,
+      color-mix(in srgb, var(--clay) 18%, transparent), transparent 60%);
+  }
+}
 @media (max-width: 640px) {
   .context-cta { padding: 22px 20px; }
   .context-cta-btn { width: 100%; justify-content: center; }
@@ -2037,6 +2064,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
 
       <div class="context-cta">
+        <span class="cta-spotlight" aria-hidden="true"></span>
         <div class="context-cta-text">
           <p class="context-cta-headline">Want a second pair of eyes on these numbers?</p>
           <p class="context-cta-sub">Send me your situation and I'll tell you the first things I'd change about your plan.</p>
@@ -2724,6 +2752,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     }, { threshold: [0, 0.6, 1] });
     observer.observe(card);
+  })();
+
+  /* Cursor-following spotlight: write pointer position relative to the card into
+     --mx/--my; the .cta-spotlight layer renders the glow there. Skipped under
+     reduced motion, which falls back to a static centered glow via CSS. */
+  (function () {
+    var card = document.querySelector('.context-cta');
+    if (!card) return;
+    if (window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    card.addEventListener('pointermove', function (e) {
+      var rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
   })();
 })();
 </script>
