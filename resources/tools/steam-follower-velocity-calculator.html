@@ -1568,9 +1568,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
                   <rect id="traj-reveal-rect" x="0" y="0" width="10" height="10" fill="url(#traj-reveal-grad)"></rect>
                 </g>
               </mask>
+              <marker id="traj-arrowhead" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto" markerUnits="strokeWidth">
+                <path id="traj-arrowhead-shape" d="M0,0 L4,2 L0,4 Z"></path>
+              </marker>
             </defs>
             <path id="overlay-target-line" class="overlay-target-line" fill="none"></path>
-            <path id="overlay-traj-line" class="overlay-traj-line" fill="none" mask="url(#traj-reveal-mask)"></path>
+            <path id="overlay-traj-line" class="overlay-traj-line" fill="none" marker-end="url(#traj-arrowhead)" mask="url(#traj-reveal-mask)"></path>
           </svg>
         </div>
         <div class="trajectory-legend">
@@ -2082,6 +2085,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var overlayTrajEl = document.getElementById('overlay-traj-line');
   var overlayMaskG = document.getElementById('traj-reveal-g');
   var overlayRevealRect = document.getElementById('traj-reveal-rect');
+  var overlayArrowEl = document.getElementById('traj-arrowhead-shape');
   var chartWrap = canvas.parentNode;
   var reduceMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -2114,6 +2118,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     overlayTrajEl.setAttribute('d', data.trajD || '');
     overlayTrajEl.setAttribute('stroke', data.trajColor);
+    // Arrowhead shares the trajectory line's dynamic color.
+    if (overlayArrowEl) overlayArrowEl.setAttribute('fill', data.trajColor);
 
     // Size the reveal mask to cover the chart plus a soft trailing band.
     var soft = cssW * REVEAL_SOFT;
