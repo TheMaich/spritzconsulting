@@ -1133,17 +1133,23 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 .outlook-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr;
   gap: 32px;
-  align-items: start;
+  align-items: stretch;
 }
 /* Title-to-content gap matching the section heading scale (.calc-notes-label). */
 .outlook-card .trajectory-label { margin-bottom: 20px; }
 .outlook-readout {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 16px;
+}
+/* Push the copy button to the bottom of the full-height column so it lines up
+   with the Expected Outcome card's bottom edge, centered within the left column. */
+.outlook-readout .calc-copy-btn {
+  margin-top: auto;
+  align-self: center;
 }
 .outlook-window {
   background: var(--paper-2);
