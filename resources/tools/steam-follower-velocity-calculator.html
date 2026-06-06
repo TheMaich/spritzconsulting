@@ -665,6 +665,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-top: auto;
 }
 
+/* Hairline separator, same 1px rule color used for borders across the page. */
+.calc-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 0;
+}
+
 .calc-label {
   display: flex;
   align-items: baseline;
@@ -1482,15 +1491,31 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
       </div>
 
-      <div class="calc-group">
-        <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
-        <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
-        <div class="calc-input-wrap date-picker-wrap">
-          <input type="text" id="page-open-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
-          <button type="button" class="date-picker-toggle" aria-label="Open calendar">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-          </button>
-          <div class="date-picker-dropdown" hidden></div>
+      <div class="calc-divider" role="presentation"></div>
+
+      <div class="calc-row">
+        <div class="calc-group">
+          <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
+          <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
+          <div class="calc-input-wrap date-picker-wrap">
+            <input type="text" id="page-open-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
+            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+            </button>
+            <div class="date-picker-dropdown" hidden></div>
+          </div>
+        </div>
+
+        <div class="calc-group">
+          <label class="calc-label" for="launch-date">Target Launch Date</label>
+          <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
+          <div class="calc-input-wrap date-picker-wrap">
+            <input type="text" id="launch-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
+            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+            </button>
+            <div class="date-picker-dropdown" hidden></div>
+          </div>
         </div>
       </div>
 
@@ -1506,18 +1531,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <button type="button" class="preset-btn" data-value="300">300</button>
           <button type="button" class="preset-btn" data-value="1000">1K</button>
           <button type="button" class="preset-btn" data-value="3000">3K</button>
-        </div>
-      </div>
-
-      <div class="calc-group">
-        <label class="calc-label" for="launch-date">Target Launch Date</label>
-        <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
-        <div class="calc-input-wrap date-picker-wrap">
-          <input type="text" id="launch-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
-          <button type="button" class="date-picker-toggle" aria-label="Open calendar">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-          </button>
-          <div class="date-picker-dropdown" hidden></div>
         </div>
       </div>
 
