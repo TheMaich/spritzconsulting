@@ -2020,6 +2020,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var overlayTargetD = null, overlayTargetColor = null;
 
     var ink = getCSSVar('--ink') || '#ECEFF6';
+    var ink2 = getCSSVar('--ink-2') || '#8E95A4';
     var ink3 = getCSSVar('--ink-3') || '#5C6272';
     var clay = getCSSVar('--clay') || '#E5B415';
     var rule = getCSSVar('--rule') || '#262A33';
@@ -2065,7 +2066,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     ctx.strokeStyle = rule;
     ctx.lineWidth = 1;
     ctx.font = '10px ui-monospace, monospace';
-    ctx.fillStyle = ink3;
+    ctx.fillStyle = ink2;
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
     for (var i = 0; i <= 4; i++) {
@@ -2078,15 +2079,19 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.fillText(fmtNum(val), padL - 10, y);
     }
 
-    ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     function fmtDate(d) {
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
-    ctx.fillText(fmtDate(state.today), padL, padT + H + 12);
-    var midDate = new Date(state.today.getTime() + (state.launchDate - state.today) / 2);
-    ctx.fillText(fmtDate(midDate), padL + W / 2, padT + H + 12);
-    ctx.fillText(fmtDate(state.launchDate), padL + W, padT + H + 12);
+    // Evenly spaced date labels from page open (start) to launch. Fewer on mobile to avoid crowding.
+    var xLabelCount = cssW < 600 ? 5 : 7;
+    for (var xl = 0; xl < xLabelCount; xl++) {
+      var xf = xl / (xLabelCount - 1);
+      var xlx = padL + W * xf;
+      var xld = new Date(state.today.getTime() + (state.launchDate - state.today) * xf);
+      ctx.textAlign = xl === 0 ? 'left' : (xl === xLabelCount - 1 ? 'right' : 'center');
+      ctx.fillText(fmtDate(xld), xlx, padT + H + 12);
+    }
 
     function xAt(days) { return padL + (W * days / totalDays); }
     function yAt(f) { return padT + H - (H * f / maxY); }
@@ -2255,7 +2260,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           overlayInView = false;
         }
       });
-    }, { threshold: 0.85 });
+    }, { threshold: 0.95 });
     overlayObserver.observe(chartWrap);
   } else {
     // No observer support: treat as always in view.
