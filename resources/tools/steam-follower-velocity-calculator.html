@@ -1110,6 +1110,83 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   border-radius: 8px;
   padding: 28px 32px;
 }
+
+/* Launch Outlook card: same surface as the trajectory card. Two columns
+   (stat readout + Expected Outcome window) collapsing to one on mobile. */
+.outlook-card {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 28px 32px;
+}
+.outlook-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+  margin-top: 6px;
+}
+.outlook-window {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+.outlook-window-title {
+  font-family: var(--mono-data);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+.outlook-levels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.outlook-level {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid transparent;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.outlook-level.is-active { color: var(--ink); font-weight: 600; }
+.outlook-level[data-level="0"].is-active,
+.outlook-level[data-level="1"].is-active {
+  background: color-mix(in srgb, var(--danger) 12%, var(--paper-2));
+  border-color: color-mix(in srgb, var(--danger) 40%, var(--rule));
+  border-left-color: var(--danger);
+}
+.outlook-level[data-level="2"].is-active {
+  background: color-mix(in srgb, var(--clay) 12%, var(--paper-2));
+  border-color: color-mix(in srgb, var(--clay) 40%, var(--rule));
+  border-left-color: var(--clay);
+}
+.outlook-level[data-level="3"].is-active,
+.outlook-level[data-level="4"].is-active {
+  background: color-mix(in srgb, var(--success) 12%, var(--paper-2));
+  border-color: color-mix(in srgb, var(--success) 40%, var(--rule));
+  border-left-color: var(--success);
+}
+.outlook-empty {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 12px;
+}
+@media (max-width: 640px) {
+  .outlook-grid { grid-template-columns: 1fr; gap: 20px; }
+  .outlook-card { padding: 20px 18px; }
+}
 .trajectory-label {
   display: flex;
   align-items: center;
@@ -1658,24 +1735,25 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <div class="spike-summary-row"><span>Total spike boost</span><span id="spike-total-boost">0</span></div>
           <div class="spike-summary-row"><span>Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
         </div>
+      </div>
 
-        <div class="calc-result-wrap">
-          <div class="calc-result" aria-live="polite">
-            <div class="calc-result-label">Followers Needed</div>
-            <div class="calc-result-sublabel" id="followers-needed-sublabel">to hit your wishlist target</div>
-            <div class="calc-result-value" id="followers-needed">0</div>
-            <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy followers needed to clipboard">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-              <span class="calc-copy-label" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Copy</span>
-            </button>
+      <div class="outlook-card">
+        <div class="trajectory-label">Launch Outlook</div>
+        <div class="outlook-grid">
+          <div class="calc-result-breakdown" id="breakdown"></div>
+          <div class="outlook-window">
+            <div class="outlook-window-title">Expected Outcome</div>
+            <ul class="outlook-levels" id="outlook-levels">
+              <li class="outlook-level" data-level="0">HIGHLY UNLIKELY to reach the objectives</li>
+              <li class="outlook-level" data-level="1">UNLIKELY to reach the objectives</li>
+              <li class="outlook-level" data-level="2">POSSIBLE, but tight</li>
+              <li class="outlook-level" data-level="3">LIKELY to reach the objectives</li>
+              <li class="outlook-level" data-level="4">HIGHLY LIKELY to reach the objectives</li>
+            </ul>
+            <div class="outlook-empty" id="outlook-empty">Set a wishlist target to see your expected outcome.</div>
           </div>
         </div>
       </div>
-
-      <div class="calc-result-breakdown" id="breakdown"></div>
 
       <div class="calc-nav-wrap">
         <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-nav-btn calc-nav-back">← Steam Wishlist Target Calculator</a>
@@ -1809,8 +1887,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var launchInput = document.getElementById('launch-date');
   var multInput = document.getElementById('multiplier');
   var targetInput = document.getElementById('wishlist-target');
-  var followersNeededEl = document.getElementById('followers-needed');
-  var followersNeededSublabelEl = document.getElementById('followers-needed-sublabel');
+  var outlookLevelsEl = document.getElementById('outlook-levels');
+  var outlookEmptyEl = document.getElementById('outlook-empty');
   var wishlistsTodayEl = document.getElementById('wishlists-today');
   var breakdownEl = document.getElementById('breakdown');
   var statusEl = document.getElementById('trajectory-status');
@@ -2378,17 +2456,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var targetEquiv = multiplier > 0 ? target / multiplier : 0;
     var followersNeeded = Math.max(0, targetEquiv - current);
     var gap = projected - targetEquiv;
-
-    rollTo(followersNeededEl, followersNeeded, fmtNum);
-
     var alreadyOnTrack = target > 0 && current > 0 && followersNeeded === 0;
-    if (alreadyOnTrack) {
-      followersNeededEl.style.color = 'var(--clay)';
-      followersNeededSublabelEl.textContent = "you're already on track";
-    } else {
-      followersNeededEl.style.color = '';
-      followersNeededSublabelEl.textContent = 'to hit your wishlist target';
-    }
 
     statusEl.classList.remove('is-positive', 'is-negative');
     if (!launch) {
@@ -2435,6 +2503,19 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       html += '<div class="row"><span>Status</span><span class="gap-positive">On track · estimated wishlists already exceed target</span></div>';
     }
     breakdownEl.innerHTML = html;
+
+    // Expected Outcome: level from estimated wishlists at launch / wishlist target.
+    var outcomeLevels = outlookLevelsEl.querySelectorAll('.outlook-level');
+    outcomeLevels.forEach(function(el) { el.classList.remove('is-active'); });
+    if (target > 0) {
+      outlookEmptyEl.style.display = 'none';
+      var r = estimatedWishlists / target;
+      var lvl = r < 0.50 ? 0 : (r < 0.75 ? 1 : (r < 1.00 ? 2 : (r < 1.25 ? 3 : 4)));
+      var activeLevel = outlookLevelsEl.querySelector('.outlook-level[data-level="' + lvl + '"]');
+      if (activeLevel) activeLevel.classList.add('is-active');
+    } else {
+      outlookEmptyEl.style.display = '';
+    }
 
     if (spikes.length > 0) {
       spikeSummary.hidden = false;
@@ -2554,23 +2635,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   document.addEventListener('themechange', function() {
     setTimeout(calculate, 50);
   });
-
-  var copyBtn = document.getElementById('calc-copy-btn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', function() {
-      var val = followersNeededEl.textContent.trim();
-      navigator.clipboard.writeText(val).then(function() {
-        copyBtn.classList.add('is-copied');
-        copyBtn.querySelector('.calc-copy-label').textContent = 'Copied';
-        copyBtn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-        setTimeout(function() {
-          copyBtn.classList.remove('is-copied');
-          copyBtn.querySelector('.calc-copy-label').textContent = 'Copy';
-          copyBtn.querySelector('svg').innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
-        }, 2000);
-      });
-    });
-  }
 
   calculate();
 })();
