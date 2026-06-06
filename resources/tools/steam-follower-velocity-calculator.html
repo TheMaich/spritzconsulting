@@ -1432,6 +1432,21 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       </div>
 
       <div class="calc-group">
+        <label class="calc-label" for="followers-last-30">Followers Gained in Last 30 Days</label>
+        <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.</div>
+        <div class="calc-input-wrap">
+          <input type="number" id="followers-last-30" class="calc-input" placeholder="0" min="0" step="1">
+          <span class="calc-suffix">FOLLOWERS</span>
+        </div>
+        <div class="calc-presets" data-target="followers-last-30">
+          <button type="button" class="preset-btn" data-value="100">100</button>
+          <button type="button" class="preset-btn" data-value="300">300</button>
+          <button type="button" class="preset-btn" data-value="1000">1K</button>
+          <button type="button" class="preset-btn" data-value="3000">3K</button>
+        </div>
+      </div>
+
+      <div class="calc-group">
         <label class="calc-label" for="launch-date">Target Launch Date</label>
         <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
         <div class="calc-input-wrap date-picker-wrap">
@@ -1491,7 +1506,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-secondary-card" aria-live="polite">
         <div class="calc-secondary-label">Estimated Wishlists Today</div>
         <div class="calc-secondary-value" id="wishlists-today">0</div>
-        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (14x)</div>
+        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
       </div>
 
       <div class="trajectory-card">
@@ -1530,7 +1545,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <li><strong>Experimental tool.</strong> This calculator is based on publicly available industry data, but the underlying metrics are subject to significant variance, genre-specific differences, and market conditions that no dataset fully captures. Use it to explore possible scenarios and pressure-test assumptions. Do not use it as a basis for financial decisions without cross-referencing with your own data and professional advice.</li>
           <li><strong>Where the follower multiplier comes from, and why it keeps changing.</strong> The follower-to-wishlist ratio has increased over time as marketers focus more on wishlist calls-to-action than follower growth. In 2021, the median was 9.6x (range 5x to 14x). By June 2023, it had risen to 12x (range 7x to 20x). GameDiscoverCo data from May 2026 puts the median at 16.1x for games with more than 50,000 wishlists at launch, suggesting the ratio continues to drift upward, especially for larger titles. This calculator uses 12x as the default, which is appropriate for most indie games in active pre-launch. If your game has broad social reach or has been featured in multiple Next Fest events, consider using 14x to 16x. Sources: <a href="https://newsletter.gamediscover.co/p/why-your-steam-follower-to-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Jun 2023</a> &middot; <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
           <li><strong>Where 10x comes from.</strong> GameDiscoverCo surveys of unreleased Steam games show a median of 9.6x to 12x wishlists per follower, with a range of 7x to 20x depending on genre, festival exposure, and marketing activity. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> · <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a></li>
-          <li><strong>Followers are a proxy, not a promise.</strong> Publishers and algorithm alike use follower counts as a visible signal of pre-launch interest. But follower velocity matters more than the absolute number. A game gaining 200 followers per day is a different conversation from one with 10,000 followers accumulated over three years.</li>
+          <li><strong>Recent velocity beats lifetime average.</strong> A page that gained 200 followers in the last month is a healthier signal than one sitting on 10,000 collected over three years. GameDiscoverCo found that titles which underperformed at launch had spent far longer in pre-release, an average of 411 days versus 214 for the strong converters, and the slower organic rate was the tell. That is why this calculator now lets you enter your last 30 days of follower growth and uses that pace when you provide it. Sources: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a> and <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a>.</li>
           <li><strong>Wishlist estimates are approximations.</strong> The follower to wishlist ratio varies by genre, festival participation, and how long the page has been open. GameDiscoverCo data shows a median of 9.6x for unreleased games, with a central cluster of 10x to 12x. Games with recent Next Fest or demo exposure tend to sit higher. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a></li>
           <li><strong>Spikes are not guaranteed.</strong> Next Fest, demos, and trailers can produce large follower boosts, but results vary enormously by genre, timing, and execution. Use spike estimates conservatively.</li>
           <li><strong>Estimation only.</strong> Directional indicator, not a forecast. Real planning needs your actual Steamworks data.</li>
@@ -1647,6 +1662,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 (function() {
   var followersInput = document.getElementById('current-followers');
   var pageOpenInput = document.getElementById('page-open-date');
+  var followersLast30Input = document.getElementById('followers-last-30');
   var launchInput = document.getElementById('launch-date');
   var multInput = document.getElementById('multiplier');
   var targetInput = document.getElementById('wishlist-target');
@@ -2014,7 +2030,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var today = new Date(); today.setHours(0,0,0,0);
     var daysSinceOpen = pageOpen ? daysBetween(pageOpen, today) : 0;
     var daysToLaunch = launch ? daysBetween(today, launch) : 0;
-    var velocity = daysSinceOpen > 0 ? current / daysSinceOpen : 0;
+    var followersLast30 = readNum(followersLast30Input);
+    var velocity = followersLast30 > 0
+      ? followersLast30 / 30
+      : (daysSinceOpen > 0 ? current / daysSinceOpen : 0);
     var baseProjected = current + velocity * daysToLaunch;
 
     var spikes = getSpikes();
@@ -2055,17 +2074,17 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     var wishlistsToday = current * multiplier;
     var wishlistsTodayLow = current * 7;
-    var wishlistsTodayHigh = current * 14;
+    var wishlistsTodayHigh = current * 16;
     document.getElementById('wishlists-today').textContent = fmtNum(wishlistsToday);
     document.getElementById('wishlists-today-range').textContent =
-      'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (14x)';
+      'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
 
     var rows = [
       ['Current followers', fmtNum(current)],
       ['Days since page open', fmtNum(daysSinceOpen)],
       ['Followers / day', fmtDecimal(velocity)],
       ['Estimated wishlists today (x' + multiplier + ')', fmtNum(wishlistsToday)],
-      ['Wishlist range today', fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (14x)'],
+      ['Wishlist range today', fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)'],
       ['Days to launch', fmtNum(daysToLaunch)],
       ['Projected followers at launch', fmtNum(projected)],
       ['Estimated wishlists at launch (x' + multiplier + ')', fmtNum(estimatedWishlists)],
@@ -2158,7 +2177,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   });
 
-  [followersInput, pageOpenInput, launchInput, multInput, targetInput].forEach(function(el) {
+  [followersInput, pageOpenInput, followersLast30Input, launchInput, multInput, targetInput].forEach(function(el) {
     ['input', 'change'].forEach(function(evt) {
       el.addEventListener(evt, calculate);
     });
@@ -2173,7 +2192,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     }
   }, true);
 
-  [followersInput, multInput, targetInput].forEach(function(el) {
+  [followersInput, followersLast30Input, multInput, targetInput].forEach(function(el) {
     el.addEventListener('wheel', function(e) {
       if (document.activeElement === el) {
         e.preventDefault();
