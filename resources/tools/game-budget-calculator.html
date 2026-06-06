@@ -662,6 +662,61 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-bottom: 24px;
 }
 
+/* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
+   as the next step, distinct from the plain .cta-card at the page bottom. */
+.context-cta {
+  margin: 28px 0 0;
+  padding: 28px 32px;
+  border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--clay) 7%, var(--paper-2));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.context-cta-text { flex: 1; min-width: 260px; }
+.context-cta-headline {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.context-cta-sub {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+}
+.context-cta-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 100px;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.context-cta-btn:hover { background: var(--clay-deep); }
+.context-cta-btn svg { transition: transform 0.3s ease-out; }
+.context-cta-btn:hover svg { transform: translate(2px, -2px); }
+@media (max-width: 640px) {
+  .context-cta { padding: 22px 20px; }
+  .context-cta-btn { width: 100%; justify-content: center; }
+}
+
 .cta-card {
   position: relative;
   overflow: hidden;
@@ -1605,6 +1660,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-result-breakdown" id="breakdown"></div>
       <p class="calc-result-note"><strong>Recoupment.</strong> As a general rule, the developer doesn't see a revenue share until net sales clear this total, but this isn't written in stone. Some deals carve out marketing, tier the recoupment, or apply different rules to different cost buckets. Read the recoupment clause before assuming anything.</p>
 
+      <div class="context-cta">
+        <div class="context-cta-text">
+          <p class="context-cta-headline">Want a second pair of eyes on these numbers?</p>
+          <p class="context-cta-sub">I've shipped titles like Dome Keeper, Redout and Sniper Elite. Send me your situation and I'll tell you the first things I'd change.</p>
+        </div>
+        <a href="mailto:michele@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
+          Get in touch
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+
       <div class="recoup-calc-wrap" hidden>
         <a href="/resources/tools/publishing-recoup-calculator.html" style="background:var(--clay); color:var(--paper); border-radius:100px; padding:12px 24px; font-weight:600; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
           Publishing Recoup Calculator
@@ -1633,8 +1699,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </p>
       </div>
       <div class="cta-card-action">
-        <a href="https://spritzconsulting.com/#contact" class="cta-card-btn">
-          Book a call <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        <a href="mailto:michele@spritzconsulting.com" class="cta-card-btn" data-contact-cta>
+          Get in touch <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </a>
       </div>
     </div>
@@ -2146,6 +2212,51 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="calc-floating-label">Total</div>
   <div class="calc-floating-value" id="floating-total">$0</div>
 </div>
+
+<script>
+(function() {
+  var CONTACT_EMAIL = 'michele@spritzconsulting.com';
+  var TOOL_NAME = "Publisher's Game Budget Calculator";
+
+  // Read the rendered result values (no recompute). Returns null when the tool is
+  // empty / zeroed so the mail does not fill with zeros.
+  function currentNumbers() {
+    var totalEl = document.getElementById('total');
+    var totalTxt = totalEl ? totalEl.textContent.trim() : '';
+    var totalNum = parseFloat(totalTxt.replace(/[^0-9.]/g, '')) || 0;
+    if (totalNum <= 0) return null;
+    var lines = ['Total to Recoup: ' + totalTxt];
+    var bd = document.getElementById('breakdown');
+    if (bd) {
+      bd.querySelectorAll('.row').forEach(function(r) {
+        var s = r.querySelectorAll('span');
+        if (s.length >= 2) lines.push(s[0].textContent.trim() + ': ' + s[s.length - 1].textContent.trim());
+      });
+    }
+    return lines;
+  }
+
+  function buildMailto() {
+    var subject = TOOL_NAME + ' - my game';
+    var body = 'Hi Michele,\n'
+      + "I used the " + TOOL_NAME + " and I'd like to talk about my game.\n\n";
+    var numbers = currentNumbers();
+    if (numbers && numbers.length) {
+      body += 'My current numbers:\n' + numbers.join('\n') + '\n\n';
+    }
+    return 'mailto:' + CONTACT_EMAIL
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+  }
+
+  document.querySelectorAll('[data-contact-cta]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = buildMailto();
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
