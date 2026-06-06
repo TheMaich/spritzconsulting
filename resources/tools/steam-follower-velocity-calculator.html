@@ -859,6 +859,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   border-color: var(--clay);
 }
 .dp-day.is-selected:hover { background: var(--clay-deep); }
+.dp-day.is-disabled {
+  color: var(--ink-3);
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.dp-day.is-disabled:hover { background: transparent; }
 
 .calc-presets {
   display: flex;
@@ -1811,7 +1818,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     return d;
   }
 
-  function buildDatePicker(input) {
+  function buildDatePicker(input, opts) {
+    opts = opts || {};
     var wrap = input.closest('.date-picker-wrap');
     if (!wrap) return;
     var toggle = wrap.querySelector('.date-picker-toggle');
@@ -1819,6 +1827,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var viewYear, viewMonth;
     var selected = null;
     var today = new Date(); today.setHours(0,0,0,0);
+    // Selectable range, using the local "today" (same basis as the velocity calc).
+    var minDate = opts.minToday ? today : null;
+    var maxDate = opts.maxToday ? today : null;
+    function inRange(d) {
+      if (minDate && d < minDate) return false;
+      if (maxDate && d > maxDate) return false;
+      return true;
+    }
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
     function formatDisplay(d) { return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
@@ -1843,7 +1859,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         if (outside) classes.push('is-outside');
         if (sameDay(date, today)) classes.push('is-today');
         if (selected && sameDay(date, selected)) classes.push('is-selected');
-        return '<button type="button" class="' + classes.join(' ') + '" data-iso="' + formatISO(date) + '">' + date.getDate() + '</button>';
+        var disabled = !inRange(date);
+        if (disabled) classes.push('is-disabled');
+        return '<button type="button" class="' + classes.join(' ') + '" data-iso="' + formatISO(date) + '"' + (disabled ? ' disabled' : '') + '>' + date.getDate() + '</button>';
       }
 
       var html = ''
@@ -1886,6 +1904,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       dropdown.querySelectorAll('.dp-day').forEach(function(btn){
         btn.addEventListener('click', function(e) {
           e.stopPropagation();
+          if (btn.disabled) return;
           var iso = btn.dataset.iso;
           var parts = iso.split('-');
           selected = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
@@ -1934,10 +1953,23 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     input.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
     toggle.addEventListener('click', function(e) { e.stopPropagation(); if (dropdown.hidden) open(); else close(); });
+
+    // Guard a value that lands out of range (e.g. set programmatically): clamp to today.
+    // Registered before the recompute listener so the calc reads the clamped value.
+    input.addEventListener('change', function() {
+      if (!input.dataset.iso) return;
+      var parts = input.dataset.iso.split('-');
+      var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      if (inRange(d)) return;
+      var clamped = (minDate && d < minDate) ? minDate : maxDate;
+      selected = new Date(clamped.getFullYear(), clamped.getMonth(), clamped.getDate());
+      input.value = formatDisplay(selected);
+      input.dataset.iso = formatISO(selected);
+    });
   }
 
-  buildDatePicker(pageOpenInput);
-  buildDatePicker(launchInput);
+  buildDatePicker(pageOpenInput, { maxToday: true });
+  buildDatePicker(launchInput, { minToday: true });
 
   function daysBetween(d1, d2) {
     return Math.max(0, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
