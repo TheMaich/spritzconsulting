@@ -1231,6 +1231,33 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 .spike-row select:focus,
 .spike-row input:focus { border-color: var(--clay); }
+/* Spike date now uses the custom picker: the .date-picker-wrap is the grid cell,
+   holding the readonly input plus the calendar toggle in one bordered box. */
+.spike-row .spike-date-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.spike-row .spike-date-wrap:focus-within { border-color: var(--clay); }
+.spike-row .spike-date-wrap input.spike-date {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 8px 10px;
+}
+.spike-row .spike-date-wrap .date-picker-toggle {
+  padding: 0 10px;
+  align-self: stretch;
+  border-left: 1px solid var(--rule);
+}
+.spike-row .spike-date-wrap .date-picker-toggle svg { width: 14px; height: 14px; }
+/* Lift the open spike row above the rows below it so its calendar overlays them. */
+.spike-row:has(.date-picker-wrap.is-open) { position: relative; z-index: 300; }
 .spike-remove {
   background: transparent;
   border: 1px solid var(--rule);
@@ -2240,10 +2267,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var arr = [];
     var today = new Date(); today.setHours(0,0,0,0);
     rows.forEach(function(row) {
-      var d = row.querySelector('.spike-date').value;
+      var date = parseDate(row.querySelector('.spike-date'));
       var boost = parseFloat(row.querySelector('.spike-boost').value) || 0;
-      if (!d || boost <= 0) return;
-      var date = new Date(d + 'T00:00:00');
+      if (!date || boost <= 0) return;
       var day = Math.round((date - today) / (1000*60*60*24));
       arr.push({ day: day, boost: boost });
     });
@@ -2364,7 +2390,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       + '<option value="press">Press Coverage</option>'
       + '<option value="custom">Custom</option>'
       + '</select>'
-      + '<input type="date" class="spike-date" aria-label="Event date" />'
+      + '<div class="date-picker-wrap spike-date-wrap">'
+      +   '<input type="text" class="date-picker-input spike-date" readonly placeholder="DD/MM/YYYY" autocomplete="off" aria-label="Event date" />'
+      +   '<button type="button" class="date-picker-toggle" aria-label="Open calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg></button>'
+      +   '<div class="date-picker-dropdown" hidden></div>'
+      + '</div>'
       + '<input type="number" class="spike-boost" min="0" step="50" placeholder="Followers boost" aria-label="Follower boost" />'
       + '<button type="button" class="spike-remove" aria-label="Remove event">&times;</button>';
     spikeList.appendChild(row);
@@ -2378,6 +2408,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       el.addEventListener('input', calculate);
       el.addEventListener('change', calculate);
     });
+    // Spike dates use the same custom picker as the velocity fields, today minimum.
+    buildDatePicker(row.querySelector('.spike-date'), { minToday: true });
     addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
   }
 
