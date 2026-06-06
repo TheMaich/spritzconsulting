@@ -1135,7 +1135,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 .trajectory-overlay .overlay-traj-line {
   fill: none;
-  stroke-width: 2;
+  stroke-width: 3;
 }
 @media (prefers-reduced-motion: reduce) {
   .trajectory-overlay .overlay-target-line {
@@ -2013,10 +2013,17 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     function yAt(f) { return padT + H - (H * f / maxY); }
 
     var hitsTarget = finalProjection >= state.targetEquiv;
-    var fillColor = hitsTarget
-      ? 'rgba(75, 200, 110, 0.10)'
-      : 'rgba(255, 91, 91, 0.10)';
-    ctx.fillStyle = fillColor;
+    var fillRGB = hitsTarget ? '75, 200, 110' : '255, 91, 91';
+    // Vertical gradient: full tint on the trajectory line, fading to transparent at the chart floor.
+    var fillTopY = padT + H;
+    for (var fp = 0; fp < points.length; fp++) {
+      var fpY = yAt(points[fp].followers);
+      if (fpY < fillTopY) fillTopY = fpY;
+    }
+    var fillGrad = ctx.createLinearGradient(0, fillTopY, 0, padT + H);
+    fillGrad.addColorStop(0, 'rgba(' + fillRGB + ', 0.10)');
+    fillGrad.addColorStop(1, 'rgba(' + fillRGB + ', 0)');
+    ctx.fillStyle = fillGrad;
     ctx.beginPath();
     ctx.moveTo(xAt(0), padT + H);
     for (var p = 0; p < points.length; p++) {
@@ -2151,7 +2158,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         { transform: 'translateX(' + start + 'px)' },
         { transform: 'translateX(0px)' }
       ],
-      { duration: 500, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'forwards' }
+      { duration: 700, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'forwards' }
     );
   }
 
@@ -2166,7 +2173,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           overlayInView = false;
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.6 });
     overlayObserver.observe(chartWrap);
   } else {
     // No observer support: treat as always in view.
