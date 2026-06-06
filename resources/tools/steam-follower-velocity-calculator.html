@@ -1133,11 +1133,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   padding: 18px 20px;
 }
 .outlook-window-title {
-  font-family: var(--mono-data);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 18px;
+  font-variation-settings: "opsz" 24;
+  letter-spacing: -0.01em;
+  color: var(--ink);
   margin-bottom: 14px;
 }
 .outlook-levels {
@@ -1744,11 +1745,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <div class="outlook-window">
             <div class="outlook-window-title">Expected Outcome</div>
             <ul class="outlook-levels" id="outlook-levels">
-              <li class="outlook-level" data-level="0">HIGHLY UNLIKELY to reach the objectives</li>
-              <li class="outlook-level" data-level="1">UNLIKELY to reach the objectives</li>
-              <li class="outlook-level" data-level="2">POSSIBLE, but tight</li>
-              <li class="outlook-level" data-level="3">LIKELY to reach the objectives</li>
               <li class="outlook-level" data-level="4">HIGHLY LIKELY to reach the objectives</li>
+              <li class="outlook-level" data-level="3">LIKELY to reach the objectives</li>
+              <li class="outlook-level" data-level="2">POSSIBLE, but tight</li>
+              <li class="outlook-level" data-level="1">UNLIKELY to reach the objectives</li>
+              <li class="outlook-level" data-level="0">HIGHLY UNLIKELY to reach the objectives</li>
             </ul>
             <div class="outlook-empty" id="outlook-empty">Set a wishlist target to see your expected outcome.</div>
           </div>
