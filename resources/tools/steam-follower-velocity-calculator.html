@@ -1726,6 +1726,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var targetInput = document.getElementById('wishlist-target');
   var followersNeededEl = document.getElementById('followers-needed');
   var followersNeededSublabelEl = document.getElementById('followers-needed-sublabel');
+  var wishlistsTodayEl = document.getElementById('wishlists-today');
   var breakdownEl = document.getElementById('breakdown');
   var statusEl = document.getElementById('trajectory-status');
   var canvas = document.getElementById('trajectory-chart');
@@ -2242,7 +2243,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var wishlistsToday = current * multiplier;
     var wishlistsTodayLow = current * 7;
     var wishlistsTodayHigh = current * 16;
-    document.getElementById('wishlists-today').textContent = fmtNum(wishlistsToday);
+    rollTo(wishlistsTodayEl, wishlistsToday, fmtNum);
     document.getElementById('wishlists-today-range').textContent =
       'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
 
