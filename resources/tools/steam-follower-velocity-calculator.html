@@ -743,6 +743,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .date-picker-wrap { position: relative; overflow: visible; z-index: 1; }
 .date-picker-wrap.is-open { z-index: 200; }
 .calc-group.is-picker-open { position: relative; z-index: 300; }
+/* The date fields now sit inside a .calc-row whose entrance animation (fill: both)
+   makes it a persistent stacking context, trapping the group z-index above. Lift the
+   whole row above the later sibling fields while either picker inside it is open. */
+.calc-row:has(.calc-group.is-picker-open) { position: relative; z-index: 300; }
 .date-picker-input { cursor: pointer; }
 .date-picker-toggle {
   background: var(--paper-3);
