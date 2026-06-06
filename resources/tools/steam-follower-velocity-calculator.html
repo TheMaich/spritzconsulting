@@ -1110,6 +1110,33 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   height: 320px;
   display: block;
 }
+.trajectory-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.trajectory-overlay .overlay-target-line {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+  animation: trajectory-marching-ants 700ms linear infinite;
+}
+@keyframes trajectory-marching-ants {
+  to { stroke-dashoffset: -11; }
+}
+.trajectory-overlay .overlay-traj-line {
+  fill: none;
+  stroke-width: 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .trajectory-overlay .overlay-target-line {
+    animation: none;
+  }
+}
 .trajectory-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1524,6 +1551,22 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
         <div class="trajectory-chart-wrap">
           <canvas id="trajectory-chart"></canvas>
+          <svg class="trajectory-overlay" id="trajectory-overlay" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="traj-reveal-grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#fff" stop-opacity="1"></stop>
+                <stop offset="0.82" stop-color="#fff" stop-opacity="1"></stop>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"></stop>
+              </linearGradient>
+              <mask id="traj-reveal-mask" maskUnits="userSpaceOnUse">
+                <g id="traj-reveal-g">
+                  <rect id="traj-reveal-rect" x="0" y="0" width="10" height="10" fill="url(#traj-reveal-grad)"></rect>
+                </g>
+              </mask>
+            </defs>
+            <path id="overlay-target-line" class="overlay-target-line" fill="none"></path>
+            <path id="overlay-traj-line" class="overlay-traj-line" fill="none" mask="url(#traj-reveal-mask)"></path>
+          </svg>
         </div>
         <div class="trajectory-legend">
           <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
@@ -1887,6 +1930,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, cssW, cssH);
 
+    // Screen-space paths handed to the SVG overlay (canvas stops stroking these two lines).
+    var overlayTrajD = null, overlayTrajColor = null;
+    var overlayTargetD = null, overlayTargetColor = null;
+
     var ink = getCSSVar('--ink') || '#ECEFF6';
     var ink3 = getCSSVar('--ink-3') || '#5C6272';
     var clay = getCSSVar('--clay') || '#E5B415';
@@ -1903,6 +1950,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.font = '12px ui-monospace, monospace';
       ctx.textAlign = 'center';
       ctx.fillText('Awaiting input', cssW / 2, cssH / 2);
+      syncOverlay(cssW, cssH, null);
       return;
     }
 
@@ -1974,29 +2022,22 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     if (state.targetEquiv > 0) {
       var targetY = yAt(state.targetEquiv);
-      ctx.strokeStyle = clay;
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([6, 4]);
-      ctx.beginPath();
-      ctx.moveTo(padL, targetY);
-      ctx.lineTo(padL + W, targetY);
-      ctx.stroke();
-      ctx.setLineDash([]);
+      // Target line is rendered by the SVG overlay; canvas keeps only its label.
+      overlayTargetColor = clay;
+      overlayTargetD = 'M' + padL + ' ' + targetY + ' L' + (padL + W) + ' ' + targetY;
       ctx.fillStyle = clay;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'bottom';
       ctx.fillText('TARGET ' + fmtNum(state.targetEquiv), padL + 6, targetY - 4);
     }
 
-    ctx.strokeStyle = ink;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
+    // Trajectory line is rendered by the SVG overlay; build its path from the same screen points.
+    overlayTrajColor = ink;
+    overlayTrajD = '';
     for (var p2 = 0; p2 < points.length; p2++) {
       var pt = points[p2];
-      if (p2 === 0) ctx.moveTo(xAt(pt.day), yAt(pt.followers));
-      else ctx.lineTo(xAt(pt.day), yAt(pt.followers));
+      overlayTrajD += (p2 === 0 ? 'M' : ' L') + xAt(pt.day) + ' ' + yAt(pt.followers);
     }
-    ctx.stroke();
 
     ctx.strokeStyle = clay;
     ctx.fillStyle = clay;
@@ -2013,6 +2054,117 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.arc(sx, padT + H - 14, 3.5, 0, Math.PI * 2);
       ctx.fill();
     }
+
+    syncOverlay(cssW, cssH, {
+      trajD: overlayTrajD,
+      trajColor: overlayTrajColor,
+      targetD: overlayTargetD,
+      targetColor: overlayTargetColor
+    });
+  }
+
+  // --- SVG overlay: renders the trajectory and target lines, with reveal + marching-ants animation.
+  var overlaySvg = document.getElementById('trajectory-overlay');
+  var overlayTargetEl = document.getElementById('overlay-target-line');
+  var overlayTrajEl = document.getElementById('overlay-traj-line');
+  var overlayMaskG = document.getElementById('traj-reveal-g');
+  var overlayRevealRect = document.getElementById('traj-reveal-rect');
+  var chartWrap = canvas.parentNode;
+  var reduceMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  var overlayInView = false;
+  var overlayRevealedOnce = false;
+  var overlayRevealPending = false;
+  var overlayLastW = 0;
+  var overlayRevealAnim = null;
+  var REVEAL_SOFT = 0.22; // soft band as a fraction of chart width
+
+  function syncOverlay(cssW, cssH, data) {
+    if (!overlaySvg) return;
+    overlayLastW = cssW;
+    overlaySvg.setAttribute('viewBox', '0 0 ' + cssW + ' ' + cssH);
+
+    if (!data) {
+      overlayTargetEl.setAttribute('d', '');
+      overlayTrajEl.setAttribute('d', '');
+      return;
+    }
+
+    if (data.targetD) {
+      overlayTargetEl.setAttribute('d', data.targetD);
+      overlayTargetEl.setAttribute('stroke', data.targetColor);
+      overlayTargetEl.style.display = '';
+    } else {
+      overlayTargetEl.setAttribute('d', '');
+      overlayTargetEl.style.display = 'none';
+    }
+
+    overlayTrajEl.setAttribute('d', data.trajD || '');
+    overlayTrajEl.setAttribute('stroke', data.trajColor);
+
+    // Size the reveal mask to cover the chart plus a soft trailing band.
+    var soft = cssW * REVEAL_SOFT;
+    overlayRevealRect.setAttribute('width', cssW + soft);
+    overlayRevealRect.setAttribute('height', cssH);
+
+    requestReveal();
+  }
+
+  function requestReveal() {
+    if (overlayInView) { doReveal(); return; }
+    overlayRevealPending = true;
+    // Before the first reveal, hold the line hidden so it does not flash in before the sweep.
+    if (!overlayRevealedOnce && !reduceMotionMQ.matches) parkRevealHidden();
+  }
+
+  function parkRevealHidden() {
+    if (overlayRevealAnim) { overlayRevealAnim.cancel(); overlayRevealAnim = null; }
+    var soft = overlayLastW * REVEAL_SOFT;
+    overlayMaskG.setAttribute('transform', 'translate(' + (-(overlayLastW + soft)) + ',0)');
+  }
+
+  function doReveal() {
+    overlayRevealPending = false;
+    overlayRevealedOnce = true;
+    if (overlayRevealAnim) { overlayRevealAnim.cancel(); overlayRevealAnim = null; }
+
+    if (reduceMotionMQ.matches) {
+      // Reduced motion: no directional sweep. Hold the mask fully open and fade opacity.
+      overlayMaskG.setAttribute('transform', 'translate(0,0)');
+      overlayRevealAnim = overlayTrajEl.animate(
+        [{ opacity: 0 }, { opacity: 1 }],
+        { duration: 200, easing: 'ease', fill: 'forwards' }
+      );
+      return;
+    }
+
+    var soft = overlayLastW * REVEAL_SOFT;
+    var start = -(overlayLastW + soft);
+    overlayRevealAnim = overlayMaskG.animate(
+      [
+        { transform: 'translateX(' + start + 'px)' },
+        { transform: 'translateX(0px)' }
+      ],
+      { duration: 500, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'forwards' }
+    );
+  }
+
+  if (overlaySvg && 'IntersectionObserver' in window) {
+    var overlayObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          overlayInView = true;
+          // First view, or a data change queued while off-screen.
+          if (!overlayRevealedOnce || overlayRevealPending) doReveal();
+        } else {
+          overlayInView = false;
+        }
+      });
+    }, { threshold: 0.2 });
+    overlayObserver.observe(chartWrap);
+  } else {
+    // No observer support: treat as always in view.
+    overlayInView = true;
   }
 
   function getSpikes() {
