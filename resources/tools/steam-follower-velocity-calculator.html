@@ -902,12 +902,21 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   bottom: auto;
   z-index: auto;
 }
+/* Followers Needed now nests inside the trajectory card under the spike summary:
+   match the nested rhythm and never stick, so it stacks in normal flow. */
+.trajectory-card .calc-result-wrap { margin-top: 14px; }
 
 @media (max-width: 640px) {
   .calc-result-wrap {
     position: sticky;
     bottom: 40px;
     z-index: 50;
+  }
+  /* Inside the trajectory card it must not stick; stays in single-column flow. */
+  .trajectory-card .calc-result-wrap {
+    position: static;
+    bottom: auto;
+    z-index: auto;
   }
 }
 
@@ -1592,21 +1601,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
       </div>
 
-      <div class="calc-result-wrap">
-        <div class="calc-result" aria-live="polite">
-          <div class="calc-result-label">Followers Needed</div>
-          <div class="calc-result-sublabel" id="followers-needed-sublabel">to hit your wishlist target</div>
-          <div class="calc-result-value" id="followers-needed">0</div>
-          <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy followers needed to clipboard">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-            <span class="calc-copy-label" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Copy</span>
-          </button>
-        </div>
-      </div>
-
       <div class="trajectory-card">
         <div class="trajectory-label">Follower Trajectory</div>
         <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
@@ -1646,6 +1640,21 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <div class="spike-summary" id="spike-summary" hidden>
           <div class="spike-summary-row"><span>Total spike boost</span><span id="spike-total-boost">0</span></div>
           <div class="spike-summary-row"><span>Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
+        </div>
+
+        <div class="calc-result-wrap">
+          <div class="calc-result" aria-live="polite">
+            <div class="calc-result-label">Followers Needed</div>
+            <div class="calc-result-sublabel" id="followers-needed-sublabel">to hit your wishlist target</div>
+            <div class="calc-result-value" id="followers-needed">0</div>
+            <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy followers needed to clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span class="calc-copy-label" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Copy</span>
+            </button>
+          </div>
         </div>
       </div>
 
