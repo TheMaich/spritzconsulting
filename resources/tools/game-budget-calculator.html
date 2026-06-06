@@ -665,6 +665,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step, distinct from the plain .cta-card at the page bottom. */
 .context-cta {
+  transform-origin: center;
   margin: 28px 0 0;
   padding: 28px 32px;
   border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
@@ -2241,6 +2242,80 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       window.location.href = buildMailto();
     });
   });
+
+  /* One-time attention nudge on the contextual CTA card. Fires once the card has
+     been continuously visible for 5s, unless the user already interacted with it.
+     Uses the Web Animations API so nothing lingers on the element afterwards. */
+  (function () {
+    var card = document.querySelector('.context-cta');
+    if (!card || typeof IntersectionObserver === 'undefined' || !card.animate) return;
+
+    var reduceMotion = !!(window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var done = false;
+    var interacted = false;
+    var timer = null;
+    var observer = null;
+
+    function clearTimer() {
+      if (timer !== null) { window.clearTimeout(timer); timer = null; }
+    }
+
+    function hexToRgba(hex, alpha) {
+      var h = hex.replace('#', '');
+      if (h.length === 3) { h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2]; }
+      var r = parseInt(h.slice(0, 2), 16);
+      var g = parseInt(h.slice(2, 4), 16);
+      var b = parseInt(h.slice(4, 6), 16);
+      return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+    }
+
+    function play() {
+      clearTimer();
+      if (done || interacted) return;
+      done = true;
+      if (observer) { observer.disconnect(); }
+      if (reduceMotion) {
+        /* No transform under reduced motion: a single clay glow/border lift, then rest. */
+        var clay = (getComputedStyle(document.documentElement)
+          .getPropertyValue('--clay') || '#8A6600').trim();
+        card.animate([
+          { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) },
+          { boxShadow: '0 0 0 6px ' + hexToRgba(clay, 0.22), borderColor: hexToRgba(clay, 0.9), offset: 0.5 },
+          { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) }
+        ], { duration: 900, easing: 'ease-out' });
+      } else {
+        /* Single settling wobble, max ~2deg, ~550ms ease-out. Not a continuous shake. */
+        card.animate([
+          { transform: 'rotate(0deg)' },
+          { transform: 'rotate(-2deg)', offset: 0.25 },
+          { transform: 'rotate(2deg)', offset: 0.55 },
+          { transform: 'rotate(-1deg)', offset: 0.8 },
+          { transform: 'rotate(0deg)' }
+        ], { duration: 550, easing: 'ease-out' });
+      }
+    }
+
+    function markInteracted() {
+      interacted = true;
+      clearTimer();
+      if (observer) { observer.disconnect(); }
+    }
+    card.addEventListener('mouseenter', markInteracted, { once: true });
+    card.addEventListener('pointerdown', markInteracted, { once: true });
+
+    observer = new IntersectionObserver(function (entries) {
+      var entry = entries[0];
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+        if (timer === null && !done && !interacted) {
+          timer = window.setTimeout(play, 5000);
+        }
+      } else {
+        clearTimer();
+      }
+    }, { threshold: [0, 0.6, 1] });
+    observer.observe(card);
+  })();
 })();
 </script>
 
