@@ -2327,22 +2327,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     });
   });
 
-  /* One-time attention nudge on the contextual CTA card. Fires once the card has
-     been continuously visible for 5s, unless the user already interacted with it.
-     Uses the Web Animations API so nothing lingers on the element afterwards. */
+  /* Attention nudge on the contextual CTA card. Wobbles about 5s after the card
+     scrolls into view, then idles roughly every 60s while it stays visible. It is
+     suppressed entirely while the pointer is over the card so it never fights the
+     hover scale, and any in-flight wobble is cancelled cleanly on pointer enter.
+     Uses the Web Animations API with the default fill (none), so no transform ever
+     lingers on the inner card. */
   (function () {
     var card = document.querySelector('.context-cta');
     if (!card || typeof IntersectionObserver === 'undefined' || !card.animate) return;
 
     var reduceMotion = !!(window.matchMedia
       && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    var done = false;
-    var interacted = false;
-    var timer = null;
-    var observer = null;
+    var hovering = false;
+    var visible = false;
+    var currentAnim = null;
+    var startTimer = null;
+    var idleTimer = null;
 
-    function clearTimer() {
-      if (timer !== null) { window.clearTimeout(timer); timer = null; }
+    function clearStartTimer() {
+      if (startTimer !== null) { window.clearTimeout(startTimer); startTimer = null; }
+    }
+    function clearIdleTimer() {
+      if (idleTimer !== null) { window.clearTimeout(idleTimer); idleTimer = null; }
     }
 
     function hexToRgba(hex, alpha) {
@@ -2354,23 +2361,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
     }
 
+    function scheduleIdle() {
+      clearIdleTimer();
+      if (hovering || !visible) return;
+      idleTimer = window.setTimeout(function () { idleTimer = null; play(); }, 60000);
+    }
+
     function play() {
-      clearTimer();
-      if (done || interacted) return;
-      done = true;
-      if (observer) { observer.disconnect(); }
+      startTimer = null;
+      /* Never wobble while hovered or off-screen. */
+      if (hovering || !visible) return;
       if (reduceMotion) {
         /* No transform under reduced motion: a single clay glow/border lift, then rest. */
         var clay = (getComputedStyle(document.documentElement)
           .getPropertyValue('--clay') || '#8A6600').trim();
-        card.animate([
+        currentAnim = card.animate([
           { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) },
           { boxShadow: '0 0 0 6px ' + hexToRgba(clay, 0.22), borderColor: hexToRgba(clay, 0.9), offset: 0.5 },
           { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) }
         ], { duration: 900, easing: 'ease-out' });
       } else {
         /* Single settling wobble, max ~1deg, ~450ms ease-out. Not a continuous shake. */
-        card.animate([
+        currentAnim = card.animate([
           { transform: 'rotate(0deg)' },
           { transform: 'rotate(-1deg)', offset: 0.25 },
           { transform: 'rotate(1deg)', offset: 0.55 },
@@ -2378,24 +2390,44 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           { transform: 'rotate(0deg)' }
         ], { duration: 450, easing: 'ease-out', composite: 'add' });
       }
+      if (currentAnim) {
+        currentAnim.onfinish = function () { currentAnim = null; scheduleIdle(); };
+        currentAnim.oncancel = function () { currentAnim = null; };
+      }
     }
 
-    function markInteracted() {
-      interacted = true;
-      clearTimer();
-      if (observer) { observer.disconnect(); }
+    /* Cancel any pending or in-flight wobble and clear the inner card back to its
+       resting transform, so nothing is left to interfere with the hover scale. */
+    function stopWobble() {
+      clearStartTimer();
+      clearIdleTimer();
+      if (currentAnim) { try { currentAnim.cancel(); } catch (e) {} currentAnim = null; }
+      card.style.transform = '';
     }
-    card.addEventListener('mouseenter', markInteracted, { once: true });
-    card.addEventListener('pointerdown', markInteracted, { once: true });
 
-    observer = new IntersectionObserver(function (entries) {
+    card.addEventListener('mouseenter', function () {
+      hovering = true;
+      stopWobble();
+    });
+    card.addEventListener('mouseleave', function () {
+      hovering = false;
+      /* Resume the idle wobble if still visible; scroll re-entry is handled below. */
+      scheduleIdle();
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
       var entry = entries[0];
       if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-        if (timer === null && !done && !interacted) {
-          timer = window.setTimeout(play, 5000);
+        if (!visible) {
+          visible = true;
+          if (!hovering) {
+            clearStartTimer();
+            startTimer = window.setTimeout(play, 5000);
+          }
         }
       } else {
-        clearTimer();
+        visible = false;
+        stopWobble();
       }
     }, { threshold: [0, 0.6, 1] });
     observer.observe(card);
