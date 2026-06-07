@@ -705,6 +705,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   pointer-events: none;
   display: block;
 }
+.context-cta-photo-mobile { display: none; }
 .context-cta-text { flex: 1; min-width: 260px; }
 .context-cta-line {
   font-family: var(--serif);
@@ -772,17 +773,43 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .context-cta:hover { transform: none; }
 }
 @media (max-width: 640px) {
-  .context-cta { padding: 22px 20px; }
-  .context-cta::before { display: none; }
-  .context-cta-figure {
-    position: static;
-    width: 72px;
-    left: auto;
-    bottom: auto;
-    transform: none;
-    align-self: flex-start;
+  /* Mobile: photo + lead line in a top row, secondary line centered below,
+     full-width button. display:contents promotes the two text lines to grid
+     items so the lead can sit beside the photo and line 2 can span full width. */
+  .context-cta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "photo lead"
+      "sub   sub"
+      "btn   btn";
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 12px;
+    padding: 24px 20px;
   }
-  .context-cta-btn { width: 100%; margin-left: 0; justify-content: center; }
+  .context-cta::before { display: none; }
+  .context-cta-figure { display: none; }
+  .context-cta-text { display: contents; }
+  .context-cta-photo-mobile {
+    grid-area: photo;
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .context-cta-photo-mobile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    transform: scale(1.1);
+    display: block;
+  }
+  .context-cta-line { grid-area: lead; margin: 0; text-align: left; }
+  .context-cta-line2 { grid-area: sub; margin: 0; text-align: center; }
+  .context-cta-btn { grid-area: btn; width: 100%; margin-left: 0; justify-content: center; }
 }
 
 .cta-card {
@@ -2107,6 +2134,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="context-cta">
         <span class="cta-spotlight" aria-hidden="true"></span>
         <img class="context-cta-figure" src="/assets/Miki%20transparent.png" alt="Michele Di Nardo">
+        <span class="context-cta-photo-mobile">
+          <img src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="60" height="60" loading="lazy">
+        </span>
         <div class="context-cta-text">
           <p class="context-cta-line">Hi, I'm Michele.</p>
           <p class="context-cta-line2">Tell me what you're working on and let's see how we can do it together.</p>
