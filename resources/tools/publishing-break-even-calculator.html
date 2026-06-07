@@ -2,9 +2,9 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
-<link rel="canonical" href="https://spritzconsulting.com/resources/tools/game-budget-calculator.html">
+<link rel="canonical" href="https://spritzconsulting.com/resources/tools/publishing-break-even-calculator.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Publisher's Game Budget Calculator — Spritz Consulting</title>
+<title>Publishing Break-Even Calculator | Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -14,12 +14,12 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Estimate your total game project budget including development, publisher markup, marketing and services. A free tool from Spritz Consulting." />
+<meta name="description" content="Run a publishing deal through the chain of deductions and see your real net per unit, then how many copies you need to recoup at 1x, 2x and 3x your project budget. A free tool from Spritz Consulting." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
 
-<meta property="og:image" content="/assets/Publisher_s_Game_Budget_Calculator.png">
+<meta property="og:image" content="/assets/Publishing__Recoup_Calculator.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 
@@ -545,13 +545,13 @@ html{
   width: 82vmax; height: 52vmax;
   left: -24vmax; top: -22vmax;
   background: radial-gradient(ellipse 60% 50% at center, color-mix(in srgb, var(--clay) 65%, transparent), transparent 68%);
-  animation: aurora-1 34s ease-in-out infinite alternate;
+  animation: aurora-1 34s linear infinite alternate;
 }
 .bg-aurora .blob-2{
   width: 50vmax; height: 72vmax;
   right: -18vmax; bottom: -20vmax;
   background: radial-gradient(ellipse 50% 60% at center, color-mix(in srgb, var(--clay) 48%, transparent), transparent 70%);
-  animation: aurora-2 44s ease-in-out infinite alternate;
+  animation: aurora-2 44s linear infinite alternate;
   opacity: 0.45;
 }
 html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
@@ -831,27 +831,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent);
 }
 
-.cta-card::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 17px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--clay) 60%, transparent),
-    transparent 40%,
-    color-mix(in srgb, var(--clay) 30%, transparent)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.cta-card:hover::after {
-  opacity: 1;
-}
-
 .cta-card-text {
   position: relative;
   z-index: 1;
@@ -989,6 +968,243 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   gap: 10px;
 }
 
+.calc-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .calc-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calc-advanced {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.calc-advanced[data-open="false"] {
+  height: auto;
+  min-height: 0;
+}
+
+.net-details-toggle {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-3);
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.net-details-chevron {
+  transition: transform 0.2s ease;
+}
+
+.net-details-toggle[aria-expanded="true"] .net-details-chevron {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 640px) {
+  .net-details-toggle {
+    display: flex;
+  }
+  .net-details-body {
+    display: none;
+  }
+  .net-details-body.is-open {
+    display: block;
+  }
+}
+
+.calc-advanced-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--paper-2);
+  border: none;
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.calc-advanced-toggle:hover {
+  color: var(--ink);
+}
+
+.calc-advanced-toggle[aria-expanded="true"] {
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+}
+
+.calc-advanced-chevron {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.calc-advanced-toggle[aria-expanded="true"] .calc-advanced-chevron {
+  transform: rotate(180deg);
+}
+
+.calc-advanced-body {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.calc-advanced-body[hidden] {
+  display: none;
+}
+
+.calc-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.calc-panel {
+  background: var(--paper-2);
+}
+
+.calc-panel-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.calc-panel-toggle:hover {
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+
+.calc-panel-toggle[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--clay) 6%, transparent);
+}
+
+.calc-panel-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ink-2);
+  font-family: var(--sans);
+}
+
+.calc-panel-current {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--clay);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.calc-panel-chevron {
+  color: var(--ink-3);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.calc-panel-toggle[aria-expanded="true"] .calc-panel-chevron {
+  transform: rotate(180deg);
+}
+
+.calc-panel-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.calc-panel-body[hidden] {
+  display: none;
+}
+
+.calc-result--with-panels .calc-result-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.calc-result--with-panels .calc-result-right {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.calc-result--with-panels .calc-result-right .calc-result-breakdown {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+
+.calc-result--with-panels .calc-result-right .calc-result-breakdown .row {
+  display: contents;
+}
+
+.calc-result--with-panels .calc-result-right .calc-result-breakdown .row > span:first-child {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.calc-result--with-panels .calc-result-right .calc-result-breakdown .row > span:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.calc-result--with-panels .calc-result-right .calc-result-value {
+  text-align: left;
+  margin-top: 12px;
+  position: relative;
+  display: inline-block;
+}
+
+.calc-result--with-panels .calc-result-right .calc-result-value::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--clay);
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .calc-result--with-panels .calc-result-cols {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
 .calc-label {
   display: flex;
   align-items: baseline;
@@ -1109,24 +1325,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 @media (max-width: 640px) {
-  .calc-result-wrap .calc-result {
+  .calc-result-wrap #recoup-card {
     padding: 10px 16px;
     gap: 2px;
     border-bottom: 1px solid var(--rule);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
   }
-  .calc-result-wrap .calc-result-label {
+  .calc-result-wrap #recoup-card .calc-result-label {
     font-size: clamp(11px, 2.8vw, 13px);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-2);
   }
-  .calc-result-wrap .calc-result-label::before,
-  .calc-result-wrap .calc-result-label::after {
+  .calc-result-wrap #recoup-card .calc-result-label::before,
+  .calc-result-wrap #recoup-card .calc-result-label::after {
     display: none;
   }
-  .calc-result-wrap .calc-result-value {
+  .calc-result-wrap #recoup-card .calc-result-sublabel {
+    display: none;
+  }
+  .calc-result-wrap #recoup-card .calc-result-value {
     font-size: clamp(28px, 7vw, 38px);
     font-weight: 700;
     color: var(--ink);
@@ -1137,59 +1356,81 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 .calc-result {
   position: relative;
-  bottom: auto;
-  z-index: auto;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  background: var(--paper-3);
   border: 1px solid var(--rule);
   border-radius: 8px;
-  padding: 32px;
+  overflow: hidden;
+  padding: 28px 32px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  box-shadow: none;
+}
+
+#recoup-card.calc-result {
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  padding: 32px;
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--clay) 18%, transparent) inset,
     0 24px 60px -32px color-mix(in srgb, var(--clay) 35%, transparent);
 }
 
-.calc-result-label {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(24px, 2.8vw, 32px);
-  font-variation-settings: "opsz" 36;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-transform: none;
-  line-height: 1.1;
-}
-.calc-result-label::before {
-  content: "Σ";
-  font-family: var(--serif);
-  font-size: 0.9em;
-  color: var(--clay);
-  font-style: italic;
-  font-weight: 400;
-}
-.calc-result-label::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: color-mix(in srgb, var(--clay) 35%, transparent);
+.calc-result-sublabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-top: 4px;
+  margin-bottom: 8px;
 }
 
-.calc-result-value {
-  font-family: var(--serif);
-  font-size: clamp(56px, 10vw, 104px);
+.calc-secondary-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-top: -12px;
+}
+
+@media (max-width: 640px) {
+  .calc-secondary-results {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calc-secondary-card {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+.calc-secondary-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.calc-secondary-value {
+  font-size: 24px;
   font-weight: 600;
   color: var(--ink);
-  letter-spacing: -0.045em;
-  line-height: 0.96;
-  font-variation-settings: "opsz" 96;
-  font-variant-numeric: tabular-nums;
-  margin-top: 4px;
+  letter-spacing: -0.02em;
+}
+
+#recoup-card .calc-result-value.is-empty,
+.calc-secondary-value.is-empty {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.4;
 }
 
 .calc-copy-btn {
@@ -1209,34 +1450,118 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transition: border-color 0.2s, color 0.2s;
   padding: 0;
 }
-
 .calc-copy-btn:hover {
   border-color: var(--ink-2);
   color: var(--ink);
 }
-
 .calc-copy-btn.is-copied {
   border-color: var(--clay);
   color: var(--clay);
 }
 
-.recoup-calc-wrap {
+.calc-nav-wrap {
   display: flex;
-  justify-content: flex-end;
-  max-width: 860px;
-  margin: 0 auto 32px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 32px;
   padding: 0 32px;
+  gap: 16px;
 }
-.recoup-calc-wrap[hidden] { display: none; }
+
+.calc-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--clay);
+  color: var(--paper);
+  border-radius: 100px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.calc-nav-btn:hover {
+  background: var(--clay-deep);
+  text-decoration: none;
+}
 
 @media (max-width: 640px) {
-  .recoup-calc-wrap {
+  .calc-nav-wrap {
+    flex-direction: column;
+    align-items: center;
+  }
+  .calc-nav-btn {
+    width: 100%;
     justify-content: center;
   }
 }
 
+.calc-result-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-variation-settings: "opsz" 30;
+  letter-spacing: -0.015em;
+  color: var(--ink-2);
+  text-transform: none;
+  line-height: 1.15;
+}
+.calc-result-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+#recoup-card .calc-result-label {
+  gap: 16px;
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-variation-settings: "opsz" 36;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+#recoup-card .calc-result-label::before {
+  content: "Σ";
+  font-family: var(--serif);
+  font-size: 0.9em;
+  color: var(--clay);
+  font-style: italic;
+  font-weight: 400;
+}
+#recoup-card .calc-result-label::after {
+  background: color-mix(in srgb, var(--clay) 35%, transparent);
+}
+
+.calc-result-value {
+  font-family: var(--serif);
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variation-settings: "opsz" 64;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+#recoup-card .calc-result-value {
+  font-size: clamp(56px, 10vw, 104px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+  font-variation-settings: "opsz" 96;
+  margin-top: 4px;
+}
+
 .calc-result-breakdown {
-  font-family: var(--mono-data);
+  font-family: var(--mono);
   font-size: 12px;
   color: var(--ink-2);
   line-height: 1.9;
@@ -1262,24 +1587,100 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink);
 }
 
-.calc-result-note{
-  margin: 20px 0 0;
-  padding-top: 16px;
-  border-top: 1px solid color-mix(in srgb, var(--clay) 22%, var(--rule));
+.calc-result-recoup{
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-2));
+  border-color: color-mix(in srgb, var(--clay) 28%, var(--rule));
+  padding: 32px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--clay) 18%, transparent) inset,
+    0 24px 60px -32px color-mix(in srgb, var(--clay) 35%, transparent);
+}
+.calc-result-recoup .calc-result-label{
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-variation-settings: "opsz" 36;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.calc-result-recoup .calc-result-label::after{
+  background: color-mix(in srgb, var(--clay) 35%, transparent);
+}
+.calc-result-recoup .calc-result-label::before{
+  content: "Σ";
+  font-family: var(--serif);
+  font-size: 0.9em;
+  color: var(--clay);
+  font-style: italic;
+  font-weight: 400;
+  order: -1;
+}
+.recoup-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+.recoup-tier{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+.recoup-tier--hero{
+  grid-column: 1 / -1;
+  padding: 28px 32px;
+  background: color-mix(in srgb, var(--clay) 7%, var(--paper-3));
+  border-color: color-mix(in srgb, var(--clay) 26%, var(--rule));
+  gap: 10px;
+}
+.recoup-tier-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+.recoup-tier--hero .recoup-tier-label{
+  font-size: 13px;
+}
+.recoup-tier-value{
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 48;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+.recoup-tier--hero .recoup-tier-value{
+  font-size: clamp(56px, 9vw, 104px);
+  letter-spacing: -0.045em;
+  font-variation-settings: "opsz" 96;
+  line-height: 0.96;
+}
+.recoup-tier-sub{
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+.recoup-tier--hero .recoup-tier-sub{
   font-size: 14px;
-  line-height: 1.6;
   color: var(--ink-2);
 }
-.calc-result-note strong{
-  color: var(--ink);
-  font-weight: 500;
+@media (max-width: 720px){
+  .recoup-grid{ grid-template-columns: 1fr; gap: 12px; }
+  .recoup-tier--hero{ grid-column: auto; padding: 22px 24px; }
 }
 
 .calc-rates {
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  padding: 8px 0 0;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 28px 32px;
   margin-top: 8px;
 }
 
@@ -1294,7 +1695,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   letter-spacing: -0.015em;
   color: var(--ink);
   text-transform: none;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   line-height: 1.15;
 }
 .calc-rates-label::after {
@@ -1307,42 +1708,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .rates-grid {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .rate-item {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding: 12px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--clay) 14%, var(--rule));
-}
-
-.rate-item:first-child {
-  padding-top: 4px;
+  align-items: center;
+  font-size: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
 }
 
 .rate-item:last-child {
   border-bottom: none;
   padding-bottom: 0;
-}
-
-.rate-name {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.4;
-  color: var(--ink-2);
-  letter-spacing: -0.005em;
-}
-
-.rate-value {
-  font-family: var(--mono);
-  font-size: 16px;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 .rate-name { color: var(--ink-2); }
@@ -1440,6 +1820,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .calc-handoff-btn[disabled]{
   background: var(--paper-3); color: var(--ink-3); cursor: not-allowed;
 }
+.calc-handoff-btn.is-secondary{
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--rule);
+}
+.calc-handoff-btn.is-secondary:hover{
+  border-color: var(--clay); color: var(--clay); background: transparent;
+}
 .calc-handoff-btn svg{
   width: 14px; height: 14px; stroke: currentColor; stroke-width: 2;
   fill: none; stroke-linecap: round; stroke-linejoin: round;
@@ -1471,97 +1858,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .calc-notes, .calc-rates { padding: 22px 20px; }
   .preset-btn { min-height: 44px; padding: 12px 18px; font-size: 14px; }
 }
-
-.calc-floating {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
-  border-left: 2px solid var(--clay);
-  border-radius: 12px;
-  padding: 16px 20px;
-  z-index: 100;
-  min-width: 200px;
-  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.4);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
-
-.calc-floating.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.calc-floating.is-docked {
-  position: absolute;
-  bottom: auto;
-  right: 24px;
-  opacity: 1;
-  transform: none;
-  box-shadow: none;
-}
-
-.calc-floating-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: var(--clay);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.calc-floating-value {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-}
-
-@media (max-width: 640px) {
-  .calc-floating {
-    bottom: 16px;
-    right: 16px;
-    left: 16px;
-    min-width: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .calc-floating {
-    transition: none;
-  }
-}
 </style>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Publisher's Game Budget Calculator",
-  "description": "Build a realistic project budget from dev costs, publisher markup, marketing, and services. The starting point for any deal conversation.",
-  "url": "https://spritzconsulting.com/resources/tools/game-budget-calculator.html",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "author": {
-    "@type": "Person",
-    "name": "Michele Di Nardo",
-    "url": "https://spritzconsulting.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Spritz Consulting",
-    "url": "https://spritzconsulting.com"
-  }
-}
-</script>
 </head>
 <body>
 
@@ -1617,13 +1914,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="article-wrap">
     <article>
       <p class="category">Tools</p>
-      <h1>Publisher's Game Budget <em>Calculator</em></h1>
+      <h1>Publishing Break-Even <em>Calculator</em></h1>
       <div class="meta">
         <div>Type <b>Calculator</b></div>
-        <div>Topic <b>Budgeting</b></div>
+        <div>Topic <b>Revenue Modeling</b></div>
         <div>Updated <b>2026</b></div>
       </div>
-      <p class="deck">Four inputs. One total. Built for the moment a publisher asks: <em>what's the all-in number</em>.</p>
+      <p class="deck">Run the deal through the chain of deductions. See what actually lands as net per unit, and how many copies you need to sell to recoup.</p>
     </article>
   </div>
 
@@ -1631,109 +1928,188 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <div class="calculator">
 
       <div class="calc-group">
-        <label class="calc-label" for="dev-budget">Development Budget</label>
-        <div class="calc-hint">This is the number you know best, and the only one entirely in your control. It's also the figure you put in the deck when you pitch to a publisher.</div>
-        <div class="calc-hint">Development Budget is usually calculated by Dev months x Monthly burn Rate + 20% of the total for rainy days.</div>
+        <label class="calc-label" for="budget">Project Budget to Recoup</label>
+        <div class="calc-hint">Paste the figure from the <a href="/resources/tools/game-budget-calculator.html">Publisher's Game Budget Calculator</a>, or type a number directly, to see how many units you need to sell to recoup.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
-          <input type="number" id="dev-budget" class="calc-input" placeholder="0" min="0" step="1000">
-        </div>
-        <div class="calc-presets" data-target="dev-budget">
-          <button type="button" class="preset-btn" data-value="75000">$75k</button>
-          <button type="button" class="preset-btn" data-value="250000">$250k</button>
-          <button type="button" class="preset-btn" data-value="350000">$350k</button>
-          <button type="button" class="preset-btn" data-value="500000">$500k</button>
+          <input type="number" id="budget" class="calc-input" placeholder="0" min="0" step="1000">
         </div>
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="markup">Publisher Markup</label>
-        <div class="calc-hint">This percentage is often buried in the contract definition of Net Revenue. Read the recoupment section carefully before agreeing to any number.</div>
+        <label class="calc-label" for="srp">Suggested Retail Price (SRP)</label>
+        <div class="calc-hint">The headline price you'd see on a Steam page or a store shelf. The starting point. Everything below this number chips away at it.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="markup" class="calc-input calc-input-pct" placeholder="0" min="0" max="15" step="0.5">
-          <span class="calc-suffix">%</span>
+          <span class="calc-currency">$</span>
+          <input type="number" id="srp" class="calc-input" placeholder="29.99" min="0" step="0.01" value="29.99">
         </div>
-        <div class="calc-presets" data-target="markup">
-          <button type="button" class="preset-btn" data-value="0">0%</button>
-          <button type="button" class="preset-btn" data-value="5">5%</button>
-          <button type="button" class="preset-btn" data-value="10">10%</button>
-          <button type="button" class="preset-btn" data-value="15">15%</button>
+        <div class="calc-presets" data-target="srp">
+          <button type="button" class="preset-btn" data-value="9.99">$9.99</button>
+          <button type="button" class="preset-btn" data-value="19.99">$19.99</button>
+          <button type="button" class="preset-btn" data-value="29.99">$29.99</button>
+          <button type="button" class="preset-btn" data-value="39.99">$39.99</button>
         </div>
       </div>
 
-      <div class="calc-group">
-        <label class="calc-label" for="marketing">Marketing Budget</label>
-        <div class="calc-hint">Covers promotional activities for the game: paid ad campaigns, influencer and creator deals, PR, festival and event presence, trailers, and store page assets. Set by the publisher, not by you. Indie titles typically run $50,000 to $200,000; more ambitious projects reach $500,000 or beyond.</div>
-        <div class="calc-input-wrap">
-          <span class="calc-currency">$</span>
-          <input type="number" id="marketing" class="calc-input" placeholder="0" min="0" step="1000">
-        </div>
-        <div class="calc-presets" data-target="marketing">
-          <button type="button" class="preset-btn" data-value="50000">$50k</button>
-          <button type="button" class="preset-btn" data-value="100000">$100k</button>
-          <button type="button" class="preset-btn" data-value="200000">$200k</button>
-          <button type="button" class="preset-btn" data-value="500000">$500k</button>
-        </div>
-      </div>
+      <div class="calc-result calc-result--with-panels" aria-live="polite">
+        <div class="calc-result-label">Average Net Per Unit</div>
+        <div class="calc-result-cols">
+        <div class="calc-panels">
 
-      <div class="calc-group">
-        <label class="calc-label" for="services">Services Budget</label>
-        <div class="calc-hint">Porting, QA, and localisation. Usually set by the publisher, but worth pressure-testing: which platforms you want to release on, which languages are non-negotiable for you, how many words you have to localize, etc.. Use the rates below to estimate.</div>
-        <div class="calc-input-wrap">
-          <span class="calc-currency">$</span>
-          <input type="number" id="services" class="calc-input" placeholder="0" min="0" step="1000">
-        </div>
-        <div class="calc-presets" data-target="services">
-          <button type="button" class="preset-btn" data-value="25000">$25k</button>
-          <button type="button" class="preset-btn" data-value="75000">$75k</button>
-          <button type="button" class="preset-btn" data-value="150000">$150k</button>
-          <button type="button" class="preset-btn" data-value="300000">$300k</button>
-        </div>
-        <div class="calc-rates">
-          <div class="calc-rates-label">Reference rates for services</div>
-          <div class="rates-grid">
-            <div class="rate-item">
-              <span class="rate-name">Porting (per platform)</span>
-              <span class="rate-value">≈ $20,000</span>
+        <div class="calc-panel">
+          <button type="button" class="calc-panel-toggle" aria-expanded="false">
+            <span class="calc-panel-name">Platform Share Kept</span>
+            <span class="calc-panel-current" id="panel-platform-val">0.70</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="calc-panel-body" hidden>
+            <div class="calc-hint">What's left after the store's cut. Steam standard is 70% to you, Steam after revenue tiers can climb to 80–88%, consoles are typically 70%. Default <strong>0.70</strong>.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="platform" class="calc-input" placeholder="0.70" min="0" max="1" step="0.01" value="0.70">
+              <span class="calc-suffix">×</span>
             </div>
-            <div class="rate-item">
-              <span class="rate-name">Localisation (standard)</span>
-              <span class="rate-value">≈ $0.015 / word</span>
-            </div>
-            <div class="rate-item">
-              <span class="rate-name">Localisation (exotic languages)</span>
-              <span class="rate-value">≈ $0.020 / word</span>
-            </div>
-            <div class="rate-item">
-              <span class="rate-name">QA</span>
-              <span class="rate-value">≈ $25 / hour</span>
+            <div class="calc-presets" data-target="platform">
+              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
+              <button type="button" class="preset-btn" data-value="0.88">0.88</button>
             </div>
           </div>
+        </div>
+
+        <div class="calc-panel">
+          <button type="button" class="calc-panel-toggle" aria-expanded="false">
+            <span class="calc-panel-name">Regional / Currency Adjuster</span>
+            <span class="calc-panel-current" id="panel-regional-val">0.80</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="calc-panel-body" hidden>
+            <div class="calc-hint">Accounts for regional pricing, sale discounts and currency conversion. A game listed at $29.99 in the US sells for much less in Brazil, Turkey, Argentina, and at every sale. A working average across the lifecycle is around <strong>0.80</strong>.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="adjuster" class="calc-input" placeholder="0.80" min="0" max="1" step="0.01" value="0.80">
+              <span class="calc-suffix">×</span>
+            </div>
+            <div class="calc-presets" data-target="adjuster">
+              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
+              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-panel">
+          <button type="button" class="calc-panel-toggle" aria-expanded="false">
+            <span class="calc-panel-name">Publisher License Fee</span>
+            <span class="calc-panel-current" id="panel-license-val">0%</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="calc-panel-body" hidden>
+            <div class="calc-hint">Some deals carve a top-line license fee off gross before recoupment. Default <strong>0%</strong>. Anything above 20% is aggressive.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="license" class="calc-input calc-input-pct" placeholder="0" min="0" max="50" step="0.5" value="0">
+              <span class="calc-suffix">%</span>
+            </div>
+            <div class="calc-presets" data-target="license">
+              <button type="button" class="preset-btn" data-value="0">0%</button>
+              <button type="button" class="preset-btn" data-value="10">10%</button>
+              <button type="button" class="preset-btn" data-value="20">20%</button>
+              <button type="button" class="preset-btn" data-value="30">30%</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-panel">
+          <button type="button" class="calc-panel-toggle" aria-expanded="false">
+            <span class="calc-panel-name">Tax Rate Retention</span>
+            <span class="calc-panel-current" id="panel-tax-val">0.90</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="calc-panel-body" hidden>
+            <div class="calc-hint">Withholding tax, VAT washout, and similar deductions before money lands in your account. A working average is <strong>0.90</strong>.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="tax" class="calc-input" placeholder="0.90" min="0" max="1" step="0.01" value="0.90">
+              <span class="calc-suffix">×</span>
+            </div>
+            <div class="calc-presets" data-target="tax">
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
+              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
+              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-panel">
+          <button type="button" class="calc-panel-toggle" aria-expanded="false">
+            <span class="calc-panel-name">Return / Chargeback Retention</span>
+            <span class="calc-panel-current" id="panel-return-val">0.95</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="calc-panel-body" hidden>
+            <div class="calc-hint">Refunds, chargebacks, fraud reversals. Industry default is around <strong>0.95</strong>, meaning roughly 5% of sales come back.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="returns" class="calc-input" placeholder="0.95" min="0" max="1" step="0.01" value="0.95">
+              <span class="calc-suffix">×</span>
+            </div>
+            <div class="calc-presets" data-target="returns">
+              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
+              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
+              <button type="button" class="preset-btn" data-value="0.98">0.98</button>
+              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+        <div class="calc-result-right">
+          <div class="calc-result-breakdown" id="breakdown"></div>
+          <div class="calc-result-value" id="net">$0.00</div>
+        </div>
         </div>
       </div>
 
       <div class="calc-result-wrap">
-        <div class="calc-result" aria-live="polite">
-          <div class="calc-result-label">Total to Recoup</div>
-          <div class="calc-result-value" id="total">$0</div>
-          <button class="calc-copy-btn" id="calc-copy-btn" aria-label="Copy total to clipboard">
+        <div class="calc-result" aria-live="polite" id="recoup-card">
+          <div class="calc-result-label">Units to Break Even</div>
+          <div class="calc-result-sublabel">1x budget · developer breaks even</div>
+          <div class="calc-result-value is-empty" id="units-1x">Add a budget above</div>
+          <button class="calc-copy-btn" data-copy-target="units-1x" aria-label="Copy 1× units">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
             </svg>
-            <span class="calc-copy-label" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Copy</span>
           </button>
         </div>
       </div>
-      <div class="calc-result-breakdown" id="breakdown"></div>
-      <p class="calc-result-note"><strong>Recoupment.</strong> As a general rule, the developer doesn't see a revenue share until net sales clear this total, but this isn't written in stone. Some deals carve out marketing, tier the recoupment, or apply different rules to different cost buckets. Read the recoupment clause before assuming anything.</p>
+
+      <div class="calc-secondary-results" aria-live="polite" id="recoup-extras">
+        <div class="calc-secondary-card">
+          <div class="calc-secondary-label">2x Budget · Publisher break-even</div>
+          <div class="calc-secondary-value is-empty" id="units-2x">Awaiting budget</div>
+        </div>
+        <div class="calc-secondary-card">
+          <div class="calc-secondary-label">3x Budget · Publisher growth target</div>
+          <div class="calc-secondary-value is-empty" id="units-3x">Awaiting budget</div>
+        </div>
+      </div>
 
       <div class="context-cta">
         <span class="cta-spotlight" aria-hidden="true"></span>
         <img class="context-cta-figure" src="/assets/Miki%20transparent.png" alt="Michele Di Nardo">
         <div class="context-cta-text">
-          <p class="context-cta-line">Hi, I'm Michele, and I'd love to work together.</p>
-          <p class="context-cta-line2">Send me your situation and let's take it from there.</p>
+          <p class="context-cta-line">Hi, I'm Michele.</p>
+          <p class="context-cta-line2">Tell me what you're working on and let's see how we can do it together.</p>
         </div>
         <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
           Get in touch
@@ -1741,21 +2117,24 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </a>
       </div>
 
-      <div class="recoup-calc-wrap" hidden>
-        <a href="/resources/tools/publishing-break-even-calculator.html" style="background:var(--clay); color:var(--paper); border-radius:100px; padding:12px 24px; font-weight:600; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-          Publishing Break-Even Calculator
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
-        </a>
+      <div class="calc-nav-wrap">
+        <a href="/resources/tools/game-budget-calculator.html" class="calc-nav-btn calc-nav-back">← Game Budget Calculator</a>
+        <!-- HIDDEN-WISHLIST-CALC START (re-enable on reveal) -->
+        <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-nav-btn calc-nav-next">Steam Wishlist Calculator →</a>
+        <!-- HIDDEN-WISHLIST-CALC END -->
       </div>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Publisher math.</strong> Project viability is usually evaluated against 2x the total (company-level break-even) and 3x (growth). You aren't expected to model those targets, but knowing they exist tells you how the publisher reads your budget when the pitch lands on their desk.</li>
-          <li><strong>Estimation only.</strong> Every figure here, including the reference rates, is a working estimate drawn from market averages. Treat the output as a directional indicator, not a contract. Real numbers come from real quotes.</li>
-          <li hidden><strong>Next step.</strong> Once you have a total, run it through the <a href="/resources/tools/publishing-break-even-calculator.html">Publishing Break-Even Calculator</a> to see how many units you need to sell to clear recoupment at 1×, 2× and 3×.</li>
-          <li><strong>Marketing, in my experience.</strong> For most deals, marketing lands somewhere between 20 and 50% of the development budget, most often around a third. Bigger budgets tend to sit at the lower end of that ratio.</li>
-          <li><strong>Services, in my experience.</strong> Services (porting, QA, localisation) usually run between 25 and 35% of the development budget. It can climb well past that when a project is heavy on ports, QA passes, or languages.</li>
+          <li><strong>The chain matters.</strong> Net per unit = SRP × regional adjuster × platform share × tax retention × return retention × (1 − license fee). Each multiplier compounds, which is why a $29.99 game rarely returns more than $14 to the developer, and often much less.</li>
+          <li><strong>Defaults are not your deal.</strong> The values pre-filled here are working averages across genres, regions and platforms. Your actual deal will move every slider. Pull the real numbers from your contract, your distribution platform reports, and your accountant.</li>
+          <li><strong>Recoup tiers.</strong> 1× is the developer's break-even, 2× is roughly where the publisher breaks even at company level once their overhead and risk are accounted for, 3× is the growth bar. Publishers usually green-light deals they believe can clear 2× comfortably.</li>
+          <li><strong>Estimation only.</strong> This is a directional tool, not a contract model. Real revenue planning requires real numbers, real contracts, and real lawyers.</li>
+          <!-- HIDDEN-WISHLIST-CALC START (re-enable on reveal) -->
+          <li><strong>Next step.</strong> Take the recoup unit target into the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> to convert it into the wishlist count you need on launch week.</li>
+          <!-- HIDDEN-WISHLIST-CALC END -->
+          <li><strong>Previous step.</strong> Don't have a budget total yet? Build one with the <a href="/resources/tools/game-budget-calculator.html">Publisher's Game Budget Calculator</a> first.</li>
         </ul>
       </div>
 
@@ -2016,16 +2395,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 <script>
 (function() {
-  var devInput = document.getElementById('dev-budget');
-  var markupInput = document.getElementById('markup');
-  var marketingInput = document.getElementById('marketing');
-  var servicesInput = document.getElementById('services');
-  var totalEl = document.getElementById('total');
-  var breakdownEl = document.getElementById('breakdown');
+  var srpInput = document.getElementById('srp');
+  var adjInput = document.getElementById('adjuster');
+  var platInput = document.getElementById('platform');
+  var taxInput = document.getElementById('tax');
+  var retInput = document.getElementById('returns');
+  var licInput = document.getElementById('license');
+  var budgetInput = document.getElementById('budget');
 
-  // Tween numeric values between old and new with ease-out-quart over 350ms.
-  // Stores last numeric value on el._rollVal so subsequent calls start from
-  // the current displayed number, not from zero.
+  var netEl = document.getElementById('net');
+  var breakdownEl = document.getElementById('breakdown');
+  var recoupCard = document.getElementById('recoup-card');
+  var u1El = document.getElementById('units-1x');
+  var u2El = document.getElementById('units-2x');
+  var u3El = document.getElementById('units-3x');
+
   var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function rollTo(el, finalNum, fmt) {
     if (!isFinite(finalNum)) finalNum = 0;
@@ -2059,57 +2443,87 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     el._rollRAF = requestAnimationFrame(tick);
   }
 
-  function fmt(n) {
-    return '$' + Math.round(n).toLocaleString('en-US');
-  }
-
-  function readNum(el) {
-    // Strip thousands separators / currency before parseFloat — when the input
-    // is in formatted display mode (type=text, value="150,000"), parseFloat
-    // would otherwise stop at the comma and return 150.
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+  function num(el, def){
     var raw = el.value.toString().replace(/[^0-9.]/g, '');
-    return Math.max(0, parseFloat(raw) || 0);
+    var v = parseFloat(raw);
+    if (isNaN(v)) return def;
+    return Math.max(0, v);
   }
+  function money(n){ return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function units(n){ return Math.ceil(n).toLocaleString('en-US'); }
 
   function calculate() {
-    var dev = readNum(devInput);
-    var markupPct = readNum(markupInput);
-    var marketing = readNum(marketingInput);
-    var services = readNum(servicesInput);
+    var srp = num(srpInput, 0);
+    var adj = clamp01(num(adjInput, 0.80));
+    var plat = clamp01(num(platInput, 0.70));
+    var tax = clamp01(num(taxInput, 0.90));
+    var ret = clamp01(num(retInput, 0.95));
+    var lic = Math.max(0, Math.min(100, num(licInput, 0)));
+    var licMul = 1 - (lic / 100);
 
-    var markupAmt = dev * (markupPct / 100);
-    var total = dev + markupAmt + marketing + services;
+    var net = srp * adj * plat * tax * ret * licMul;
+    rollTo(netEl, net, money);
 
-    rollTo(totalEl, total, fmt);
-
-    var floatingVal = document.getElementById('floating-total');
-    if (floatingVal) {
-      floatingVal.textContent = totalEl.textContent;
-    }
-
-    function row(label, value) {
-      return '<div class="row"><span>' + label + '</span><span>' + fmt(value) + '</span></div>';
+    function row(label, mul, running) {
+      return '<div class="row"><span>' + label + '</span><span>' + money(running) + '</span></div>';
     }
     var lines = [];
-    lines.push(row('Development', dev));
-    lines.push(row('Markup ' + markupPct + '%', markupAmt));
-    lines.push(row('Marketing', marketing));
-    lines.push(row('Services', services));
-
+    var r = srp;                            lines.push(row('SRP', null, r));
+    r = r * adj;                            lines.push(row('× regional ' + adj.toFixed(2), null, r));
+    r = r * plat;                           lines.push(row('× platform ' + plat.toFixed(2), null, r));
+    r = r * tax;                            lines.push(row('× tax ' + tax.toFixed(2), null, r));
+    r = r * ret;                            lines.push(row('× return ' + ret.toFixed(2), null, r));
+    r = r * licMul;                         lines.push(row('− license ' + lic + '%', null, r));
     breakdownEl.innerHTML = lines.join('');
 
-    var carryBtn = document.getElementById('carry-to-deal');
-    if (carryBtn) {
-      if (total > 0) {
-        carryBtn.disabled = false;
-        carryBtn.dataset.total = Math.round(total);
-      } else {
-        carryBtn.disabled = true;
+    var budget = num(budgetInput, 0);
+    var handoff = document.getElementById('handoff-card');
+    if (budget > 0 && net > 0) {
+      var u1 = Math.ceil(budget / net);
+      var u2 = Math.ceil((budget * 2) / net);
+      var u3 = Math.ceil((budget * 3) / net);
+      u1El.classList.remove('is-empty');
+      u2El.classList.remove('is-empty');
+      u3El.classList.remove('is-empty');
+      rollTo(u1El, u1, units);
+      rollTo(u2El, u2, units);
+      rollTo(u3El, u3, units);
+      if (handoff) {
+        handoff.hidden = false;
+        document.getElementById('carry-1x').dataset.units = u1;
+        document.getElementById('carry-2x').dataset.units = u2;
+        document.getElementById('carry-3x').dataset.units = u3;
       }
+    } else {
+      u1El.classList.add('is-empty');
+      u2El.classList.add('is-empty');
+      u3El.classList.add('is-empty');
+      u1El.textContent = 'Add a budget above';
+      u2El.textContent = 'Awaiting budget';
+      u3El.textContent = 'Awaiting budget';
+      if (handoff) handoff.hidden = true;
     }
+
+    updatePanelLabels();
   }
 
-  [devInput, markupInput, marketingInput, servicesInput].forEach(function(el) {
+  function updatePanelLabels() {
+    var labels = [
+      ['panel-regional-val', adjInput, null],
+      ['panel-platform-val', platInput, null],
+      ['panel-tax-val', taxInput, null],
+      ['panel-return-val', retInput, null],
+      ['panel-license-val', licInput, '%']
+    ];
+    labels.forEach(function(pair) {
+      var el = document.getElementById(pair[0]);
+      if (el && pair[1]) el.textContent = pair[1].value + (pair[2] || '');
+    });
+  }
+
+  var allInputs = [srpInput, adjInput, platInput, taxInput, retInput, licInput, budgetInput];
+  allInputs.forEach(function(el) {
     ['input', 'change', 'touchend'].forEach(function(evt) {
       el.addEventListener(evt, calculate);
     });
@@ -2120,39 +2534,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (tracked) return;
     tracked = true;
     if (window.cf && window.cf.beacon) {
-      window.cf.beacon({ name: 'tool_used', data: { tool: 'game_budget_calculator' } });
+      window.cf.beacon({ name: 'tool_used', data: { tool: 'publishing_recoup_calculator' } });
     }
   }, true);
 
-  // Prevent mouse wheel from changing focused number input values.
-  [devInput, markupInput, marketingInput, servicesInput].forEach(function(el) {
-    el.addEventListener('wheel', function(e) {
-      if (document.activeElement === el) {
-        e.preventDefault();
-        el.blur();
-      }
-    }, { passive: false });
-  });
-
-  var carryBtn = document.getElementById('carry-to-deal');
-  if (carryBtn) {
-    carryBtn.addEventListener('click', function() {
-      var t = carryBtn.dataset.total;
-      if (!t) return;
-      window.location.href = '/resources/tools/publishing-break-even-calculator.html?budget=' + encodeURIComponent(t);
-    });
-  }
-
-  var dollarIds = { 'dev-budget': true, 'marketing': true, 'services': true };
-
-  function formatDollar(el) {
+  function formatDollarBudget(el) {
     var v = parseFloat(el.value.toString().replace(/[^0-9.]/g, ''));
     if (!isNaN(v) && v > 0) {
       el.type = 'text';
       el.value = Math.round(v).toLocaleString('en-US');
     }
   }
-  function unformatDollar(el) {
+  function unformatDollarBudget(el) {
     if (el.type === 'text') {
       var raw = el.value.replace(/[^0-9.]/g, '');
       el.type = 'number';
@@ -2168,20 +2561,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
 
   document.querySelectorAll('.calc-presets').forEach(function(group) {
-    var targetId = group.dataset.target;
-    var input = document.getElementById(targetId === 'dev-budget' ? 'dev-budget' : targetId);
+    var input = document.getElementById(group.dataset.target);
     if (!input) return;
 
     group.querySelectorAll('.preset-btn').forEach(function(btn) {
       var handler = function(e) {
         if (e && e.type === 'touchstart') e.preventDefault();
-        unformatDollar(input);
         input.value = btn.dataset.value;
         syncGroup(group, btn.dataset.value);
         calculate();
-        if (document.activeElement !== input && dollarIds[input.id]) {
-          formatDollar(input);
-        }
       };
       btn.addEventListener('click', handler);
       btn.addEventListener('touchstart', handler, { passive: false });
@@ -2190,84 +2578,105 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     input.addEventListener('input', function() {
       syncGroup(group, input.value);
     });
+
+    syncGroup(group, input.value);
   });
 
-  // Format dollar inputs with thousands separators on blur; strip on focus.
-  [devInput, marketingInput, servicesInput].forEach(function(el) {
-    el.addEventListener('blur', function() { formatDollar(el); });
-    el.addEventListener('focus', function() { unformatDollar(el); });
-    // Strip thousands separators / currency on paste so "$150,000" doesn't get
-    // truncated to 150 by the type=number input.
-    el.addEventListener('paste', function(e) {
-      e.preventDefault();
-      var text = ((e.clipboardData || window.clipboardData).getData('text') || '');
-      var clean = text.replace(/[^0-9.]/g, '');
-      if (!clean) return;
-      if (el.type === 'text') { el.type = 'number'; }
-      el.value = clean;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
+  budgetInput.addEventListener('blur', function() { formatDollarBudget(budgetInput); });
+  budgetInput.addEventListener('focus', function() { unformatDollarBudget(budgetInput); });
+
+  // Strip thousands separators / currency on paste so "$150,000" pasted into a
+  // number input doesn't get truncated to 150 by the browser.
+  budgetInput.addEventListener('paste', function(e) {
+    e.preventDefault();
+    var text = ((e.clipboardData || window.clipboardData).getData('text') || '');
+    var clean = text.replace(/[^0-9.]/g, '');
+    if (!clean) return;
+    budgetInput.value = clean;
+    budgetInput.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+
+  // Prevent mouse wheel from changing focused number input values.
+  allInputs.forEach(function(el) {
+    el.addEventListener('wheel', function(e) {
+      if (document.activeElement === el) {
+        e.preventDefault();
+        el.blur();
+      }
+    }, { passive: false });
+  });
+
+  // Read incoming budget from URL param (?budget=N).
+  var incoming = new URLSearchParams(window.location.search).get('budget');
+  if (incoming) {
+    var clean = incoming.replace(/[^0-9.]/g, '');
+    if (clean) budgetInput.value = clean;
+  }
+
+  // Wire carry-to-calc3 buttons.
+  ['carry-1x', 'carry-2x', 'carry-3x'].forEach(function(id) {
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var u = btn.dataset.units;
+      if (!u) return;
+      window.location.href = '/resources/tools/steam-wishlist-target-calculator.html?units=' + encodeURIComponent(u);
     });
   });
 
-  var copyBtn = document.getElementById('calc-copy-btn');
-  if (copyBtn) {
+  document.querySelectorAll('.calc-copy-btn').forEach(function(copyBtn) {
     copyBtn.addEventListener('click', function() {
-      var val = document.getElementById('total').textContent.trim();
+      var targetId = copyBtn.dataset.copyTarget;
+      var targetEl = targetId ? document.getElementById(targetId) : document.querySelector('.calc-result-value, #total, #result');
+      if (!targetEl) return;
+      var val = targetEl.textContent.trim();
       navigator.clipboard.writeText(val).then(function() {
         copyBtn.classList.add('is-copied');
-        copyBtn.querySelector('.calc-copy-label').textContent = 'Copied';
         copyBtn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
         setTimeout(function() {
           copyBtn.classList.remove('is-copied');
-          copyBtn.querySelector('.calc-copy-label').textContent = 'Copy';
           copyBtn.querySelector('svg').innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
         }, 2000);
       });
     });
+  });
+
+  var netToggle = document.querySelector('.net-details-toggle');
+  if (netToggle) {
+    netToggle.addEventListener('click', function() {
+      var body = document.getElementById('net-details-body');
+      var expanded = netToggle.getAttribute('aria-expanded') === 'true';
+      netToggle.setAttribute('aria-expanded', !expanded);
+      body.classList.toggle('is-open');
+    });
   }
 
-  calculate();
-})();
+  document.querySelectorAll('.calc-panel-toggle').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      var panel = toggle.closest('.calc-panel');
+      var body = panel.querySelector('.calc-panel-body');
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
 
-(function() {
-  var floating = document.getElementById('calc-floating');
-  var resultBlock = document.getElementById('total');
-  if (!floating || !resultBlock) return;
-
-  var hasValue = false;
-
-  document.querySelectorAll('.calc-input').forEach(function(input) {
-    ['input', 'change'].forEach(function(evt) {
-      input.addEventListener(evt, function() {
-        hasValue = true;
-        checkVisibility();
+      document.querySelectorAll('.calc-panel-toggle').forEach(function(t) {
+        if (t !== toggle) {
+          t.setAttribute('aria-expanded', 'false');
+          t.closest('.calc-panel').querySelector('.calc-panel-body').setAttribute('hidden', '');
+        }
       });
+
+      toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      if (expanded) {
+        body.setAttribute('hidden', '');
+      } else {
+        body.removeAttribute('hidden');
+      }
     });
   });
 
-  function isResultVisible() {
-    var rect = resultBlock.getBoundingClientRect();
-    return rect.top < window.innerHeight && rect.bottom > 0;
-  }
-
-  function checkVisibility() {
-    if (!hasValue) return;
-    if (isResultVisible()) {
-      floating.classList.remove('is-visible');
-    } else {
-      floating.classList.add('is-visible');
-    }
-  }
-
-  window.addEventListener('scroll', checkVisibility, { passive: true });
-  window.addEventListener('resize', checkVisibility, { passive: true });
+  calculate();
+  if (incoming) formatDollarBudget(budgetInput);
 })();
 </script>
-
-<div class="calc-floating" id="calc-floating" aria-live="polite" aria-label="Running total">
-  <div class="calc-floating-label">Total</div>
-  <div class="calc-floating-value" id="floating-total">$0</div>
-</div>
 
 <script>
 (function() {
@@ -2275,7 +2684,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
   function buildMailto() {
     var subject = 'Project Enquiry: [Name Surname] (Studio)';
-    var body = "Hi Michele,\nI used the Game Budget Calculator and I'd like to talk with you.";
+    var body = "Hi Michele,\nI used the Publishing Break-Even Calculator and I'd like to talk with you.";
     return 'mailto:' + CONTACT_EMAIL
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
