@@ -669,7 +669,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transform-origin: center;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.2s ease-out;
+  transition: border-color 0.2s ease-out, transform 200ms ease-out;
   margin: 28px 0 0;
   padding: 28px 32px 28px 190px;
   border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
@@ -757,17 +757,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease-out;
-  background: radial-gradient(circle 220px at var(--mx, 50%) var(--my, 50%),
-    color-mix(in srgb, var(--clay) 22%, transparent), transparent 60%);
+  background: radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--clay) 12%, transparent), transparent 55%);
 }
 .context-cta:hover .cta-spotlight { opacity: 1; }
-.context-cta:hover { border-color: var(--clay); }
+.context-cta:hover { border-color: var(--clay); transform: scale(1.012); transform-origin: center; }
 @media (prefers-reduced-motion: reduce) {
   /* No pointer tracking: static centered clay glow on hover. */
   .cta-spotlight {
-    background: radial-gradient(circle 220px at 50% 50%,
-      color-mix(in srgb, var(--clay) 18%, transparent), transparent 60%);
+    background: radial-gradient(circle 180px at 50% 50%,
+      color-mix(in srgb, var(--clay) 10%, transparent), transparent 55%);
   }
+  /* Drop the hover lift; keep only the static glow. */
+  .context-cta:hover { transform: none; }
 }
 @media (max-width: 640px) {
   .context-cta { padding: 22px 20px; }
@@ -2740,7 +2742,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           { transform: 'rotate(1deg)', offset: 0.55 },
           { transform: 'rotate(-0.5deg)', offset: 0.8 },
           { transform: 'rotate(0deg)' }
-        ], { duration: 450, easing: 'ease-out' });
+        ], { duration: 450, easing: 'ease-out', composite: 'add' });
       }
     }
 
