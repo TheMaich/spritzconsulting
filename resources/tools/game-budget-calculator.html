@@ -711,6 +711,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .context-cta-btn {
   flex-shrink: 0;
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -732,7 +733,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Lift content above the spotlight layer so the glow sits behind text/button. */
 .context-cta-text,
 .context-cta-btn { position: relative; z-index: 1; }
-.context-cta-text .context-cta-btn { margin-top: 16px; }
 /* Cursor-following spotlight. Separate layer so it coexists with any other card
    effects; pointer position arrives via --mx/--my (set in JS). */
 .cta-spotlight {
@@ -757,7 +757,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (max-width: 640px) {
   .context-cta { padding: 22px 20px; }
   .context-cta-photo { width: 64px; height: 64px; }
-  .context-cta-btn { width: 100%; justify-content: center; }
+  .context-cta-btn { width: 100%; margin-left: 0; justify-content: center; }
 }
 
 .cta-card {
@@ -1710,11 +1710,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </span>
         <div class="context-cta-text">
           <p class="context-cta-line">Hi, I'm Michele, and I'd love to work together. Send me your situation and let's take it from there.</p>
-          <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
-            Get in touch
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-          </a>
         </div>
+        <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
+          Get in touch
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
       </div>
 
       <div class="recoup-calc-wrap" hidden>
