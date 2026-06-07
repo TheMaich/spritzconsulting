@@ -670,7 +670,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transform-origin: center;
   transition: transform 200ms ease-out;
 }
-.context-cta-shell:hover { transform: scale(1.1); }
+.context-cta-shell:hover { transform: scale(1.1) !important; }
 .context-cta {
   --cta-radius: 14px;
   transform-origin: center;
@@ -777,7 +777,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       color-mix(in srgb, var(--clay) 10%, transparent), transparent 55%);
   }
   /* Drop the hover lift; keep only the static glow. */
-  .context-cta-shell:hover { transform: none; }
+  .context-cta-shell:hover { transform: none !important; }
 }
 @media (max-width: 640px) {
   /* Mobile: photo + lead line in a top row, secondary line centered below,
