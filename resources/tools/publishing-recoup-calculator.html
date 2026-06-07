@@ -2635,39 +2635,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <script>
 (function() {
   var CONTACT_EMAIL = 'hello@spritzconsulting.com';
-  var TOOL_NAME = 'Publishing Recoup Calculator';
-
-  // Read the rendered result values (no recompute). Returns null when no budget is
-  // set (recoup units show the is-empty placeholder) so the mail is not zero-filled.
-  function currentNumbers() {
-    var u1 = document.getElementById('units-1x');
-    if (!u1 || u1.classList.contains('is-empty')) return null;
-    var lines = [];
-    var bd = document.getElementById('breakdown');
-    if (bd) {
-      bd.querySelectorAll('.row').forEach(function(r) {
-        var s = r.querySelectorAll('span');
-        if (s.length >= 2) lines.push(s[0].textContent.trim() + ': ' + s[s.length - 1].textContent.trim());
-      });
-    }
-    var net = document.getElementById('net');
-    if (net) lines.push('Net per unit: ' + net.textContent.trim());
-    lines.push('Units to recoup (1x budget): ' + u1.textContent.trim());
-    var u2 = document.getElementById('units-2x');
-    var u3 = document.getElementById('units-3x');
-    if (u2) lines.push('Units to recoup (2x budget): ' + u2.textContent.trim());
-    if (u3) lines.push('Units to recoup (3x budget): ' + u3.textContent.trim());
-    return lines;
-  }
 
   function buildMailto() {
     var subject = 'Project Enquiry: [Name Surname] (Studio)';
-    var body = 'Hi Michele,\n'
-      + "I used the " + TOOL_NAME + " and I'd like to talk about my game.\n\n";
-    var numbers = currentNumbers();
-    if (numbers && numbers.length) {
-      body += 'My current numbers:\n' + numbers.join('\n') + '\n\n';
-    }
+    var body = "Hi Michele,\nI used the Publishing Recoup Calculator and I'd like to talk with you.";
     return 'mailto:' + CONTACT_EMAIL
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
