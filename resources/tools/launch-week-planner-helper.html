@@ -662,95 +662,80 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-bottom: 24px;
 }
 
-.cta-card {
+/* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
+   as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
+   .context-cta owns the wobble and cursor glow, so the two never fight. */
+.context-cta-shell {
+  display: block;
+  margin: 28px 0 0;
+  transform-origin: center;
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.context-cta-shell:hover { transform: scale(1.012) !important; }
+.context-cta {
+  --cta-radius: 14px;
+  transform-origin: center;
   position: relative;
   overflow: hidden;
-  border-radius: 16px;
-  border: 1px solid var(--rule);
-  background: var(--paper-2);
-  padding: 48px;
-  margin: 36px auto 0;
-  max-width: 860px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 32px;
+  transition: border-color 0.2s ease-out;
+  margin: 0;
+  padding: 28px 32px 28px 190px;
+  border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
+  border-radius: var(--cta-radius);
+  background: color-mix(in srgb, var(--clay) 7%, var(--paper-2));
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 0.3s ease,
-              box-shadow 0.3s ease;
+  justify-content: flex-start;
+  gap: 20px;
 }
-
-@media (max-width: 640px) {
-  .cta-card {
-    grid-template-columns: 1fr;
-    padding: 32px 24px;
-    gap: 24px;
-  }
-}
-
-.cta-card::before {
+.context-cta::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 60% 80% at 100% 50%,
-    color-mix(in srgb, var(--clay) 8%, transparent),
-    transparent 70%
-  );
-  pointer-events: none;
-}
-
-.cta-card:hover {
-  transform: scale(1.025);
-  border-color: color-mix(in srgb, var(--clay) 40%, transparent);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--clay) 20%, transparent),
-    0 8px 32px -8px color-mix(in srgb, var(--clay) 20%, transparent);
-}
-
-.cta-card::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 17px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--clay) 60%, transparent),
-    transparent 40%,
-    color-mix(in srgb, var(--clay) 30%, transparent)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  left: 0;
+  bottom: 0;
+  width: 210px;
+  height: 100%;
   z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(130px 150px at 95px 70%,
+    color-mix(in srgb, var(--paper) 16%, transparent), transparent 70%);
 }
-
-.cta-card:hover::after {
-  opacity: 1;
-}
-
-.cta-card-text {
-  position: relative;
+.context-cta-figure {
+  position: absolute;
+  left: 24px;
+  bottom: -21px;
   z-index: 1;
+  width: 140px;
+  height: auto;
+  transform: scale(1.15);
+  transform-origin: bottom center;
+  pointer-events: none;
+  display: block;
 }
-
-.cta-card-headline {
-  font-size: clamp(20px, 3vw, 28px);
+.context-cta-photo-mobile { display: none; }
+.context-cta-text { flex: 1; min-width: 260px; }
+.context-cta-line {
+  font-family: var(--serif);
   font-weight: 600;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.015em;
   color: var(--ink);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin-bottom: 0;
-  font-variation-settings: "opsz" 32;
+  margin: 0 0 4px;
+  line-height: 1.3;
 }
-
-.cta-card-action {
-  position: relative;
-  z-index: 1;
+.context-cta-line2 {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: clamp(15px, 1.7vw, 17px);
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  margin: 0;
+  line-height: 1.4;
+}
+.context-cta-btn {
   flex-shrink: 0;
-}
-
-.cta-card-btn {
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -763,42 +748,68 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   border-radius: 100px;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-
-.cta-card-btn:hover {
-  background: var(--clay-deep);
+.context-cta-btn:hover { background: var(--clay-deep); }
+.context-cta-btn svg { transition: transform 0.3s ease-out; }
+.context-cta-btn:hover svg { transform: translate(2px, -2px); }
+.context-cta-text,
+.context-cta-btn { position: relative; z-index: 1; }
+.cta-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+  background: radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--clay) 12%, transparent), transparent 55%);
 }
-
+.context-cta:hover .cta-spotlight { opacity: 1; }
+.context-cta:hover { border-color: var(--clay); }
 @media (prefers-reduced-motion: reduce) {
-  .cta-card-btn {
-    transform: none !important;
-    transition: background 0.2s;
+  .cta-spotlight {
+    background: radial-gradient(circle 180px at 50% 50%,
+      color-mix(in srgb, var(--clay) 10%, transparent), transparent 55%);
   }
+  .context-cta-shell:hover { transform: none !important; }
 }
-
-.cta-card-btn svg {
-  transition: transform 0.3s ease-out;
-}
-
-.cta-card-btn:hover svg {
-  transform: rotate(45deg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-card-text,
-  .cta-card-btn svg {
-    transition: none !important;
-    transform: none !important;
+@media (max-width: 640px) {
+  .context-cta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "photo lead"
+      "sub   sub"
+      "btn   btn";
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 12px;
+    padding: 24px 20px;
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cta-card,
-  .cta-card::after {
-    transition: none !important;
-    transform: none !important;
+  .context-cta::before { display: none; }
+  .context-cta-figure { display: none; }
+  .context-cta-text { display: contents; }
+  .context-cta-photo-mobile {
+    grid-area: photo;
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
   }
+  .context-cta-photo-mobile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    transform: scale(1.1);
+    display: block;
+  }
+  .context-cta-line { grid-area: lead; margin: 0; text-align: left; }
+  .context-cta-line2 { grid-area: sub; margin: 0; text-align: center; }
+  .context-cta-btn { grid-area: btn; width: 100%; margin-left: 0; justify-content: center; }
 }
 
 /* Bolder pass: editorial amplification */
@@ -2018,16 +2029,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     </div>
 
-    <div class="cta-card">
-      <div class="cta-card-text">
-        <p class="cta-card-headline">
-          Want to talk through this?<br>
-          Book a 30-minute discovery call.
-        </p>
-      </div>
-      <div class="cta-card-action">
-        <a href="https://spritzconsulting.com/#contact" class="cta-card-btn">
-          Book a call <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    <div class="context-cta-shell">
+      <div class="context-cta">
+        <span class="cta-spotlight" aria-hidden="true"></span>
+        <img class="context-cta-figure" src="/assets/Miki%20transparent.png" alt="Michele Di Nardo">
+        <span class="context-cta-photo-mobile">
+          <img src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="60" height="60" loading="lazy">
+        </span>
+        <div class="context-cta-text">
+          <p class="context-cta-line">Hi, I'm Michele, and I'd love to work together.</p>
+          <p class="context-cta-line2">Send me your situation and let's take it from there.</p>
+        </div>
+        <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
+          Get in touch
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
         </a>
       </div>
     </div>
@@ -2735,5 +2750,153 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 })();
 </script>
 
+<script>
+/* Contextual CTA: random phrase per load, mailto builder, attention wobble, cursor
+   glow. Mirrors the implementation on game-budget and publishing-break-even. */
+(function() {
+  var CONTACT_EMAIL = 'hello@spritzconsulting.com';
+  var TOOL_NAME = 'Launch Week Planner Helper';
+
+  /* Random phrase per load. Phrase A is the default in the HTML (present on load);
+     about half the time swap to phrase B. No layout shift beyond the line text. */
+  (function () {
+    var lead = document.querySelector('.context-cta-line');
+    var sub = document.querySelector('.context-cta-line2');
+    if (!lead || !sub) return;
+    var phrases = [
+      { lead: "Hi, I'm Michele, and I'd love to work together.",
+        sub: "Send me your situation and let's take it from there." },
+      { lead: "Hi, I'm Michele.",
+        sub: "Tell me what you're working on and let's see how we can do it together." }
+    ];
+    var pick = phrases[Math.floor(Math.random() * phrases.length)];
+    lead.textContent = pick.lead;
+    sub.textContent = pick.sub;
+  })();
+
+  /* Build the mailto with this page's tool name in the body. */
+  function buildMailto() {
+    var subject = 'Project Enquiry: [Name Surname] (Studio)';
+    var body = "Hi Michele,\nI used the " + TOOL_NAME + " and I'd like to talk with you.";
+    return 'mailto:' + CONTACT_EMAIL
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+  }
+  document.querySelectorAll('[data-contact-cta]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = buildMailto();
+    });
+  });
+
+  /* Attention nudge: wobble ~5s after scroll-in, then idle ~60s, suppressed on hover. */
+  (function () {
+    var card = document.querySelector('.context-cta');
+    if (!card || typeof IntersectionObserver === 'undefined' || !card.animate) return;
+
+    var reduceMotion = !!(window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var hovering = false;
+    var visible = false;
+    var currentAnim = null;
+    var startTimer = null;
+    var idleTimer = null;
+
+    function clearStartTimer() {
+      if (startTimer !== null) { window.clearTimeout(startTimer); startTimer = null; }
+    }
+    function clearIdleTimer() {
+      if (idleTimer !== null) { window.clearTimeout(idleTimer); idleTimer = null; }
+    }
+
+    function hexToRgba(hex, alpha) {
+      var h = hex.replace('#', '');
+      if (h.length === 3) { h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2]; }
+      var r = parseInt(h.slice(0, 2), 16);
+      var g = parseInt(h.slice(2, 4), 16);
+      var b = parseInt(h.slice(4, 6), 16);
+      return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+    }
+
+    function scheduleIdle() {
+      clearIdleTimer();
+      if (hovering || !visible) return;
+      idleTimer = window.setTimeout(function () { idleTimer = null; play(); }, 60000);
+    }
+
+    function play() {
+      startTimer = null;
+      if (hovering || !visible) return;
+      if (reduceMotion) {
+        var clay = (getComputedStyle(document.documentElement)
+          .getPropertyValue('--clay') || '#8A6600').trim();
+        currentAnim = card.animate([
+          { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) },
+          { boxShadow: '0 0 0 6px ' + hexToRgba(clay, 0.22), borderColor: hexToRgba(clay, 0.9), offset: 0.5 },
+          { boxShadow: '0 0 0 0 ' + hexToRgba(clay, 0), borderColor: hexToRgba(clay, 0.35) }
+        ], { duration: 900, easing: 'ease-out' });
+      } else {
+        currentAnim = card.animate([
+          { transform: 'rotate(0deg)' },
+          { transform: 'rotate(-1deg)', offset: 0.25 },
+          { transform: 'rotate(1deg)', offset: 0.55 },
+          { transform: 'rotate(-0.5deg)', offset: 0.8 },
+          { transform: 'rotate(0deg)' }
+        ], { duration: 450, easing: 'ease-out', composite: 'add' });
+      }
+      if (currentAnim) {
+        currentAnim.onfinish = function () { currentAnim = null; scheduleIdle(); };
+        currentAnim.oncancel = function () { currentAnim = null; };
+      }
+    }
+
+    function stopWobble() {
+      clearStartTimer();
+      clearIdleTimer();
+      if (currentAnim) { try { currentAnim.cancel(); } catch (e) {} currentAnim = null; }
+      card.style.transform = '';
+    }
+
+    card.addEventListener('mouseenter', function () {
+      hovering = true;
+      stopWobble();
+    });
+    card.addEventListener('mouseleave', function () {
+      hovering = false;
+      scheduleIdle();
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      var entry = entries[0];
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+        if (!visible) {
+          visible = true;
+          if (!hovering) {
+            clearStartTimer();
+            startTimer = window.setTimeout(play, 5000);
+          }
+        }
+      } else {
+        visible = false;
+        stopWobble();
+      }
+    }, { threshold: [0, 0.6, 1] });
+    observer.observe(card);
+  })();
+
+  /* Cursor-following glow: write pointer position into --mx/--my. */
+  (function () {
+    var card = document.querySelector('.context-cta');
+    if (!card) return;
+    if (window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    card.addEventListener('pointermove', function (e) {
+      var rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
+  })();
+})();
+</script>
 </body>
 </html>
