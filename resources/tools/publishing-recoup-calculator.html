@@ -687,42 +687,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   flex-shrink: 0;
   width: 72px;
   height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: block;
+}
+.context-cta-photo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center 25%;
-  border-radius: var(--cta-radius);
+  transform: scale(1.1);
   display: block;
 }
 .context-cta-text { flex: 1; min-width: 260px; }
-.context-cta-name {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 16px;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  margin: 0;
-  line-height: 1.2;
-}
-.context-cta-role {
-  font-family: var(--sans);
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--ink-2);
-  margin: 2px 0 12px;
-}
-.context-cta-headline {
+.context-cta-line {
   font-family: var(--serif);
   font-weight: 600;
   font-size: clamp(18px, 2vw, 22px);
   letter-spacing: -0.015em;
   color: var(--ink);
-  margin: 0 0 8px;
-  line-height: 1.25;
-}
-.context-cta-sub {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--ink-2);
   margin: 0;
+  line-height: 1.35;
 }
 .context-cta-btn {
   flex-shrink: 0;
@@ -2096,12 +2081,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="context-cta">
         <span class="cta-spotlight" aria-hidden="true"></span>
-        <img class="context-cta-photo" src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="72" height="72">
+        <span class="context-cta-photo">
+          <img src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="72" height="72">
+        </span>
         <div class="context-cta-text">
-          <p class="context-cta-name">Michele Di Nardo</p>
-          <p class="context-cta-role">Production and publishing consultant, Spritz Consulting</p>
-          <p class="context-cta-headline">Want a second pair of eyes on these numbers?</p>
-          <p class="context-cta-sub">Send me your situation and I'll tell you the first things I'd change about your plan.</p>
+          <p class="context-cta-line">Hi, I'm Michele. Tell me what you're working on and let's see how we can do it together.</p>
           <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
             Get in touch
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
