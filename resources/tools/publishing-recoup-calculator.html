@@ -671,7 +671,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   overflow: hidden;
   transition: border-color 0.2s ease-out;
   margin: 28px 0 0;
-  padding: 28px 32px;
+  padding: 28px 32px 28px 190px;
   border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
   border-radius: var(--cta-radius);
   background: color-mix(in srgb, var(--clay) 7%, var(--paper-2));
@@ -681,22 +681,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   justify-content: flex-start;
   gap: 20px;
 }
-.context-cta-photo {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: block;
-}
-.context-cta-photo img {
-  width: 100%;
+.context-cta::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 210px;
   height: 100%;
-  object-fit: cover;
-  object-position: center 25%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(130px 150px at 95px 70%,
+    color-mix(in srgb, var(--paper) 16%, transparent), transparent 70%);
+}
+.context-cta-figure {
+  position: absolute;
+  left: 24px;
+  bottom: -12px;
+  z-index: 1;
+  width: 140px;
+  height: auto;
   transform: scale(1.1);
+  transform-origin: bottom center;
+  pointer-events: none;
   display: block;
 }
 .context-cta-text { flex: 1; min-width: 260px; }
@@ -765,7 +771,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 @media (max-width: 640px) {
   .context-cta { padding: 22px 20px; }
-  .context-cta-photo { width: 64px; height: 64px; }
+  .context-cta::before { display: none; }
+  .context-cta-figure {
+    position: static;
+    width: 72px;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    align-self: flex-start;
+  }
   .context-cta-btn { width: 100%; margin-left: 0; justify-content: center; }
 }
 
@@ -2090,9 +2104,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="context-cta">
         <span class="cta-spotlight" aria-hidden="true"></span>
-        <span class="context-cta-photo">
-          <img src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="72" height="72">
-        </span>
+        <img class="context-cta-figure" src="/assets/Miki%20transparent.png" alt="Michele Di Nardo">
         <div class="context-cta-text">
           <p class="context-cta-line">Hi, I'm Michele.</p>
           <p class="context-cta-line2">Tell me what you're working on and let's see how we can do it together.</p>
