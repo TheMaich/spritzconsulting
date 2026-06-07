@@ -2500,11 +2500,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
     var lines = [];
     var r = srp;                            lines.push(row('SRP', null, r));
-    r = r * adj;                            lines.push(row('× regional ' + adj.toFixed(2), null, r));
     r = r * plat;                           lines.push(row('× platform ' + plat.toFixed(2), null, r));
+    r = r * adj;                            lines.push(row('× regional ' + adj.toFixed(2), null, r));
+    r = r * licMul;                         lines.push(row('− license ' + lic + '%', null, r));
     r = r * tax;                            lines.push(row('× tax ' + tax.toFixed(2), null, r));
     r = r * ret;                            lines.push(row('× return ' + ret.toFixed(2), null, r));
-    r = r * licMul;                         lines.push(row('− license ' + lic + '%', null, r));
     breakdownEl.innerHTML = lines.join('');
 
     var budget = num(budgetInput, 0);
