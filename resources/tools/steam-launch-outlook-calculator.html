@@ -1628,7 +1628,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <label class="calc-label" for="current-followers">Current Steam Followers</label>
           <div class="calc-hint">Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.</div>
           <div class="calc-input-wrap">
-            <input type="number" id="current-followers" class="calc-input" placeholder="0" min="0" step="1">
+            <input type="text" id="current-followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
             <span class="calc-suffix">FOLLOWERS</span>
           </div>
           <div class="calc-presets" data-target="current-followers">
@@ -1643,7 +1643,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
           <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure. This multiplier applies across the whole tool, including Followers Needed.</div>
           <div class="calc-input-wrap">
-            <input type="number" id="multiplier" class="calc-input" placeholder="12" min="1" max="30" step="0.1" value="12">
+            <input type="text" id="multiplier" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="12" value="12">
             <span class="calc-suffix">X</span>
           </div>
           <div class="calc-presets" data-target="multiplier">
@@ -1695,7 +1695,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <label class="calc-label" for="followers-last-30">Followers Gained in Last 30 Days</label>
         <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="followers-last-30" class="calc-input" placeholder="0" min="0" step="1">
+          <input type="text" id="followers-last-30" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">FOLLOWERS</span>
         </div>
         <div class="calc-presets" data-target="followers-last-30">
@@ -1710,7 +1710,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <label class="calc-label" for="wishlist-target">Wishlist Target at Launch</label>
         <div class="calc-hint">Paste the figure from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a>, or enter your target manually.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="wishlist-target" class="calc-input" placeholder="0" min="0" step="100">
+          <input type="text" id="wishlist-target" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">WISHLISTS</span>
         </div>
         <div class="calc-presets" data-target="wishlist-target">
@@ -2469,7 +2469,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var current = readNum(followersInput);
     var pageOpen = parseDate(pageOpenInput);
     var launch = parseDate(launchInput);
-    var multiplier = readNum(multInput) || 10;
+    var multiplier = Math.max(1, Math.min(30, readNum(multInput) || 10));
     var target = readNum(targetInput);
 
     var today = new Date(); today.setHours(0,0,0,0);
@@ -2657,6 +2657,45 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       }
     }, { passive: false });
   });
+
+  // Numeric keyboard treatment: keep these text inputs digit-only (integer) or
+  // digit-plus-single-dot (decimal). Strips disallowed characters on input and paste.
+  function attachIntFilter(el) {
+    if (!el) return;
+    el.addEventListener('input', function() {
+      var c = el.value.replace(/[^0-9]/g, '');
+      if (c !== el.value) el.value = c;
+    });
+    el.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var t = ((e.clipboardData || window.clipboardData).getData('text') || '').replace(/[^0-9]/g, '');
+      if (!t) return;
+      el.value = t;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+  function attachDecFilter(el) {
+    if (!el) return;
+    function clean(s) {
+      s = s.replace(/[^0-9.]/g, '');
+      var i = s.indexOf('.');
+      if (i !== -1) s = s.slice(0, i + 1) + s.slice(i + 1).replace(/\./g, '');
+      return s;
+    }
+    el.addEventListener('input', function() {
+      var c = clean(el.value);
+      if (c !== el.value) el.value = c;
+    });
+    el.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var t = clean((e.clipboardData || window.clipboardData).getData('text') || '');
+      if (!t) return;
+      el.value = t;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+  [followersInput, followersLast30Input, targetInput].forEach(attachIntFilter);
+  attachDecFilter(multInput);
 
   var resizeTO;
   window.addEventListener('resize', function() {

@@ -1225,7 +1225,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <label class="calc-label" for="wishlists">Wishlists at Launch</label>
         <div class="calc-hint">Your estimated or target wishlist count at launch. Paste from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> or enter manually.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="wishlists" class="calc-input" placeholder="0" min="0" step="1000">
+          <input type="text" id="wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">wishlists</span>
         </div>
         <div class="calc-presets" data-target="wishlists">
@@ -1240,7 +1240,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <label class="calc-label" for="followers">Steam Followers (optional)</label>
         <div class="calc-hint">If you enter followers, the calculator will cross-check your wishlist estimate using the 10x median ratio and show a confidence range.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="followers" class="calc-input" placeholder="0" min="0" step="100">
+          <input type="text" id="followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">followers</span>
         </div>
       </div>
@@ -1250,7 +1250,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-hint">The price shown on your Steam store page on launch day.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
-          <input type="number" id="price" class="calc-input" placeholder="0" min="0" step="0.01">
+          <input type="text" id="price" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
         </div>
         <div class="calc-presets" data-target="price">
           <button type="button" class="preset-btn" data-value="9.99">$9.99</button>
@@ -1306,7 +1306,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <label class="calc-label" for="actual-week1">Actual Week 1 Sales</label>
         <div class="calc-hint">Total copies sold in the first 7 days from your Steamworks data.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="actual-week1" class="calc-input" placeholder="0" min="0" step="1">
+          <input type="text" id="actual-week1" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">units</span>
         </div>
       </div>
@@ -1315,7 +1315,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <label class="calc-label" for="actual-reviews">Week 1 Reviews</label>
         <div class="calc-hint">Public review count at end of Week 1. Used to cross-check sales via Boxleiter method (20x to 60x sales per review).</div>
         <div class="calc-input-wrap">
-          <input type="number" id="actual-reviews" class="calc-input" placeholder="0" min="0" step="1">
+          <input type="text" id="actual-reviews" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">reviews</span>
         </div>
       </div>
@@ -1324,7 +1324,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <label class="calc-label" for="post-wishlists">Wishlists at Launch</label>
         <div class="calc-hint">Used to calculate your actual conversion rate and compare to the 15% median. Inherits the value from Part 1 if left empty.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="post-wishlists" class="calc-input" placeholder="0" min="0" step="1000">
+          <input type="text" id="post-wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">wishlists</span>
         </div>
       </div>
@@ -1690,6 +1690,45 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     }, { passive: false });
   });
+
+  // Numeric keyboard treatment: keep these text inputs digit-only (integer) or
+  // digit-plus-single-dot (decimal). Strips disallowed characters on input and paste.
+  function attachIntFilter(el) {
+    if (!el) return;
+    el.addEventListener('input', function() {
+      var c = el.value.replace(/[^0-9]/g, '');
+      if (c !== el.value) el.value = c;
+    });
+    el.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var t = ((e.clipboardData || window.clipboardData).getData('text') || '').replace(/[^0-9]/g, '');
+      if (!t) return;
+      el.value = t;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+  function attachDecFilter(el) {
+    if (!el) return;
+    function clean(s) {
+      s = s.replace(/[^0-9.]/g, '');
+      var i = s.indexOf('.');
+      if (i !== -1) s = s.slice(0, i + 1) + s.slice(i + 1).replace(/\./g, '');
+      return s;
+    }
+    el.addEventListener('input', function() {
+      var c = clean(el.value);
+      if (c !== el.value) el.value = c;
+    });
+    el.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var t = clean((e.clipboardData || window.clipboardData).getData('text') || '');
+      if (!t) return;
+      el.value = t;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+  [wishlistsInput, followersInput, actualWeek1Input, actualReviewsInput, postWishlistsInput].forEach(attachIntFilter);
+  attachDecFilter(priceInput);
 
   launchPills.forEach(function(btn) {
     btn.addEventListener('click', function() {
