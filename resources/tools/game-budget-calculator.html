@@ -665,6 +665,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step, distinct from the plain .cta-card at the page bottom. */
 .context-cta {
+  --cta-radius: 14px;
   transform-origin: center;
   position: relative;
   overflow: hidden;
@@ -672,15 +673,42 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin: 28px 0 0;
   padding: 28px 32px;
   border: 1px solid color-mix(in srgb, var(--clay) 35%, var(--rule));
-  border-radius: 14px;
+  border-radius: var(--cta-radius);
   background: color-mix(in srgb, var(--clay) 7%, var(--paper-2));
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 20px;
 }
+.context-cta-photo {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  object-position: center 25%;
+  border-radius: var(--cta-radius);
+  display: block;
+}
 .context-cta-text { flex: 1; min-width: 260px; }
+.context-cta-name {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.2;
+}
+.context-cta-role {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 2px 0 12px;
+}
 .context-cta-headline {
   font-family: var(--serif);
   font-weight: 600;
@@ -719,6 +747,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Lift content above the spotlight layer so the glow sits behind text/button. */
 .context-cta-text,
 .context-cta-btn { position: relative; z-index: 1; }
+.context-cta-text .context-cta-btn { margin-top: 16px; }
 /* Cursor-following spotlight. Separate layer so it coexists with any other card
    effects; pointer position arrives via --mx/--my (set in JS). */
 .cta-spotlight {
@@ -742,6 +771,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 @media (max-width: 640px) {
   .context-cta { padding: 22px 20px; }
+  .context-cta-photo { width: 64px; height: 64px; }
   .context-cta-btn { width: 100%; justify-content: center; }
 }
 
@@ -1690,14 +1720,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="context-cta">
         <span class="cta-spotlight" aria-hidden="true"></span>
+        <img class="context-cta-photo" src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="72" height="72">
         <div class="context-cta-text">
+          <p class="context-cta-name">Michele Di Nardo</p>
+          <p class="context-cta-role">Production and publishing consultant, Spritz Consulting</p>
           <p class="context-cta-headline">Want a second pair of eyes on these numbers?</p>
           <p class="context-cta-sub">Send me your situation and I'll tell you the first things I'd change about your plan.</p>
+          <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
+            Get in touch
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </a>
         </div>
-        <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
-          Get in touch
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-        </a>
       </div>
 
       <div class="recoup-calc-wrap" hidden>
