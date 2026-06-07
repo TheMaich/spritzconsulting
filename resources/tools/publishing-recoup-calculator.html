@@ -1918,6 +1918,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
         <div class="calc-panel">
           <button type="button" class="calc-panel-toggle" aria-expanded="false">
+            <span class="calc-panel-name">Platform Share Kept</span>
+            <span class="calc-panel-current" id="panel-platform-val">0.70</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="calc-panel-body" hidden>
+            <div class="calc-hint">What's left after the store's cut. Steam standard is 70% to you, Steam after revenue tiers can climb to 80–88%, consoles are typically 70%. Default <strong>0.70</strong>.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="platform" class="calc-input" placeholder="0.70" min="0" max="1" step="0.01" value="0.70">
+              <span class="calc-suffix">×</span>
+            </div>
+            <div class="calc-presets" data-target="platform">
+              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
+              <button type="button" class="preset-btn" data-value="0.88">0.88</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-panel">
+          <button type="button" class="calc-panel-toggle" aria-expanded="false">
             <span class="calc-panel-name">Regional / Currency Adjuster</span>
             <span class="calc-panel-current" id="panel-regional-val">0.80</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
@@ -1941,23 +1964,23 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
         <div class="calc-panel">
           <button type="button" class="calc-panel-toggle" aria-expanded="false">
-            <span class="calc-panel-name">Platform Share Kept</span>
-            <span class="calc-panel-current" id="panel-platform-val">0.70</span>
+            <span class="calc-panel-name">Publisher License Fee</span>
+            <span class="calc-panel-current" id="panel-license-val">0%</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </button>
           <div class="calc-panel-body" hidden>
-            <div class="calc-hint">What's left after the store's cut. Steam standard is 70% to you, Steam after revenue tiers can climb to 80–88%, consoles are typically 70%. Default <strong>0.70</strong>.</div>
+            <div class="calc-hint">Some deals carve a top-line license fee off gross before recoupment. Default <strong>0%</strong>. Anything above 20% is aggressive.</div>
             <div class="calc-input-wrap">
-              <input type="number" id="platform" class="calc-input" placeholder="0.70" min="0" max="1" step="0.01" value="0.70">
-              <span class="calc-suffix">×</span>
+              <input type="number" id="license" class="calc-input calc-input-pct" placeholder="0" min="0" max="50" step="0.5" value="0">
+              <span class="calc-suffix">%</span>
             </div>
-            <div class="calc-presets" data-target="platform">
-              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
-              <button type="button" class="preset-btn" data-value="0.88">0.88</button>
+            <div class="calc-presets" data-target="license">
+              <button type="button" class="preset-btn" data-value="0">0%</button>
+              <button type="button" class="preset-btn" data-value="10">10%</button>
+              <button type="button" class="preset-btn" data-value="20">20%</button>
+              <button type="button" class="preset-btn" data-value="30">30%</button>
             </div>
           </div>
         </div>
@@ -2004,29 +2027,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
               <button type="button" class="preset-btn" data-value="0.95">0.95</button>
               <button type="button" class="preset-btn" data-value="0.98">0.98</button>
               <button type="button" class="preset-btn" data-value="1.00">1.00</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="calc-panel">
-          <button type="button" class="calc-panel-toggle" aria-expanded="false">
-            <span class="calc-panel-name">Publisher License Fee</span>
-            <span class="calc-panel-current" id="panel-license-val">0%</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="calc-panel-chevron">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
-          <div class="calc-panel-body" hidden>
-            <div class="calc-hint">Some deals carve a top-line license fee off gross before recoupment. Default <strong>0%</strong>. Anything above 20% is aggressive.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="license" class="calc-input calc-input-pct" placeholder="0" min="0" max="50" step="0.5" value="0">
-              <span class="calc-suffix">%</span>
-            </div>
-            <div class="calc-presets" data-target="license">
-              <button type="button" class="preset-btn" data-value="0">0%</button>
-              <button type="button" class="preset-btn" data-value="10">10%</button>
-              <button type="button" class="preset-btn" data-value="20">20%</button>
-              <button type="button" class="preset-btn" data-value="30">30%</button>
             </div>
           </div>
         </div>
