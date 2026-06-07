@@ -1959,7 +1959,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-hint">Paste the figure from the <a href="/resources/tools/game-budget-calculator.html">Publisher's Game Budget Calculator</a>, or type a number directly, to see how many units you need to sell to recoup.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
-          <input type="number" id="budget" class="calc-input" placeholder="0" min="0" step="1000">
+          <input type="text" id="budget" class="calc-input" inputmode="numeric" pattern="[0-9]*" placeholder="0">
         </div>
       </div>
 
@@ -2571,16 +2571,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   function formatDollarBudget(el) {
     var v = parseFloat(el.value.toString().replace(/[^0-9.]/g, ''));
     if (!isNaN(v) && v > 0) {
-      el.type = 'text';
       el.value = Math.round(v).toLocaleString('en-US');
     }
   }
   function unformatDollarBudget(el) {
-    if (el.type === 'text') {
-      var raw = el.value.replace(/[^0-9.]/g, '');
-      el.type = 'number';
-      el.value = raw;
-    }
+    el.value = el.value.replace(/[^0-9]/g, '');
   }
 
   function syncGroup(groupEl, value) {
@@ -2620,10 +2615,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   budgetInput.addEventListener('paste', function(e) {
     e.preventDefault();
     var text = ((e.clipboardData || window.clipboardData).getData('text') || '');
-    var clean = text.replace(/[^0-9.]/g, '');
+    var clean = text.replace(/[^0-9]/g, '');
     if (!clean) return;
     budgetInput.value = clean;
     budgetInput.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+
+  // Integer-only filter: strip any non-digit as it is typed. Runs on input while
+  // the field is focused (raw digits, no separators); the blur formatter adds
+  // thousands separators afterward via a non-input value set, so they do not fight.
+  budgetInput.addEventListener('input', function() {
+    var cleaned = budgetInput.value.replace(/[^0-9]/g, '');
+    if (cleaned !== budgetInput.value) budgetInput.value = cleaned;
   });
 
   // Prevent mouse wheel from changing focused number input values.
