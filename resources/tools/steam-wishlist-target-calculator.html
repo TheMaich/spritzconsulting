@@ -1024,12 +1024,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .calc-toggle-btn[aria-pressed="true"] .calc-toggle-dot {
   background: var(--paper);
 }
-.calc-group.is-disabled {
-  opacity: 0.45;
-}
 .calc-group.is-disabled .calc-input,
 .calc-group.is-disabled .preset-btn {
   pointer-events: none;
+}
+/* Dim only the surrounding chrome to read as inactive. The input text itself
+   carries the true Ink-3 disabled token at full strength (no group opacity
+   multiplying it), so it renders as #5C6272 and stays legible. */
+.calc-group.is-disabled .calc-label,
+.calc-group.is-disabled .calc-hint,
+.calc-group.is-disabled .calc-presets {
+  opacity: 0.55;
 }
 .calc-group.is-disabled .calc-input {
   color: var(--ink-3);
