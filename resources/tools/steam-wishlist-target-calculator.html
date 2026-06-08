@@ -982,6 +982,64 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--paper);
 }
 
+.calc-toggle-row {
+  display: flex;
+  margin-top: 4px;
+}
+.calc-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  min-height: 40px;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.calc-toggle-btn:hover {
+  border-color: color-mix(in srgb, var(--clay) 70%, var(--rule));
+  color: var(--ink);
+}
+.calc-toggle-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  background: transparent;
+  flex-shrink: 0;
+  transition: background 0.2s var(--ease);
+}
+.calc-toggle-btn[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.calc-toggle-btn[aria-pressed="true"] .calc-toggle-dot {
+  background: var(--paper);
+}
+.calc-group.is-disabled {
+  opacity: 0.45;
+}
+.calc-group.is-disabled .calc-input,
+.calc-group.is-disabled .preset-btn {
+  pointer-events: none;
+}
+.tier-gap {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--clay);
+}
+
 .calc-result-wrap {
   position: static;
   bottom: auto;
@@ -1579,6 +1637,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </div>
       </div>
 
+      <div class="calc-group" id="current-wishlists-group">
+        <label class="calc-label" for="current-wishlists">Current Wishlists</label>
+        <div class="calc-hint">How many wishlists you have right now. Optional. Leave empty if you just want the target.</div>
+        <div class="calc-input-wrap">
+          <input type="text" id="current-wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="0">
+          <span class="calc-suffix">wishlists</span>
+        </div>
+        <div class="calc-presets" data-target="current-wishlists">
+          <button type="button" class="preset-btn" data-value="1000">1k</button>
+          <button type="button" class="preset-btn" data-value="5000">5k</button>
+          <button type="button" class="preset-btn" data-value="10000">10k</button>
+          <button type="button" class="preset-btn" data-value="25000">25k</button>
+        </div>
+        <div class="calc-toggle-row">
+          <button type="button" class="calc-toggle-btn" id="prelaunch-toggle" aria-pressed="false">
+            <span class="calc-toggle-dot" aria-hidden="true"></span>
+            My Steam page is not online yet
+          </button>
+        </div>
+      </div>
+
       <div class="calc-result-breakdown" id="breakdown"></div>
 
       <div class="calc-result-wrap is-sticky">
@@ -1595,6 +1674,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                 </svg>
               </button>
+              <div class="tier-gap" id="wishlist-gap" hidden></div>
             </div>
             <div class="recoup-tier scenario-strong">
               <div class="recoup-tier-label">10% strong</div>
@@ -1907,6 +1987,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var wish5El = document.getElementById('wishlists-5');
   var wish10El = document.getElementById('wishlists-10');
   var breakdownEl = document.getElementById('breakdown');
+  var currentInput = document.getElementById('current-wishlists');
+  var prelaunchToggle = document.getElementById('prelaunch-toggle');
+  var currentGroup = document.getElementById('current-wishlists-group');
+  var gapEl = document.getElementById('wishlist-gap');
+
+  function isPrelaunch() {
+    return prelaunchToggle.getAttribute('aria-pressed') === 'true';
+  }
 
   function num(el, def){
     var raw = el.value.toString().replace(/[^0-9.]/g, '');
@@ -1961,6 +2049,23 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     rollTo(wish5El, wish5, intFmt);
     rollTo(wish10El, wish10, intFmt);
 
+    // Gap line on the 5% median tier only. Pre-launch ignores Current Wishlists.
+    var currentWishes = num(currentInput, 0);
+    if (isPrelaunch()) {
+      gapEl.hidden = false;
+      gapEl.textContent = "You're starting from zero, you need all of them.";
+    } else if (currentWishes > 0) {
+      gapEl.hidden = false;
+      if (currentWishes >= wish5) {
+        gapEl.textContent = 'Target reached';
+      } else {
+        gapEl.textContent = 'You have ' + intFmt(currentWishes) + '. ' + intFmt(wish5 - currentWishes) + ' to go.';
+      }
+    } else {
+      gapEl.hidden = true;
+      gapEl.textContent = '';
+    }
+
     function row(label, value) {
       return '<div class="row"><span>' + label + '</span><span>' + value + '</span></div>';
     }
@@ -1974,11 +2079,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     breakdownEl.innerHTML = lines.join('');
   }
 
-  var allInputs = [unitsInput, monthsInput];
+  var allInputs = [unitsInput, monthsInput, currentInput];
   allInputs.forEach(function(el) {
     ['input', 'change', 'touchend'].forEach(function(evt) {
       el.addEventListener(evt, calculate);
     });
+  });
+
+  // Pre-launch toggle: aria-pressed idiom (not a checkbox). Wired separately
+  // because allInputs only carries number fields.
+  prelaunchToggle.addEventListener('click', function() {
+    var next = !isPrelaunch();
+    prelaunchToggle.setAttribute('aria-pressed', next ? 'true' : 'false');
+    currentGroup.classList.toggle('is-disabled', next);
+    currentInput.disabled = next;
+    calculate();
   });
 
   var tracked = false;
@@ -1998,6 +2113,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
   }
   function unformatThousands(el) {
+    // Keep the integer wishlist field as type="text" with inputmode="numeric";
+    // never flip it to type="number" on preset tap. Value still applies normally.
+    if (el.id === 'current-wishlists') return;
     if (el.type === 'text') {
       var raw = el.value.replace(/[^0-9.]/g, '');
       el.type = 'number';
