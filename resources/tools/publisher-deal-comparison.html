@@ -14,7 +14,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Put two publisher term sheets side by side. See net per unit, units to recoup, and developer earnings at every sales milestone. Find the crossover point." />
+<meta name="description" content="Two publisher offers on the table. Same game, same platform, same market, only the contract terms differ. See which deal actually pays better, and at what sales level the answer changes." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
@@ -2090,7 +2090,126 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .cmp-table td { padding: 11px 14px; }
   .deal-panel { padding: 20px; }
   .cmp-crossover { padding: 22px 20px; }
-}</style>
+}
+/* Publisher deal comparison — shared params + breakdown + per-deal net */
+.shared-params {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.shared-head .calc-label { font-size: clamp(20px, 2.2vw, 26px); }
+.shared-head .calc-hint { margin-top: 6px; }
+.shared-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.shared-grid .calc-label { font-size: clamp(17px, 1.6vw, 19px); font-variation-settings: "opsz" 24; }
+.shared-net {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-3));
+  border: 1px solid color-mix(in srgb, var(--clay) 24%, var(--rule));
+  border-radius: 10px;
+}
+.shared-net-label { font-size: 14px; color: var(--ink-2); }
+.shared-net-value {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(24px, 3vw, 34px);
+  font-variation-settings: "opsz" 40;
+  letter-spacing: -0.02em;
+  color: var(--clay);
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdown {
+  margin-top: 2px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.breakdown-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--paper-3);
+  border: 0;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  transition: color 0.2s;
+}
+.breakdown-toggle:hover { color: var(--ink); }
+.breakdown-chevron { transition: transform 0.2s ease; flex-shrink: 0; }
+.breakdown-toggle[aria-expanded="true"] .breakdown-chevron { transform: rotate(180deg); }
+.breakdown-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--rule);
+}
+.breakdown-body[hidden] { display: none; }
+.breakdown-row { display: flex; flex-direction: column; gap: 6px; }
+.breakdown-row label { font-size: 13px; color: var(--ink-2); }
+.breakdown-calc,
+.breakdown-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.breakdown-calc { color: var(--ink-3); }
+.breakdown-calc span:last-child { color: var(--ink-2); }
+.breakdown-total {
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 13px;
+}
+.breakdown-total span:last-child { color: var(--clay); font-size: 15px; }
+
+.deal-net {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px;
+  background: color-mix(in srgb, var(--clay) 6%, var(--paper-3));
+  border: 1px solid color-mix(in srgb, var(--clay) 24%, var(--rule));
+  border-radius: 10px;
+}
+.deal-net-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.deal-net-label { font-size: 13px; color: var(--ink-2); line-height: 1.3; }
+.deal-net-value {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.deal-net-row:first-child .deal-net-value {
+  color: var(--clay);
+  font-size: clamp(20px, 2.4vw, 26px);
+}
+.deal-net-value.is-muted { color: var(--ink-3); font-weight: 500; }
+</style>
 </head>
 <body>
 
@@ -2152,12 +2271,103 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Topic <b>Deal Analysis</b></div>
         <div>Updated <b>2026</b></div>
       </div>
-      <p class="deck">Two deals look different on paper. Run them both through the same math and see which one actually pays better, and at what sales level the answer changes.</p>
+      <p class="deck">The game is the same. The platform is the same. The only thing that differs is what each publisher is offering. Put both deals through the same math and find the crossover.</p>
     </article>
   </div>
 
   <div class="calc-wrap">
     <div class="calculator">
+
+      <div class="shared-params">
+        <div class="shared-head">
+          <div class="calc-label">Your game — same for both deals</div>
+          <div class="calc-hint">These inputs reflect your game and your market. They don't change based on which publisher you sign with.</div>
+        </div>
+
+        <div class="shared-grid">
+
+          <div class="calc-group">
+            <label class="calc-label" for="srp">Suggested Retail Price (SRP)</label>
+            <div class="calc-hint">The price on the store page.</div>
+            <div class="calc-input-wrap">
+              <span class="calc-currency">$</span>
+              <input type="number" id="srp" class="calc-input" placeholder="29.99" min="0" step="0.01" value="29.99">
+            </div>
+            <div class="calc-presets" data-target="srp">
+              <button type="button" class="preset-btn" data-value="9.99">$9.99</button>
+              <button type="button" class="preset-btn" data-value="19.99">$19.99</button>
+              <button type="button" class="preset-btn" data-value="29.99">$29.99</button>
+              <button type="button" class="preset-btn" data-value="39.99">$39.99</button>
+            </div>
+          </div>
+
+          <div class="calc-group">
+            <label class="calc-label" for="platform">Platform Share Kept</label>
+            <div class="calc-hint">Steam standard is 0.70. Adjust if you're modelling a different storefront.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="platform" class="calc-input" placeholder="0.70" min="0" max="1" step="0.01" value="0.70">
+              <span class="calc-suffix">&times;</span>
+            </div>
+            <div class="calc-presets" data-target="platform">
+              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
+              <button type="button" class="preset-btn" data-value="0.88">0.88</button>
+            </div>
+          </div>
+
+          <div class="calc-group">
+            <label class="calc-label" for="adjuster">Regional / Currency Adjuster</label>
+            <div class="calc-hint">Blended average across your territory mix. Not every sale is at full USD price.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="adjuster" class="calc-input" placeholder="0.80" min="0" max="1" step="0.01" value="0.80">
+              <span class="calc-suffix">&times;</span>
+            </div>
+            <div class="calc-presets" data-target="adjuster">
+              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
+              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
+            </div>
+          </div>
+
+          <div class="calc-group">
+            <label class="calc-label" for="tax">Tax Rate Retention</label>
+            <div class="calc-hint">Revenue retained after applicable taxes.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="tax" class="calc-input" placeholder="0.90" min="0" max="1" step="0.01" value="0.90">
+              <span class="calc-suffix">&times;</span>
+            </div>
+            <div class="calc-presets" data-target="tax">
+              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
+              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
+              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
+              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
+            </div>
+          </div>
+
+          <div class="calc-group">
+            <label class="calc-label" for="returns">Return / Chargeback Retention</label>
+            <div class="calc-hint">Revenue retained after refunds. Steam average is around 0.95.</div>
+            <div class="calc-input-wrap">
+              <input type="number" id="returns" class="calc-input" placeholder="0.95" min="0" max="1" step="0.01" value="0.95">
+              <span class="calc-suffix">&times;</span>
+            </div>
+            <div class="calc-presets" data-target="returns">
+              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
+              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
+              <button type="button" class="preset-btn" data-value="0.98">0.98</button>
+              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="shared-net">
+          <span class="shared-net-label">Base net per unit (before publisher terms)</span>
+          <span class="shared-net-value" id="base-net">$0.00</span>
+        </div>
+      </div>
 
       <div class="deal-panels">
 
@@ -2167,107 +2377,71 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           </div>
 
           <div class="calc-group">
-            <label class="calc-label" for="budget-a">Project Budget to Recoup</label>
-            <div class="calc-hint">The total recoupable amount under this deal, development budget plus publisher markup, marketing, and services. Use the <a href="/resources/tools/game-budget-calculator.html">Game Budget Calculator</a> if you don't have this figure yet.</div>
+            <label class="calc-label" for="recoup-a">Total recoupable amount</label>
+            <div class="calc-hint">Everything the publisher needs to earn back before the revenue split kicks in, development advance, markup, and any recoupable marketing or service costs.</div>
             <div class="calc-input-wrap">
               <span class="calc-currency">$</span>
-              <input type="text" id="budget-a" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+              <input type="text" id="recoup-a" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+            </div>
+
+            <div class="breakdown">
+              <button type="button" class="breakdown-toggle" aria-expanded="false" data-deal="a">
+                <span>Break down recoupable costs</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="breakdown-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="breakdown-body" hidden>
+                <div class="breakdown-row">
+                  <label for="adv-a">Development advance</label>
+                  <div class="calc-input-wrap">
+                    <span class="calc-currency">$</span>
+                    <input type="text" id="adv-a" class="calc-input bd-money" inputmode="numeric" autocomplete="off" placeholder="0">
+                  </div>
+                </div>
+                <div class="breakdown-row">
+                  <label for="markup-a">Publisher markup</label>
+                  <div class="calc-input-wrap">
+                    <input type="number" id="markup-a" class="calc-input" min="0" step="1" autocomplete="off" placeholder="0">
+                    <span class="calc-suffix">%</span>
+                  </div>
+                </div>
+                <div class="breakdown-calc"><span>Markup amount</span><span id="markup-val-a">$0</span></div>
+                <div class="breakdown-row">
+                  <label for="mkt-a">Marketing (recoupable)</label>
+                  <div class="calc-input-wrap">
+                    <span class="calc-currency">$</span>
+                    <input type="text" id="mkt-a" class="calc-input bd-money" inputmode="numeric" autocomplete="off" placeholder="0">
+                  </div>
+                </div>
+                <div class="breakdown-row">
+                  <label for="svc-a">Services (QA, loc, porting)</label>
+                  <div class="calc-input-wrap">
+                    <span class="calc-currency">$</span>
+                    <input type="text" id="svc-a" class="calc-input bd-money" inputmode="numeric" autocomplete="off" placeholder="0">
+                  </div>
+                </div>
+                <div class="breakdown-total"><span>Total recoupable</span><span id="bd-total-a">$0</span></div>
+              </div>
             </div>
           </div>
 
           <div class="calc-group">
-            <label class="calc-label" for="srp-a">Suggested Retail Price (SRP)</label>
-            <div class="calc-hint">The headline price on the store page.</div>
-            <div class="calc-input-wrap">
-              <span class="calc-currency">$</span>
-              <input type="number" id="srp-a" class="calc-input" placeholder="29.99" min="0" step="0.01" value="29.99">
-            </div>
-            <div class="calc-presets" data-target="srp-a">
-              <button type="button" class="preset-btn" data-value="9.99">$9.99</button>
-              <button type="button" class="preset-btn" data-value="19.99">$19.99</button>
-              <button type="button" class="preset-btn" data-value="29.99">$29.99</button>
-              <button type="button" class="preset-btn" data-value="39.99">$39.99</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="platform-a">Platform Share Kept</label>
-            <div class="calc-hint">Your platform revenue share. Steam standard is 0.70 (platform keeps 30%).</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="platform-a" class="calc-input" placeholder="0.70" min="0" max="1" step="0.01" value="0.70">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="platform-a">
-              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
-              <button type="button" class="preset-btn" data-value="0.88">0.88</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="adjuster-a">Regional / Currency Adjuster</label>
-            <div class="calc-hint">Blended average across your territory mix. Not every sale is at full USD price.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="adjuster-a" class="calc-input" placeholder="0.80" min="0" max="1" step="0.01" value="0.80">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="adjuster-a">
-              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
-              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="license-a">Publisher License Fee</label>
-            <div class="calc-hint">Additional revenue share the publisher takes on net, on top of the headline split. 0% if not in your contract.</div>
+            <label class="calc-label" for="license-a">Publisher license fee</label>
+            <div class="calc-hint">An additional % the publisher takes on net revenue, on top of the headline split. Not present in every deal, check your contract.</div>
             <div class="calc-input-wrap">
               <input type="number" id="license-a" class="calc-input calc-input-pct" placeholder="0" min="0" max="50" step="0.5" value="0">
               <span class="calc-suffix">%</span>
             </div>
             <div class="calc-presets" data-target="license-a">
               <button type="button" class="preset-btn" data-value="0">0%</button>
+              <button type="button" class="preset-btn" data-value="5">5%</button>
               <button type="button" class="preset-btn" data-value="10">10%</button>
-              <button type="button" class="preset-btn" data-value="20">20%</button>
-              <button type="button" class="preset-btn" data-value="30">30%</button>
+              <button type="button" class="preset-btn" data-value="15">15%</button>
             </div>
           </div>
 
           <div class="calc-group">
-            <label class="calc-label" for="tax-a">Tax Rate Retention</label>
-            <div class="calc-hint">Retained revenue after applicable taxes.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="tax-a" class="calc-input" placeholder="0.90" min="0" max="1" step="0.01" value="0.90">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="tax-a">
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
-              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
-              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="returns-a">Return / Chargeback Retention</label>
-            <div class="calc-hint">Revenue retained after refunds. Average is around 0.95.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="returns-a" class="calc-input" placeholder="0.95" min="0" max="1" step="0.01" value="0.95">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="returns-a">
-              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
-              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
-              <button type="button" class="preset-btn" data-value="0.98">0.98</button>
-              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="split-a">Developer Revenue Split After Recoup</label>
-            <div class="calc-hint">Your percentage of net revenue once the advance is fully recouped. This is the number that makes deals structurally different from each other.</div>
+            <label class="calc-label" for="split-a">Developer revenue split after recoup</label>
+            <div class="calc-hint">Your percentage of net revenue once the advance is fully recouped.</div>
             <div class="calc-input-wrap">
               <input type="number" id="split-a" class="calc-input calc-input-pct" placeholder="50" min="0" max="100" step="1" value="50">
               <span class="calc-suffix">%</span>
@@ -2280,6 +2454,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </div>
           </div>
 
+          <div class="deal-net">
+            <div class="deal-net-row">
+              <span class="deal-net-label">Effective net per unit under this deal</span>
+              <span class="deal-net-value" id="eff-net-a">$0.00</span>
+            </div>
+            <div class="deal-net-row">
+              <span class="deal-net-label">Units to recoup</span>
+              <span class="deal-net-value is-muted" id="recoup-units-a">&mdash;</span>
+            </div>
+          </div>
         </div>
 
         <div class="deal-panel" data-deal="b">
@@ -2288,107 +2472,71 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           </div>
 
           <div class="calc-group">
-            <label class="calc-label" for="budget-b">Project Budget to Recoup</label>
-            <div class="calc-hint">The total recoupable amount under this deal, development budget plus publisher markup, marketing, and services. Use the <a href="/resources/tools/game-budget-calculator.html">Game Budget Calculator</a> if you don't have this figure yet.</div>
+            <label class="calc-label" for="recoup-b">Total recoupable amount</label>
+            <div class="calc-hint">Everything the publisher needs to earn back before the revenue split kicks in, development advance, markup, and any recoupable marketing or service costs.</div>
             <div class="calc-input-wrap">
               <span class="calc-currency">$</span>
-              <input type="text" id="budget-b" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+              <input type="text" id="recoup-b" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+            </div>
+
+            <div class="breakdown">
+              <button type="button" class="breakdown-toggle" aria-expanded="false" data-deal="b">
+                <span>Break down recoupable costs</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="breakdown-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="breakdown-body" hidden>
+                <div class="breakdown-row">
+                  <label for="adv-b">Development advance</label>
+                  <div class="calc-input-wrap">
+                    <span class="calc-currency">$</span>
+                    <input type="text" id="adv-b" class="calc-input bd-money" inputmode="numeric" autocomplete="off" placeholder="0">
+                  </div>
+                </div>
+                <div class="breakdown-row">
+                  <label for="markup-b">Publisher markup</label>
+                  <div class="calc-input-wrap">
+                    <input type="number" id="markup-b" class="calc-input" min="0" step="1" autocomplete="off" placeholder="0">
+                    <span class="calc-suffix">%</span>
+                  </div>
+                </div>
+                <div class="breakdown-calc"><span>Markup amount</span><span id="markup-val-b">$0</span></div>
+                <div class="breakdown-row">
+                  <label for="mkt-b">Marketing (recoupable)</label>
+                  <div class="calc-input-wrap">
+                    <span class="calc-currency">$</span>
+                    <input type="text" id="mkt-b" class="calc-input bd-money" inputmode="numeric" autocomplete="off" placeholder="0">
+                  </div>
+                </div>
+                <div class="breakdown-row">
+                  <label for="svc-b">Services (QA, loc, porting)</label>
+                  <div class="calc-input-wrap">
+                    <span class="calc-currency">$</span>
+                    <input type="text" id="svc-b" class="calc-input bd-money" inputmode="numeric" autocomplete="off" placeholder="0">
+                  </div>
+                </div>
+                <div class="breakdown-total"><span>Total recoupable</span><span id="bd-total-b">$0</span></div>
+              </div>
             </div>
           </div>
 
           <div class="calc-group">
-            <label class="calc-label" for="srp-b">Suggested Retail Price (SRP)</label>
-            <div class="calc-hint">The headline price on the store page.</div>
-            <div class="calc-input-wrap">
-              <span class="calc-currency">$</span>
-              <input type="number" id="srp-b" class="calc-input" placeholder="29.99" min="0" step="0.01" value="29.99">
-            </div>
-            <div class="calc-presets" data-target="srp-b">
-              <button type="button" class="preset-btn" data-value="9.99">$9.99</button>
-              <button type="button" class="preset-btn" data-value="19.99">$19.99</button>
-              <button type="button" class="preset-btn" data-value="29.99">$29.99</button>
-              <button type="button" class="preset-btn" data-value="39.99">$39.99</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="platform-b">Platform Share Kept</label>
-            <div class="calc-hint">Your platform revenue share. Steam standard is 0.70 (platform keeps 30%).</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="platform-b" class="calc-input" placeholder="0.70" min="0" max="1" step="0.01" value="0.70">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="platform-b">
-              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
-              <button type="button" class="preset-btn" data-value="0.88">0.88</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="adjuster-b">Regional / Currency Adjuster</label>
-            <div class="calc-hint">Blended average across your territory mix. Not every sale is at full USD price.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="adjuster-b" class="calc-input" placeholder="0.80" min="0" max="1" step="0.01" value="0.80">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="adjuster-b">
-              <button type="button" class="preset-btn" data-value="0.70">0.70</button>
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
-              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="license-b">Publisher License Fee</label>
-            <div class="calc-hint">Additional revenue share the publisher takes on net, on top of the headline split. 0% if not in your contract.</div>
+            <label class="calc-label" for="license-b">Publisher license fee</label>
+            <div class="calc-hint">An additional % the publisher takes on net revenue, on top of the headline split. Not present in every deal, check your contract.</div>
             <div class="calc-input-wrap">
               <input type="number" id="license-b" class="calc-input calc-input-pct" placeholder="0" min="0" max="50" step="0.5" value="0">
               <span class="calc-suffix">%</span>
             </div>
             <div class="calc-presets" data-target="license-b">
               <button type="button" class="preset-btn" data-value="0">0%</button>
+              <button type="button" class="preset-btn" data-value="5">5%</button>
               <button type="button" class="preset-btn" data-value="10">10%</button>
-              <button type="button" class="preset-btn" data-value="20">20%</button>
-              <button type="button" class="preset-btn" data-value="30">30%</button>
+              <button type="button" class="preset-btn" data-value="15">15%</button>
             </div>
           </div>
 
           <div class="calc-group">
-            <label class="calc-label" for="tax-b">Tax Rate Retention</label>
-            <div class="calc-hint">Retained revenue after applicable taxes.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="tax-b" class="calc-input" placeholder="0.90" min="0" max="1" step="0.01" value="0.90">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="tax-b">
-              <button type="button" class="preset-btn" data-value="0.80">0.80</button>
-              <button type="button" class="preset-btn" data-value="0.85">0.85</button>
-              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
-              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="returns-b">Return / Chargeback Retention</label>
-            <div class="calc-hint">Revenue retained after refunds. Average is around 0.95.</div>
-            <div class="calc-input-wrap">
-              <input type="number" id="returns-b" class="calc-input" placeholder="0.95" min="0" max="1" step="0.01" value="0.95">
-              <span class="calc-suffix">&times;</span>
-            </div>
-            <div class="calc-presets" data-target="returns-b">
-              <button type="button" class="preset-btn" data-value="0.90">0.90</button>
-              <button type="button" class="preset-btn" data-value="0.95">0.95</button>
-              <button type="button" class="preset-btn" data-value="0.98">0.98</button>
-              <button type="button" class="preset-btn" data-value="1.00">1.00</button>
-            </div>
-          </div>
-
-          <div class="calc-group">
-            <label class="calc-label" for="split-b">Developer Revenue Split After Recoup</label>
-            <div class="calc-hint">Your percentage of net revenue once the advance is fully recouped. This is the number that makes deals structurally different from each other.</div>
+            <label class="calc-label" for="split-b">Developer revenue split after recoup</label>
+            <div class="calc-hint">Your percentage of net revenue once the advance is fully recouped.</div>
             <div class="calc-input-wrap">
               <input type="number" id="split-b" class="calc-input calc-input-pct" placeholder="50" min="0" max="100" step="1" value="50">
               <span class="calc-suffix">%</span>
@@ -2401,48 +2549,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </div>
           </div>
 
+          <div class="deal-net">
+            <div class="deal-net-row">
+              <span class="deal-net-label">Effective net per unit under this deal</span>
+              <span class="deal-net-value" id="eff-net-b">$0.00</span>
+            </div>
+            <div class="deal-net-row">
+              <span class="deal-net-label">Units to recoup</span>
+              <span class="deal-net-value is-muted" id="recoup-units-b">&mdash;</span>
+            </div>
+          </div>
         </div>
 
       </div>
 
       <div class="cmp-output">
-
-        <div class="cmp-block">
-          <div class="cmp-head">
-            <span class="cmp-head-metric"></span>
-            <span class="cmp-head-deal" id="cmp-name-a">Deal A</span>
-            <span class="cmp-head-deal" id="cmp-name-b">Deal B</span>
-          </div>
-          <div class="cmp-row cmp-row--lead">
-            <span class="cmp-metric">Average net per unit</span>
-            <span class="cmp-val" id="net-a">$0.00</span>
-            <span class="cmp-val" id="net-b">$0.00</span>
-          </div>
-          <div class="cmp-row">
-            <span class="cmp-metric">Units to recoup advance</span>
-            <span class="cmp-val is-muted" id="recoup-a">&mdash;</span>
-            <span class="cmp-val is-muted" id="recoup-b">&mdash;</span>
-          </div>
-          <div class="cmp-row">
-            <span class="cmp-metric">Units to 2&times; (publisher break-even)</span>
-            <span class="cmp-val is-muted" id="recoup2-a">&mdash;</span>
-            <span class="cmp-val is-muted" id="recoup2-b">&mdash;</span>
-          </div>
-          <div class="cmp-row">
-            <span class="cmp-metric">Units to 3&times; (publisher growth target)</span>
-            <span class="cmp-val is-muted" id="recoup3-a">&mdash;</span>
-            <span class="cmp-val is-muted" id="recoup3-b">&mdash;</span>
-          </div>
-        </div>
-
         <div class="cmp-table-wrap">
           <div class="cmp-table-title">Developer earnings at fixed milestones</div>
           <table class="cmp-table">
             <thead>
               <tr>
                 <th scope="col">Units sold</th>
-                <th scope="col" id="th-a">Deal A earnings</th>
-                <th scope="col" id="th-b">Deal B earnings</th>
+                <th scope="col" id="th-a">Deal A &mdash; developer earnings</th>
+                <th scope="col" id="th-b">Deal B &mdash; developer earnings</th>
               </tr>
             </thead>
             <tbody id="earnings-body"></tbody>
@@ -2451,10 +2580,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
         <div class="cmp-crossover" aria-live="polite">
           <div class="cmp-crossover-label">Crossover point</div>
-          <div class="cmp-crossover-value" id="crossover-value">Enter both deals to see the crossover.</div>
+          <div class="cmp-crossover-value" id="crossover-value">Complete both deals to see the crossover.</div>
           <div class="cmp-crossover-note" id="crossover-note"></div>
         </div>
-
       </div>
 
       <div class="context-cta-shell">
@@ -2483,11 +2611,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>The split only kicks in after recoup.</strong> Until the advance is fully recouped, you earn nothing beyond the upfront payment regardless of how good your revenue split is. A 70/30 split in your favour sounds great. If the advance takes 80,000 units to recoup, you won't see it for a long time, if at all on a smaller title. The crossover point in this tool is exactly where that changes.</li>
-          <li><strong>Net per unit is the number that drives everything.</strong> Two deals with identical splits and budgets can have very different net-per-unit figures depending on license fees, price point assumptions, and regional adjusters. A publisher deal with no license fee and a higher price assumption will often outperform a "better split" deal that includes a 15% license fee on net. Run the full chain, not just the headline percentage.</li>
-          <li><strong>Defaults are not your deal.</strong> The values pre-filled here are working averages. Pull the real numbers from your term sheet. If your contract defines net revenue differently from the chain above, the comparison will be off. When in doubt, ask your lawyer to confirm the calculation base before you run this.</li>
-          <li><strong>The crossover assumes consistent net per unit.</strong> In practice, net per unit shifts over time as regional mix changes, platform revenue tiers kick in, and prices get discounted. This calculator uses a fixed average. Treat the crossover as directional, not precise.</li>
-          <li><strong>Estimation only.</strong> This is a planning tool, not a contract model. Real deal evaluation requires your actual contract, your accountant, and ideally someone who has been on both sides of these negotiations.</li>
+          <li><strong>The split only matters after recoup.</strong> Until the advance is fully recouped, your revenue split is irrelevant, you earn nothing beyond the upfront payment. A 70/30 split in your favour only starts working once you've sold enough copies to clear the recoupable total. The crossover point is exactly where that dynamic plays out between two deals.</li>
+          <li><strong>What counts as recoupable varies significantly.</strong> Some publishers recoup only the development advance. Others include marketing spend, porting costs, QA, and service fees. A deal with a smaller headline advance can have a larger effective recoupable total once everything is included. Read what's actually in the recoupable bucket before entering a number here.</li>
+          <li><strong>The license fee compounds quietly.</strong> A 10% publisher license fee on net doesn't sound like much. Applied before the revenue split, it reduces your effective net per unit on every single sale, including every sale after recoup. On a 50/50 split with a 10% license fee, you're effectively on a 45/55 before the split even starts. Check whether your contract has one.</li>
+          <li><strong>The shared parameters are your parameters, not your publisher's.</strong> Platform share, regional mix, tax rate, and return rate are properties of your game and your market. They're the same regardless of which publisher you sign with. Setting them accurately in the shared section is what makes the deal comparison meaningful.</li>
+          <li><strong>Estimation only.</strong> This is a planning tool, not a contract model. Real deal evaluation requires your actual term sheet, your accountant, and ideally someone who has been on both sides of these negotiations.</li>
         </ul>
       </div>
 
@@ -2748,12 +2876,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 <script>
 (function() {
-  var MILESTONES = [5000, 10000, 25000, 50000, 75000, 100000, 200000];
+  var MILESTONES = [5000, 10000, 25000, 50000, 75000, 100000, 150000, 200000];
   var DEALS = ['a', 'b'];
 
   function $(id) { return document.getElementById(id); }
   function clamp01(v) { return Math.max(0, Math.min(1, v)); }
-
   function numRaw(el, def) {
     if (!el) return def;
     var raw = el.value.toString().replace(/[^0-9.]/g, '');
@@ -2762,12 +2889,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return Math.max(0, v);
   }
   function money(n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function money0(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
   function units(n) { return Math.ceil(n).toLocaleString('en-US'); }
-  function earningsMoney(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
   function dealLabel(s) {
     var el = $('label-' + s);
@@ -2775,44 +2899,37 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return v || (el ? el.getAttribute('placeholder') : 'Deal ' + s.toUpperCase());
   }
 
-  function readDeal(s) {
-    var srp = numRaw($('srp-' + s), 0);
-    var adj = clamp01(numRaw($('adjuster-' + s), 0.80));
-    var plat = clamp01(numRaw($('platform-' + s), 0.70));
-    var tax = clamp01(numRaw($('tax-' + s), 0.90));
-    var ret = clamp01(numRaw($('returns-' + s), 0.95));
+  function baseNet() {
+    var srp = numRaw($('srp'), 0);
+    var plat = clamp01(numRaw($('platform'), 0.70));
+    var adj = clamp01(numRaw($('adjuster'), 0.80));
+    var tax = clamp01(numRaw($('tax'), 0.90));
+    var ret = clamp01(numRaw($('returns'), 0.95));
+    return srp * plat * adj * tax * ret;
+  }
+
+  function readDeal(s, base) {
+    var recoup = numRaw($('recoup-' + s), 0);
     var lic = Math.max(0, Math.min(100, numRaw($('license-' + s), 0)));
     var split = Math.max(0, Math.min(100, numRaw($('split-' + s), 50)));
-    var budget = numRaw($('budget-' + s), 0);
-    var net = srp * adj * plat * tax * ret * (1 - lic / 100);
-    return { s: s, budget: budget, net: net, split: split, label: dealLabel(s) };
+    var effNet = base * (1 - lic / 100);
+    return { s: s, recoup: recoup, lic: lic, split: split, net: effNet, label: dealLabel(s) };
   }
+
+  function ready(d) { return d.net > 0 && d.recoup > 0; }
 
   function earningsAt(d, N) {
-    var gross = N * d.net;
-    if (gross <= d.budget) return 0;
-    return (gross - d.budget) * (d.split / 100);
+    var rev = N * d.net;
+    if (rev <= d.recoup) return 0;
+    return (rev - d.recoup) * (d.split / 100);
   }
 
-  function ready(d) { return d.net > 0 && d.budget > 0; }
   function setText(id, txt) { var el = $(id); if (el) el.textContent = txt; }
 
-  function fillRecoup(id, d, mult) {
-    var el = $(id);
-    if (!el) return;
-    if (ready(d)) {
-      el.textContent = units((d.budget * mult) / d.net);
-      el.classList.remove('is-muted');
-    } else {
-      el.textContent = '—';
-      el.classList.add('is-muted');
-    }
-  }
-
   function cell(d, e) {
-    if (!ready(d)) return '<td class="cmp-cell-muted">—</td>';
+    if (!ready(d)) return '<td class="cmp-cell-muted">&mdash;</td>';
     if (e <= 0) return '<td class="cmp-cell-muted">In recoup</td>';
-    return '<td>' + earningsMoney(e) + '</td>';
+    return '<td>' + money0(e) + '</td>';
   }
 
   function renderTable(A, B) {
@@ -2843,7 +2960,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (!valEl || !noteEl) return;
 
     if (!ready(A) || !ready(B)) {
-      valEl.textContent = 'Enter both deals to see the crossover.';
+      valEl.textContent = 'Complete both deals to see the crossover.';
       noteEl.innerHTML = '';
       return;
     }
@@ -2854,23 +2971,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return ea > eb ? 1 : -1;
     }
 
-    var budgetsDiffer = A.budget !== B.budget;
-    var splitsDiffer = A.split !== B.split;
+    var sa = A.split / 100, sb = B.split / 100;
+    var denom = (A.net * sa) - (B.net * sb);
+    var numer = (A.recoup * sa) - (B.recoup * sb);
+    var cross = numer / denom;
 
-    if (budgetsDiffer && splitsDiffer) {
-      var denom = (A.net * (A.split / 100)) - (B.net * (B.split / 100));
-      var cross = (A.budget - B.budget) / denom;
-      if (isFinite(cross) && cross > 0) {
-        var below = richer(Math.max(1, Math.floor(cross * 0.5)));
-        var above = richer(Math.ceil(cross * 2) + 1);
-        if (below !== 0 && above !== 0 && below !== above) {
-          valEl.textContent = 'Crossover point: ' + Math.round(cross).toLocaleString('en-US') + ' units';
-          var belowDeal = below > 0 ? A.label : B.label;
-          var aboveDeal = above > 0 ? A.label : B.label;
-          noteEl.innerHTML = 'Below this number, <strong>' + esc(belowDeal) + '</strong> puts more money in your pocket. '
-            + 'Above it, <strong>' + esc(aboveDeal) + '</strong> does.';
-          return;
-        }
+    if (isFinite(cross) && cross > 0) {
+      var below = richer(Math.max(1, Math.floor(cross * 0.5)));
+      var above = richer(Math.ceil(cross * 2) + 1);
+      if (below !== 0 && above !== 0 && below !== above) {
+        valEl.textContent = 'Crossover point: ' + Math.round(cross).toLocaleString('en-US') + ' units';
+        var belowDeal = below > 0 ? A.label : B.label;
+        var aboveDeal = above > 0 ? A.label : B.label;
+        noteEl.innerHTML = 'Below this, <strong>' + esc(belowDeal) + '</strong> pays more. '
+          + 'Above it, <strong>' + esc(aboveDeal) + '</strong> does.';
+        return;
       }
     }
 
@@ -2880,46 +2995,75 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       noteEl.innerHTML = '';
     } else {
       var winner = hi > 0 ? A.label : B.label;
-      valEl.textContent = esc(winner) + ' pays better at every sales level under these terms.';
+      valEl.textContent = esc(winner) + ' pays more at every sales level under these terms.';
       noteEl.innerHTML = '';
     }
   }
 
   function calculate() {
-    var A = readDeal('a');
-    var B = readDeal('b');
+    var base = baseNet();
+    setText('base-net', money(base));
 
-    setText('cmp-name-a', A.label);
-    setText('cmp-name-b', B.label);
-    setText('th-a', A.label + ' earnings');
-    setText('th-b', B.label + ' earnings');
+    var A = readDeal('a', base);
+    var B = readDeal('b', base);
 
-    setText('net-a', A.net > 0 ? money(A.net) : '—');
-    setText('net-b', B.net > 0 ? money(B.net) : '—');
-    if ($('net-a')) $('net-a').classList.toggle('is-muted', !(A.net > 0));
-    if ($('net-b')) $('net-b').classList.toggle('is-muted', !(B.net > 0));
+    setText('th-a', A.label + ' — developer earnings');
+    setText('th-b', B.label + ' — developer earnings');
 
-    fillRecoup('recoup-a', A, 1);
-    fillRecoup('recoup-b', B, 1);
-    fillRecoup('recoup2-a', A, 2);
-    fillRecoup('recoup2-b', B, 2);
-    fillRecoup('recoup3-a', A, 3);
-    fillRecoup('recoup3-b', B, 3);
+    [A, B].forEach(function(d) {
+      setText('eff-net-' + d.s, money(d.net));
+      var ru = $('recoup-units-' + d.s);
+      if (ru) {
+        if (ready(d)) { ru.textContent = units(d.recoup / d.net); ru.classList.remove('is-muted'); }
+        else { ru.textContent = '—'; ru.classList.add('is-muted'); }
+      }
+    });
 
     renderTable(A, B);
     renderCrossover(A, B);
   }
 
+  function recomputeBreakdown(s) {
+    var adv = numRaw($('adv-' + s), 0);
+    var markup = Math.max(0, numRaw($('markup-' + s), 0));
+    var mkt = numRaw($('mkt-' + s), 0);
+    var svc = numRaw($('svc-' + s), 0);
+    var markupVal = adv * (markup / 100);
+    var total = adv + markupVal + mkt + svc;
+    setText('markup-val-' + s, money0(markupVal));
+    setText('bd-total-' + s, money0(total));
+    var recoupInput = $('recoup-' + s);
+    if (recoupInput) {
+      recoupInput.value = total > 0 ? Math.round(total).toLocaleString('en-US') : '';
+    }
+  }
+
+  var sharedIds = ['srp', 'platform', 'adjuster', 'tax', 'returns'];
+  var perDeal = ['recoup', 'license', 'split', 'label'];
   var allInputs = [];
+  sharedIds.forEach(function(id) { var el = $(id); if (el) allInputs.push(el); });
   DEALS.forEach(function(s) {
-    ['budget', 'srp', 'platform', 'adjuster', 'license', 'tax', 'returns', 'split', 'label'].forEach(function(k) {
-      var el = $(k + '-' + s);
-      if (el) allInputs.push(el);
-    });
+    perDeal.forEach(function(k) { var el = $(k + '-' + s); if (el) allInputs.push(el); });
   });
   allInputs.forEach(function(el) {
-    ['input', 'change', 'touchend'].forEach(function(evt) {
-      el.addEventListener(evt, calculate);
+    ['input', 'change', 'touchend'].forEach(function(evt) { el.addEventListener(evt, calculate); });
+  });
+
+  DEALS.forEach(function(s) {
+    ['adv', 'markup', 'mkt', 'svc'].forEach(function(k) {
+      var el = $(k + '-' + s);
+      if (!el) return;
+      el.addEventListener('input', function() { recomputeBreakdown(s); calculate(); });
+      el.addEventListener('change', function() { recomputeBreakdown(s); calculate(); });
+    });
+  });
+
+  document.querySelectorAll('.breakdown-toggle').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      var body = toggle.parentNode.querySelector('.breakdown-body');
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      if (body) { if (expanded) body.setAttribute('hidden', ''); else body.removeAttribute('hidden'); }
     });
   });
 
@@ -2955,49 +3099,39 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     syncGroup(group, input.value);
   });
 
-  function formatDollarBudget(el) {
+  function formatMoney(el) {
     var v = parseFloat(el.value.toString().replace(/[^0-9.]/g, ''));
     if (!isNaN(v) && v > 0) el.value = Math.round(v).toLocaleString('en-US');
   }
-  function unformatDollarBudget(el) {
-    el.value = el.value.replace(/[^0-9]/g, '');
-  }
+  function unformatMoney(el) { el.value = el.value.replace(/[^0-9]/g, ''); }
+
+  var moneyFields = [];
   DEALS.forEach(function(s) {
-    var b = $('budget-' + s);
-    if (!b) return;
-    b.addEventListener('blur', function() { formatDollarBudget(b); });
-    b.addEventListener('focus', function() { unformatDollarBudget(b); });
-    b.addEventListener('paste', function(e) {
+    ['recoup-' + s, 'adv-' + s, 'mkt-' + s, 'svc-' + s].forEach(function(id) {
+      var el = $(id); if (el) moneyFields.push(el);
+    });
+  });
+  moneyFields.forEach(function(el) {
+    el.addEventListener('blur', function() { formatMoney(el); });
+    el.addEventListener('focus', function() { unformatMoney(el); });
+    el.addEventListener('input', function() {
+      var cleaned = el.value.replace(/[^0-9]/g, '');
+      if (cleaned !== el.value) el.value = cleaned;
+    });
+    el.addEventListener('paste', function(e) {
       e.preventDefault();
       var text = ((e.clipboardData || window.clipboardData).getData('text') || '');
       var clean = text.replace(/[^0-9]/g, '');
       if (!clean) return;
-      b.value = clean;
-      b.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-    b.addEventListener('input', function() {
-      var cleaned = b.value.replace(/[^0-9]/g, '');
-      if (cleaned !== b.value) b.value = cleaned;
+      el.value = clean;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
     });
   });
 
-  allInputs.forEach(function(el) {
+  document.querySelectorAll('input[type="number"]').forEach(function(el) {
     el.addEventListener('wheel', function(e) {
-      if (document.activeElement === el && el.type === 'number') {
-        e.preventDefault();
-        el.blur();
-      }
+      if (document.activeElement === el) { e.preventDefault(); el.blur(); }
     }, { passive: false });
-  });
-
-  var params = new URLSearchParams(window.location.search);
-  ['a', 'b'].forEach(function(s) {
-    var incoming = params.get('budget' + s.toUpperCase());
-    var b = $('budget-' + s);
-    if (incoming && b) {
-      var clean = incoming.replace(/[^0-9.]/g, '');
-      if (clean) { b.value = clean; formatDollarBudget(b); }
-    }
   });
 
   calculate();
