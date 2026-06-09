@@ -633,10 +633,14 @@ html{
   margin: 0;
   padding: clamp(28px, 4vw, 44px) 0;
 }
+.res-iconcol{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  justify-self: start;
+}
 .res-badge{
-  position: absolute;
-  top: clamp(20px, 3vw, 32px);
-  right: 0;
   background: var(--clay);
   color: var(--paper);
   font-family: var(--mono);
@@ -647,6 +651,7 @@ html{
   line-height: 1;
   padding: 4px 10px;
   border-radius: 100px;
+  white-space: nowrap;
   pointer-events: none;
 }
 
@@ -776,11 +781,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
 
   <section class="resources-list wrap">
     <a href="/resources/tools/publishing-break-even-calculator.html" class="res-card is-unlocked" data-category="tools" style="position:relative;">
-      <!-- NEW-BADGE START (move to the latest published tool on each launch) -->
-      <span class="res-badge">New</span>
-      <!-- NEW-BADGE END -->
-      <div class="res-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
+      <div class="res-iconcol">
+        <div class="res-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
+        </div>
+        <!-- NEW-BADGE START (move to the latest published tool on each launch) -->
+        <span class="res-badge">New</span>
+        <!-- NEW-BADGE END -->
       </div>
       <div class="res-body">
         <div class="res-text">
