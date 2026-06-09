@@ -2709,9 +2709,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   document.addEventListener('input', function() {
     if (tracked) return;
     tracked = true;
-    if (window.cf && window.cf.beacon) {
-      window.cf.beacon({ name: 'tool_used', data: { tool: 'simship_calculator' } });
-    }
+    if (window.zaraz) { zaraz.track('tool_used', { tool: 'simship_calculator' }); }
   }, true);
 
   render();
@@ -2791,6 +2789,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
   }
+  document.querySelectorAll('[data-contact-cta]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      if (window.zaraz) { zaraz.track('cta_click', { page: location.pathname }); }
+    });
+  });
+
   document.querySelectorAll('[data-contact-cta]').forEach(function(el) {
     el.addEventListener('click', function(e) {
       e.preventDefault();
