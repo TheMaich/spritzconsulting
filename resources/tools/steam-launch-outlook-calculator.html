@@ -877,6 +877,22 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   width: 304px;
   max-width: calc(100vw - 32px);
 }
+/* On narrow screens the dropdown was anchored to the input's right edge inside
+   a tight grid cell, which pushed the calendar past the left edge of the
+   viewport. Switch to viewport-fixed horizontal centering so it always fits
+   on screen regardless of which row opened it. JS sets the vertical position
+   so the popup still tracks the input it belongs to. */
+@media (max-width: 640px) {
+  .date-picker-dropdown {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    top: auto;
+    transform: translateX(-50%);
+    width: 304px;
+    max-width: calc(100vw - 32px);
+  }
+}
 .dp-header {
   display: flex;
   align-items: center;
@@ -2193,14 +2209,32 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       wrap.classList.add('is-open');
       var group = wrap.closest('.calc-group');
       if (group) group.classList.add('is-picker-open');
+      positionMobile();
       setTimeout(function(){
         document.addEventListener('click', handleOutside);
         document.addEventListener('keydown', handleKey);
       }, 0);
     }
 
+    // Mobile: CSS centers the dropdown horizontally with position: fixed; we set
+    // the vertical position so it sits just below the input. Clamp to keep the
+    // calendar from spilling under the viewport bottom on short screens.
+    function positionMobile() {
+      var isMobile = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+      if (!isMobile) { dropdown.style.top = ''; return; }
+      var rect = input.getBoundingClientRect();
+      var top = rect.bottom + 8;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var h = dropdown.offsetHeight;
+      if (top + h > vh - 16) {
+        top = Math.max(16, vh - h - 16);
+      }
+      dropdown.style.top = top + 'px';
+    }
+
     function close() {
       dropdown.hidden = true;
+      dropdown.style.top = '';
       wrap.classList.remove('is-open');
       var group = wrap.closest('.calc-group');
       if (group) group.classList.remove('is-picker-open');
