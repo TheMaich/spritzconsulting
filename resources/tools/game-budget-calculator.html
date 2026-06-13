@@ -2098,6 +2098,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return '$' + Math.round(n).toLocaleString('en-US');
   }
 
+  // Compact thousands form for placeholder hints: 30000 -> "30k", 37500 -> "38k".
+  function kShort(n) {
+    return Math.round(n / 1000) + 'k';
+  }
+
   function readNum(el) {
     // Strip thousands separators / currency before parseFloat — when the input
     // is in formatted display mode (type=text, value="150,000"), parseFloat
@@ -2111,6 +2116,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var markupPct = readNum(markupInput);
     var marketing = readNum(marketingInput);
     var services = readNum(servicesInput);
+
+    // Dynamic placeholder suggestions derived from the dev budget. Native
+    // placeholder only shows while the field is empty, so this never touches a
+    // value the user typed. Falls back to the static "0" when dev is 0/empty.
+    if (dev > 0) {
+      marketingInput.placeholder = 'e.g. ' + kShort(dev * 0.20) + '-' + kShort(dev * 0.50) + ' (20-50% of dev)';
+      servicesInput.placeholder = 'e.g. ' + kShort(dev * 0.25) + '-' + kShort(dev * 0.35) + ' (25-35% of dev)';
+    } else {
+      marketingInput.placeholder = '0';
+      servicesInput.placeholder = '0';
+    }
 
     var markupAmt = dev * (markupPct / 100);
     var total = dev + markupAmt + marketing + services;
