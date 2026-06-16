@@ -1466,6 +1466,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   vertical-align: middle;
 }
 .wbs-table tbody tr:last-child td{ border-bottom: 0; }
+/* Equal minimum row height. In table layout, height on a row acts as a minimum, so short
+   rows share a baseline while rows with long materials grow and are never clipped. */
+.wbs-table tbody tr{ height: 52px; }
 .wbs-col-icon{ width: 1%; text-align: center; white-space: nowrap; }
 .wbs-date{
   font-family: var(--sans);
@@ -1509,6 +1512,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--clay);
   border-color: color-mix(in srgb, var(--clay) 45%, var(--rule));
 }
+.wbs-table tr.is-accent .wbs-date,
+.wbs-table tr.is-accent .wbs-milestone{ color: var(--clay); }
 .wbs-table tbody tr.is-lock{ background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
 .wbs-table tbody tr.is-lock .wbs-date,
 .wbs-table tbody tr.is-lock .wbs-milestone,
@@ -1656,7 +1661,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table tr{
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px 10px;
     border: 1px solid var(--rule); border-radius: 10px;
-    padding: 13px 12px; margin-bottom: 12px;
+    padding: 13px 12px; margin-bottom: 12px; min-height: 76px;
     background: var(--paper-2);
   }
   .wbs-table tbody td{
@@ -1809,7 +1814,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div>
         <div class="calc-result-head">
-          <div class="calc-result-label">Your Release Plan</div>
+          <div class="calc-result-label">Your Physical Release Plan</div>
           <button type="button" class="calc-copy-btn" id="wbs-copy-btn" hidden aria-label="Copy schedule to clipboard">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <span class="wbs-copy-label">Copy</span>
@@ -1858,6 +1863,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-notes-label">Notes</div>
         <ul>
           <li><strong>Age rating submissions run on their own track, well ahead of manufacturing.</strong> Start them early: the ratings exist to get the classification logos onto the box, and they do not depend on your certification gold master.</li>
+          <li><strong>This planner simplifies the real chain.</strong> The real order is: ratings approved first, then platform certification submissions (up to three rounds), then the gold master, then manufacturing. This planner anchors the ratings directly to the gold master and does not model the platform certification rounds, so leave extra room for those between your rating approvals and the gold master.</li>
           <li><strong>China is not a simple age rating.</strong> Selling a game in mainland China needs a publishing licence (ISBN) from the NPPA, and a foreign company cannot apply directly: you work through a licensed local publisher and operator. Approval can take 12 months or more and is not a predictable lead time, so plan China as a separate track outside this schedule.</li>
           <li><strong>Latin America beyond Brazil has no single mandatory rating body.</strong> Many markets either follow ESRB ratings in practice or have no compulsory classification for a boxed release, so plan the region case by case. Brazil is the exception, with its own mandatory DJCTQ classification covered above.</li>
         </ul>
@@ -2199,11 +2205,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     // Territories drive which age rating bodies apply. Day offsets below are
     // INDICATIVE estimates to confirm with each rating body.
     var territories = territoryBoxes.filter(function(b) { return b.checked; }).map(function(b) { return b.value; });
-    function relMinus(n) { return addDays(release, -n); }
-
     // Schedule rows. Each: { date, label, badge, kind }. Sorted by date before render.
     var rows = [];
     rows.push({ date: release, label: 'Release date', badge: 'ALL', kind: 'release' });
+
+    // Gold master is the central deadline. Every rating must be APPROVED by the gold master
+    // (rating logos go on the box), so each rating's shown date is its LATEST submission
+    // date, back-dated from the gold master by its processing lead time in calendar days.
+    var goldDate = subWorkdays(release, 35);
 
     // Age rating derivation. USK triggers on EU/UK physical (Germany): PEGI covers most
     // of Europe, USK covers Germany, so a European boxed release needs both.
@@ -2214,27 +2223,25 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var hasKR   = territories.indexOf('kr')    > -1;
     var hasBR   = territories.indexOf('br')    > -1;
 
+    // lead = processing time before the gold master, in CALENDAR days. Slower bodies sit
+    // further before the gold master; faster ones closer.
     var ratings = [];
-    if (hasJP)   ratings.push({ region: 'JP', sub: 112, appr: 63, label: 'CERO submission (JP)', cost: 'from ~1,350 USD', materials: 'Full playable build, content questionnaire, documentation often in Japanese, a local contact or publisher, a build per platform.' });
-    if (hasNA)   ratings.push({ region: 'NA', sub: 98,  appr: 63, label: 'ESRB submission (NA)', cost: 'from ~3,000 USD', materials: 'Detailed long-form questionnaire, gameplay video showing the most extreme content including cutscenes and locked-out content.' });
-    if (hasEUUK) ratings.push({ region: 'EU', sub: 70,  appr: 49, label: 'PEGI submission (EU)', cost: 'from ~260 EUR', materials: 'Content questionnaire, gameplay video reel, details per platform.' });
-    if (hasEUUK) ratings.push({ region: 'DE', sub: 56,  appr: 42, label: 'USK submission (DE)', cost: 'from ~1,200 EUR', materials: 'Full game, signed submission form, manual, cover, fact sheet, achievement or trophy list, walkthrough. For multiplayer, a description and access.' });
-    if (hasAU)   ratings.push({ region: 'AU', sub: 56,  appr: 35, label: 'ACB submission (AU)', cost: 'from ~470 AUD', materials: 'Classification questionnaire, playable build, content description.' });
-    if (hasKR)   ratings.push({ region: 'KR', sub: 90,  appr: 63, label: 'GRAC submission (KR)', cost: 'from ~360,000 KRW', materials: 'Game specifications, content summary, representative gameplay video, game files, certificate of the business entity, a local publisher or distributor (required, a foreign company cannot apply directly).' });
-    if (hasBR)   ratings.push({ region: 'BR', sub: 30,  appr: 20, label: 'DJCTQ submission (BR)', cost: 'no fee (direct DJCTQ)', materials: 'Portuguese-language documentation and a preview of the game. An existing ESRB or PEGI certificate can speed this up through an equivalence process.' });
+    if (hasJP)   ratings.push({ region: 'JP', lead: 49, label: 'CERO submission (JP)', cost: 'from ~1,350 USD', materials: 'Full playable build, content questionnaire, documentation often in Japanese, a local contact or publisher, a build per platform.' });
+    if (hasNA)   ratings.push({ region: 'NA', lead: 35, label: 'ESRB submission (NA)', cost: 'from ~3,000 USD', materials: 'Detailed long-form questionnaire, gameplay video showing the most extreme content including cutscenes and locked-out content.' });
+    if (hasEUUK) ratings.push({ region: 'EU', lead: 21, label: 'PEGI submission (EU)', cost: 'from ~260 EUR', materials: 'Content questionnaire, gameplay video reel, details per platform.' });
+    if (hasEUUK) ratings.push({ region: 'DE', lead: 14, label: 'USK submission (DE)', cost: 'from ~1,200 EUR', materials: 'Full game, signed submission form, manual, cover, fact sheet, achievement or trophy list, walkthrough. For multiplayer, a description and access.' });
+    if (hasAU)   ratings.push({ region: 'AU', lead: 21, label: 'ACB submission (AU)', cost: 'from ~470 AUD', materials: 'Classification questionnaire, playable build, content description.' });
+    if (hasKR)   ratings.push({ region: 'KR', lead: 27, label: 'GRAC submission (KR)', cost: 'from ~360,000 KRW', materials: 'Game specifications, content summary, representative gameplay video, game files, certificate of the business entity, a local publisher or distributor (required, a foreign company cannot apply directly).' });
+    if (hasBR)   ratings.push({ region: 'BR', lead: 10, label: 'DJCTQ submission (BR)', cost: 'no fee (direct DJCTQ)', materials: 'Portuguese-language documentation and a preview of the game. An existing ESRB or PEGI certificate can speed this up through an equivalence process.' });
     ratings.forEach(function(r) {
-      r.subDate = relMinus(r.sub);
+      r.subDate = addDays(goldDate, -r.lead);   // latest date to submit so approval lands by the gold master
       rows.push({ date: r.subDate, label: r.label, badge: r.region, kind: 'rating', materials: r.materials, cost: r.cost });
     });
 
     // Physical manufacturing. The gold master starts the physical chain and is back-dated
-    // in WORKING days. Rating approval runs on a separate, parallel track, so the gold
-    // master date does not depend on when ratings clear.
-    var goldNote = 'First certified build that goes to disc. Manufacturing and distribution run from here.';
-    rows.push({ date: subWorkdays(release, 70), label: 'Physical gold master ready', badge: 'ALL', kind: 'physical', critical: true, note: goldNote });
-    rows.push({ date: subWorkdays(release, 63), label: 'Manufacturer submission', badge: 'ALL', kind: 'physical' });
-    rows.push({ date: subWorkdays(release, 35), label: 'Manufacturing complete', badge: 'ALL', kind: 'physical' });
-    rows.push({ date: subWorkdays(release, 14), label: 'Distribution shipped', badge: 'ALL', kind: 'physical' });
+    // in WORKING days. Each rating above is timed so its approval lands by this date.
+    rows.push({ date: goldDate, label: 'Physical gold master ready', badge: 'ALL', kind: 'physical', accent: true, note: 'First certified build that goes to disc. Manufacturing runs from here.' });
+    rows.push({ date: subWorkdays(release, 20), label: 'Manufacturing', badge: 'ALL', kind: 'physical', note: 'Disc or cartridge production begins. Roughly the final 15 to 20 days before release.' });
 
     rows.sort(function(a, b) { return a.date - b.date; });
 
@@ -2242,15 +2249,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     rows.forEach(function(r) {
       // Rating rows carry materials + cost: shown as desktop columns and, on mobile,
       // as sub-lines stacked under the milestone name.
-      var sub = (r.kind === 'rating')
-        ? '<span class="wbs-subnote">Materials: ' + esc(r.materials) + '</span><span class="wbs-subnote">Cost: ' + esc(r.cost) + '</span>'
-        : '';
-      var rownote = r.note ? '<span class="wbs-rownote">' + esc(r.note) + '</span>' : '';
-      rowsHtml += '<tr' + ((r.kind === 'release' || r.critical) ? ' class="is-lock"' : '') + '>' +
+      // Mobile sub-lines under the milestone: rating rows show materials + cost; physical
+      // rows show their note. Desktop shows these in the Notes / Materials and cost columns.
+      var sub = '';
+      if (r.kind === 'rating') {
+        sub = '<span class="wbs-subnote">Materials: ' + esc(r.materials) + '</span><span class="wbs-subnote">Cost: ' + esc(r.cost) + '</span>';
+      } else if (r.note) {
+        sub = '<span class="wbs-subnote">' + esc(r.note) + '</span>';
+      }
+      var cls = (r.kind === 'release') ? ' class="is-lock"' : (r.accent ? ' class="is-accent"' : '');
+      var notesCell = r.materials || r.note || '';
+      rowsHtml += '<tr' + cls + '>' +
         '<td class="wbs-date" data-label="' + esc(L.date) + '">' + fmt(r.date) + '</td>' +
-        '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + sub + rownote + '</td>' +
+        '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + sub + '</td>' +
         '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '"><span class="wbs-badge">' + esc(r.badge) + '</span></td>' +
-        '<td class="wbs-materials" data-label="Materials">' + (r.materials ? esc(r.materials) : '') + '</td>' +
+        '<td class="wbs-materials" data-label="Notes / Materials needed">' + (notesCell ? esc(notesCell) : '') + '</td>' +
         '<td class="wbs-cost" data-label="Approval cost">' + (r.cost ? esc(r.cost) : '') + '</td>' +
         '</tr>';
     });
@@ -2260,10 +2273,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       '<th>' + esc(L.date) + '</th>' +
       '<th>' + esc(L.milestone) + '</th>' +
       '<th class="wbs-col-icon">' + esc(L.platform) + '</th>' +
-      '<th>Materials</th>' +
+      '<th>Notes / Materials needed</th>' +
       '<th>Approval cost</th>' +
       '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>' +
-      '<p class="calc-hint" style="margin-top:14px;">Submission dates and approval costs are indicative starting estimates. Real costs vary by budget tier, platform count and submission type. Manufacturing dates are indicative and depend on your replication house. Confirm current figures and required materials with each rating body before you lock your schedule.</p>';
+      '<p class="calc-hint" style="margin-top:14px;">Each rating row shows the latest date to submit so approval lands by the gold master. Dates and approval costs are indicative starting estimates. Real costs vary by budget tier, platform count and submission type. Manufacturing dates are indicative and depend on your replication house. Confirm current figures and required materials with each rating body before you lock your schedule.</p>';
     clearExtras();
   }
 
