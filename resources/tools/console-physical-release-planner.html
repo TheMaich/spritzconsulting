@@ -1864,6 +1864,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <ul>
           <li><strong>Age rating submissions run on their own track, well ahead of manufacturing.</strong> Start them early: the ratings exist to get the classification logos onto the box, and they do not depend on your certification gold master.</li>
           <li><strong>This planner simplifies the real chain.</strong> The real order is: ratings approved first, then platform certification submissions (up to three rounds), then the gold master, then manufacturing. This planner anchors the ratings directly to the gold master and does not model the platform certification rounds, so leave extra room for those between your rating approvals and the gold master.</li>
+          <li><strong>The gap between your last rating approval and the gold master leaves room for platform certification, up to three lot-check rounds.</strong> This planner assumes the longest case, a Nintendo Switch style chain, so if you skip Switch you will have extra room rather than less.</li>
           <li><strong>China is not a simple age rating.</strong> Selling a game in mainland China needs a publishing licence (ISBN) from the NPPA, and a foreign company cannot apply directly: you work through a licensed local publisher and operator. Approval can take 12 months or more and is not a predictable lead time, so plan China as a separate track outside this schedule.</li>
           <li><strong>Latin America beyond Brazil has no single mandatory rating body.</strong> Many markets either follow ESRB ratings in practice or have no compulsory classification for a boxed release, so plan the region case by case. Brazil is the exception, with its own mandatory DJCTQ classification covered above.</li>
         </ul>
@@ -2213,6 +2214,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     // (rating logos go on the box), so each rating's shown date is its LATEST submission
     // date, back-dated from the gold master by its processing lead time in calendar days.
     var goldDate = subWorkdays(release, 35);
+    // Buffer between the latest rating approval and the gold master, leaving room for the
+    // platform certification chain (up to three lot-check rounds + padding). Derived from the
+    // Simship Switch cert model. Ratings are pulled this far (working days) before the GM.
+    var CERT_BUFFER_WD = 40; // Simship Switch cert chain (2*check+2*fix+2*cushion+last = 37 wd) plus a small cushion
+    var certStart = subWorkdays(goldDate, CERT_BUFFER_WD); // freeze-aware working days before the GM
 
     // Age rating derivation. USK triggers on EU/UK physical (Germany): PEGI covers most
     // of Europe, USK covers Germany, so a European boxed release needs both.
@@ -2234,7 +2240,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (hasKR)   ratings.push({ region: 'KR', lead: 27, label: 'GRAC submission (KR)', cost: 'from ~360,000 KRW', materials: 'Game specifications, content summary, representative gameplay video, game files, certificate of the business entity, a local publisher or distributor (required, a foreign company cannot apply directly).' });
     if (hasBR)   ratings.push({ region: 'BR', lead: 10, label: 'DJCTQ submission (BR)', cost: 'no fee (direct DJCTQ)', materials: 'Portuguese-language documentation and a preview of the game. An existing ESRB or PEGI certificate can speed this up through an equivalence process.' });
     ratings.forEach(function(r) {
-      r.subDate = addDays(goldDate, -r.lead);   // latest date to submit so approval lands by the gold master
+      r.subDate = addDays(certStart, -r.lead);   // submit by here so approval lands before the cert chain and gold master
       rows.push({ date: r.subDate, label: r.label, badge: r.region, kind: 'rating', materials: r.materials, cost: r.cost });
     });
 
