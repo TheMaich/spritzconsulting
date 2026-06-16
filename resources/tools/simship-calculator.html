@@ -1655,6 +1655,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table td.wbs-milestone{ order: 1; flex: 1 1 100%; font-weight: 500; font-size: 15px; color: var(--ink); }
   .wbs-table td.wbs-date{ order: 2; font-family: var(--mono-data); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
   .wbs-table td.wbs-col-icon{ order: 3; margin-left: auto; }
+  .wbs-table tr.is-lock{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
+  .wbs-table tr.is-lock .wbs-milestone,
+  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); }
+  .wbs-table tr.is-lock .wbs-badge{ color: var(--clay); border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
 }
 
 /* Mobile "better on desktop" modal */
@@ -2387,7 +2391,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var rowsHtml = '';
     recap.forEach(function(r) {
       var dateText = fmt(r.date);
-      rowsHtml += '<tr>' +
+      rowsHtml += '<tr' + (r.lock ? ' class="is-lock"' : '') + '>' +
         '<td class="wbs-date" data-label="' + esc(L.date) + '">' + dateText + '</td>' +
         '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + '</td>' +
         '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '">' + platIcon(r.plat) + '</td>' +
