@@ -1455,7 +1455,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .wbs-table thead th.wbs-col-icon{ text-align: center; }
 .wbs-table tbody td{
-  padding: 13px 16px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--rule);
   vertical-align: middle;
 }
@@ -1636,33 +1636,25 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .gantt-section{ display: none; }
   .gantt-mobile-notice{ display: block; }
 
-  /* Schedule table -> stacked cards (no horizontal scroll) */
+  /* Schedule table -> compact stacked rows: milestone on top, date + platform below */
   .wbs-table-wrap{ overflow-x: visible; border: 0; border-radius: 0; background: transparent; }
   .wbs-table{ min-width: 0; }
   .wbs-table thead{ display: none; }
-  .wbs-table, .wbs-table tbody, .wbs-table tr, .wbs-table td{ display: block; width: 100%; }
+  .wbs-table, .wbs-table tbody{ display: block; width: 100%; }
   .wbs-table tr{
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px;
     border: 1px solid var(--rule); border-radius: 10px;
-    padding: 12px 14px; margin-bottom: 10px;
+    padding: 8px 12px; margin-bottom: 6px;
     background: var(--paper-2);
   }
-  .wbs-table tbody tr:last-child td{ border: none; }
-  .wbs-table tr.is-lock{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
-  .wbs-table tr.is-release{ border-color: color-mix(in srgb, var(--clay) 60%, var(--rule)); }
-  .wbs-table td,
-  .wbs-table td.wbs-date,
-  .wbs-table td.wbs-note{
-    padding: 4px 0; border: none; text-align: left;
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    white-space: normal; overflow-wrap: anywhere; min-width: 0;
+  .wbs-table td{
+    display: inline; padding: 0; border: none; text-align: left;
+    white-space: normal; overflow-wrap: anywhere;
   }
-  .wbs-table td::before{
-    content: attr(data-label);
-    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ink-3); flex: none;
-  }
-  .wbs-table td.wbs-milestone{ font-weight: 500; }
-  .wbs-table td .wbs-badge{ margin-left: auto; }
+  .wbs-table td::before{ content: none; }
+  .wbs-table td.wbs-milestone{ order: 1; flex: 1 1 100%; font-weight: 500; font-size: 15px; color: var(--ink); }
+  .wbs-table td.wbs-date{ order: 2; font-family: var(--mono-data); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+  .wbs-table td.wbs-col-icon{ order: 3; margin-left: auto; }
 }
 
 /* Mobile "better on desktop" modal */
@@ -2395,23 +2387,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var rowsHtml = '';
     recap.forEach(function(r) {
       var dateText = fmt(r.date);
-      var rowClass = r.release ? ' class="is-lock is-release"' : (r.lock ? ' class="is-lock"' : '');
-      rowsHtml += '<tr' + rowClass + '>' +
+      rowsHtml += '<tr>' +
         '<td class="wbs-date" data-label="' + esc(L.date) + '">' + dateText + '</td>' +
-        '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '">' + platIcon(r.plat) + '</td>' +
         '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + '</td>' +
-        '<td class="wbs-col-icon wbs-col-type" data-label="' + esc(L.type) + '">' + typeIcon(r.note) + '</td>' +
-        '<td class="wbs-note" data-label="' + esc(L.note) + '">' + esc(r.note) + '</td>' +
+        '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '">' + platIcon(r.plat) + '</td>' +
         '</tr>';
     });
     timelineWrap.innerHTML =
       '<div class="wbs-table-wrap"><table class="wbs-table">' +
       '<thead><tr>' +
       '<th>' + esc(L.date) + '</th>' +
-      '<th class="wbs-col-icon">' + esc(L.platform) + '</th>' +
       '<th>' + esc(L.milestone) + '</th>' +
-      '<th class="wbs-col-icon wbs-col-type">' + esc(L.type) + '</th>' +
-      '<th>' + esc(L.note) + '</th>' +
+      '<th class="wbs-col-icon">' + esc(L.platform) + '</th>' +
       '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
 
     // --- clipboard payload: tab-separated, fixed English headers for clean Sheets paste ---
