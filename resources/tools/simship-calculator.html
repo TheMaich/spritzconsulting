@@ -1647,13 +1647,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     padding: 8px 12px; margin-bottom: 6px;
     background: var(--paper-2);
   }
-  .wbs-table td{
+  .wbs-table tbody td{
     padding: 0; border: none; text-align: left;
     white-space: normal; overflow-wrap: anywhere; min-width: 0;
   }
   .wbs-table td::before{ content: none; }
-  /* Line 1: date bold sans, centered on its own line */
-  .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+  /* Line 1: date bold sans, larger and clay, centered on its own line */
+  .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 16px; color: var(--clay); white-space: nowrap; }
   /* Line 2: milestone left (wraps if long), platform badge pinned right and never shrinking */
   .wbs-table td.wbs-milestone{ order: 2; flex: 1 1 auto; min-width: 0; font-weight: 500; font-size: 15px; color: var(--ink); }
   .wbs-table td.wbs-col-icon{ order: 3; width: auto; flex: 0 0 auto; flex-shrink: 0; margin-left: auto; text-align: right; }
