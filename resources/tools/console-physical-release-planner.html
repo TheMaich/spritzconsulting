@@ -1671,6 +1671,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table td::before{ content: none; }
   /* Line 1: date bold sans, larger and clay, centered, with a separator line under it */
   .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 16px; color: var(--clay); white-space: nowrap; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+  /* Cert window shows a date range; let it wrap and shrink so it never overflows the card. */
+  .wbs-table tr.is-range td.wbs-date{ white-space: normal; font-size: 13px; line-height: 1.3; }
   /* Line 2: milestone left (slightly indented, wraps if long), platform badge pinned right and never shrinking */
   .wbs-table td.wbs-milestone{ order: 2; flex: 1 1 0; min-width: 0; text-align: left; padding-left: 12px; font-weight: 500; font-size: 15px; color: var(--ink); }
   .wbs-table td.wbs-col-icon{ order: 3; width: 124px; flex: 0 0 124px; text-align: right; }
@@ -2249,6 +2251,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     rows.push({ date: goldDate, label: 'Physical gold master ready', badge: 'ALL', kind: 'physical', accent: true, note: 'First certified build that goes to disc. Manufacturing runs from here.' });
     rows.push({ date: subWorkdays(release, 20), label: 'Manufacturing', badge: 'ALL', kind: 'physical', note: 'Disc or cartridge production begins. Roughly the final 15 to 20 days before release.' });
 
+    // Platform certification window: the cert chain occupies certStart to the gold master.
+    // Shown as a date range; sorts on certStart so it sits after the last rating, before the GM.
+    rows.push({ date: certStart, dateText: fmt(certStart) + ' to ' + fmt(goldDate), label: 'Platform certification window', badge: 'ALL', kind: 'certwindow', note: 'Platform certification, up to three lot-check rounds plus padding. This assumes the longest case, a Nintendo Switch style chain.' });
+
     rows.sort(function(a, b) { return a.date - b.date; });
 
     var rowsHtml = '';
@@ -2263,10 +2269,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       } else if (r.note) {
         sub = '<span class="wbs-subnote">' + esc(r.note) + '</span>';
       }
-      var cls = (r.kind === 'release') ? ' class="is-lock"' : (r.accent ? ' class="is-accent"' : '');
+      var cls = (r.kind === 'release') ? ' class="is-lock"' : (r.accent ? ' class="is-accent"' : (r.kind === 'certwindow' ? ' class="is-range"' : ''));
       var notesCell = r.materials || r.note || '';
       rowsHtml += '<tr' + cls + '>' +
-        '<td class="wbs-date" data-label="' + esc(L.date) + '">' + fmt(r.date) + '</td>' +
+        '<td class="wbs-date" data-label="' + esc(L.date) + '">' + (r.dateText ? esc(r.dateText) : fmt(r.date)) + '</td>' +
         '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + sub + '</td>' +
         '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '"><span class="wbs-badge">' + esc(r.badge) + '</span></td>' +
         '<td class="wbs-materials" data-label="Notes / Materials needed">' + (notesCell ? esc(notesCell) : '') + '</td>' +
