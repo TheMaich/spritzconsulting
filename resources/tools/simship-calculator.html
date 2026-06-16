@@ -2383,7 +2383,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return '<span class="wbs-badge">BUILD</span>';
     }
 
-    // --- 5-column work-back table (recap is already sorted by date) ---
+    // --- 3-column work-back table: Date / Milestone / Platform (recap is already sorted by date) ---
     var rowsHtml = '';
     recap.forEach(function(r) {
       var dateText = fmt(r.date);
@@ -2707,9 +2707,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="sim-modal-backdrop" data-close></div>
   <div class="sim-modal-card" role="document">
     <h2 class="sim-modal-title" id="sim-modal-title">Better on <em>desktop</em></h2>
-    <p class="sim-modal-body">This tool is built for a wide screen. On mobile the schedule is
-    cramped and the Gantt timelines are hidden. For the full work-back schedule and both Gantt
-    views, open it on a desktop or laptop. Ciao, anytime.</p>
+    <p class="sim-modal-body">On mobile you get the essential schedule: dates, milestones and platforms in a
+    compact view. The full layout with both Gantt timelines is built for a wide screen, so open it on
+    desktop or laptop when you want the complete picture. Ciao, anytime.</p>
     <button type="button" class="sim-modal-btn" id="sim-modal-dismiss">Got it</button>
   </div>
 </div>
