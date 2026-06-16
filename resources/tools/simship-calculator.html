@@ -1643,24 +1643,23 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table, .wbs-table tbody{ display: block; width: 100%; }
   .wbs-table tr{
     display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
-    border: 1px solid var(--rule); border-radius: 10px;
     padding: 8px 12px; margin-bottom: 6px;
-    background: var(--paper-2);
   }
   .wbs-table td{
     padding: 0; border: none; text-align: left;
     white-space: normal; overflow-wrap: anywhere; min-width: 0;
   }
   .wbs-table td::before{ content: none; }
-  /* Line 1: date centered on its own line */
-  .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--mono-data); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
-  /* Line 2: milestone left (wraps if long), platform badge pinned right */
+  /* Line 1: date bold sans, centered, with a single separator line under it */
+  .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 12px; color: var(--ink-2); white-space: nowrap; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+  /* Line 2: milestone left (wraps if long), platform badge pinned right and never shrinking */
   .wbs-table td.wbs-milestone{ order: 2; flex: 1 1 auto; min-width: 0; font-weight: 500; font-size: 15px; color: var(--ink); }
-  .wbs-table td.wbs-col-icon{ order: 3; flex: 0 0 auto; margin-left: auto; text-align: right; }
+  .wbs-table td.wbs-col-icon{ order: 3; width: auto; flex: 0 0 auto; flex-shrink: 0; margin-left: auto; text-align: right; }
   .wbs-table td.wbs-col-icon .wbs-badge{ white-space: nowrap; min-width: 0; border-radius: 6px; padding: 3px 10px; }
-  .wbs-table tr.is-lock{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
-  .wbs-table tr.is-lock .wbs-milestone,
-  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); }
+  /* Content Lock keeps the full gold box; no under-date line inside it */
+  .wbs-table tr.is-lock{ border: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); border-radius: 10px; background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
+  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); border-bottom: none; padding-bottom: 0; }
+  .wbs-table tr.is-lock .wbs-milestone{ color: var(--clay); }
   .wbs-table tr.is-lock .wbs-badge{ color: var(--clay); border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
 }
 
@@ -2373,10 +2372,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     function platIcon(plat) {
       var p = (plat || '').toLowerCase();
       var code = 'ALL';
-      if (p.indexOf('switch') > -1 || p.indexOf('nintendo') > -1) code = 'NSW';
-      else if (p.indexOf('playstation') > -1 || p.indexOf('ps') > -1) code = 'PS';
-      else if (p.indexOf('xbox') > -1) code = 'XB';
-      else if (p.indexOf('pc') > -1 || p.indexOf('steam') > -1) code = 'PC';
+      if (p.indexOf('switch') > -1 || p.indexOf('nintendo') > -1) code = 'Switch';
+      else if (p.indexOf('playstation') > -1 || p.indexOf('ps') > -1) code = 'Playstation';
+      else if (p.indexOf('xbox') > -1) code = 'Xbox';
+      else if (p.indexOf('pc') > -1 || p.indexOf('steam') > -1) code = 'Steam';
       return '<span class="wbs-badge">' + code + '</span>';
     }
     function typeIcon(note) {
