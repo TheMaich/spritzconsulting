@@ -1660,7 +1660,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table td.wbs-col-icon .wbs-badge{ white-space: nowrap; min-width: 0; border-radius: 6px; padding: 3px 10px; }
   /* Content Lock keeps the gold box variant; every row is boxed */
   .wbs-table tr.is-lock{ border: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); border-radius: 10px; background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
-  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); border-bottom-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
+  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); border-bottom: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); }
   .wbs-table tr.is-lock .wbs-milestone{ color: var(--clay); }
   .wbs-table tr.is-lock .wbs-badge{ color: var(--clay); border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
 }
@@ -2395,7 +2395,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var rowsHtml = '';
     recap.forEach(function(r) {
       var dateText = fmt(r.date);
-      rowsHtml += '<tr' + (r.lock ? ' class="is-lock"' : '') + '>' +
+      rowsHtml += '<tr' + ((r.lock || r.release) ? ' class="is-lock"' : '') + '>' +
         '<td class="wbs-date" data-label="' + esc(L.date) + '">' + dateText + '</td>' +
         '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + '</td>' +
         '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '">' + platIcon(r.plat) + '</td>' +
