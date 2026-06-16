@@ -1643,22 +1643,24 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table, .wbs-table tbody{ display: block; width: 100%; }
   .wbs-table tr{
     display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+    border: 1px solid var(--rule); border-radius: 10px;
     padding: 8px 12px; margin-bottom: 6px;
+    background: var(--paper-2);
   }
   .wbs-table td{
     padding: 0; border: none; text-align: left;
     white-space: normal; overflow-wrap: anywhere; min-width: 0;
   }
   .wbs-table td::before{ content: none; }
-  /* Line 1: date bold sans, centered, with a single separator line under it */
-  .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 12px; color: var(--ink-2); white-space: nowrap; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+  /* Line 1: date bold sans, centered on its own line */
+  .wbs-table td.wbs-date{ order: 1; flex: 0 0 100%; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
   /* Line 2: milestone left (wraps if long), platform badge pinned right and never shrinking */
   .wbs-table td.wbs-milestone{ order: 2; flex: 1 1 auto; min-width: 0; font-weight: 500; font-size: 15px; color: var(--ink); }
   .wbs-table td.wbs-col-icon{ order: 3; width: auto; flex: 0 0 auto; flex-shrink: 0; margin-left: auto; text-align: right; }
   .wbs-table td.wbs-col-icon .wbs-badge{ white-space: nowrap; min-width: 0; border-radius: 6px; padding: 3px 10px; }
-  /* Content Lock keeps the full gold box; no under-date line inside it */
+  /* Content Lock keeps the gold box variant; every row is boxed */
   .wbs-table tr.is-lock{ border: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); border-radius: 10px; background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
-  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); border-bottom: none; padding-bottom: 0; }
+  .wbs-table tr.is-lock .wbs-date{ color: var(--clay); }
   .wbs-table tr.is-lock .wbs-milestone{ color: var(--clay); }
   .wbs-table tr.is-lock .wbs-badge{ color: var(--clay); border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
 }
