@@ -1,0 +1,194 @@
+<!--
+  DRAFT reference extracted from simship working tree on 2026-06-16.
+  Source material for a future standalone Console Physical Release Planner.
+  Not linked, not live.
+
+  This file is a holding pen for the Physical Release + Age Ratings logic that was
+  prototyped inside simship-calculator.html. It is NOT a working page. It contains
+  ONLY the physical/rating parts. The pill selector / table-merge code is deliberately
+  excluded.
+
+  It assumes the host page already provides: a recap[] array of milestone rows, a
+  release Date, addDays(), fmt(), esc(), radioValue(), allDates[], contentLock,
+  a #timeline-wrap render, selected[] platforms, and the .wbs-table mobile card
+  styles. Wire these in when building the standalone tool.
+-->
+
+<!-- ============================================================ -->
+<!-- A. CSS  (physical / rating presentation)                      -->
+<!-- ============================================================ -->
+<style>
+.wbs-section-head{
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin: 28px 0 12px;
+}
+.wbs-section-note{
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.wbs-callout{
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule));
+  background: color-mix(in srgb, var(--clay) 10%, var(--paper-2));
+  color: var(--clay);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.wbs-subnote{
+  display: block;
+  margin-top: 3px;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+</style>
+
+<!-- ============================================================ -->
+<!-- B. INPUT MARKUP  (Physical Release toggle + territory group)  -->
+<!-- ============================================================ -->
+<div class="calc-group">
+  <span class="calc-label">Physical Release</span>
+  <div class="calc-hint">Boxed edition shipping to retail. Adds manufacturing, distribution and rating approval milestones. Select the territories where physical copies will be sold.</div>
+  <div class="seg" role="radiogroup" aria-label="Physical Release">
+    <label class="seg-btn"><input type="radio" name="physical" value="no" checked> No</label>
+    <label class="seg-btn"><input type="radio" name="physical" value="yes"> Yes</label>
+  </div>
+</div>
+
+<div class="calc-group" id="territory-group" hidden>
+  <span class="calc-label">Physical Territories</span>
+  <div class="calc-hint">Where boxed copies will be sold. Each territory adds its own rating body to the schedule.</div>
+  <div class="opt-grid">
+    <label class="opt-chip"><input type="checkbox" name="territory" value="eu-uk"> EU / UK</label>
+    <label class="opt-chip"><input type="checkbox" name="territory" value="na"> North America (US / CA)</label>
+    <label class="opt-chip"><input type="checkbox" name="territory" value="jp"> Japan</label>
+    <label class="opt-chip"><input type="checkbox" name="territory" value="au"> Australia</label>
+    <label class="opt-chip"><input type="checkbox" name="territory" value="other"> Other</label>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- C. HOLIDAY WARNING ADDITION                                   -->
+<!--    This <span> was appended inside the existing #holiday-warn -->
+<!--    <p>, after the .adj-note span. Shown when physical=yes and -->
+<!--    the end-of-year freeze warning is active.                  -->
+<!-- ============================================================ -->
+<!--
+<span class="phys-warn" hidden> Physical manufacturing and distribution are also affected by end of year closures. Confirm lead times with your replication house if you ship physical editions in Q1.</span>
+-->
+
+<!-- ============================================================ -->
+<!-- D. NOTES BULLETS  (verbatim, appended to the Notes <ul>)      -->
+<!-- ============================================================ -->
+<!--
+<li><strong>Physical gold master comes before digital gold.</strong> Rating logos go on the box, so every required rating must be fully approved before you submit to the replication house. PEGI and traditional ESRB each take roughly 6-10 weeks. Ratings and manufacturing run in sequence, so plan them one after the other.</li>
+<li><strong>CERO is the longest pipeline here.</strong> For a physical release in Japan, CERO certification usually runs 8-16 weeks and often needs Japanese documentation and a local contact or publisher. When CERO is in your schedule it is almost always the driving milestone, ahead of Nintendo Lot Check and manufacturing. Start it first.</li>
+<li><strong>USK is required for Nintendo Switch in Germany even for a digital release.</strong> IARC covers most digital storefronts, but the German Nintendo eShop needs a separate USK certificate on top of IARC. When Switch is selected, the USK submission deadline appears in your schedule automatically.</li>
+<li><strong>All age rating timelines here are estimates.</strong> PEGI, ESRB, USK, CERO and ACB each have variable queue times. These dates use typical review windows, so confirm current timelines with each body or your local representative before you lock your schedule.</li>
+-->
+
+<!-- ============================================================ -->
+<!-- E. JS  (all physical / rating logic)                          -->
+<!-- ============================================================ -->
+<script>
+/* ---- E1. Element refs (declared alongside the other render refs) ---- */
+var physicalRadios = document.querySelectorAll('input[name="physical"]');
+var territoryBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="territory"]'));
+var territoryGroup = document.getElementById('territory-group');
+
+/* ---- E2. Listeners (re-render on change) ---- */
+physicalRadios.forEach(function(r) { r.addEventListener('change', render); });
+territoryBoxes.forEach(function(b) { b.addEventListener('change', render); });
+
+/* ---- E3. Inside render(): read state + reveal territory group ---- */
+var physicalOn = radioValue(physicalRadios) === 'yes';
+if (territoryGroup) territoryGroup.hidden = !physicalOn;
+var territories = physicalOn ? territoryBoxes.filter(function(b) { return b.checked; }).map(function(b) { return b.value; }) : [];
+
+/* ---- E4. Rating-body derivation + physical timeline rows + driving milestone ----
+   Every date here is an INDICATIVE estimate to confirm with each rating body.
+   Calendar-day offsets from the release date. Push physical rows into recap[]
+   BEFORE the recap.sort() so they interleave chronologically. */
+function relMinus(n) { return addDays(release, -n); }
+var hasEUUK = physicalOn && territories.indexOf('eu-uk') > -1;
+var hasNA   = physicalOn && territories.indexOf('na') > -1;
+var hasJP   = physicalOn && territories.indexOf('jp') > -1;
+var hasAU   = physicalOn && territories.indexOf('au') > -1;
+var switchSel = selected.indexOf('switch') > -1;
+
+// Rating bodies. USK is triggered by Switch (digital German eShop) OR EU/UK physical.
+// sub = submission deadline offset (days before release); appr = expected approval offset.
+var ratings = [];
+if (hasJP)                ratings.push({ body: 'CERO', region: 'JP', sub: 112, appr: 63, label: 'CERO submission (JP)', tail: 'Longest pipeline, likely your driving milestone.' });
+if (hasNA)                ratings.push({ body: 'ESRB', region: 'NA', sub: 98,  appr: 63, label: 'ESRB submission (NA)', tail: 'Needed before NA physical gold.' });
+if (hasEUUK)              ratings.push({ body: 'PEGI', region: 'EU', sub: 70,  appr: 49, label: 'PEGI submission (EU)', tail: 'Needed before physical gold master.' });
+if (switchSel || hasEUUK) ratings.push({ body: 'USK',  region: 'DE', sub: 56,  appr: 42, label: 'USK submission (DE)',  tail: 'Needed for Nintendo eShop DE and EU physical.' });
+if (hasAU)                ratings.push({ body: 'ACB',  region: 'AU', sub: 56,  appr: 35, label: 'ACB submission (AU)',  tail: '' });
+ratings.forEach(function(r) { r.subDate = relMinus(r.sub); r.apprDate = relMinus(r.appr); allDates.push(r.subDate); });
+
+// Physical manufacturing milestones go into the main schedule.
+if (physicalOn) {
+  var goldRatings = [];
+  if (hasEUUK) goldRatings.push('PEGI');
+  if (hasNA)   goldRatings.push('ESRB');
+  if (hasJP)   goldRatings.push('CERO');
+  if (hasEUUK) goldRatings.push('USK');
+  if (hasAU)   goldRatings.push('ACB');
+  var goldNote = 'All ratings must be approved by this date.';
+  if (goldRatings.length) goldNote += ' ' + goldRatings.join(', ') + ' required before this date.';
+  recap.push({ date: relMinus(70), label: 'Physical gold master ready', plat: 'All platforms', note: goldNote, kind: 'physical' });
+  recap.push({ date: relMinus(63), label: 'Manufacturer submission', plat: 'All platforms', note: 'Submit gold master to replication house', kind: 'physical' });
+  recap.push({ date: relMinus(35), label: 'Manufacturing complete', plat: 'All platforms', note: "Discs or cartridges produced and QA'd", kind: 'physical' });
+  recap.push({ date: relMinus(14), label: 'Distribution shipped', plat: 'All platforms', note: 'Units leave warehouse to retail', kind: 'physical' });
+}
+
+// Driving milestone: earliest content-lock-driving date across the cert content lock,
+// rating submissions and physical gold master. Highlight only; console dates do not move.
+var drivers = [{ kind: 'lock', date: contentLock }];
+ratings.forEach(function(r) { drivers.push({ kind: 'rating', body: r.body, date: r.subDate, ref: r }); });
+if (physicalOn) drivers.push({ kind: 'gold', date: relMinus(70) });
+drivers.sort(function(a, b) { return a.date - b.date; });
+var driver = drivers[0];
+if (driver.kind === 'rating') driver.ref.isDriving = true;
+var ceroDriving = driver.kind === 'rating' && driver.body === 'CERO';
+
+// Fold rating rows into the schedule. USK is a build deadline when physical is off
+// (Switch digital only) and a physical deadline when physical is on.
+ratings.forEach(function(r) {
+  var rnote = 'Approval estimated around ' + fmt(r.apprDate) + '.' + (r.tail ? ' ' + r.tail : '');
+  var cat = (r.body === 'USK') ? (physicalOn ? 'physical' : 'build') : 'physical';
+  recap.push({ date: r.subDate, label: r.label, plat: r.region, region: r.region, isRating: true, isDriving: r.isDriving, note: rnote, subnote: rnote, kind: 'rating', cat: cat });
+});
+
+/* ---- E5. IARC note + CERO driving callout (rendered as context above the table) ----
+   IARC is required whenever a digital platform is selected. Near-instant, no dated row. */
+var contextHtml = '<p class="wbs-section-note">IARC: generated automatically when you submit to digital storefronts. Near-instant, so it has no dated milestone here. All rating dates here are estimates to confirm with each body.</p>';
+if (ceroDriving) {
+  contextHtml += '<div class="wbs-callout">CERO (Japan) is your driving milestone, earlier than Nintendo cert. Content lock moves to ' + fmt(driver.date) + '.</div>';
+}
+
+/* ---- E6. Row-builder branches that the rating rows need ----
+   In the unified builder: region badge instead of platIcon for rating rows, the
+   .wbs-subnote approval line, and is-lock for the driving rating row. */
+// var badge = r.isRating ? '<span class="wbs-badge">' + esc(r.region) + '</span>' : platIcon(r.plat);
+// var ms = esc(r.label) + (r.subnote ? '<span class="wbs-subnote">' + esc(r.subnote) + '</span>' : '');
+// '<tr ...' + ((r.lock || r.release || r.isDriving) ? ' class="is-lock"' : '') + '>' ...
+
+/* ---- E7. Clipboard export type labels for the new kinds ----
+   Added cases inside typeTextEN(kind): */
+// kind === 'physical' ? 'Physical' : kind === 'rating' ? 'Age rating' : ...
+
+/* ---- E8. Holiday warning toggle (alongside the other freeze-note toggles) ---- */
+var physWarn = holidayEl.querySelector('.phys-warn');
+if (physWarn) physWarn.hidden = !(physicalOn && holidayHit);
+</script>
