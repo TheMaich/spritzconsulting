@@ -1468,7 +1468,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .wbs-table tbody tr:last-child td{ border-bottom: 0; }
 .wbs-col-icon{ width: 1%; text-align: center; white-space: nowrap; }
 .wbs-date{
-  font-family: var(--mono-data);
+  font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   color: var(--ink);
   white-space: nowrap;
@@ -1485,6 +1485,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .wbs-icon{ display: inline-flex; align-items: center; justify-content: center; color: var(--ink-3); }
 .wbs-icon svg{ display: block; }
 .wbs-col-type{ width: 120px; }
+.wbs-materials{ color: var(--ink-2); font-size: 13px; line-height: 1.5; max-width: 340px; }
+.wbs-cost{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.04em; color: var(--clay); white-space: nowrap; }
+.wbs-subnote{ display: none; }
+.wbs-rownote{ display: block; margin-top: 4px; font-size: 12px; line-height: 1.4; font-weight: 400; color: var(--ink-3); }
+.wbs-callout{ margin: 16px 0 0; padding: 12px 16px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); color: var(--clay); font-size: 14px; line-height: 1.5; }
+.wbs-section-note{ font-size: 13px; color: var(--ink-3); line-height: 1.5; margin: 0 0 12px; }
 .wbs-badge{
   display: inline-block;
   font-family: var(--mono);
@@ -1669,6 +1675,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .wbs-table tr.is-lock .wbs-date{ color: var(--clay); border-bottom: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); }
   .wbs-table tr.is-lock .wbs-milestone{ color: var(--clay); }
   .wbs-table tr.is-lock .wbs-badge{ color: var(--clay); border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
+  /* Materials + cost: hide the desktop columns, show them as sub-lines under the milestone. */
+  .wbs-table td.wbs-materials, .wbs-table td.wbs-cost{ display: none; }
+  .wbs-table td.wbs-milestone .wbs-subnote{ display: block; margin-top: 4px; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.4; color: var(--ink-3); }
 }
 
 /* Mobile "better on desktop" modal */
@@ -1793,7 +1802,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <label class="opt-chip"><input type="checkbox" name="territory" value="na"> North America (US / CA)</label>
           <label class="opt-chip"><input type="checkbox" name="territory" value="jp"> Japan</label>
           <label class="opt-chip"><input type="checkbox" name="territory" value="au"> Australia</label>
-          <label class="opt-chip"><input type="checkbox" name="territory" value="other"> Other</label>
+          <label class="opt-chip"><input type="checkbox" name="territory" value="kr"> South Korea</label>
+          <label class="opt-chip"><input type="checkbox" name="territory" value="br"> Brazil</label>
         </div>
       </div>
 
@@ -1847,7 +1857,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Work in progress.</strong> This planner is being built. The rating approval and manufacturing logic arrives in the next update, and the guidance notes will appear here then.</li>
+          <li><strong>Age rating submissions run on their own track, well ahead of manufacturing.</strong> Start them early: the ratings exist to get the classification logos onto the box, and they do not depend on your certification gold master.</li>
+          <li><strong>China is not a simple age rating.</strong> Selling a game in mainland China needs a publishing licence (ISBN) from the NPPA, and a foreign company cannot apply directly: you work through a licensed local publisher and operator. Approval can take 12 months or more and is not a predictable lead time, so plan China as a separate track outside this schedule.</li>
+          <li><strong>Latin America beyond Brazil has no single mandatory rating body.</strong> Many markets either follow ESRB ratings in practice or have no compulsory classification for a boxed release, so plan the region case by case. Brazil is the exception, with its own mandatory DJCTQ classification covered above.</li>
         </ul>
       </div>
 
@@ -2078,6 +2090,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 (function() {
   var releaseInput = document.getElementById('release');
   var platformBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="platform"]'));
+  var territoryBoxes = Array.prototype.slice.call(document.querySelectorAll('input[name="territory"]'));
   var qaRadios = document.querySelectorAll('input[name="qa"]');
   var locSelect = document.getElementById('loc-tier');
   var timelineWrap = document.getElementById('timeline-wrap');
@@ -2183,19 +2196,74 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       return;
     }
 
-    // Phase 1 skeleton: render the schedule shell with the release date only, so the
-    // card layout is visible. Rating approvals and manufacturing rows arrive in Phase 2.
+    // Territories drive which age rating bodies apply. Day offsets below are
+    // INDICATIVE estimates to confirm with each rating body.
+    var territories = territoryBoxes.filter(function(b) { return b.checked; }).map(function(b) { return b.value; });
+    function relMinus(n) { return addDays(release, -n); }
+
+    // Schedule rows. Each: { date, label, badge, kind }. Sorted by date before render.
+    var rows = [];
+    rows.push({ date: release, label: 'Release date', badge: 'ALL', kind: 'release' });
+
+    // Age rating derivation. USK triggers on EU/UK physical (Germany): PEGI covers most
+    // of Europe, USK covers Germany, so a European boxed release needs both.
+    var hasEUUK = territories.indexOf('eu-uk') > -1;
+    var hasNA   = territories.indexOf('na')    > -1;
+    var hasJP   = territories.indexOf('jp')    > -1;
+    var hasAU   = territories.indexOf('au')    > -1;
+    var hasKR   = territories.indexOf('kr')    > -1;
+    var hasBR   = territories.indexOf('br')    > -1;
+
+    var ratings = [];
+    if (hasJP)   ratings.push({ region: 'JP', sub: 112, appr: 63, label: 'CERO submission (JP)', cost: 'from ~1,350 USD', materials: 'Full playable build, content questionnaire, documentation often in Japanese, a local contact or publisher, a build per platform.' });
+    if (hasNA)   ratings.push({ region: 'NA', sub: 98,  appr: 63, label: 'ESRB submission (NA)', cost: 'from ~3,000 USD', materials: 'Detailed long-form questionnaire, gameplay video showing the most extreme content including cutscenes and locked-out content.' });
+    if (hasEUUK) ratings.push({ region: 'EU', sub: 70,  appr: 49, label: 'PEGI submission (EU)', cost: 'from ~260 EUR', materials: 'Content questionnaire, gameplay video reel, details per platform.' });
+    if (hasEUUK) ratings.push({ region: 'DE', sub: 56,  appr: 42, label: 'USK submission (DE)', cost: 'from ~1,200 EUR', materials: 'Full game, signed submission form, manual, cover, fact sheet, achievement or trophy list, walkthrough. For multiplayer, a description and access.' });
+    if (hasAU)   ratings.push({ region: 'AU', sub: 56,  appr: 35, label: 'ACB submission (AU)', cost: 'from ~470 AUD', materials: 'Classification questionnaire, playable build, content description.' });
+    if (hasKR)   ratings.push({ region: 'KR', sub: 90,  appr: 63, label: 'GRAC submission (KR)', cost: 'from ~360,000 KRW', materials: 'Game specifications, content summary, representative gameplay video, game files, certificate of the business entity, a local publisher or distributor (required, a foreign company cannot apply directly).' });
+    if (hasBR)   ratings.push({ region: 'BR', sub: 30,  appr: 20, label: 'DJCTQ submission (BR)', cost: 'no fee (direct DJCTQ)', materials: 'Portuguese-language documentation and a preview of the game. An existing ESRB or PEGI certificate can speed this up through an equivalence process.' });
+    ratings.forEach(function(r) {
+      r.subDate = relMinus(r.sub);
+      rows.push({ date: r.subDate, label: r.label, badge: r.region, kind: 'rating', materials: r.materials, cost: r.cost });
+    });
+
+    // Physical manufacturing. The gold master starts the physical chain and is back-dated
+    // in WORKING days. Rating approval runs on a separate, parallel track, so the gold
+    // master date does not depend on when ratings clear.
+    var goldNote = 'First certified build that goes to disc. Manufacturing and distribution run from here.';
+    rows.push({ date: subWorkdays(release, 70), label: 'Physical gold master ready', badge: 'ALL', kind: 'physical', critical: true, note: goldNote });
+    rows.push({ date: subWorkdays(release, 63), label: 'Manufacturer submission', badge: 'ALL', kind: 'physical' });
+    rows.push({ date: subWorkdays(release, 35), label: 'Manufacturing complete', badge: 'ALL', kind: 'physical' });
+    rows.push({ date: subWorkdays(release, 14), label: 'Distribution shipped', badge: 'ALL', kind: 'physical' });
+
+    rows.sort(function(a, b) { return a.date - b.date; });
+
+    var rowsHtml = '';
+    rows.forEach(function(r) {
+      // Rating rows carry materials + cost: shown as desktop columns and, on mobile,
+      // as sub-lines stacked under the milestone name.
+      var sub = (r.kind === 'rating')
+        ? '<span class="wbs-subnote">Materials: ' + esc(r.materials) + '</span><span class="wbs-subnote">Cost: ' + esc(r.cost) + '</span>'
+        : '';
+      var rownote = r.note ? '<span class="wbs-rownote">' + esc(r.note) + '</span>' : '';
+      rowsHtml += '<tr' + ((r.kind === 'release' || r.critical) ? ' class="is-lock"' : '') + '>' +
+        '<td class="wbs-date" data-label="' + esc(L.date) + '">' + fmt(r.date) + '</td>' +
+        '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">' + esc(r.label) + sub + rownote + '</td>' +
+        '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '"><span class="wbs-badge">' + esc(r.badge) + '</span></td>' +
+        '<td class="wbs-materials" data-label="Materials">' + (r.materials ? esc(r.materials) : '') + '</td>' +
+        '<td class="wbs-cost" data-label="Approval cost">' + (r.cost ? esc(r.cost) : '') + '</td>' +
+        '</tr>';
+    });
     timelineWrap.innerHTML =
       '<div class="wbs-table-wrap"><table class="wbs-table">' +
       '<thead><tr>' +
       '<th>' + esc(L.date) + '</th>' +
       '<th>' + esc(L.milestone) + '</th>' +
       '<th class="wbs-col-icon">' + esc(L.platform) + '</th>' +
-      '</tr></thead><tbody>' +
-      '<tr class="is-lock"><td class="wbs-date" data-label="' + esc(L.date) + '">' + fmt(release) + '</td>' +
-      '<td class="wbs-milestone" data-label="' + esc(L.milestone) + '">Release date</td>' +
-      '<td class="wbs-col-icon" data-label="' + esc(L.platform) + '"><span class="wbs-badge">ALL</span></td></tr>' +
-      '</tbody></table></div>';
+      '<th>Materials</th>' +
+      '<th>Approval cost</th>' +
+      '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>' +
+      '<p class="calc-hint" style="margin-top:14px;">Submission dates and approval costs are indicative starting estimates. Real costs vary by budget tier, platform count and submission type. Manufacturing dates are indicative and depend on your replication house. Confirm current figures and required materials with each rating body before you lock your schedule.</p>';
     clearExtras();
   }
 
@@ -2334,6 +2402,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   releaseInput.addEventListener('input', render);
   releaseInput.addEventListener('change', render);
   platformBoxes.forEach(function(b) { b.addEventListener('change', render); });
+  territoryBoxes.forEach(function(b) { b.addEventListener('change', render); });
   qaRadios.forEach(function(r) { r.addEventListener('change', render); });
   if (locSelect) locSelect.addEventListener('change', render);
 
