@@ -1388,6 +1388,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
 }
 
+/* Quiet inline nudge under the break-even result. Reuses .calc-hint type and
+   .calc-hint a link colour; this rule only sets spacing, no new colours. */
+.calc-result-nudge {
+  margin: 16px 0 0;
+  max-width: 70ch;
+}
+
 .calc-result {
   position: relative;
   background: var(--paper-3);
@@ -2127,6 +2134,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </div>
       </div>
 
+      <p class="calc-hint calc-result-nudge">Selling that many copies before you see a cent? Worth a second opinion on the deal. <a id="inline-result-cta" href="mailto:hello@spritzconsulting.com?subject=Project%20enquiry%20-%20Spritz%20Consulting">Get in touch</a>.</p>
+
       <div class="calc-secondary-results" aria-live="polite" id="recoup-extras">
         <div class="calc-secondary-card">
           <div class="calc-secondary-label">2x Budget · Publisher break-even</div>
@@ -2739,6 +2748,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       window.location.href = buildMailto();
     });
   });
+
+  // Inline result nudge: tracking only, native mailto href handles the link.
+  var inlineCta = document.getElementById('inline-result-cta');
+  if (inlineCta) {
+    inlineCta.addEventListener('click', function() {
+      if (window.zaraz) { zaraz.track('cta_click', { page: location.pathname, position: 'inline_result' }); }
+    });
+  }
 
   /* Attention nudge on the contextual CTA card. Wobbles about 5s after the card
      scrolls into view, then idles roughly every 60s while it stays visible. It is
