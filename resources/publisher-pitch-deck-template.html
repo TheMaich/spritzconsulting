@@ -1073,7 +1073,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Static depth layers: offset + blurred + fixed tilt, behind the front slide.
    Angles are predefined (same every load) for a loosely-dropped photo-pile look. */
 .deck-back{ box-shadow: var(--shadow-sm); }
-.back-1{ transform: translate(1.8%, 2.8%) rotate(3deg);  filter: blur(3px);  z-index: 2; }
 .back-2{ transform: translate(3.6%, 5.6%) rotate(-4deg); filter: blur(6px);  z-index: 1; }
 .back-3{ transform: translate(5.4%, 8.4%) rotate(2deg);  filter: blur(10px); z-index: 0; }
 /* Front sharp slides: only the active one is visible, on top of the stack.
@@ -1231,7 +1230,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <!-- Static blurred depth layers: the rest of the deck, never brought to front -->
           <img class="deck-back back-3" src="/assets/Deck_PitchdeckTemplate/deck-slide-06.webp" alt="" aria-hidden="true" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
           <img class="deck-back back-2" src="/assets/Deck_PitchdeckTemplate/deck-slide-05.webp" alt="" aria-hidden="true" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
-          <img class="deck-back back-1" src="/assets/Deck_PitchdeckTemplate/deck-slide-04.webp" alt="" aria-hidden="true" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
           <!-- Front, navigable sharp slides (1, 2, 3) -->
           <img class="deck-front is-active" data-slide="0" src="/assets/Deck_PitchdeckTemplate/deck-slide-01.webp" alt="Pitch deck template, slide 1 preview" width="1280" height="720" loading="eager" decoding="async" draggable="false" />
           <img class="deck-front" data-slide="1" src="/assets/Deck_PitchdeckTemplate/deck-slide-02.webp" alt="Pitch deck template, slide 2 preview" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
