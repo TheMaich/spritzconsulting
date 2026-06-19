@@ -993,10 +993,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .deck-actions{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;          /* caption sits directly under the button */
+  align-items: center;        /* caption centered under the button */
+  gap: 12px;
   margin: 0;
 }
+.deck-free-note{ text-align: center; }
 .btn-download{
   display: inline-flex;
   align-items: center;
@@ -1240,11 +1241,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="deck-nav">
         <button type="button" class="deck-nav-btn" id="deck-prev" aria-label="Previous slide">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-          Previous
         </button>
-        <span class="deck-counter" aria-live="polite"><span id="deck-current">1</span> / 3</span>
         <button type="button" class="deck-nav-btn" id="deck-next" aria-label="Next slide">
-          Next
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </button>
       </div>
