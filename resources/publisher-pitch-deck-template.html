@@ -1082,7 +1082,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   z-index: 3;
   opacity: 0;
   box-shadow: var(--shadow-md);
-  transition: opacity .4s var(--ease);
 }
 .deck-front[data-slide="0"]{ transform: rotate(-2deg); }
 .deck-front[data-slide="1"]{ transform: rotate(1.5deg); }
@@ -1232,9 +1231,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <img class="deck-back back-3" src="/assets/Deck_PitchdeckTemplate/deck-slide-06.webp" alt="" aria-hidden="true" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
           <img class="deck-back back-2" src="/assets/Deck_PitchdeckTemplate/deck-slide-05.webp" alt="" aria-hidden="true" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
           <!-- Front, navigable sharp slides (1, 2, 3) -->
-          <img class="deck-front is-active" data-slide="0" src="/assets/Deck_PitchdeckTemplate/deck-slide-01.webp" alt="Pitch deck template, slide 1 preview" width="1280" height="720" loading="eager" decoding="async" draggable="false" />
-          <img class="deck-front" data-slide="1" src="/assets/Deck_PitchdeckTemplate/deck-slide-02.webp" alt="Pitch deck template, slide 2 preview" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
-          <img class="deck-front" data-slide="2" src="/assets/Deck_PitchdeckTemplate/deck-slide-03.webp" alt="Pitch deck template, slide 3 preview" width="1280" height="720" loading="lazy" decoding="async" draggable="false" />
+          <img class="deck-front is-active" data-slide="0" src="/assets/Deck_PitchdeckTemplate/deck-slide-01.webp" alt="Pitch deck template, slide 1 preview" width="1280" height="720" loading="eager" decoding="sync" draggable="false" />
+          <img class="deck-front" data-slide="1" src="/assets/Deck_PitchdeckTemplate/deck-slide-02.webp" alt="Pitch deck template, slide 2 preview" width="1280" height="720" loading="eager" decoding="sync" draggable="false" />
+          <img class="deck-front" data-slide="2" src="/assets/Deck_PitchdeckTemplate/deck-slide-03.webp" alt="Pitch deck template, slide 3 preview" width="1280" height="720" loading="eager" decoding="sync" draggable="false" />
         </div>
       </div>
       <div class="deck-nav">
