@@ -1300,12 +1300,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <span data-i18n="theme.night">Dark</span>
         </button>
       </div>
-      <div class="lang-toggle notranslate" translate="no" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
-        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
-        <button type="button" data-lang-target="fr" aria-pressed="false" aria-label="Passer en français" hidden>FR</button>
-        <button type="button" data-lang-target="es" aria-pressed="false" aria-label="Cambiar a español" hidden>ES</button>
-      </div>
     </div>
     <span class="copy" data-i18n="footer.copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
   </div>
@@ -1329,162 +1323,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       const tgt = btn.dataset.themeTarget;
       try { localStorage.setItem(THEME_KEY, tgt); } catch (e) {}
       applyTheme(tgt);
-    });
-  });
-
-  // i18n
-  const LANG_KEY = 'mdn-lang';
-  const ORIG = new WeakMap();
-
-  const IT = {
-    'nav.consultancy': 'La Mia Esperienza',
-    'nav.services': 'Servizi',
-    'nav.faq': 'FAQ',
-    'nav.contact': 'Contatti',
-    'nav.resources': 'Risorse',
-    'menu.open': 'Apri menu',
-    'menu.close': 'Chiudi menu',
-    'theme.day': 'Chiaro',
-    'theme.night': 'Scuro',
-    'theme.aria.day': 'Passa al tema chiaro',
-    'theme.aria.night': 'Passa al tema scuro',
-    'theme.aria.group': 'Tema',
-    'lang.aria.group': 'Lingua',
-    'footer.sayhi': 'Fatti sentire, <em>quando vuoi.</em>',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'Profilo LinkedIn',
-    'footer.copy': '© 2026 Spritz Consulting · Tutti i diritti riservati',
-    'res.kicker': '05 RISORSE',
-    'res.h1': 'Guide dal lato produzione.',
-    'res.deck': 'Articoli pratici su contratti di publishing, produzione e platform delivery. Scritti per esperienza, non da template.',
-    'res.read': 'Leggi →',
-    'res.card1.title': 'Cosa significa davvero \'50/50\'',
-    'res.card1.desc': 'La revenue split è il numero di cui tutti parlano nel pitch. È anche probabilmente il numero meno utile dell\'intero contratto.',
-    'res.card2.title': 'L\'IP è tuo. Per fare cosa?',
-    'res.card2.desc': 'Esiste una versione di \'tieni il tuo gioco\' che nella pratica non significa quasi nulla. Possesso e controllo sono cose diverse.',
-    'res.card3.title': 'Quando il publisher diventa silenzioso',
-    'res.card3.desc': 'Nessuno negozia pensando al terzo anno. È di solito lì che la struttura del contratto inizia a contare.',
-    'res.card4.title': 'Titolo articolo qui',
-    'res.card4.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
-    'res.card5.title': 'Titolo articolo qui',
-    'res.card5.desc': 'Una breve descrizione dell\'articolo va qui. Due o tre frasi al massimo.',
-  };
-
-  const FR = {
-    'nav.consultancy': 'Mon Parcours',
-    'nav.services': 'Services',
-    'nav.faq': 'FAQ',
-    'nav.contact': 'Contact',
-    'nav.resources': 'Ressources',
-    'menu.open': 'Ouvrir le menu',
-    'menu.close': 'Fermer le menu',
-    'theme.day': 'Clair',
-    'theme.night': 'Sombre',
-    'theme.aria.day': 'Passer au thème clair',
-    'theme.aria.night': 'Passer au thème sombre',
-    'theme.aria.group': 'Thème',
-    'lang.aria.group': 'Langue',
-    'footer.sayhi': 'Écrivez-nous, <em>quand vous voulez.</em>',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'LinkedIn Spritz Consulting',
-    'footer.copy': '© 2026 Spritz Consulting · Tous droits réservés',
-    'res.kicker': '05 RESSOURCES',
-    'res.h1': 'Des guides côté production.',
-    'res.deck': 'Des articles pratiques sur les contrats de publishing, la production et le release management. Écrits depuis l\'expérience, pas depuis un template.',
-    'res.read': 'Lire →',
-    'res.card1.title': 'Ce que \'50/50\' veut vraiment dire',
-    'res.card1.desc': 'Le partage des revenus est le chiffre dont tout le monde parle dans le pitch. C\'est aussi probablement le moins utile de tout le contrat.',
-    'res.card2.title': 'Vous gardez l\'IP. Pour quoi faire?',
-    'res.card2.desc': 'Il existe une version de \'vous gardez votre jeu\' qui en pratique ne veut presque rien dire. Possession et contrôle sont deux choses différentes.',
-    'res.card3.title': 'Quand le publisher devient silencieux',
-    'res.card3.desc': 'Personne ne négocie en pensant à la troisième année. C\'est généralement là que la structure du contrat commence à compter.',
-    'res.card4.title': 'Titre de l\'article ici',
-    'res.card4.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
-    'res.card5.title': 'Titre de l\'article ici',
-    'res.card5.desc': 'Une brève description de l\'article ici. Deux ou trois phrases maximum.',
-  };
-
-  const ES = {
-    'nav.consultancy': 'Mi Trayectoria',
-    'nav.services': 'Servicios',
-    'nav.faq': 'FAQ',
-    'nav.contact': 'Contacto',
-    'nav.resources': 'Recursos',
-    'menu.open': 'Abrir menú',
-    'menu.close': 'Cerrar menú',
-    'theme.day': 'Claro',
-    'theme.night': 'Oscuro',
-    'theme.aria.day': 'Cambiar a tema claro',
-    'theme.aria.night': 'Cambiar a tema oscuro',
-    'theme.aria.group': 'Tema',
-    'lang.aria.group': 'Idioma',
-    'footer.sayhi': 'Di hola, <em>cuando quieras.</em>',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'LinkedIn de Spritz Consulting',
-    'footer.copy': '© 2026 Spritz Consulting · Todos los derechos reservados',
-    'res.kicker': '05 RECURSOS',
-    'res.h1': 'Guías desde el lado de la producción.',
-    'res.deck': 'Artículos prácticos sobre contratos de publishing, producción y platform delivery. Escritos desde la experiencia, no desde una plantilla.',
-    'res.read': 'Leer →',
-    'res.card1.title': 'Qué significa realmente \'50/50\'',
-    'res.card1.desc': 'El reparto de ingresos es el número del que todos hablan en el pitch. También es probablemente el número menos útil de todo el contrato.',
-    'res.card2.title': 'Tienes la IP. ¿Para qué?',
-    'res.card2.desc': 'Hay una versión de \'te quedas con tu juego\' que en la práctica no significa casi nada. Propiedad y control son cosas distintas.',
-    'res.card3.title': 'Cuando tu publisher se queda en silencio',
-    'res.card3.desc': 'Nadie negocia pensando en el tercer año. Suele ser ahí donde la estructura del contrato empieza a importar.',
-    'res.card4.title': 'Título del artículo aquí',
-    'res.card4.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
-    'res.card5.title': 'Título del artículo aquí',
-    'res.card5.desc': 'Una breve descripción del artículo aquí. Dos o tres frases como máximo.',
-  };
-
-  const DICTS = { it: IT, fr: FR, es: ES };
-  let currentLang = 'en';
-
-  const cacheOriginal = (el) => {
-    let entry = ORIG.get(el);
-    if (entry) return entry;
-    entry = {
-      text: el.textContent,
-      html: el.innerHTML,
-      aria: el.getAttribute('aria-label'),
-    };
-    ORIG.set(el, entry);
-    return entry;
-  };
-
-  const applyLang = (lang) => {
-    currentLang = DICTS[lang] ? lang : 'en';
-    document.documentElement.setAttribute('lang', currentLang);
-
-    const dict = DICTS[currentLang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18n;
-      if (dict) {
-        const val = dict[key];
-        if (val == null) return;
-        el.innerHTML = val;
-      } else {
-        el.innerHTML = orig.html;
-      }
-    });
-    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18nAria;
-      el.setAttribute('aria-label', dict ? (dict[key] ?? orig.aria ?? '') : (orig.aria ?? ''));
-    });
-
-    document.querySelectorAll('[data-lang-target]').forEach(btn => {
-      btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
-    });
-  };
-
-  document.querySelectorAll('[data-lang-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const l = btn.dataset.langTarget;
-      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-      applyLang(l);
     });
   });
 
@@ -1532,14 +1370,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     if (e.key === 'Escape' && menu.dataset.open === 'true') setMenu(false);
   });
 
-  // Bootstrap language
-  let savedLang = null;
-  try { savedLang = localStorage.getItem(LANG_KEY); } catch (e) {}
-  if (savedLang) {
-    applyLang(savedLang);
-  } else {
-    applyLang('en');
-  }
 })();
 </script>
 
