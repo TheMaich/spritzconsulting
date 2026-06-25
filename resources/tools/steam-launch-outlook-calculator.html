@@ -1828,7 +1828,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Experimental
       </div>
-      <p class="deck">Enter your current Steam followers and launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
+      <p class="deck">Enter your current Steam wishlists or followers and your launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
     </article>
   </div>
 
@@ -1948,7 +1948,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       </div>
 
       <div class="trajectory-card">
-        <div class="trajectory-label">Follower Trajectory</div>
+        <div class="trajectory-label" id="trajectory-title">Follower Trajectory</div>
         <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
         <div class="trajectory-chart-wrap">
           <canvas id="trajectory-chart"></canvas>
@@ -2183,6 +2183,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var l30Suffix = document.getElementById('l30-suffix');
   var spikeProjLabel = document.getElementById('spike-proj-label');
   var legendCurrentLabel = document.getElementById('legend-current-label');
+  var trajectoryTitle = document.getElementById('trajectory-title');
 
   var METHOD_COPY = {
     followers: {
@@ -2195,7 +2196,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       spikeBoostPh: 'Followers boost',
       spikeBoostAria: 'Follower boost',
       spikeProjLabel: 'Projected followers with spikes',
-      legendCurrent: 'Followers so far'
+      legendCurrent: 'Followers so far',
+      trajLabel: 'Follower Trajectory'
     },
     wishlist: {
       cfLabel: 'Current Wishlists',
@@ -2207,7 +2209,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       spikeBoostPh: 'Wishlists boost',
       spikeBoostAria: 'Wishlist boost',
       spikeProjLabel: 'Projected wishlists with spikes',
-      legendCurrent: 'Wishlists so far'
+      legendCurrent: 'Wishlists so far',
+      trajLabel: 'Wishlist Trajectory'
     }
   };
 
@@ -3187,6 +3190,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (l30Suffix) l30Suffix.textContent = c.l30Suffix;
     if (spikeProjLabel) spikeProjLabel.textContent = c.spikeProjLabel;
     if (legendCurrentLabel) legendCurrentLabel.textContent = c.legendCurrent;
+    if (trajectoryTitle) trajectoryTitle.textContent = c.trajLabel;
     if (methodHint) methodHint.textContent = METHOD_HINT_ACTIVE;
     refreshSpikeLabels();
     swapPresets(inputMethod);
