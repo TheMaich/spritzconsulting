@@ -1921,7 +1921,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
         <div class="trajectory-legend">
           <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
-          <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target follower equivalent</span>
+          <span class="legend-item"><span class="legend-line legend-line-dashed"></span><span id="legend-target-label">Target follower equivalent</span></span>
         </div>
         <div class="spike-section">
           <div class="spike-header">
@@ -1932,7 +1932,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
         <div class="spike-summary" id="spike-summary" hidden>
           <div class="spike-summary-row"><span>Total spike boost</span><span id="spike-total-boost">0</span></div>
-          <div class="spike-summary-row"><span>Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
+          <div class="spike-summary-row"><span id="spike-proj-label">Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
         </div>
       </div>
 
@@ -2121,6 +2121,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var l30Label = document.getElementById('l30-label');
   var l30Hint = document.getElementById('l30-hint');
   var l30Suffix = document.getElementById('l30-suffix');
+  var spikeProjLabel = document.getElementById('spike-proj-label');
+  var legendTargetLabel = document.getElementById('legend-target-label');
 
   var METHOD_COPY = {
     followers: {
@@ -2129,7 +2131,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       cfSuffix: 'FOLLOWERS',
       l30Label: 'Followers Gained in Last 30 Days',
       l30Hint: 'Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.',
-      l30Suffix: 'FOLLOWERS'
+      l30Suffix: 'FOLLOWERS',
+      spikeBoostPh: 'Followers boost',
+      spikeBoostAria: 'Follower boost',
+      spikeProjLabel: 'Projected followers with spikes',
+      legendTarget: 'Target follower equivalent'
     },
     wishlist: {
       cfLabel: 'Current Wishlists',
@@ -2137,7 +2143,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       cfSuffix: 'WISHLISTS',
       l30Label: 'Wishlists Gained in Last 30 Days',
       l30Hint: 'Optional. Pull this from your Steamworks wishlist report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.',
-      l30Suffix: 'WISHLISTS'
+      l30Suffix: 'WISHLISTS',
+      spikeBoostPh: 'Wishlists boost',
+      spikeBoostAria: 'Wishlist boost',
+      spikeProjLabel: 'Projected wishlists with spikes',
+      legendTarget: 'Target wishlists'
     }
   };
 
@@ -2780,7 +2790,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var baseProjected = current + velocity * daysToLaunch;
 
     var spikes = getSpikes();
-    var spikeBoost = spikes.reduce(function(acc, s){ return acc + s.boost; }, 0);
+    // Wishlist method: spike boosts are entered as wishlists. Convert to follower-
+    // equivalent without mutating s.boost (computed fresh each call, never written).
+    var spikeBoost = spikes.reduce(function(sum, s){
+      var b = (wishlistMode && multiplier > 0) ? s.boost / multiplier : s.boost;
+      return sum + b;
+    }, 0);
     var projected = baseProjected + spikeBoost;
     var estimatedWishlists = projected * multiplier;
     var targetEquiv = multiplier > 0 ? target / multiplier : 0;
@@ -2871,8 +2886,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     if (spikes.length > 0) {
       spikeSummary.hidden = false;
-      spikeTotalBoostEl.textContent = fmtNum(spikeBoost);
-      spikeTotalProjEl.textContent = fmtNum(projected);
+      spikeTotalBoostEl.textContent = fmtNum(spikeBoost * unitMul);
+      spikeTotalProjEl.textContent = fmtNum(projected * unitMul);
     } else {
       spikeSummary.hidden = true;
     }
@@ -2895,6 +2910,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
   function addSpike() {
     if (spikeList.children.length >= MAX_SPIKES) return;
+    var sc = METHOD_COPY[inputMethod] || METHOD_COPY.wishlist;
     var row = document.createElement('div');
     row.className = 'spike-row';
     row.innerHTML = ''
@@ -2910,7 +2926,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       +   '<button type="button" class="date-picker-toggle" aria-label="Open calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg></button>'
       +   '<div class="date-picker-dropdown" hidden></div>'
       + '</div>'
-      + '<input type="number" class="spike-boost" min="0" step="50" placeholder="Followers boost" aria-label="Follower boost" />'
+      + '<input type="number" class="spike-boost" min="0" step="50" placeholder="' + sc.spikeBoostPh + '" aria-label="' + sc.spikeBoostAria + '" />'
       + '<button type="button" class="spike-remove" aria-label="Remove event">&times;</button>';
     spikeList.appendChild(row);
 
@@ -3088,6 +3104,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   }
 
+  // Update every already-added spike row's boost placeholder + aria to the active unit.
+  function refreshSpikeLabels() {
+    var sc = METHOD_COPY[inputMethod] || METHOD_COPY.wishlist;
+    spikeList.querySelectorAll('.spike-boost').forEach(function(inp) {
+      inp.placeholder = sc.spikeBoostPh;
+      inp.setAttribute('aria-label', sc.spikeBoostAria);
+    });
+  }
+
   // Apply an input method: lift the gate, mutate labels/suffix/help, swap presets,
   // mark the pill, recalc.
   function applyMethod(method) {
@@ -3100,6 +3125,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (l30Label) l30Label.textContent = c.l30Label;
     if (l30Hint) l30Hint.textContent = c.l30Hint;
     if (l30Suffix) l30Suffix.textContent = c.l30Suffix;
+    if (spikeProjLabel) spikeProjLabel.textContent = c.spikeProjLabel;
+    if (legendTargetLabel) legendTargetLabel.textContent = c.legendTarget;
+    refreshSpikeLabels();
     swapPresets(inputMethod);
     // The "Estimated Wishlists Today" card only makes sense in follower method, where
     // the wishlist figure is a real estimate. Hidden in wishlist method.
