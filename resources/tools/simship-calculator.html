@@ -2024,8 +2024,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   };
 
   function fmt(d) {
-    var day = ('0' + d.getDate()).slice(-2);
-    return day + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+    return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
   }
   function addDays(base, n) { return new Date(base.getTime() + n * DAY); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -2405,6 +2404,27 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       buildChart(storeRows, storeStart, [], storeBands) + '</div>' +
       storeLegend + '</div>';
     ganttWrap.hidden = false;
+
+    // Sync the two Gantt charts' horizontal scroll, aligned BY DATE. Both charts
+    // share px/day (PX) and end on `release` but start on different dates, so the
+    // same calendar date sits OFFSET px further right on the build chart.
+    (function syncGanttScroll() {
+      var GANTT_PX = 14;
+      var scrolls = ganttWrap.querySelectorAll('.gantt-scroll');
+      if (scrolls.length < 2) return;
+      var buildScroll = scrolls[0], storeScroll = scrolls[1];
+      var offset = ((storeStart - buildStart) / DAY) * GANTT_PX; // >= 0
+      var isSyncing = false;
+      function clamp(el, v) { return Math.max(0, Math.min(v, el.scrollWidth - el.clientWidth)); }
+      function mirror(from, to, delta) {
+        if (isSyncing) return;
+        isSyncing = true;
+        to.scrollLeft = clamp(to, from.scrollLeft + delta);
+        requestAnimationFrame(function() { isSyncing = false; });
+      }
+      buildScroll.addEventListener('scroll', function() { mirror(buildScroll, storeScroll, -offset); }, { passive: true });
+      storeScroll.addEventListener('scroll', function() { mirror(storeScroll, buildScroll, offset); }, { passive: true });
+    })();
 
     // Alerts reflect proximity to a freeze on any computed date.
     var holidayHit = origHolidayHit || allDates.some(function(d) { return isHoliday(d); });
