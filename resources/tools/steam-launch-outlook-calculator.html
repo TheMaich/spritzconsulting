@@ -1057,41 +1057,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   min-height: 52px;
 }
 
-/* Gate: a single veil over the calculator body (everything below the dates + picker)
-   with a readable prompt on top. The real gate is the disabled attribute set in JS;
-   the veil is the visual layer. Dates and picker sit outside the region, never covered. */
+/* Gate region: layout wrapper for the calculator body below the dates + picker.
+   The gate itself is the disabled attribute set in JS; disabled controls are styled
+   to read as intentionally on-hold (see the :disabled rules below). */
 .calc-gate-region {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 36px;
-}
-.gate-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: none;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 24px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--paper) 68%, transparent);
-}
-.calculator.is-gated .gate-veil { display: flex; }
-.gate-veil-msg {
-  /* Sticks near the top of the viewport while the gated area is on screen, then
-     scrolls away with the region. The offset clears the sticky site header, whose
-     height shrinks on narrow screens, so it scales with viewport width instead of
-     a fixed desktop value. */
-  --gate-msg-top: clamp(68px, 12vw, 84px);
-  position: sticky;
-  top: var(--gate-msg-top);
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 15px;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-  text-align: center;
 }
 
 .calc-result-wrap {
@@ -1547,6 +1519,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   background: color-mix(in srgb, var(--clay) 8%, var(--paper-2));
 }
 .spike-add-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* Gated controls read as intentionally on-hold (not broken), matching the
+   .spike-add-btn[disabled] treatment. Opacity sits on the input wrap, not the
+   field, so it is not compounded by a second opacity on the input itself. */
+.calc-input-wrap:has(.calc-input:disabled) { opacity: 0.4; }
+.calc-input:disabled { cursor: not-allowed; }
+.preset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.calc-copy-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .spike-list { display: flex; flex-direction: column; gap: 10px; }
 .spike-row {
   display: grid;
@@ -1867,7 +1847,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-group method-gate gate-exempt">
         <label class="calc-label">Choose your input method</label>
-        <div class="calc-hint">Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier. Choose a method to start.</div>
+        <div class="calc-hint" id="method-hint">Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier. Choose a method to start.</div>
         <div class="method-toggle" id="method-toggle" role="group" aria-label="Input method">
           <button type="button" class="method-pill" data-method="wishlist" aria-pressed="false">Wishlist</button>
           <button type="button" class="method-pill" data-method="followers" aria-pressed="false">Followers</button>
@@ -2017,7 +1997,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
       </div>
 
-        <div class="gate-veil" id="gate-veil"><p class="gate-veil-msg">Choose a method above to start</p></div>
       </div>
 
       <div class="calc-nav-wrap">
@@ -2175,6 +2154,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var inputMethod = null;
   var calculatorEl = document.querySelector('.calculator');
   var methodToggle = document.getElementById('method-toggle');
+  var methodHint = document.getElementById('method-hint');
+  // Active-state hint drops the trailing "Choose a method to start." once chosen.
+  var METHOD_HINT_ACTIVE = 'Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier.';
   var cfLabel = document.getElementById('cf-label');
   var cfHint = document.getElementById('cf-hint');
   var cfSuffix = document.getElementById('cf-suffix');
@@ -3187,6 +3169,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (l30Suffix) l30Suffix.textContent = c.l30Suffix;
     if (spikeProjLabel) spikeProjLabel.textContent = c.spikeProjLabel;
     if (legendCurrentLabel) legendCurrentLabel.textContent = c.legendCurrent;
+    if (methodHint) methodHint.textContent = METHOD_HINT_ACTIVE;
     refreshSpikeLabels();
     swapPresets(inputMethod);
     // The "Estimated Wishlists Today" card only makes sense in follower method, where
