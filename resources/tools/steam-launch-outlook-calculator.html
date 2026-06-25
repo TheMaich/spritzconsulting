@@ -2443,34 +2443,41 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var yZero = yAt(0), yToday = yAt(state.currentFollowers);
     var hasPast = daysSinceOpen > 0;
 
-    // Past events draw as +boost steps on the ramp. Base slope is set so the stepped
-    // ramp still lands exactly on currentFollowers today:
-    //   baseSlope*daysSinceOpen + sumPastBoosts = currentFollowers.
-    // With zero past events this reduces to the simple straight 0 -> current line.
+    // Past events rise as short ramps (not vertical steps): each boost ramps in linearly
+    // over RAMP_DAYS days from its day, the same shape as future spikes. Independent terms
+    // are summed, so overlapping ramps add once each and never double-count.
     var pastEvents = sortedSpikes
       .map(function(sp) { return { d: daysSinceOpen + sp.day, boost: sp.boost }; })
       .filter(function(e) { return e.d >= 0 && e.d <= daysSinceOpen; });
-    var sumPastBoosts = pastEvents.reduce(function(a, e) { return a + e.boost; }, 0);
-    var baseSlope = daysSinceOpen > 0 ? (state.currentFollowers - sumPastBoosts) / daysSinceOpen : 0;
-    // Value on the stepped past ramp at dayFromOpen (post-jump at an event day).
-    function pastValueAt(d) {
-      var v = baseSlope * d;
-      for (var i = 0; i < pastEvents.length; i++) { if (pastEvents[i].d <= d) v += pastEvents[i].boost; }
-      return v;
+    function pastBoostAt(d) {
+      var sum = 0;
+      for (var i = 0; i < pastEvents.length; i++) {
+        var t = (d - pastEvents[i].d) / RAMP_DAYS;
+        sum += pastEvents[i].boost * Math.max(0, Math.min(1, t));
+      }
+      return sum;
     }
-    // Screen points of the stepped past ramp: (open,0) up to each event, vertical jump,
-    // then on to (today, current). Reused by the fill and the overlay stroke.
+    // Base slope compensates for exactly the boost ramped in by today, so the line lands
+    // on currentFollowers today even when an event's ramp spills past today.
+    var baseSlope = daysSinceOpen > 0 ? (state.currentFollowers - pastBoostAt(daysSinceOpen)) / daysSinceOpen : 0;
+    function pastValueAt(d) { return baseSlope * d + pastBoostAt(d); }
+    // Sampled past ramp points: day 0, today, and every day inside each event's ramp
+    // window (event day + 0..RAMP_DAYS), so the rise renders sloped, not stepped.
     var pastPts = [];
     if (hasPast) {
-      pastPts.push({ x: xOpen, y: yZero });
-      var cum = 0;
+      var pastMarks = {};
+      pastMarks[0] = true;
+      pastMarks[daysSinceOpen] = true;
       for (var pe = 0; pe < pastEvents.length; pe++) {
-        var ev = pastEvents[pe];
-        pastPts.push({ x: xAt(ev.d), y: yAt(baseSlope * ev.d + cum) }); // up the slope
-        cum += ev.boost;
-        pastPts.push({ x: xAt(ev.d), y: yAt(baseSlope * ev.d + cum) }); // vertical step up
+        for (var k = 0; k <= RAMP_DAYS; k++) {
+          var dm = pastEvents[pe].d + k;
+          if (dm >= 0 && dm <= daysSinceOpen) pastMarks[dm] = true;
+        }
       }
-      pastPts.push({ x: xToday, y: yToday });
+      var pastDays = Object.keys(pastMarks).map(Number).sort(function(a, b){ return a - b; });
+      for (var pm = 0; pm < pastDays.length; pm++) {
+        pastPts.push({ x: xAt(pastDays[pm]), y: yAt(pastValueAt(pastDays[pm])) });
+      }
     }
 
     var hitsTarget = finalProjection >= state.targetEquiv;
