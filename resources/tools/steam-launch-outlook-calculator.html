@@ -1084,6 +1084,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   transition: opacity 0.2s var(--ease);
 }
 
+/* Wishlist mode: the multiplier is a no-op for the user (wishlists are entered
+   directly), so hide its field and the section divider, and collapse the now
+   half-empty row to one column. #multiplier stays in the DOM (display:none only) so
+   the engine still reads its value. Scoped to the region so the gate-exempt dates
+   row above stays two-column. */
+.calculator[data-method="wishlist"] #calc-gate-region .calc-group:has(#multiplier) { display: none; }
+.calculator[data-method="wishlist"] #calc-gate-region .calc-divider { display: none; }
+.calculator[data-method="wishlist"] #calc-gate-region .calc-row:has(#multiplier) { grid-template-columns: 1fr; }
+
 .calc-result-wrap {
   position: static;
   bottom: auto;
@@ -3181,6 +3190,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   function applyMethod(method) {
     inputMethod = (method === 'followers') ? 'followers' : 'wishlist';
     setGated(false);
+    if (calculatorEl) calculatorEl.dataset.method = inputMethod; // CSS hook for per-method layout
     var c = METHOD_COPY[inputMethod];
     if (cfLabel) cfLabel.textContent = c.cfLabel;
     if (cfHint) cfHint.textContent = c.cfHint;
