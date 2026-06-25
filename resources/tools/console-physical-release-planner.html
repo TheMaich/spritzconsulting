@@ -1513,12 +1513,22 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--clay);
   border-color: color-mix(in srgb, var(--clay) 45%, var(--rule));
 }
-.wbs-table tr.is-accent .wbs-date,
-.wbs-table tr.is-accent .wbs-milestone{ color: var(--clay); }
 .wbs-table tbody tr.is-lock{ background: color-mix(in srgb, var(--clay) 10%, var(--paper-2)); }
+/* Three key milestone tiers (cert window, gold master, release) read as one tier:
+   same clay token, same bold weight on the date and milestone label. */
+.wbs-table tr.is-accent .wbs-date,
+.wbs-table tr.is-accent .wbs-milestone,
+.wbs-table tr.is-range .wbs-date,
+.wbs-table tr.is-range .wbs-milestone,
 .wbs-table tbody tr.is-lock .wbs-date,
 .wbs-table tbody tr.is-lock .wbs-milestone,
 .wbs-table tbody tr.is-lock .wbs-icon{ color: var(--clay); }
+.wbs-table tr.is-accent .wbs-date,
+.wbs-table tr.is-accent .wbs-milestone,
+.wbs-table tr.is-range .wbs-date,
+.wbs-table tr.is-range .wbs-milestone,
+.wbs-table tbody tr.is-lock .wbs-date,
+.wbs-table tbody tr.is-lock .wbs-milestone{ font-weight: 700; }
 
 /* Gantt charts */
 .gantt-section{
