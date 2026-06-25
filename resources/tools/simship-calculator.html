@@ -1548,7 +1548,25 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .gl-release{ width:2px; height:14px; border-radius:0; background:var(--clay); }
 .gantt-scroll{ overflow-x: auto; overflow-y: hidden; }
 .gantt-scroll:focus-visible{ outline: 2px solid var(--clay); outline-offset: -2px; }
-.gantt-body{ width: max-content; min-width: 100%; padding-bottom: 14px; }
+.gantt-body{ position: relative; width: max-content; min-width: 100%; padding-bottom: 14px; }
+.g-crosshair{
+  position: absolute; top: 0; bottom: 0;
+  width: 1px; background: var(--clay);
+  pointer-events: none; z-index: 6; display: none;
+}
+.g-gantt-tip{
+  position: fixed; pointer-events: none; z-index: 50;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: var(--sans); font-size: 12px; line-height: 1.4;
+  color: var(--ink); white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  display: none;
+}
+.g-gantt-tip .g-tip-date{ font-variant-numeric: tabular-nums; }
+.g-gantt-tip .g-tip-name{ display: block; color: var(--ink-2); margin-top: 2px; }
 .gantt-row{ display: flex; align-items: stretch; border-top: 1px solid var(--rule-soft); }
 .gantt-row.gantt-axis{ border-top: 0; }
 .gantt-label{
@@ -2424,6 +2442,79 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
       buildScroll.addEventListener('scroll', function() { mirror(buildScroll, storeScroll, -offset); }, { passive: true });
       storeScroll.addEventListener('scroll', function() { mirror(storeScroll, buildScroll, offset); }, { passive: true });
+    })();
+
+    // Hover crosshair, content-anchored: a vertical line on BOTH charts at the same
+    // calendar date, plus a fixed tooltip with the date and (over a bar) milestone.
+    (function ganttCrosshair() {
+      var GANTT_PX = 14;
+      var scrolls = ganttWrap.querySelectorAll('.gantt-scroll');
+      if (scrolls.length < 2) return;
+      var charts = [
+        { scroll: scrolls[0], start: buildStart },
+        { scroll: scrolls[1], start: storeStart }
+      ];
+      charts.forEach(function(c) {
+        c.body = c.scroll.querySelector('.gantt-body');
+        c.track = c.scroll.querySelector('.gantt-track');
+        c.label = c.scroll.querySelector('.gantt-label');
+        if (!c.body || !c.track) return;
+        c.line = document.createElement('div');
+        c.line.className = 'g-crosshair';
+        c.body.appendChild(c.line);
+      });
+
+      // One shared tooltip, reused by both charts.
+      var tip = document.getElementById('g-gantt-tip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'g-gantt-tip';
+        tip.className = 'g-gantt-tip';
+        tip.innerHTML = '<span class="g-tip-date"></span><span class="g-tip-name"></span>';
+        document.body.appendChild(tip);
+      }
+      var tipDate = tip.querySelector('.g-tip-date');
+      var tipName = tip.querySelector('.g-tip-name');
+
+      function hideAll() {
+        charts.forEach(function(c) { if (c.line) c.line.style.display = 'none'; });
+        tip.style.display = 'none';
+      }
+
+      function onMove(self) {
+        return function(ev) {
+          if (!self.track) return;
+          var labelW = (self.label && self.label.offsetWidth) || 150;
+          var xInTrack = ev.clientX - self.track.getBoundingClientRect().left;
+          if (xInTrack < 0) { hideAll(); return; }
+          var date = new Date(self.start.getTime() + (xInTrack / GANTT_PX) * DAY);
+
+          // Draw the line on BOTH charts at this date, in content coordinates.
+          charts.forEach(function(c) {
+            if (!c.line) return;
+            var lw = (c.label && c.label.offsetWidth) || labelW;
+            c.line.style.left = (lw + ((date - c.start) / DAY) * GANTT_PX) + 'px';
+            c.line.style.display = 'block';
+          });
+
+          // Tooltip: date always, milestone name when hovering a bar.
+          tipDate.textContent = fmt(date);
+          var el = document.elementFromPoint(ev.clientX, ev.clientY);
+          var bar = el && el.closest ? el.closest('.g-bar') : null;
+          var name = bar ? (bar.getAttribute('title') || '') : '';
+          tipName.textContent = name;
+          tipName.style.display = name ? 'block' : 'none';
+          tip.style.display = 'block';
+          tip.style.left = (ev.clientX + 14) + 'px';
+          tip.style.top = (ev.clientY + 14) + 'px';
+        };
+      }
+
+      charts.forEach(function(c) {
+        if (!c.track) return;
+        c.scroll.addEventListener('mousemove', onMove(c));
+        c.scroll.addEventListener('mouseleave', hideAll);
+      });
     })();
 
     // Alerts reflect proximity to a freeze on any computed date.
