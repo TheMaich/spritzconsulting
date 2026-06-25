@@ -2024,8 +2024,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   };
 
   function fmt(d) {
-    var day = ('0' + d.getDate()).slice(-2);
-    return day + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+    return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
   }
   function addDays(base, n) { return new Date(base.getTime() + n * DAY); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
