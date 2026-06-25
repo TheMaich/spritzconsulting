@@ -2443,6 +2443,36 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var yZero = yAt(0), yToday = yAt(state.currentFollowers);
     var hasPast = daysSinceOpen > 0;
 
+    // Past events draw as +boost steps on the ramp. Base slope is set so the stepped
+    // ramp still lands exactly on currentFollowers today:
+    //   baseSlope*daysSinceOpen + sumPastBoosts = currentFollowers.
+    // With zero past events this reduces to the simple straight 0 -> current line.
+    var pastEvents = sortedSpikes
+      .map(function(sp) { return { d: daysSinceOpen + sp.day, boost: sp.boost }; })
+      .filter(function(e) { return e.d >= 0 && e.d <= daysSinceOpen; });
+    var sumPastBoosts = pastEvents.reduce(function(a, e) { return a + e.boost; }, 0);
+    var baseSlope = daysSinceOpen > 0 ? (state.currentFollowers - sumPastBoosts) / daysSinceOpen : 0;
+    // Value on the stepped past ramp at dayFromOpen (post-jump at an event day).
+    function pastValueAt(d) {
+      var v = baseSlope * d;
+      for (var i = 0; i < pastEvents.length; i++) { if (pastEvents[i].d <= d) v += pastEvents[i].boost; }
+      return v;
+    }
+    // Screen points of the stepped past ramp: (open,0) up to each event, vertical jump,
+    // then on to (today, current). Reused by the fill and the overlay stroke.
+    var pastPts = [];
+    if (hasPast) {
+      pastPts.push({ x: xOpen, y: yZero });
+      var cum = 0;
+      for (var pe = 0; pe < pastEvents.length; pe++) {
+        var ev = pastEvents[pe];
+        pastPts.push({ x: xAt(ev.d), y: yAt(baseSlope * ev.d + cum) }); // up the slope
+        cum += ev.boost;
+        pastPts.push({ x: xAt(ev.d), y: yAt(baseSlope * ev.d + cum) }); // vertical step up
+      }
+      pastPts.push({ x: xToday, y: yToday });
+    }
+
     var hitsTarget = finalProjection >= state.targetEquiv;
     var fillRGB = hitsTarget ? '75, 200, 110' : '255, 91, 91';
     // Vertical gradient: full tint at the line, fading to transparent at the chart floor.
@@ -2457,8 +2487,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     ctx.fillStyle = fillGrad;
     ctx.beginPath();
     ctx.moveTo(xOpen, padT + H);
-    if (hasPast) ctx.lineTo(xOpen, yZero);
-    ctx.lineTo(xToday, yToday);
+    if (hasPast) {
+      for (var pk = 0; pk < pastPts.length; pk++) ctx.lineTo(pastPts[pk].x, pastPts[pk].y);
+    } else {
+      ctx.lineTo(xToday, yToday);
+    }
     for (var p = 1; p < points.length; p++) {
       ctx.lineTo(xAt(points[p].day), yAt(points[p].followers));
     }
@@ -2498,7 +2531,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     // Past segment (solid) and future projection (dashed) are both rendered by the SVG
     // overlay; build their screen paths.
     overlayPastColor = ink;
-    overlayPastD = hasPast ? ('M' + xOpen + ' ' + yZero + ' L' + xToday + ' ' + yToday) : '';
+    overlayPastD = hasPast
+      ? pastPts.map(function(k, i) { return (i === 0 ? 'M' : 'L') + k.x + ' ' + k.y; }).join(' ')
+      : '';
 
     overlayTrajColor = ink;
     overlayTrajD = '';
@@ -2516,8 +2551,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       var dFromOpen = daysSinceOpen + sp2.day; // sp2.day <= 0 for past/today events
       if (dFromOpen < 0 || dFromOpen > daysSinceOpen) continue;
       var sx = xAt(dFromOpen);
-      var frac = daysSinceOpen > 0 ? (dFromOpen / daysSinceOpen) : 1;
-      var sy = yAt(state.currentFollowers * frac);
+      var sy = yAt(pastValueAt(dFromOpen)); // sits on the stepped ramp (post-jump)
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(sx, sy);
@@ -2544,6 +2578,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     chartState.daysSinceOpen = daysSinceOpen;
     chartState.totalSpan = totalSpan;
     chartState.currentFollowers = state.currentFollowers;
+    chartState.pastValueAt = pastValueAt;
     chartState.padL = padL;
     chartState.padT = padT;
     chartState.W = W;
@@ -2707,7 +2742,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       // ramp 0 -> currentFollowers (not followersAt of a negative day).
       var value = (dayFromOpen >= daysSinceOpen)
         ? chartState.followersAt(dayFromOpen - daysSinceOpen)
-        : (daysSinceOpen > 0 ? chartState.currentFollowers * (dayFromOpen / daysSinceOpen) : chartState.currentFollowers);
+        : (daysSinceOpen > 0 ? chartState.pastValueAt(dayFromOpen) : chartState.currentFollowers);
       var date = new Date(chartState.pageOpen.getTime() + dayFromOpen * MS_PER_DAY);
 
       crosshairLine.setAttribute('x1', x);
