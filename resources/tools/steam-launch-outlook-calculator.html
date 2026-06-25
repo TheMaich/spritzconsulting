@@ -1381,6 +1381,29 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   fill: none;
   stroke-width: 3;
 }
+.trajectory-overlay .traj-crosshair {
+  stroke: var(--clay);
+  stroke-width: 1;
+  display: none;
+}
+.traj-tip {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  display: none;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: var(--mono-data);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+}
+.traj-tip .traj-tip-date { color: var(--clay); }
+.traj-tip .traj-tip-val { color: var(--ink); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) {
   .trajectory-overlay .overlay-target-line {
     animation: none;
@@ -2325,6 +2348,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.textAlign = 'center';
       ctx.fillText('Awaiting input', cssW / 2, cssH / 2);
       syncOverlay(cssW, cssH, null);
+      chartState.valid = false; // no plot, no crosshair
       return;
     }
 
@@ -2463,6 +2487,17 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       targetD: overlayTargetD,
       targetColor: overlayTargetColor
     });
+
+    // Stash what the crosshair handler needs to sample after render. followersAt is the
+    // exact continuous projection used above, so the crosshair value matches the line.
+    chartState.valid = true;
+    chartState.today = state.today;
+    chartState.totalDays = totalDays;
+    chartState.padL = padL;
+    chartState.padT = padT;
+    chartState.W = W;
+    chartState.H = H;
+    chartState.followersAt = followersAt;
   }
 
   // --- SVG overlay: renders the trajectory and target lines, with reveal + marching-ants animation.
@@ -2570,6 +2605,64 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   } else {
     // No observer support: treat as always in view.
     overlayInView = true;
+  }
+
+  // --- Hover crosshair: a vertical clay line that follows the mouse over the plot,
+  // with a fixed tooltip showing the date and the projected followers at that date.
+  // The value is sampled from the exact projection function, not the sparse points.
+  var chartState = { valid: false };
+  var crosshairLine = null, trajTip = null;
+  if (overlaySvg) {
+    crosshairLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    crosshairLine.setAttribute('class', 'traj-crosshair');
+    overlaySvg.appendChild(crosshairLine);
+
+    trajTip = document.createElement('div');
+    trajTip.className = 'traj-tip';
+    trajTip.innerHTML = '<span class="traj-tip-date"></span> <span class="traj-tip-val"></span>';
+    document.body.appendChild(trajTip);
+    var trajTipDate = trajTip.querySelector('.traj-tip-date');
+    var trajTipVal = trajTip.querySelector('.traj-tip-val');
+    var MS_PER_DAY = 86400000;
+
+    function hideCrosshair() {
+      crosshairLine.style.display = 'none';
+      trajTip.style.display = 'none';
+    }
+
+    chartWrap.addEventListener('mousemove', function(ev) {
+      if (!chartState.valid) { hideCrosshair(); return; }
+      var rect = chartWrap.getBoundingClientRect();
+      var mouseX = ev.clientX - rect.left;
+      var mouseY = ev.clientY - rect.top;
+      var padL = chartState.padL, padT = chartState.padT, W = chartState.W, H = chartState.H;
+      // Only inside the plot area.
+      if (mouseX < padL || mouseX > padL + W || mouseY < padT || mouseY > padT + H) {
+        hideCrosshair();
+        return;
+      }
+      var days = Math.max(0, Math.min(chartState.totalDays, (mouseX - padL) / W * chartState.totalDays));
+      var x = padL + (W * days / chartState.totalDays);
+      var value = chartState.followersAt(days);
+      var date = new Date(chartState.today.getTime() + days * MS_PER_DAY);
+
+      crosshairLine.setAttribute('x1', x);
+      crosshairLine.setAttribute('x2', x);
+      crosshairLine.setAttribute('y1', padT);
+      crosshairLine.setAttribute('y2', padT + H);
+      crosshairLine.style.display = 'block';
+
+      trajTipDate.textContent = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      trajTipVal.textContent = fmtNum(value) + ' followers';
+      trajTip.style.display = 'block';
+      // Place near cursor, flip left near the right viewport edge so it stays on screen.
+      var tipW = trajTip.offsetWidth;
+      var left = ev.clientX + 14;
+      if (left + tipW > window.innerWidth - 8) left = ev.clientX - 14 - tipW;
+      trajTip.style.left = left + 'px';
+      trajTip.style.top = (ev.clientY + 14) + 'px';
+    });
+    chartWrap.addEventListener('mouseleave', hideCrosshair);
   }
 
   function getSpikes() {
