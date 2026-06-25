@@ -1065,6 +1065,24 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   flex-direction: column;
   gap: 36px;
 }
+/* When gated (no method chosen), dim the non-input text in the region so headings,
+   labels, hints, and readouts read on-hold alongside the disabled inputs. Scoped to
+   text elements only, so the already-dimmed inputs/presets are not double-dimmed. */
+.calculator.is-gated #calc-gate-region .calc-section-title,
+.calculator.is-gated #calc-gate-region .calc-label,
+.calculator.is-gated #calc-gate-region .calc-hint,
+.calculator.is-gated #calc-gate-region .calc-secondary-card,
+.calculator.is-gated #calc-gate-region .trajectory-label,
+.calculator.is-gated #calc-gate-region .trajectory-status,
+.calculator.is-gated #calc-gate-region .spike-title,
+.calculator.is-gated #calc-gate-region .outlook-window-title,
+.calculator.is-gated #calc-gate-region .outlook-levels,
+.calculator.is-gated #calc-gate-region .outlook-empty,
+.calculator.is-gated #calc-gate-region .calc-result-breakdown,
+.calculator.is-gated #calc-gate-region .trajectory-legend {
+  opacity: 0.4;
+  transition: opacity 0.2s var(--ease);
+}
 
 .calc-result-wrap {
   position: static;
