@@ -2180,7 +2180,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var L = LWT_STR[LWT_LANG] || LWT_STR.en;
 
   function pad(n){ return n < 10 ? '0' + n : '' + n; }
-  function fmtDate(d){ return pad(d.getDate()) + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear(); }
+  function fmtDate(d){ return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); }
 
   // The custom picker stores the canonical date in input.dataset.iso (YYYY-MM-DD).
   // Empty dataset.iso means "not set".
