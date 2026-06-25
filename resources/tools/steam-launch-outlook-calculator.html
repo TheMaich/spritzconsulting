@@ -1080,8 +1080,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .calculator.is-gated .gate-veil { display: flex; }
 .gate-veil-msg {
   /* Sticks near the top of the viewport while the gated area is on screen, then
-     scrolls away with the region. The offset token clears the sticky site header. */
-  --gate-msg-top: 84px;
+     scrolls away with the region. The offset clears the sticky site header, whose
+     height shrinks on narrow screens, so it scales with viewport width instead of
+     a fixed desktop value. */
+  --gate-msg-top: clamp(68px, 12vw, 84px);
   position: sticky;
   top: var(--gate-msg-top);
   margin: 0;
@@ -1487,12 +1489,39 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   border-bottom: 1px solid var(--rule);
 }
 .legend-item { display: inline-flex; align-items: center; gap: 8px; }
+/* Solid ink swatch = past line (.overlay-traj-past). */
 .legend-line { display: inline-block; width: 24px; height: 2px; background: var(--ink); }
-.legend-line-dashed {
-  background-image: linear-gradient(to right, var(--clay) 50%, transparent 50%);
+.legend-line-dashed,
+.legend-line-dashed-ink {
   background-size: 6px 2px;
   background-repeat: repeat-x;
   background-color: transparent;
+}
+/* Dashed ink + arrowhead = projection line (.overlay-traj-line, marker-end). */
+.legend-line-dashed-ink {
+  position: relative;
+  background-image: linear-gradient(to right, var(--ink) 50%, transparent 50%);
+}
+.legend-line-dashed-ink::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-left: 5px solid var(--ink);
+}
+/* Dashed clay, marching ants = target line (.overlay-target-line, animated). */
+.legend-line-dashed {
+  background-image: linear-gradient(to right, var(--clay) 50%, transparent 50%);
+  animation: legend-marching-ants 700ms linear infinite;
+}
+@keyframes legend-marching-ants {
+  to { background-position: 6px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .legend-line-dashed { animation: none; }
 }
 .spike-section { margin-top: 18px; }
 .spike-header {
@@ -1947,8 +1976,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           </svg>
         </div>
         <div class="trajectory-legend">
-          <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
-          <span class="legend-item"><span class="legend-line legend-line-dashed"></span><span id="legend-target-label">Target follower equivalent</span></span>
+          <span class="legend-item"><span class="legend-line legend-line-solid"></span><span id="legend-current-label">Followers so far</span></span>
+          <span class="legend-item"><span class="legend-line legend-line-dashed-ink"></span>Projection</span>
+          <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target</span>
         </div>
         <div class="spike-section">
           <div class="spike-header">
@@ -2152,7 +2182,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var l30Hint = document.getElementById('l30-hint');
   var l30Suffix = document.getElementById('l30-suffix');
   var spikeProjLabel = document.getElementById('spike-proj-label');
-  var legendTargetLabel = document.getElementById('legend-target-label');
+  var legendCurrentLabel = document.getElementById('legend-current-label');
 
   var METHOD_COPY = {
     followers: {
@@ -2165,7 +2195,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       spikeBoostPh: 'Followers boost',
       spikeBoostAria: 'Follower boost',
       spikeProjLabel: 'Projected followers with spikes',
-      legendTarget: 'Target follower equivalent'
+      legendCurrent: 'Followers so far'
     },
     wishlist: {
       cfLabel: 'Current Wishlists',
@@ -2177,7 +2207,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       spikeBoostPh: 'Wishlists boost',
       spikeBoostAria: 'Wishlist boost',
       spikeProjLabel: 'Projected wishlists with spikes',
-      legendTarget: 'Target wishlists'
+      legendCurrent: 'Wishlists so far'
     }
   };
 
@@ -3156,7 +3186,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (l30Hint) l30Hint.textContent = c.l30Hint;
     if (l30Suffix) l30Suffix.textContent = c.l30Suffix;
     if (spikeProjLabel) spikeProjLabel.textContent = c.spikeProjLabel;
-    if (legendTargetLabel) legendTargetLabel.textContent = c.legendTarget;
+    if (legendCurrentLabel) legendCurrentLabel.textContent = c.legendCurrent;
     refreshSpikeLabels();
     swapPresets(inputMethod);
     // The "Estimated Wishlists Today" card only makes sense in follower method, where
