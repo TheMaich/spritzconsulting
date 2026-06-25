@@ -2310,8 +2310,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   // When the page-open lower bound moves, re-validate every spike date against it
   // before the recompute reads them, so none stay below the new page-open date.
   pageOpenInput.addEventListener('change', function() {
-    document.querySelectorAll('.spike-date').forEach(function(si) {
-      if (si._clampRange) si._clampRange();
+    spikeList.querySelectorAll('.spike-row').forEach(function(row) {
+      if (row.querySelector('.spike-type').value === 'page-launch') {
+        setSpikeRowToPageOpen(row); // locked event follows the page-open date
+      } else {
+        var si = row.querySelector('.spike-date');
+        if (si._clampRange) si._clampRange();
+      }
     });
   });
 
@@ -2892,6 +2897,37 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   }
 
+  // --- Steam Page Launch event: a spike whose date is locked to the page-open field.
+  function setSpikeRowToPageOpen(row) {
+    var di = row.querySelector('.spike-date');
+    di.value = pageOpenInput.value || '';
+    di.dataset.iso = pageOpenInput.dataset.iso || '';
+  }
+  function setSpikeDateLocked(row, locked) {
+    var toggle = row.querySelector('.date-picker-toggle');
+    if (toggle) { toggle.disabled = locked; toggle.style.display = locked ? 'none' : ''; }
+  }
+  // Only one page-launch event may exist: disable that option in every other row's select.
+  function syncPageLaunchOptions() {
+    var rows = spikeList.querySelectorAll('.spike-row');
+    var taken = false;
+    rows.forEach(function(r) { if (r.querySelector('.spike-type').value === 'page-launch') taken = true; });
+    rows.forEach(function(r) {
+      var sel = r.querySelector('.spike-type');
+      var opt = sel.querySelector('option[value="page-launch"]');
+      if (opt) opt.disabled = taken && sel.value !== 'page-launch';
+    });
+  }
+  function applySpikeRowType(row) {
+    if (row.querySelector('.spike-type').value === 'page-launch') {
+      setSpikeRowToPageOpen(row);   // date follows #page-open-date (may be empty)
+      setSpikeDateLocked(row, true);
+    } else {
+      setSpikeDateLocked(row, false);
+    }
+    syncPageLaunchOptions();
+  }
+
   function addSpike() {
     if (spikeList.children.length >= MAX_SPIKES) return;
     var row = document.createElement('div');
@@ -2902,6 +2938,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       + '<option value="demo">Demo Release</option>'
       + '<option value="trailer">Trailer</option>'
       + '<option value="press">Press Coverage</option>'
+      + '<option value="page-launch">Steam Page Launch</option>'
       + '<option value="custom">Custom</option>'
       + '</select>'
       + '<div class="date-picker-wrap spike-date-wrap">'
@@ -2915,9 +2952,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     row.querySelector('.spike-remove').addEventListener('click', function() {
       row.remove();
+      syncPageLaunchOptions(); // re-enable the page-launch option elsewhere if it was this row
       addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
       calculate();
     });
+    // Type changes lock/unlock the date and enforce the single page-launch. Registered
+    // before the recompute listener so the date is set before calculate reads it.
+    row.querySelector('.spike-type').addEventListener('change', function() { applySpikeRowType(row); });
     row.querySelectorAll('select, input').forEach(function(el) {
       el.addEventListener('input', calculate);
       el.addEventListener('change', calculate);
@@ -2927,6 +2968,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       maxToday: true,
       getMin: function() { return parseDate(pageOpenInput); }
     });
+    syncPageLaunchOptions(); // a new row cannot pick page-launch if one already exists
     addSpikeBtn.disabled = spikeList.children.length >= MAX_SPIKES;
   }
 
