@@ -1057,8 +1057,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   min-height: 52px;
 }
 
-/* Until a method is chosen, everything below the gate is disabled and greyed. */
-.calculator.is-gated > *:not(.method-gate) {
+/* Until a method is chosen, everything below the gate is disabled and greyed.
+   The dates row and the picker itself are .gate-exempt and stay active. */
+.calculator.is-gated > *:not(.gate-exempt) {
   opacity: 0.4;
   pointer-events: none;
   filter: grayscale(0.4);
@@ -1781,7 +1782,35 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   <div class="calc-wrap">
     <div class="calculator">
 
-      <div class="calc-group method-gate">
+      <div class="calc-section-title">Your launch dates</div>
+
+      <div class="calc-row gate-exempt">
+        <div class="calc-group">
+          <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
+          <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
+          <div class="calc-input-wrap date-picker-wrap">
+            <input type="text" id="page-open-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
+            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+            </button>
+            <div class="date-picker-dropdown" hidden></div>
+          </div>
+        </div>
+
+        <div class="calc-group">
+          <label class="calc-label" for="launch-date">Target Launch Date</label>
+          <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
+          <div class="calc-input-wrap date-picker-wrap">
+            <input type="text" id="launch-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
+            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+            </button>
+            <div class="date-picker-dropdown" hidden></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-group method-gate gate-exempt">
         <label class="calc-label">Choose your input method</label>
         <div class="calc-hint">Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier. Choose a method to start.</div>
         <div class="method-toggle" id="method-toggle" role="group" aria-label="Input method">
@@ -1833,32 +1862,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-divider" role="presentation"></div>
 
       <div class="calc-section-title">Project to launch</div>
-
-      <div class="calc-row">
-        <div class="calc-group">
-          <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
-          <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
-          <div class="calc-input-wrap date-picker-wrap">
-            <input type="text" id="page-open-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
-            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-            </button>
-            <div class="date-picker-dropdown" hidden></div>
-          </div>
-        </div>
-
-        <div class="calc-group">
-          <label class="calc-label" for="launch-date">Target Launch Date</label>
-          <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
-          <div class="calc-input-wrap date-picker-wrap">
-            <input type="text" id="launch-date" class="calc-input date-picker-input" readonly placeholder="DD/MM/YYYY" autocomplete="off">
-            <button type="button" class="date-picker-toggle" aria-label="Open calendar">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
-            </button>
-            <div class="date-picker-dropdown" hidden></div>
-          </div>
-        </div>
-      </div>
 
       <div class="calc-group">
         <label class="calc-label" for="followers-last-30" id="l30-label">Wishlists Gained in Last 30 Days</label>
@@ -3080,7 +3083,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (calculatorEl) calculatorEl.classList.toggle('is-gated', gated);
     if (!calculatorEl) return;
     calculatorEl.querySelectorAll('input, button, select').forEach(function(el) {
-      if (el.closest('.method-gate')) return; // the picker stays interactive
+      if (el.closest('.gate-exempt')) return; // dates + picker stay interactive
       el.disabled = gated;
     });
   }
