@@ -1493,6 +1493,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   border: 1px solid var(--rule);
   border-radius: 6px;
 }
+.spike-row .spike-date-wrap[hidden] { display: none; }
+.spike-date-locked-msg {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--ink-3);
+}
 .spike-row .spike-date-wrap:focus-within { border-color: var(--clay); }
 .spike-row .spike-date-wrap input.spike-date {
   flex: 1;
@@ -2904,8 +2910,20 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     di.dataset.iso = pageOpenInput.dataset.iso || '';
   }
   function setSpikeDateLocked(row, locked) {
-    var toggle = row.querySelector('.date-picker-toggle');
-    if (toggle) { toggle.disabled = locked; toggle.style.display = locked ? 'none' : ''; }
+    // Hide the whole date field + picker and show a small note in its slot instead.
+    var wrap = row.querySelector('.spike-date-wrap');
+    var msg = row.querySelector('.spike-date-locked-msg');
+    if (wrap) wrap.hidden = locked;
+    if (msg) msg.hidden = !locked;
+  }
+  // Page-launch boost cannot exceed current Steam followers. No cap while current is 0/empty.
+  function clampPageLaunchBoost(row) {
+    if (row.querySelector('.spike-type').value !== 'page-launch') return;
+    var current = readNum(followersInput);
+    if (current <= 0) return;
+    var boostEl = row.querySelector('.spike-boost');
+    var v = parseFloat(boostEl.value);
+    if (!isNaN(v) && v > current) boostEl.value = String(current);
   }
   // Only one page-launch event may exist: disable that option in every other row's select.
   function syncPageLaunchOptions() {
@@ -2922,6 +2940,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (row.querySelector('.spike-type').value === 'page-launch') {
       setSpikeRowToPageOpen(row);   // date follows #page-open-date (may be empty)
       setSpikeDateLocked(row, true);
+      clampPageLaunchBoost(row);    // enforce the boost cap on switch
     } else {
       setSpikeDateLocked(row, false);
     }
@@ -2946,6 +2965,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       +   '<button type="button" class="date-picker-toggle" aria-label="Open calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg></button>'
       +   '<div class="date-picker-dropdown" hidden></div>'
       + '</div>'
+      + '<div class="spike-date-locked-msg" hidden>Date is drawn from the Steam Page Open Since field.</div>'
       + '<input type="number" class="spike-boost" min="0" step="50" placeholder="Followers boost" aria-label="Follower boost" />'
       + '<button type="button" class="spike-remove" aria-label="Remove event">&times;</button>';
     spikeList.appendChild(row);
@@ -2959,6 +2979,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     // Type changes lock/unlock the date and enforce the single page-launch. Registered
     // before the recompute listener so the date is set before calculate reads it.
     row.querySelector('.spike-type').addEventListener('change', function() { applySpikeRowType(row); });
+    // Clamp the page-launch boost to current followers before the recompute reads it.
+    row.querySelector('.spike-boost').addEventListener('input', function() { clampPageLaunchBoost(row); });
     row.querySelectorAll('select, input').forEach(function(el) {
       el.addEventListener('input', calculate);
       el.addEventListener('change', calculate);
