@@ -1009,90 +1009,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   color: var(--paper);
 }
 
-/* Input-method segmented pill (Wishlist / Followers) */
-.method-toggle {
-  display: inline-flex;
-  gap: 6px;
-  padding: 4px;
-  border: 1px solid var(--rule);
-  border-radius: 100px;
-  background: var(--paper-2);
-  margin-top: 4px;
-  width: max-content;
-  max-width: 100%;
-}
-.method-pill {
-  font-family: var(--mono);
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  padding: 8px 22px;
-  min-height: 40px;
-  border-radius: 100px;
-  border: 0;
-  background: transparent;
-  color: var(--ink-2);
-  cursor: pointer;
-  transition: color 0.2s var(--ease), background 0.2s var(--ease);
-}
-.method-pill:hover { color: var(--clay); }
-.method-pill.is-active {
-  background: var(--clay);
-  color: var(--paper);
-}
-
-/* Gate: the method picker is the required first action. Centred and enlarged. */
-.method-gate {
-  align-items: center;
-  text-align: center;
-  margin-bottom: 8px;
-}
-.method-gate .method-toggle {
-  margin-inline: auto;
-  gap: 8px;
-  padding: 5px;
-}
-.method-gate .method-pill {
-  padding: 14px 36px;
-  font-size: 16px;
-  min-height: 52px;
-}
-
-/* Gate region: layout wrapper for the calculator body below the dates + picker.
-   The gate itself is the disabled attribute set in JS; disabled controls are styled
-   to read as intentionally on-hold (see the :disabled rules below). */
-.calc-gate-region {
-  display: flex;
-  flex-direction: column;
-  gap: 36px;
-}
-/* When gated (no method chosen), dim the non-input text in the region so headings,
-   labels, hints, and readouts read on-hold alongside the disabled inputs. Scoped to
-   text elements only, so the already-dimmed inputs/presets are not double-dimmed. */
-.calculator.is-gated #calc-gate-region .calc-section-title,
-.calculator.is-gated #calc-gate-region .calc-label,
-.calculator.is-gated #calc-gate-region .calc-hint,
-.calculator.is-gated #calc-gate-region .calc-secondary-card,
-.calculator.is-gated #calc-gate-region .trajectory-label,
-.calculator.is-gated #calc-gate-region .trajectory-status,
-.calculator.is-gated #calc-gate-region .spike-title,
-.calculator.is-gated #calc-gate-region .outlook-window-title,
-.calculator.is-gated #calc-gate-region .outlook-levels,
-.calculator.is-gated #calc-gate-region .outlook-empty,
-.calculator.is-gated #calc-gate-region .calc-result-breakdown,
-.calculator.is-gated #calc-gate-region .trajectory-legend {
-  opacity: 0.4;
-  transition: opacity 0.2s var(--ease);
-}
-
-/* Wishlist mode: the multiplier is a no-op for the user (wishlists are entered
-   directly), so hide its field and the section divider, and collapse the now
-   half-empty row to one column. #multiplier stays in the DOM (display:none only) so
-   the engine still reads its value. Scoped to the region so the gate-exempt dates
-   row above stays two-column. */
-.calculator[data-method="wishlist"] #calc-gate-region .calc-group:has(#multiplier) { display: none; }
-.calculator[data-method="wishlist"] #calc-gate-region .calc-divider { display: none; }
-.calculator[data-method="wishlist"] #calc-gate-region .calc-row:has(#multiplier) { grid-template-columns: 1fr; }
-
 .calc-result-wrap {
   position: static;
   bottom: auto;
@@ -1461,14 +1377,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 @keyframes trajectory-marching-ants {
   to { stroke-dashoffset: -11; }
 }
-.trajectory-overlay .overlay-traj-past {
-  fill: none;
-  stroke-width: 3;
-}
 .trajectory-overlay .overlay-traj-line {
   fill: none;
   stroke-width: 3;
-  stroke-dasharray: 7 5;
 }
 @media (prefers-reduced-motion: reduce) {
   .trajectory-overlay .overlay-target-line {
@@ -1488,39 +1399,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   border-bottom: 1px solid var(--rule);
 }
 .legend-item { display: inline-flex; align-items: center; gap: 8px; }
-/* Solid ink swatch = past line (.overlay-traj-past). */
 .legend-line { display: inline-block; width: 24px; height: 2px; background: var(--ink); }
-.legend-line-dashed,
-.legend-line-dashed-ink {
+.legend-line-dashed {
+  background-image: linear-gradient(to right, var(--clay) 50%, transparent 50%);
   background-size: 6px 2px;
   background-repeat: repeat-x;
   background-color: transparent;
-}
-/* Dashed ink + arrowhead = projection line (.overlay-traj-line, marker-end). */
-.legend-line-dashed-ink {
-  position: relative;
-  background-image: linear-gradient(to right, var(--ink) 50%, transparent 50%);
-}
-.legend-line-dashed-ink::after {
-  content: "";
-  position: absolute;
-  right: -1px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-top: 3px solid transparent;
-  border-bottom: 3px solid transparent;
-  border-left: 5px solid var(--ink);
-}
-/* Dashed clay, marching ants = target line (.overlay-target-line, animated). */
-.legend-line-dashed {
-  background-image: linear-gradient(to right, var(--clay) 50%, transparent 50%);
-  animation: legend-marching-ants 700ms linear infinite;
-}
-@keyframes legend-marching-ants {
-  to { background-position: 6px 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .legend-line-dashed { animation: none; }
 }
 .spike-section { margin-top: 18px; }
 .spike-header {
@@ -1546,14 +1430,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   background: color-mix(in srgb, var(--clay) 8%, var(--paper-2));
 }
 .spike-add-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
-
-/* Gated controls read as intentionally on-hold (not broken), matching the
-   .spike-add-btn[disabled] treatment. Opacity sits on the input wrap, not the
-   field, so it is not compounded by a second opacity on the input itself. */
-.calc-input-wrap:has(.calc-input:disabled) { opacity: 0.4; }
-.calc-input:disabled { cursor: not-allowed; }
-.preset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.calc-copy-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .spike-list { display: flex; flex-direction: column; gap: 10px; }
 .spike-row {
   display: grid;
@@ -1837,16 +1713,58 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Experimental
       </div>
-      <p class="deck">Enter your current Steam wishlists or followers and your launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
+      <p class="deck">Enter your current Steam followers and launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
     </article>
   </div>
 
   <div class="calc-wrap">
     <div class="calculator">
 
-      <div class="calc-section-title">Your launch dates</div>
+      <div class="calc-section-title">Where the game is today</div>
 
-      <div class="calc-row gate-exempt">
+      <div class="calc-row">
+        <div class="calc-group">
+          <label class="calc-label" for="current-followers">Current Steam Followers</label>
+          <div class="calc-hint">Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.</div>
+          <div class="calc-input-wrap">
+            <input type="text" id="current-followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+            <span class="calc-suffix">FOLLOWERS</span>
+          </div>
+          <div class="calc-presets" data-target="current-followers">
+            <button type="button" class="preset-btn" data-value="500">500</button>
+            <button type="button" class="preset-btn" data-value="1000">1K</button>
+            <button type="button" class="preset-btn" data-value="5000">5K</button>
+            <button type="button" class="preset-btn" data-value="10000">10K</button>
+          </div>
+        </div>
+
+        <div class="calc-group">
+          <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
+          <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure. This multiplier applies across the whole tool, including Followers Needed.</div>
+          <div class="calc-input-wrap">
+            <input type="text" id="multiplier" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="12" value="12">
+            <span class="calc-suffix">X</span>
+          </div>
+          <div class="calc-presets" data-target="multiplier">
+            <button type="button" class="preset-btn" data-value="7">7x</button>
+            <button type="button" class="preset-btn" data-value="10">10x</button>
+            <button type="button" class="preset-btn is-active" data-value="12">12x</button>
+            <button type="button" class="preset-btn" data-value="16">16x</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-secondary-card" aria-live="polite">
+        <div class="calc-secondary-label">Estimated Wishlists Today</div>
+        <div class="calc-secondary-value" id="wishlists-today">0</div>
+        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
+      </div>
+
+      <div class="calc-divider" role="presentation"></div>
+
+      <div class="calc-section-title">Project to launch</div>
+
+      <div class="calc-row">
         <div class="calc-group">
           <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
           <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
@@ -1872,64 +1790,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
       </div>
 
-      <div class="calc-group method-gate gate-exempt">
-        <label class="calc-label">Choose your input method</label>
-        <div class="calc-hint" id="method-hint">Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier. Choose a method to start.</div>
-        <div class="method-toggle" id="method-toggle" role="group" aria-label="Input method">
-          <button type="button" class="method-pill" data-method="wishlist" aria-pressed="false">Wishlist</button>
-          <button type="button" class="method-pill" data-method="followers" aria-pressed="false">Followers</button>
-        </div>
-      </div>
-
-      <div class="calc-gate-region" id="calc-gate-region">
-      <div class="calc-section-title">Launch Projection</div>
-
-      <div class="calc-row">
-        <div class="calc-group">
-          <label class="calc-label" for="current-followers" id="cf-label">Current Wishlists</label>
-          <div class="calc-hint" id="cf-hint">Find this in your Steamworks wishlist report. Enter your current total wishlists; the tool converts to followers internally using the multiplier.</div>
-          <div class="calc-input-wrap">
-            <input type="text" id="current-followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-            <span class="calc-suffix" id="cf-suffix">WISHLISTS</span>
-          </div>
-          <div class="calc-presets" data-target="current-followers">
-            <button type="button" class="preset-btn" data-value="500">500</button>
-            <button type="button" class="preset-btn" data-value="1000">1K</button>
-            <button type="button" class="preset-btn" data-value="5000">5K</button>
-            <button type="button" class="preset-btn" data-value="10000">10K</button>
-          </div>
-        </div>
-
-        <div class="calc-group">
-          <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
-          <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). 12x is a median, not a rule, and it varies a lot by genre. For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure. This multiplier applies across the whole tool, including Followers Needed.</div>
-          <div class="calc-input-wrap">
-            <input type="text" id="multiplier" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="12" value="12">
-            <span class="calc-suffix">X</span>
-          </div>
-          <div class="calc-presets" data-target="multiplier">
-            <button type="button" class="preset-btn" data-value="7">7x</button>
-            <button type="button" class="preset-btn" data-value="10">10x</button>
-            <button type="button" class="preset-btn is-active" data-value="12">12x</button>
-            <button type="button" class="preset-btn" data-value="16">16x</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="calc-secondary-card" id="wishlists-today-card" aria-live="polite">
-        <div class="calc-secondary-label">Estimated Wishlists Today</div>
-        <div class="calc-secondary-value" id="wishlists-today">0</div>
-        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
-      </div>
-
-      <div class="calc-divider" role="presentation"></div>
-
       <div class="calc-group">
-        <label class="calc-label" for="followers-last-30" id="l30-label">Wishlists Gained in Last 30 Days</label>
-        <div class="calc-hint" id="l30-hint">Optional. Pull this from your Steamworks wishlist report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.</div>
+        <label class="calc-label" for="followers-last-30">Followers Gained in Last 30 Days</label>
+        <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.</div>
         <div class="calc-input-wrap">
           <input type="text" id="followers-last-30" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-          <span class="calc-suffix" id="l30-suffix">WISHLISTS</span>
+          <span class="calc-suffix">FOLLOWERS</span>
         </div>
         <div class="calc-presets" data-target="followers-last-30">
           <button type="button" class="preset-btn" data-value="100">100</button>
@@ -1955,7 +1821,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       </div>
 
       <div class="trajectory-card">
-        <div class="trajectory-label" id="trajectory-title">Follower Trajectory</div>
+        <div class="trajectory-label">Follower Trajectory</div>
         <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
         <div class="trajectory-chart-wrap">
           <canvas id="trajectory-chart"></canvas>
@@ -1976,14 +1842,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
               </marker>
             </defs>
             <path id="overlay-target-line" class="overlay-target-line" fill="none"></path>
-            <path id="overlay-traj-past" class="overlay-traj-past" fill="none"></path>
             <path id="overlay-traj-line" class="overlay-traj-line" fill="none" marker-end="url(#traj-arrowhead)" mask="url(#traj-reveal-mask)"></path>
           </svg>
         </div>
         <div class="trajectory-legend">
-          <span class="legend-item"><span class="legend-line legend-line-solid"></span><span id="legend-current-label">Followers so far</span></span>
-          <span class="legend-item"><span class="legend-line legend-line-dashed-ink"></span>Projection</span>
-          <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target</span>
+          <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
+          <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target follower equivalent</span>
         </div>
         <div class="spike-section">
           <div class="spike-header">
@@ -1994,7 +1858,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         </div>
         <div class="spike-summary" id="spike-summary" hidden>
           <div class="spike-summary-row"><span>Total spike boost</span><span id="spike-total-boost">0</span></div>
-          <div class="spike-summary-row"><span id="spike-proj-label">Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
+          <div class="spike-summary-row"><span>Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
         </div>
       </div>
 
@@ -2020,8 +1884,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
             <div class="outlook-empty" id="outlook-empty">Set a wishlist target to see your expected outcome.</div>
           </div>
         </div>
-      </div>
-
       </div>
 
       <div class="calc-nav-wrap">
@@ -2172,68 +2034,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var spikeSummary = document.getElementById('spike-summary');
   var spikeTotalBoostEl = document.getElementById('spike-total-boost');
   var spikeTotalProjEl = document.getElementById('spike-total-projection');
-  var wishlistsTodayCard = document.getElementById('wishlists-today-card');
-
-  // Input method: null until the user picks one (gate), then 'wishlist' or 'followers'.
-  // Wishlist inputs are converted to follower-equivalent at ingress in calculate().
-  var inputMethod = null;
-  var calculatorEl = document.querySelector('.calculator');
-  var methodToggle = document.getElementById('method-toggle');
-  var methodHint = document.getElementById('method-hint');
-  // Active-state hint drops the trailing "Choose a method to start." once chosen.
-  var METHOD_HINT_ACTIVE = 'Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier.';
-  var cfLabel = document.getElementById('cf-label');
-  var cfHint = document.getElementById('cf-hint');
-  var cfSuffix = document.getElementById('cf-suffix');
-  var l30Label = document.getElementById('l30-label');
-  var l30Hint = document.getElementById('l30-hint');
-  var l30Suffix = document.getElementById('l30-suffix');
-  var spikeProjLabel = document.getElementById('spike-proj-label');
-  var legendCurrentLabel = document.getElementById('legend-current-label');
-  var trajectoryTitle = document.getElementById('trajectory-title');
-
-  var METHOD_COPY = {
-    followers: {
-      cfLabel: 'Current Steam Followers',
-      cfHint: 'Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.',
-      cfSuffix: 'FOLLOWERS',
-      l30Label: 'Followers Gained in Last 30 Days',
-      l30Hint: 'Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.',
-      l30Suffix: 'FOLLOWERS',
-      spikeBoostPh: 'Followers boost',
-      spikeBoostAria: 'Follower boost',
-      spikeProjLabel: 'Projected followers with spikes',
-      legendCurrent: 'Followers so far',
-      trajLabel: 'Follower Trajectory'
-    },
-    wishlist: {
-      cfLabel: 'Current Wishlists',
-      cfHint: 'Find this in your Steamworks wishlist report. Enter your current total wishlists; the tool converts to followers internally using the multiplier.',
-      cfSuffix: 'WISHLISTS',
-      l30Label: 'Wishlists Gained in Last 30 Days',
-      l30Hint: 'Optional. Pull this from your Steamworks wishlist report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.',
-      l30Suffix: 'WISHLISTS',
-      spikeBoostPh: 'Wishlists boost',
-      spikeBoostAria: 'Wishlist boost',
-      spikeProjLabel: 'Projected wishlists with spikes',
-      legendCurrent: 'Wishlists so far',
-      trajLabel: 'Wishlist Trajectory'
-    }
-  };
-
-  // Preset magnitudes per method. Wishlist values are the follower presets times the
-  // default 12x, rounded to clean numbers.
-  var METHOD_PRESETS = {
-    'current-followers': {
-      followers: [['500', '500'], ['1000', '1K'], ['5000', '5K'], ['10000', '10K']],
-      wishlist:  [['6000', '6K'], ['12000', '12K'], ['60000', '60K'], ['120000', '120K']]
-    },
-    'followers-last-30': {
-      followers: [['100', '100'], ['300', '300'], ['1000', '1K'], ['3000', '3K']],
-      wishlist:  [['1200', '1.2K'], ['3600', '3.6K'], ['12000', '12K'], ['36000', '36K']]
-    }
-  };
-
   var MAX_SPIKES = 5;
   // Days over which a spike's follower boost ramps in (spikes are not instantaneous).
   var RAMP_DAYS = 5;
@@ -2505,7 +2305,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     // Screen-space paths handed to the SVG overlay (canvas stops stroking these two lines).
     var overlayTrajD = null, overlayTrajColor = null;
-    var overlayPastD = null, overlayPastColor = null;
     var overlayTargetD = null, overlayTargetColor = null;
 
     var ink = getCSSVar('--ink') || '#ECEFF6';
@@ -2529,21 +2328,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       return;
     }
 
-    // Axis labels re-unit to the active input method; geometry stays in followers.
-    var udm = state.unitMul || 1;
-
-    // Domain spans the full page-open -> launch window. Day 0 = page open.
-    var daysSinceOpen = Math.max(0, state.daysSinceOpen || 0);
-    var daysToLaunch = Math.max(1, daysBetween(state.today, state.launchDate));
-    var totalSpan = Math.max(1, daysSinceOpen + daysToLaunch);
+    var totalDays = Math.max(1, daysBetween(state.today, state.launchDate));
 
     var sortedSpikes = state.spikes.slice().sort(function(a, b){ return a.day - b.day; });
 
-    // Future projection is sampled from today (day 0) to launch. Event dates are capped
-    // at today, so no spike lands in the future; the ramp sampling is kept harmless for
-    // any edge case. day here is days-from-today.
+    // Spikes are not instantaneous: each boost ramps linearly over RAMP_DAYS days
+    // starting on the spike date, applied as additive per-day deltas so overlapping
+    // windows simply sum and the line slopes steeply instead of going vertical.
     var activeSpikes = sortedSpikes.filter(function(sp) {
-      return sp.day > 0 && sp.day <= daysToLaunch;
+      return sp.day > 0 && sp.day <= totalDays;
     });
     function boostAt(day) {
       var sum = 0;
@@ -2557,25 +2350,23 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     function followersAt(day) {
       return state.currentFollowers + state.velocity * day + boostAt(day);
     }
+    // Sample day 0, the launch day, and every day inside a ramp window so the slope
+    // renders with intermediate points; flat stretches stay straight.
     var dayMarks = {};
-    function markDay(d) { dayMarks[Math.max(0, Math.min(daysToLaunch, Math.round(d)))] = true; }
+    function markDay(d) { dayMarks[Math.max(0, Math.min(totalDays, Math.round(d)))] = true; }
     markDay(0);
-    markDay(daysToLaunch);
+    markDay(totalDays);
     for (var m = 0; m < activeSpikes.length; m++) {
       for (var k = 0; k <= RAMP_DAYS; k++) markDay(activeSpikes[m].day + k);
     }
     var sortedDays = Object.keys(dayMarks).map(Number).sort(function(a, b){ return a - b; });
-    // Future points carry an absolute day-from-page-open for x positioning.
     var points = sortedDays.map(function(d) {
-      return { day: daysSinceOpen + d, followers: followersAt(d) };
+      return { day: d, followers: followersAt(d) };
     });
 
-    var finalProjection = followersAt(daysToLaunch);
+    var finalProjection = followersAt(totalDays);
     var maxY = Math.max(finalProjection, state.targetEquiv, state.currentFollowers + 100) * 1.15;
     if (maxY <= 0) maxY = 100;
-
-    function xAt(dayFromOpen) { return padL + (W * dayFromOpen / totalSpan); }
-    function yAt(f) { return padT + H - (H * f / maxY); }
 
     ctx.strokeStyle = rule;
     ctx.lineWidth = 1;
@@ -2590,7 +2381,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.moveTo(padL, y);
       ctx.lineTo(padL + W, y);
       ctx.stroke();
-      ctx.fillText(fmtNum(val * udm), padL - 10, y);
+      ctx.fillText(fmtNum(val), padL - 10, y);
     }
 
     ctx.textBaseline = 'top';
@@ -2602,21 +2393,18 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     for (var xl = 0; xl < xLabelCount; xl++) {
       var xf = xl / (xLabelCount - 1);
       var xlx = padL + W * xf;
-      var xld = new Date(state.pageOpen.getTime() + (state.launchDate - state.pageOpen) * xf);
+      var xld = new Date(state.today.getTime() + (state.launchDate - state.today) * xf);
       ctx.textAlign = xl === 0 ? 'left' : (xl === xLabelCount - 1 ? 'right' : 'center');
       ctx.fillText(fmtDate(xld), xlx, padT + H + 12);
     }
 
-    // Past segment endpoints: (page open, 0) -> (today, current followers), straight line
-    // at the lifetime-average slope. The line lands exactly on current followers today.
-    var xOpen = xAt(0), xToday = xAt(daysSinceOpen);
-    var yZero = yAt(0), yToday = yAt(state.currentFollowers);
-    var hasPast = daysSinceOpen > 0;
+    function xAt(days) { return padL + (W * days / totalDays); }
+    function yAt(f) { return padT + H - (H * f / maxY); }
 
     var hitsTarget = finalProjection >= state.targetEquiv;
     var fillRGB = hitsTarget ? '75, 200, 110' : '255, 91, 91';
-    // Vertical gradient: full tint at the line, fading to transparent at the chart floor.
-    var fillTopY = yToday;
+    // Vertical gradient: full tint on the trajectory line, fading to transparent at the chart floor.
+    var fillTopY = padT + H;
     for (var fp = 0; fp < points.length; fp++) {
       var fpY = yAt(points[fp].followers);
       if (fpY < fillTopY) fillTopY = fpY;
@@ -2626,13 +2414,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     fillGrad.addColorStop(1, 'rgba(' + fillRGB + ', 0)');
     ctx.fillStyle = fillGrad;
     ctx.beginPath();
-    ctx.moveTo(xOpen, padT + H);
-    if (hasPast) ctx.lineTo(xOpen, yZero);
-    ctx.lineTo(xToday, yToday);
-    for (var p = 1; p < points.length; p++) {
+    ctx.moveTo(xAt(0), padT + H);
+    for (var p = 0; p < points.length; p++) {
       ctx.lineTo(xAt(points[p].day), yAt(points[p].followers));
     }
-    ctx.lineTo(xAt(totalSpan), padT + H);
+    ctx.lineTo(xAt(totalDays), padT + H);
     ctx.closePath();
     ctx.fill();
 
@@ -2644,31 +2430,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.fillStyle = clay;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'bottom';
-      ctx.fillText('TARGET ' + fmtNum(state.targetEquiv * udm), padL + 6, targetY - 4);
+      ctx.fillText('TARGET ' + fmtNum(state.targetEquiv), padL + 6, targetY - 4);
     }
 
-    // Today divider: subtle dashed vertical line where past meets projected.
-    if (hasPast && daysSinceOpen < totalSpan) {
-      ctx.save();
-      ctx.strokeStyle = ink3;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([3, 4]);
-      ctx.beginPath();
-      ctx.moveTo(xToday, padT);
-      ctx.lineTo(xToday, padT + H);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = ink3;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText('Today', xToday, padT + 2);
-      ctx.restore();
-    }
-
-    // Both trajectory segments are rendered by the SVG overlay; build their screen paths.
-    overlayPastColor = ink;
-    overlayPastD = hasPast ? ('M' + xOpen + ' ' + yZero + ' L' + xToday + ' ' + yToday) : '';
-
+    // Trajectory line is rendered by the SVG overlay; build its path from the same screen points.
     overlayTrajColor = ink;
     overlayTrajD = '';
     for (var p2 = 0; p2 < points.length; p2++) {
@@ -2676,31 +2441,25 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       overlayTrajD += (p2 === 0 ? 'M' : ' L') + xAt(pt.day) + ' ' + yAt(pt.followers);
     }
 
-    // Past spike events: positional markers on the past line. They annotate where events
-    // happened; they do NOT add to the line's y values (no double-counting).
     ctx.strokeStyle = clay;
     ctx.fillStyle = clay;
+    ctx.lineWidth = 2;
     for (var s2 = 0; s2 < sortedSpikes.length; s2++) {
       var sp2 = sortedSpikes[s2];
-      var dFromOpen = daysSinceOpen + sp2.day; // sp2.day <= 0 for past/today events
-      if (dFromOpen < 0 || dFromOpen > daysSinceOpen) continue;
-      var sx = xAt(dFromOpen);
-      var frac = daysSinceOpen > 0 ? (dFromOpen / daysSinceOpen) : 1;
-      var sy = yAt(state.currentFollowers * frac);
-      ctx.lineWidth = 1.5;
+      if (sp2.day <= 0 || sp2.day > totalDays) continue;
+      var sx = xAt(sp2.day);
       ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(sx, sy + 9);
+      ctx.moveTo(sx, padT + H);
+      ctx.lineTo(sx, padT + H - 10);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(sx, sy, 3.5, 0, Math.PI * 2);
+      ctx.arc(sx, padT + H - 14, 3.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
     syncOverlay(cssW, cssH, {
       trajD: overlayTrajD,
       trajColor: overlayTrajColor,
-      pastD: overlayPastD,
       targetD: overlayTargetD,
       targetColor: overlayTargetColor
     });
@@ -2710,7 +2469,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var overlaySvg = document.getElementById('trajectory-overlay');
   var overlayTargetEl = document.getElementById('overlay-target-line');
   var overlayTrajEl = document.getElementById('overlay-traj-line');
-  var overlayTrajPastEl = document.getElementById('overlay-traj-past');
   var overlayMaskG = document.getElementById('traj-reveal-g');
   var overlayRevealRect = document.getElementById('traj-reveal-rect');
   var overlayArrowEl = document.getElementById('traj-arrowhead-shape');
@@ -2732,14 +2490,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (!data) {
       overlayTargetEl.setAttribute('d', '');
       overlayTrajEl.setAttribute('d', '');
-      if (overlayTrajPastEl) overlayTrajPastEl.setAttribute('d', '');
       return;
-    }
-
-    // Past segment: solid, static, no reveal or arrowhead.
-    if (overlayTrajPastEl) {
-      overlayTrajPastEl.setAttribute('d', data.pastD || '');
-      overlayTrajPastEl.setAttribute('stroke', data.trajColor);
     }
 
     if (data.targetD) {
@@ -2836,36 +2587,23 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   }
 
   function calculate() {
-    if (!inputMethod) return; // gated: no method chosen yet
     var current = readNum(followersInput);
     var pageOpen = parseDate(pageOpenInput);
     var launch = parseDate(launchInput);
     var multiplier = Math.max(1, Math.min(30, readNum(multInput) || 10));
     var target = readNum(targetInput);
 
-    // Wishlist method: the current + last30 inputs are wishlists. Convert to follower-
-    // equivalent at ingress so the follower engine below is unchanged. (target already
-    // converts via target / multiplier in both methods.)
-    var wishlistMode = inputMethod === 'wishlist';
-    if (wishlistMode && multiplier > 0) current = current / multiplier;
-
     var today = new Date(); today.setHours(0,0,0,0);
     var daysSinceOpen = pageOpen ? daysBetween(pageOpen, today) : 0;
     var daysToLaunch = launch ? daysBetween(today, launch) : 0;
     var followersLast30 = readNum(followersLast30Input);
-    if (wishlistMode && multiplier > 0) followersLast30 = followersLast30 / multiplier;
     var velocity = followersLast30 > 0
       ? followersLast30 / 30
       : (daysSinceOpen > 0 ? current / daysSinceOpen : 0);
     var baseProjected = current + velocity * daysToLaunch;
 
     var spikes = getSpikes();
-    // Wishlist method: spike boosts are entered as wishlists. Convert to follower-
-    // equivalent without mutating s.boost (computed fresh each call, never written).
-    var spikeBoost = spikes.reduce(function(sum, s){
-      var b = (wishlistMode && multiplier > 0) ? s.boost / multiplier : s.boost;
-      return sum + b;
-    }, 0);
+    var spikeBoost = spikes.reduce(function(acc, s){ return acc + s.boost; }, 0);
     var projected = baseProjected + spikeBoost;
     var estimatedWishlists = projected * multiplier;
     var targetEquiv = multiplier > 0 ? target / multiplier : 0;
@@ -2884,18 +2622,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     } else if (target <= 0) {
       statusEl.textContent = daysToLaunch + ' days to launch · set a wishlist target above';
     } else {
-      // Display unit: wishlist mode multiplies follower-engine values back to wishlists.
-      var unitMul = wishlistMode ? multiplier : 1;
-      var unitWord = wishlistMode ? 'wishlists' : 'followers';
-      var statusText = (gap >= 0 ? 'On track to clear target' : 'Below target by ' + fmtNum(Math.abs(gap) * unitMul) + ' ' + unitWord)
+      var statusText = (gap >= 0 ? 'On track to clear target' : 'Below target by ' + fmtNum(Math.abs(gap)) + ' followers')
         + ' · ' + daysToLaunch + ' days to launch';
       statusEl.textContent = statusText;
       statusEl.classList.add(gap >= 0 ? 'is-positive' : 'is-negative');
     }
-
-    // Display unit helper for the summary block (declared once here for all rows).
-    var unitMul = wishlistMode ? multiplier : 1;
-    function disp(followersVal) { return fmtNum(followersVal * unitMul); }
 
     var wishlistsToday = current * multiplier;
     var wishlistsTodayLow = current * 7;
@@ -2903,34 +2634,19 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     rollTo(wishlistsTodayEl, wishlistsToday, fmtNum);
     document.getElementById('wishlists-today-range').textContent =
       'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
-    // The wishlist-estimate stat card is meaningless when the user already entered wishlists.
-    if (wishlistsTodayCard) wishlistsTodayCard.style.display = wishlistMode ? 'none' : '';
 
-    var rows;
-    if (wishlistMode) {
-      // Summary speaks wishlists throughout; the wishlist-estimate rows are dropped.
-      rows = [
-        ['Current wishlists', disp(current)],
-        ['Days since page open', fmtNum(daysSinceOpen)],
-        ['Wishlists / day', fmtDecimal(velocity * multiplier)],
-        ['Days to launch', fmtNum(daysToLaunch)],
-        ['Projected wishlists at launch', disp(projected)],
-        ['Wishlist target', fmtNum(target)]
-      ];
-    } else {
-      rows = [
-        ['Current followers', fmtNum(current)],
-        ['Days since page open', fmtNum(daysSinceOpen)],
-        ['Followers / day', fmtDecimal(velocity)],
-        ['Estimated wishlists today (x' + multiplier + ')', fmtNum(wishlistsToday)],
-        ['Wishlist range today', fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)'],
-        ['Days to launch', fmtNum(daysToLaunch)],
-        ['Projected followers at launch', fmtNum(projected)],
-        ['Estimated wishlists at launch (x' + multiplier + ')', fmtNum(estimatedWishlists)],
-        ['Wishlist target', fmtNum(target)]
-      ];
-    }
-    var gapStr = (gap >= 0 ? '+' : '') + fmtNum(gap * unitMul);
+    var rows = [
+      ['Current followers', fmtNum(current)],
+      ['Days since page open', fmtNum(daysSinceOpen)],
+      ['Followers / day', fmtDecimal(velocity)],
+      ['Estimated wishlists today (x' + multiplier + ')', fmtNum(wishlistsToday)],
+      ['Wishlist range today', fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)'],
+      ['Days to launch', fmtNum(daysToLaunch)],
+      ['Projected followers at launch', fmtNum(projected)],
+      ['Estimated wishlists at launch (x' + multiplier + ')', fmtNum(estimatedWishlists)],
+      ['Wishlist target', fmtNum(target)]
+    ];
+    var gapStr = (gap >= 0 ? '+' : '') + fmtNum(gap);
     var gapCls = gap >= 0 ? 'gap-positive' : 'gap-negative';
     var html = rows.map(function(r){
       return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>';
@@ -2956,8 +2672,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     if (spikes.length > 0) {
       spikeSummary.hidden = false;
-      spikeTotalBoostEl.textContent = fmtNum(spikeBoost * unitMul);
-      spikeTotalProjEl.textContent = fmtNum(projected * unitMul);
+      spikeTotalBoostEl.textContent = fmtNum(spikeBoost);
+      spikeTotalProjEl.textContent = fmtNum(projected);
     } else {
       spikeSummary.hidden = true;
     }
@@ -2966,21 +2682,17 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     drawChart({
       valid: valid,
       today: today,
-      pageOpen: pageOpen,
-      daysSinceOpen: daysSinceOpen,
       launchDate: launch,
       currentFollowers: current,
       velocity: velocity,
       projected: projected,
       targetEquiv: targetEquiv,
-      unitMul: unitMul,
       spikes: spikes
     });
   }
 
   function addSpike() {
     if (spikeList.children.length >= MAX_SPIKES) return;
-    var sc = METHOD_COPY[inputMethod] || METHOD_COPY.wishlist;
     var row = document.createElement('div');
     row.className = 'spike-row';
     row.innerHTML = ''
@@ -2996,7 +2708,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       +   '<button type="button" class="date-picker-toggle" aria-label="Open calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg></button>'
       +   '<div class="date-picker-dropdown" hidden></div>'
       + '</div>'
-      + '<input type="number" class="spike-boost" min="0" step="50" placeholder="' + sc.spikeBoostPh + '" aria-label="' + sc.spikeBoostAria + '" />'
+      + '<input type="number" class="spike-boost" min="0" step="50" placeholder="Followers boost" aria-label="Follower boost" />'
       + '<button type="button" class="spike-remove" aria-label="Remove event">&times;</button>';
     spikeList.appendChild(row);
 
@@ -3146,86 +2858,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   }
 
-  // Swap preset button values/labels for the active method, then resync is-active.
-  function swapPresets(method) {
-    Object.keys(METHOD_PRESETS).forEach(function(targetId) {
-      var group = document.querySelector('.calc-presets[data-target="' + targetId + '"]');
-      if (!group) return;
-      var input = document.getElementById(targetId);
-      var defs = METHOD_PRESETS[targetId][method];
-      var btns = group.querySelectorAll('.preset-btn');
-      btns.forEach(function(btn, i) {
-        if (!defs[i]) return;
-        btn.dataset.value = defs[i][0];
-        btn.textContent = defs[i][1];
-      });
-      var v = input ? parseFloat(input.value) : NaN;
-      btns.forEach(function(b){ b.classList.toggle('is-active', !isNaN(v) && parseFloat(b.dataset.value) === v); });
-    });
-  }
-
-  // Gate: disable + grey every control below the picker until a method is chosen.
-  function setGated(gated) {
-    if (calculatorEl) calculatorEl.classList.toggle('is-gated', gated);
-    if (!calculatorEl) return;
-    calculatorEl.querySelectorAll('input, button, select').forEach(function(el) {
-      if (el.closest('.gate-exempt')) return; // dates + picker stay interactive
-      el.disabled = gated;
-    });
-  }
-
-  // Update every already-added spike row's boost placeholder + aria to the active unit.
-  function refreshSpikeLabels() {
-    var sc = METHOD_COPY[inputMethod] || METHOD_COPY.wishlist;
-    spikeList.querySelectorAll('.spike-boost').forEach(function(inp) {
-      inp.placeholder = sc.spikeBoostPh;
-      inp.setAttribute('aria-label', sc.spikeBoostAria);
-    });
-  }
-
-  // Apply an input method: lift the gate, mutate labels/suffix/help, swap presets,
-  // mark the pill, recalc.
-  function applyMethod(method) {
-    inputMethod = (method === 'followers') ? 'followers' : 'wishlist';
-    setGated(false);
-    if (calculatorEl) calculatorEl.dataset.method = inputMethod; // CSS hook for per-method layout
-    var c = METHOD_COPY[inputMethod];
-    if (cfLabel) cfLabel.textContent = c.cfLabel;
-    if (cfHint) cfHint.textContent = c.cfHint;
-    if (cfSuffix) cfSuffix.textContent = c.cfSuffix;
-    if (l30Label) l30Label.textContent = c.l30Label;
-    if (l30Hint) l30Hint.textContent = c.l30Hint;
-    if (l30Suffix) l30Suffix.textContent = c.l30Suffix;
-    if (spikeProjLabel) spikeProjLabel.textContent = c.spikeProjLabel;
-    if (legendCurrentLabel) legendCurrentLabel.textContent = c.legendCurrent;
-    if (trajectoryTitle) trajectoryTitle.textContent = c.trajLabel;
-    if (methodHint) methodHint.textContent = METHOD_HINT_ACTIVE;
-    refreshSpikeLabels();
-    swapPresets(inputMethod);
-    // The "Estimated Wishlists Today" card only makes sense in follower method, where
-    // the wishlist figure is a real estimate. Hidden in wishlist method.
-    if (wishlistsTodayCard) wishlistsTodayCard.style.display = (inputMethod === 'followers') ? '' : 'none';
-    if (methodToggle) {
-      methodToggle.querySelectorAll('.method-pill').forEach(function(p){
-        var on = p.dataset.method === inputMethod;
-        p.classList.toggle('is-active', on);
-        p.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-    }
-    calculate();
-  }
-
-  if (methodToggle) {
-    methodToggle.querySelectorAll('.method-pill').forEach(function(p){
-      p.addEventListener('click', function(){ applyMethod(p.dataset.method); });
-    });
-  }
-
-  // No method chosen yet: gate the form (veil + disabled), hide the estimate card.
-  // The veil carries the prompt; #trajectory-status keeps its normal per-method text.
-  // The first calculate() runs only when the user picks a method.
-  setGated(true);
-  if (wishlistsTodayCard) wishlistsTodayCard.style.display = 'none';
+  calculate();
 })();
 </script>
 
