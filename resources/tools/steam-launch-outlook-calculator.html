@@ -1080,9 +1080,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .calculator.is-gated .gate-veil { display: flex; }
 .gate-veil-msg {
   /* Sticks near the top of the viewport while the gated area is on screen, then
-     scrolls away with the region. The offset clears the sticky site header. */
+     scrolls away with the region. The offset token clears the sticky site header. */
+  --gate-msg-top: 84px;
   position: sticky;
-  top: 84px;
+  top: var(--gate-msg-top);
   margin: 0;
   font-family: var(--mono);
   font-size: 15px;
