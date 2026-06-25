@@ -1377,9 +1377,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 @keyframes trajectory-marching-ants {
   to { stroke-dashoffset: -11; }
 }
+.trajectory-overlay .overlay-traj-past {
+  fill: none;
+  stroke-width: 3;
+}
 .trajectory-overlay .overlay-traj-line {
   fill: none;
   stroke-width: 3;
+  stroke-dasharray: 7 5;
 }
 .trajectory-overlay .traj-crosshair {
   stroke: var(--clay);
@@ -1865,6 +1870,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
               </marker>
             </defs>
             <path id="overlay-target-line" class="overlay-target-line" fill="none"></path>
+            <path id="overlay-traj-past" class="overlay-traj-past" fill="none"></path>
             <path id="overlay-traj-line" class="overlay-traj-line" fill="none" marker-end="url(#traj-arrowhead)" mask="url(#traj-reveal-mask)"></path>
           </svg>
         </div>
@@ -2328,6 +2334,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
     // Screen-space paths handed to the SVG overlay (canvas stops stroking these two lines).
     var overlayTrajD = null, overlayTrajColor = null;
+    var overlayPastD = null, overlayPastColor = null;
     var overlayTargetD = null, overlayTargetColor = null;
 
     var ink = getCSSVar('--ink') || '#ECEFF6';
@@ -2352,7 +2359,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       return;
     }
 
-    var totalDays = Math.max(1, daysBetween(state.today, state.launchDate));
+    // Domain spans page open -> launch. day 0 = today (engine origin); the past segment
+    // covers the daysSinceOpen days before today.
+    var daysSinceOpen = Math.max(0, state.daysSinceOpen || 0);
+    var daysToLaunch = Math.max(1, daysBetween(state.today, state.launchDate));
+    var totalSpan = Math.max(1, daysSinceOpen + daysToLaunch);
 
     var sortedSpikes = state.spikes.slice().sort(function(a, b){ return a.day - b.day; });
 
@@ -2360,7 +2371,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     // starting on the spike date, applied as additive per-day deltas so overlapping
     // windows simply sum and the line slopes steeply instead of going vertical.
     var activeSpikes = sortedSpikes.filter(function(sp) {
-      return sp.day > 0 && sp.day <= totalDays;
+      return sp.day > 0 && sp.day <= daysToLaunch;
     });
     function boostAt(day) {
       var sum = 0;
@@ -2377,18 +2388,19 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     // Sample day 0, the launch day, and every day inside a ramp window so the slope
     // renders with intermediate points; flat stretches stay straight.
     var dayMarks = {};
-    function markDay(d) { dayMarks[Math.max(0, Math.min(totalDays, Math.round(d)))] = true; }
+    function markDay(d) { dayMarks[Math.max(0, Math.min(daysToLaunch, Math.round(d)))] = true; }
     markDay(0);
-    markDay(totalDays);
+    markDay(daysToLaunch);
     for (var m = 0; m < activeSpikes.length; m++) {
       for (var k = 0; k <= RAMP_DAYS; k++) markDay(activeSpikes[m].day + k);
     }
     var sortedDays = Object.keys(dayMarks).map(Number).sort(function(a, b){ return a - b; });
+    // Future points carry an absolute day-from-page-open for x positioning.
     var points = sortedDays.map(function(d) {
-      return { day: d, followers: followersAt(d) };
+      return { day: daysSinceOpen + d, followers: followersAt(d) };
     });
 
-    var finalProjection = followersAt(totalDays);
+    var finalProjection = followersAt(daysToLaunch);
     var maxY = Math.max(finalProjection, state.targetEquiv, state.currentFollowers + 100) * 1.15;
     if (maxY <= 0) maxY = 100;
 
@@ -2417,18 +2429,24 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     for (var xl = 0; xl < xLabelCount; xl++) {
       var xf = xl / (xLabelCount - 1);
       var xlx = padL + W * xf;
-      var xld = new Date(state.today.getTime() + (state.launchDate - state.today) * xf);
+      var xld = new Date(state.pageOpen.getTime() + (state.launchDate - state.pageOpen) * xf);
       ctx.textAlign = xl === 0 ? 'left' : (xl === xLabelCount - 1 ? 'right' : 'center');
       ctx.fillText(fmtDate(xld), xlx, padT + H + 12);
     }
 
-    function xAt(days) { return padL + (W * days / totalDays); }
+    function xAt(dayFromOpen) { return padL + (W * dayFromOpen / totalSpan); }
     function yAt(f) { return padT + H - (H * f / maxY); }
+
+    // Past segment endpoints: (page open, 0) -> (today, current followers), a straight
+    // line at the lifetime-average slope. Drawn only when there is a past window.
+    var xOpen = xAt(0), xToday = xAt(daysSinceOpen);
+    var yZero = yAt(0), yToday = yAt(state.currentFollowers);
+    var hasPast = daysSinceOpen > 0;
 
     var hitsTarget = finalProjection >= state.targetEquiv;
     var fillRGB = hitsTarget ? '75, 200, 110' : '255, 91, 91';
-    // Vertical gradient: full tint on the trajectory line, fading to transparent at the chart floor.
-    var fillTopY = padT + H;
+    // Vertical gradient: full tint at the line, fading to transparent at the chart floor.
+    var fillTopY = yToday;
     for (var fp = 0; fp < points.length; fp++) {
       var fpY = yAt(points[fp].followers);
       if (fpY < fillTopY) fillTopY = fpY;
@@ -2438,11 +2456,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     fillGrad.addColorStop(1, 'rgba(' + fillRGB + ', 0)');
     ctx.fillStyle = fillGrad;
     ctx.beginPath();
-    ctx.moveTo(xAt(0), padT + H);
-    for (var p = 0; p < points.length; p++) {
+    ctx.moveTo(xOpen, padT + H);
+    if (hasPast) ctx.lineTo(xOpen, yZero);
+    ctx.lineTo(xToday, yToday);
+    for (var p = 1; p < points.length; p++) {
       ctx.lineTo(xAt(points[p].day), yAt(points[p].followers));
     }
-    ctx.lineTo(xAt(totalDays), padT + H);
+    ctx.lineTo(xAt(totalSpan), padT + H);
     ctx.closePath();
     ctx.fill();
 
@@ -2457,7 +2477,29 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ctx.fillText('TARGET ' + fmtNum(state.targetEquiv), padL + 6, targetY - 4);
     }
 
-    // Trajectory line is rendered by the SVG overlay; build its path from the same screen points.
+    // Today divider: subtle dashed vertical line where past meets projected.
+    if (hasPast && daysSinceOpen < totalSpan) {
+      ctx.save();
+      ctx.strokeStyle = ink3;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath();
+      ctx.moveTo(xToday, padT);
+      ctx.lineTo(xToday, padT + H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = ink3;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Today', xToday, padT + 2);
+      ctx.restore();
+    }
+
+    // Past segment (solid) and future projection (dashed) are both rendered by the SVG
+    // overlay; build their screen paths.
+    overlayPastColor = ink;
+    overlayPastD = hasPast ? ('M' + xOpen + ' ' + yZero + ' L' + xToday + ' ' + yToday) : '';
+
     overlayTrajColor = ink;
     overlayTrajD = '';
     for (var p2 = 0; p2 < points.length; p2++) {
@@ -2465,34 +2507,43 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       overlayTrajD += (p2 === 0 ? 'M' : ' L') + xAt(pt.day) + ' ' + yAt(pt.followers);
     }
 
+    // Past spike events: markers on the past ramp at their date. Positional only; they
+    // do not bend the line.
     ctx.strokeStyle = clay;
     ctx.fillStyle = clay;
-    ctx.lineWidth = 2;
     for (var s2 = 0; s2 < sortedSpikes.length; s2++) {
       var sp2 = sortedSpikes[s2];
-      if (sp2.day <= 0 || sp2.day > totalDays) continue;
-      var sx = xAt(sp2.day);
+      var dFromOpen = daysSinceOpen + sp2.day; // sp2.day <= 0 for past/today events
+      if (dFromOpen < 0 || dFromOpen > daysSinceOpen) continue;
+      var sx = xAt(dFromOpen);
+      var frac = daysSinceOpen > 0 ? (dFromOpen / daysSinceOpen) : 1;
+      var sy = yAt(state.currentFollowers * frac);
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(sx, padT + H);
-      ctx.lineTo(sx, padT + H - 10);
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx, sy + 9);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(sx, padT + H - 14, 3.5, 0, Math.PI * 2);
+      ctx.arc(sx, sy, 3.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
     syncOverlay(cssW, cssH, {
       trajD: overlayTrajD,
       trajColor: overlayTrajColor,
+      pastD: overlayPastD,
       targetD: overlayTargetD,
       targetColor: overlayTargetColor
     });
 
     // Stash what the crosshair handler needs to sample after render. followersAt is the
-    // exact continuous projection used above, so the crosshair value matches the line.
+    // exact continuous projection used above (day = days-from-today), so the crosshair
+    // value matches the line. The past ramp is linear 0 -> currentFollowers.
     chartState.valid = true;
-    chartState.today = state.today;
-    chartState.totalDays = totalDays;
+    chartState.pageOpen = state.pageOpen;
+    chartState.daysSinceOpen = daysSinceOpen;
+    chartState.totalSpan = totalSpan;
+    chartState.currentFollowers = state.currentFollowers;
     chartState.padL = padL;
     chartState.padT = padT;
     chartState.W = W;
@@ -2504,6 +2555,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var overlaySvg = document.getElementById('trajectory-overlay');
   var overlayTargetEl = document.getElementById('overlay-target-line');
   var overlayTrajEl = document.getElementById('overlay-traj-line');
+  var overlayTrajPastEl = document.getElementById('overlay-traj-past');
   var overlayMaskG = document.getElementById('traj-reveal-g');
   var overlayRevealRect = document.getElementById('traj-reveal-rect');
   var overlayArrowEl = document.getElementById('traj-arrowhead-shape');
@@ -2525,7 +2577,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (!data) {
       overlayTargetEl.setAttribute('d', '');
       overlayTrajEl.setAttribute('d', '');
+      if (overlayTrajPastEl) overlayTrajPastEl.setAttribute('d', '');
       return;
+    }
+
+    // Past segment: solid, static, no reveal or arrowhead.
+    if (overlayTrajPastEl) {
+      overlayTrajPastEl.setAttribute('d', data.pastD || '');
+      overlayTrajPastEl.setAttribute('stroke', data.trajColor);
     }
 
     if (data.targetD) {
@@ -2641,10 +2700,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         hideCrosshair();
         return;
       }
-      var days = Math.max(0, Math.min(chartState.totalDays, (mouseX - padL) / W * chartState.totalDays));
-      var x = padL + (W * days / chartState.totalDays);
-      var value = chartState.followersAt(days);
-      var date = new Date(chartState.today.getTime() + days * MS_PER_DAY);
+      var totalSpan = chartState.totalSpan, daysSinceOpen = chartState.daysSinceOpen;
+      var dayFromOpen = Math.max(0, Math.min(totalSpan, (mouseX - padL) / W * totalSpan));
+      var x = padL + (W * dayFromOpen / totalSpan);
+      // Piecewise value: future uses the exact projection; past uses the drawn linear
+      // ramp 0 -> currentFollowers (not followersAt of a negative day).
+      var value = (dayFromOpen >= daysSinceOpen)
+        ? chartState.followersAt(dayFromOpen - daysSinceOpen)
+        : (daysSinceOpen > 0 ? chartState.currentFollowers * (dayFromOpen / daysSinceOpen) : chartState.currentFollowers);
+      var date = new Date(chartState.pageOpen.getTime() + dayFromOpen * MS_PER_DAY);
 
       crosshairLine.setAttribute('x1', x);
       crosshairLine.setAttribute('x2', x);
@@ -2775,6 +2839,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     drawChart({
       valid: valid,
       today: today,
+      pageOpen: pageOpen,
+      daysSinceOpen: daysSinceOpen,
       launchDate: launch,
       currentFollowers: current,
       velocity: velocity,
