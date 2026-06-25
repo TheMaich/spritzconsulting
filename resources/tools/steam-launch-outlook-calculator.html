@@ -1040,6 +1040,31 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   color: var(--paper);
 }
 
+/* Gate: the method picker is the required first action. Centred and enlarged. */
+.method-gate {
+  align-items: center;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.method-gate .method-toggle {
+  margin-inline: auto;
+  gap: 8px;
+  padding: 5px;
+}
+.method-gate .method-pill {
+  padding: 14px 36px;
+  font-size: 16px;
+  min-height: 52px;
+}
+
+/* Until a method is chosen, everything below the gate is disabled and greyed. */
+.calculator.is-gated > *:not(.method-gate) {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.4);
+  transition: opacity 0.25s var(--ease);
+}
+
 .calc-result-wrap {
   position: static;
   bottom: auto;
@@ -1756,6 +1781,15 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   <div class="calc-wrap">
     <div class="calculator">
 
+      <div class="calc-group method-gate">
+        <label class="calc-label">Choose your input method</label>
+        <div class="calc-hint">Pick what you want to enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier. Choose a method to start.</div>
+        <div class="method-toggle" id="method-toggle" role="group" aria-label="Input method">
+          <button type="button" class="method-pill" data-method="wishlist" aria-pressed="false">Wishlist</button>
+          <button type="button" class="method-pill" data-method="followers" aria-pressed="false">Followers</button>
+        </div>
+      </div>
+
       <div class="calc-section-title">Where the game is today</div>
 
       <div class="calc-row">
@@ -1823,15 +1857,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
             </button>
             <div class="date-picker-dropdown" hidden></div>
           </div>
-        </div>
-      </div>
-
-      <div class="calc-group">
-        <label class="calc-label">Input Method</label>
-        <div class="calc-hint">Choose what you enter. Wishlist uses your wishlist numbers directly. Followers uses follower counts and estimates wishlists from the multiplier.</div>
-        <div class="method-toggle" id="method-toggle" role="group" aria-label="Input method">
-          <button type="button" class="method-pill is-active" data-method="wishlist" aria-pressed="true">Wishlist</button>
-          <button type="button" class="method-pill" data-method="followers" aria-pressed="false">Followers</button>
         </div>
       </div>
 
@@ -2082,9 +2107,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var spikeTotalProjEl = document.getElementById('spike-total-projection');
   var wishlistsTodayCard = document.getElementById('wishlists-today-card');
 
-  // Input method: 'wishlist' (default) or 'followers'. Wishlist inputs are converted to
-  // follower-equivalent at ingress in calculate(), so the engine never changes.
-  var inputMethod = 'wishlist';
+  // Input method: null until the user picks one (gate), then 'wishlist' or 'followers'.
+  // Wishlist inputs are converted to follower-equivalent at ingress in calculate().
+  var inputMethod = null;
+  var calculatorEl = document.querySelector('.calculator');
   var methodToggle = document.getElementById('method-toggle');
   var cfLabel = document.getElementById('cf-label');
   var cfHint = document.getElementById('cf-hint');
@@ -2727,6 +2753,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   }
 
   function calculate() {
+    if (!inputMethod) return; // gated: no method chosen yet
     var current = readNum(followersInput);
     var pageOpen = parseDate(pageOpenInput);
     var launch = parseDate(launchInput);
@@ -3048,9 +3075,21 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   }
 
-  // Apply an input method: mutate labels/suffix/help, swap presets, mark the pill, recalc.
+  // Gate: disable + grey every control below the picker until a method is chosen.
+  function setGated(gated) {
+    if (calculatorEl) calculatorEl.classList.toggle('is-gated', gated);
+    if (!calculatorEl) return;
+    calculatorEl.querySelectorAll('input, button, select').forEach(function(el) {
+      if (el.closest('.method-gate')) return; // the picker stays interactive
+      el.disabled = gated;
+    });
+  }
+
+  // Apply an input method: lift the gate, mutate labels/suffix/help, swap presets,
+  // mark the pill, recalc.
   function applyMethod(method) {
     inputMethod = (method === 'followers') ? 'followers' : 'wishlist';
+    setGated(false);
     var c = METHOD_COPY[inputMethod];
     if (cfLabel) cfLabel.textContent = c.cfLabel;
     if (cfHint) cfHint.textContent = c.cfHint;
@@ -3075,8 +3114,10 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   }
 
-  // Initialise in the default (wishlist) method; this also runs the first calculate().
-  applyMethod(inputMethod);
+  // No method chosen yet: gate the form and show a neutral placeholder. The first
+  // calculate() runs only when the user picks a method.
+  setGated(true);
+  statusEl.textContent = 'Choose a method above to start';
 })();
 </script>
 
