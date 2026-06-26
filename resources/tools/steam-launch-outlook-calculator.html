@@ -2062,6 +2062,62 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var wishlistsTodayEl = document.getElementById('wishlists-today');
   var breakdownEl = document.getElementById('breakdown');
   var statusEl = document.getElementById('trajectory-status');
+
+  // Launch Outlook breakdown rows are built once with persistent value spans, so the
+  // count-up (rollTo) survives across renders instead of being wiped by innerHTML.
+  // Numeric spans animate; the range and status rows stay plain text.
+  var BD_NUMERIC = { current: 1, daysOpen: 1, velocity: 1, wlToday: 1, daysLaunch: 1, projected: 1, wlLaunch: 1, target: 1, gap: 1 };
+  var bdRefs = {};
+  var bdAnimated = [];
+  var bdBuilt = false;
+  function buildBreakdown() {
+    var defs = [
+      ['current',    'Current followers'],
+      ['daysOpen',   'Days since page open'],
+      ['velocity',   'Followers / day'],
+      ['wlToday',    'Estimated wishlists today'],
+      ['range',      'Wishlist range today'],
+      ['daysLaunch', 'Days to launch'],
+      ['projected',  'Projected followers at launch'],
+      ['wlLaunch',   'Estimated wishlists at launch'],
+      ['target',     'Wishlist target'],
+      ['gap',        'Gap'],
+      ['status',     'Status']
+    ];
+    breakdownEl.innerHTML = '';
+    for (var i = 0; i < defs.length; i++) {
+      var key = defs[i][0];
+      var row = document.createElement('div');
+      row.className = 'row';
+      var labelSpan = document.createElement('span');
+      labelSpan.textContent = defs[i][1];
+      var valSpan = document.createElement('span');
+      row.appendChild(labelSpan);
+      row.appendChild(valSpan);
+      breakdownEl.appendChild(row);
+      bdRefs[key] = { row: row, label: labelSpan, val: valSpan };
+      if (BD_NUMERIC[key]) bdAnimated.push(valSpan);
+    }
+    bdBuilt = true;
+  }
+  // Set a numeric breakdown value via the count-up, stashing the final value + formatter
+  // on the span so the R replay can re-roll it from zero later.
+  function setBdNum(key, value, fmtFn) {
+    var span = bdRefs[key].val;
+    span._fmt = fmtFn;
+    span._finalNum = value;
+    rollTo(span, value, fmtFn);
+  }
+  // R replay: force every animated breakdown number to visibly count up again from zero
+  // to its current final value.
+  function replayBreakdownCount() {
+    for (var i = 0; i < bdAnimated.length; i++) {
+      var span = bdAnimated[i];
+      if (typeof span._finalNum !== 'number' || typeof span._fmt !== 'function') continue;
+      span._rollVal = 0;
+      rollTo(span, span._finalNum, span._fmt);
+    }
+  }
   var canvas = document.getElementById('trajectory-chart');
   var ctx = canvas.getContext('2d');
   var addSpikeBtn = document.getElementById('add-spike-btn');
@@ -2729,6 +2785,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var el = document.activeElement;
     if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
     if (overlaySvg) doReveal();
+    replayBreakdownCount();
   });
 
   // --- Hover crosshair: a vertical clay line that follows the mouse over the plot,
@@ -2857,27 +2914,37 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     document.getElementById('wishlists-today-range').textContent =
       'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
 
-    var rows = [
-      ['Current followers', fmtNum(current)],
-      ['Days since page open', fmtNum(daysSinceOpen)],
-      ['Followers / day', fmtDecimal(velocity)],
-      ['Estimated wishlists today (x' + multiplier + ')', fmtNum(wishlistsToday)],
-      ['Wishlist range today', fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)'],
-      ['Days to launch', fmtNum(daysToLaunch)],
-      ['Projected followers at launch', fmtNum(projected)],
-      ['Estimated wishlists at launch (x' + multiplier + ')', fmtNum(estimatedWishlists)],
-      ['Wishlist target', fmtNum(target)]
-    ];
-    var gapStr = (gap >= 0 ? '+' : '') + fmtNum(gap);
-    var gapCls = gap >= 0 ? 'gap-positive' : 'gap-negative';
-    var html = rows.map(function(r){
-      return '<div class="row"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>';
-    }).join('');
-    html += '<div class="row"><span>Gap</span><span class="' + gapCls + '">' + gapStr + '</span></div>';
+    if (!bdBuilt) buildBreakdown();
+
+    // Labels that carry the multiplier are refreshed each render; the value spans persist.
+    bdRefs.wlToday.label.textContent = 'Estimated wishlists today (x' + multiplier + ')';
+    bdRefs.wlLaunch.label.textContent = 'Estimated wishlists at launch (x' + multiplier + ')';
+
+    setBdNum('current', current, fmtNum);
+    setBdNum('daysOpen', daysSinceOpen, fmtNum);
+    setBdNum('velocity', velocity, fmtDecimal);
+    setBdNum('wlToday', wishlistsToday, fmtNum);
+    bdRefs.range.val.textContent = fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
+    setBdNum('daysLaunch', daysToLaunch, fmtNum);
+    setBdNum('projected', projected, fmtNum);
+    setBdNum('wlLaunch', estimatedWishlists, fmtNum);
+    setBdNum('target', target, fmtNum);
+
+    // Gap: fix the sign + color class from the final value up front, then animate the
+    // magnitude so a zero-crossing during the roll never flips the displayed sign or class.
+    var gapSign = gap >= 0 ? '+' : '-';
+    bdRefs.gap.val.className = gap >= 0 ? 'gap-positive' : 'gap-negative';
+    setBdNum('gap', Math.abs(gap), function(v){ return gapSign + fmtNum(v); });
+
     if (alreadyOnTrack) {
-      html += '<div class="row"><span>Status</span><span class="gap-positive">On track · estimated wishlists already exceed target</span></div>';
+      bdRefs.status.row.style.display = '';
+      bdRefs.status.val.className = 'gap-positive';
+      bdRefs.status.val.textContent = 'On track · estimated wishlists already exceed target';
+    } else {
+      bdRefs.status.row.style.display = 'none';
+      bdRefs.status.val.className = '';
+      bdRefs.status.val.textContent = '';
     }
-    breakdownEl.innerHTML = html;
 
     // Expected Outcome: level from estimated wishlists at launch / wishlist target.
     var outcomeLevels = outlookLevelsEl.querySelectorAll('.outlook-level');
@@ -3114,6 +3181,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       if (!navigator.clipboard) return;
       var lines = [];
       breakdownEl.querySelectorAll('.row').forEach(function(row) {
+        if (row.style.display === 'none') return;
         var spans = row.querySelectorAll('span');
         if (spans.length >= 2) {
           lines.push(spans[0].textContent.trim() + ': ' + spans[spans.length - 1].textContent.trim());
