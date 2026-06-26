@@ -1875,8 +1875,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
                 <path id="traj-arrowhead-shape" d="M0,0 L4,2 L0,4 Z"></path>
               </marker>
             </defs>
-            <path id="overlay-target-line" class="overlay-target-line" fill="none"></path>
-            <path id="overlay-traj-past" class="overlay-traj-past" fill="none"></path>
+            <path id="overlay-target-line" class="overlay-target-line" fill="none" mask="url(#traj-reveal-mask)"></path>
+            <path id="overlay-traj-past" class="overlay-traj-past" fill="none" mask="url(#traj-reveal-mask)"></path>
             <path id="overlay-traj-line" class="overlay-traj-line" fill="none" marker-end="url(#traj-arrowhead)" mask="url(#traj-reveal-mask)"></path>
           </svg>
         </div>
@@ -2681,12 +2681,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (overlayRevealAnim) { overlayRevealAnim.cancel(); overlayRevealAnim = null; }
 
     if (reduceMotionMQ.matches) {
-      // Reduced motion: no directional sweep. Hold the mask fully open and fade opacity.
+      // Reduced motion: no directional sweep. Hold the mask fully open and fade the whole
+      // trajectory (past + future) and the target line in together.
       overlayMaskG.setAttribute('transform', 'translate(0,0)');
-      overlayRevealAnim = overlayTrajEl.animate(
-        [{ opacity: 0 }, { opacity: 1 }],
-        { duration: 200, easing: 'ease', fill: 'forwards' }
-      );
+      var fadeKeyframes = [{ opacity: 0 }, { opacity: 1 }];
+      var fadeOpts = { duration: 200, easing: 'ease', fill: 'forwards' };
+      overlayRevealAnim = overlayTrajEl.animate(fadeKeyframes, fadeOpts);
+      if (overlayTrajPastEl) overlayTrajPastEl.animate(fadeKeyframes, fadeOpts);
+      if (overlayTargetEl) overlayTargetEl.animate(fadeKeyframes, fadeOpts);
       return;
     }
 
