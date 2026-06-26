@@ -2719,6 +2719,16 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     overlayInView = true;
   }
 
+  // Press R to replay the chart reveal sweep. Ignored while typing in a form field
+  // so it cannot interfere with normal input. Re-triggers animation only, no data change.
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'r' && e.key !== 'R') return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var el = document.activeElement;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+    if (overlaySvg) doReveal();
+  });
+
   // --- Hover crosshair: a vertical clay line that follows the mouse over the plot,
   // with a fixed tooltip showing the date and the projected followers at that date.
   // The value is sampled from the exact projection function, not the sparse points.
