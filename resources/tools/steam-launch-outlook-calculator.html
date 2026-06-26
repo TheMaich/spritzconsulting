@@ -2786,6 +2786,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
     if (overlaySvg) doReveal();
     replayBreakdownCount();
+    // Re-ignite the active Expected Outcome level: remove, force reflow, re-add so the
+    // 200ms turn-on transition runs again. No-op when nothing is lit (target <= 0).
+    var activeLevel = outlookLevelsEl.querySelector('.outlook-level.is-active');
+    if (activeLevel) {
+      activeLevel.classList.remove('is-active');
+      void activeLevel.offsetWidth;
+      activeLevel.classList.add('is-active');
+    }
   });
 
   // --- Hover crosshair: a vertical clay line that follows the mouse over the plot,
