@@ -2366,10 +2366,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         r.segments.forEach(function(s) {
           var bx = x(s.start), bw = Math.max(6, x(s.end) - x(s.start));
           var lbl = s.label ? '<span class="g-bar-label">' + esc(s.label) + '</span>' : '';
-          bars += '<div class="g-bar ' + s.cls + '" style="left:' + bx + 'px;width:' + bw + 'px" title="' + esc(s.name) + '" aria-label="' + esc(r.plat + ': ' + s.name) + '">' + lbl + '</div>';
+          bars += '<div class="g-bar ' + s.cls + '" style="left:' + bx + 'px;width:' + bw + 'px" data-name="' + esc(s.name) + '" aria-label="' + esc(r.plat + ': ' + s.name) + '">' + lbl + '</div>';
         });
         (r.markers || []).forEach(function(m) {
-          bars += '<div class="g-marker" style="left:' + x(m) + 'px" title="Submission" aria-label="' + esc(r.plat + ': submission') + '"></div>';
+          bars += '<div class="g-marker" style="left:' + x(m) + 'px" aria-label="' + esc(r.plat + ': submission') + '"></div>';
         });
         body += '<div class="gantt-row"><div class="gantt-label"><span>' + esc(r.plat) + '</span></div>' +
           '<div class="gantt-track" style="width:' + chartW + 'px">' + bg + bars + '</div></div>';
@@ -2501,7 +2501,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           tipDate.textContent = fmt(date);
           var el = document.elementFromPoint(ev.clientX, ev.clientY);
           var bar = el && el.closest ? el.closest('.g-bar') : null;
-          var name = bar ? (bar.getAttribute('title') || '') : '';
+          var name = bar ? (bar.getAttribute('data-name') || '') : '';
           tipName.textContent = name;
           tipName.style.display = name ? 'block' : 'none';
           tip.style.display = 'block';
