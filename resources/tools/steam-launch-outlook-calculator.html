@@ -2786,11 +2786,17 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
     if (overlaySvg) doReveal();
     replayBreakdownCount();
-    // Re-ignite the active Expected Outcome level: remove, force reflow, re-add so the
-    // 200ms turn-on transition runs again. No-op when nothing is lit (target <= 0).
+    // Re-ignite the active Expected Outcome level so the 750ms turn-on transition runs
+    // again. The off state also transitions, so a plain remove/reflow/re-add leaves the
+    // color mid-flight (no delta). Disable the transition, jump to inactive instantly,
+    // then restore it before re-adding so inactive -> active eases over 750ms.
+    // No-op when nothing is lit (target <= 0).
     var activeLevel = outlookLevelsEl.querySelector('.outlook-level.is-active');
     if (activeLevel) {
+      activeLevel.style.transition = 'none';
       activeLevel.classList.remove('is-active');
+      void activeLevel.offsetWidth;
+      activeLevel.style.transition = '';
       void activeLevel.offsetWidth;
       activeLevel.classList.add('is-active');
     }
