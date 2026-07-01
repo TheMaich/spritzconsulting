@@ -2248,6 +2248,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       anchorStart = approvals.reduce(function(a, b) { return a < b ? a : b; }, release);
     }
     var contentLock = addDays(anchorStart, -14);
+    if (consoleKeys.length === 0) { contentLock = addDays(contentLock, -7); }  // PC-only: one more week of margin before release
     var qaStart = addDays(anchorStart, -21);
     recap.push({ date: contentLock, label: 'Content lock / feature complete', plat: 'All platforms', note: 'Effective content lock', lock: true, kind: 'lock' });
     // Localization delivery: calendar days before content lock (more languages = earlier), so it
