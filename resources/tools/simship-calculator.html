@@ -1601,7 +1601,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .gantt-axis .gantt-label{ background: var(--paper-3); }
 .gantt-track{ position: relative; flex: 0 0 auto; overflow: hidden; }
 .gantt-row:not(.gantt-axis) .gantt-track{ height: 46px; }
-.gantt-axis .gantt-track{ height: 64px; background: var(--paper-3); }
+.gantt-axis .gantt-track{ height: 80px; background: var(--paper-3); }
 .g-tick{ position: absolute; top: 0; bottom: 0; width: 1px; background: var(--rule-soft); }
 .g-month{
   position: absolute; top: 6px;
@@ -1635,9 +1635,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .g-guide-label.is-release{ color: var(--clay); }
 .g-guide-label.is-lock{ color: var(--accent-2); }
-.g-guide-label.is-qa{ color: var(--ink-2); top: 52px; }
 .g-guide-label.is-loc{ color: var(--ink-2); top: 52px; }
-.g-guide-label.is-summer{ color: var(--clay); top: 52px; }
+.g-guide-label.is-qa{ color: var(--ink-2); top: 66px; }
+.g-guide-label.is-summer{ color: var(--clay); top: 66px; }
 .g-qa-band{ position: absolute; top: 0; bottom: 0; background: var(--ink-3); opacity: 0.10; z-index: 1; }
 .gantt-band-summer{
   position: absolute; top: 0; bottom: 0;
@@ -2380,7 +2380,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         var bx = x(b.start), bw = Math.max(2, x(b.end) - x(b.start));
         bandsHtml += '<div class="' + (b.cls || 'g-qa-band') + '" style="left:' + bx + 'px;width:' + bw + 'px"></div>';
         if (b.label) {
-          bandLabelsHtml += '<div class="g-guide-label ' + (b.labelCls || '') + '" style="left:' + bx + 'px">' + esc(b.label) + '</div>';
+          // Band labels anchor to the band CENTER (bx + bw/2), not the start, so two band
+          // labels that begin near the same date (internal QA and summer) spread apart.
+          bandLabelsHtml += '<div class="g-guide-label ' + (b.labelCls || '') + '" style="left:' + (bx + bw / 2) + 'px">' + esc(b.label) + '</div>';
         }
       });
 
