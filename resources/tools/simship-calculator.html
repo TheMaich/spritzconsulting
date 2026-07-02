@@ -2094,10 +2094,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var m = d.getMonth(), day = d.getDate();
     return (m === 11 && day >= 20) || (m === 0 && day <= 10);
   }
-  // European summer slowdown: 15 Jul through 31 Aug, ignoring year.
+  // European summer slowdown: 15 Jul through 15 Aug, ignoring year.
   function isSummer(d) {
     var m = d.getMonth(), day = d.getDate();
-    return (m === 6 && day >= 15) || (m === 7);
+    return (m === 6 && day >= 15) || (m === 7 && day <= 15);
   }
 
   function radioValue(list) {
@@ -2363,12 +2363,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
       }
 
-      // Summer slowdown band(s): Jul 15 through Aug 31, clamped to this chart's visible
+      // Summer slowdown band(s): Jul 15 through Aug 15, clamped to this chart's visible
       // range [startDate, release]. One band per summer the range crosses.
       var summerBands = [];
       for (var sy = startDate.getFullYear(); sy <= release.getFullYear(); sy++) {
         var sStart = new Date(sy, 6, 15);   // Jul 15
-        var sEnd   = new Date(sy, 8, 1);    // Sep 1 exclusive, so the band covers all of Aug 31
+        var sEnd   = new Date(sy, 7, 16);   // Aug 16 exclusive, so the band covers all of Aug 15
         if (sStart < startDate) sStart = new Date(startDate.getTime());
         if (sEnd > release)     sEnd   = new Date(release.getTime());
         if (sStart < sEnd) summerBands.push({ start: sStart, end: sEnd, cls: 'gantt-band-summer', label: 'Summer slowdown', labelCls: 'is-summer' });
