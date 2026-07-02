@@ -1637,7 +1637,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .g-guide-label.is-lock{ color: var(--accent-2); }
 .g-guide-label.is-qa{ color: var(--ink-2); top: 52px; }
 .g-guide-label.is-loc{ color: var(--ink-2); top: 52px; }
+.g-guide-label.is-summer{ color: var(--clay); top: 52px; }
 .g-qa-band{ position: absolute; top: 0; bottom: 0; background: var(--ink-3); opacity: 0.10; z-index: 1; }
+.gantt-band-summer{
+  position: absolute; top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--clay) 10%, transparent);
+  border-left: 1px dashed color-mix(in srgb, var(--clay) 45%, transparent);
+  border-right: 1px dashed color-mix(in srgb, var(--clay) 45%, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
 .g-bar{
   position: absolute; top: 50%; transform: translateY(-50%);
   height: 18px; border-radius: 5px; z-index: 2;
@@ -2055,22 +2064,28 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   function addDays(base, n) { return new Date(base.getTime() + n * DAY); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function isWorkday(d) { var g = d.getDay(); return g !== 0 && g !== 6; }
-  // Cert review pauses during freezes, so freeze days are not cert working days.
-  function isFreeze(d) { return isHoliday(d) || isSummer(d); }
-  function isCertWorkday(d) {
+  // Per-day cert progress weight. Weekends and the winter/holiday freeze are a hard 0
+  // (no work). Summer is a SLOWDOWN, not a freeze: a summer weekday advances progress by
+  // 0.67, so a summer-crossing window needs ~50% more calendar time (1 / 0.67) than normal.
+  function certWeight(d) {
     var g = d.getDay();
-    return g !== 0 && g !== 6 && !isFreeze(d);
+    if (g === 0 || g === 6) return 0;   // weekend: no work
+    if (isHoliday(d)) return 0;         // winter/holiday freeze stays a hard 0
+    if (isSummer(d)) return 0.67;       // summer: slowdown, ~50% more calendar time
+    return 1;                           // normal working day
   }
-  // n cert working days BEFORE base, landing on a cert working day.
+  // "Is this a cert working day at all" = any day that advances progress (summer now counts).
+  function isCertWorkday(d) { return certWeight(d) > 0; }
+  // n cert working days BEFORE base, accumulating fractional summer weight.
   function subWorkdays(base, n) {
     var d = new Date(base.getTime()), left = n;
-    while (left > 0) { d = addDays(d, -1); if (isCertWorkday(d)) left--; }
+    while (left > 1e-9) { d = addDays(d, -1); var w = certWeight(d); if (w > 0) left -= w; }
     return d;
   }
-  // n cert working days AFTER base, landing on a cert working day.
+  // n cert working days AFTER base, accumulating fractional summer weight.
   function addWorkdays(base, n) {
     var d = new Date(base.getTime()), left = n;
-    while (left > 0) { d = addDays(d, 1); if (isCertWorkday(d)) left--; }
+    while (left > 1e-9) { d = addDays(d, 1); var w = certWeight(d); if (w > 0) left -= w; }
     return d;
   }
 
@@ -2348,8 +2363,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
       }
 
+      // Summer slowdown band(s): Jul 15 through Aug 31, clamped to this chart's visible
+      // range [startDate, release]. One band per summer the range crosses.
+      var summerBands = [];
+      for (var sy = startDate.getFullYear(); sy <= release.getFullYear(); sy++) {
+        var sStart = new Date(sy, 6, 15);   // Jul 15
+        var sEnd   = new Date(sy, 8, 1);    // Sep 1 exclusive, so the band covers all of Aug 31
+        if (sStart < startDate) sStart = new Date(startDate.getTime());
+        if (sEnd > release)     sEnd   = new Date(release.getTime());
+        if (sStart < sEnd) summerBands.push({ start: sStart, end: sEnd, cls: 'gantt-band-summer', label: 'Summer slowdown', labelCls: 'is-summer' });
+      }
+      var allBands = bands.concat(summerBands);
+
       var bandsHtml = '', bandLabelsHtml = '';
-      bands.forEach(function(b) {
+      allBands.forEach(function(b) {
         var bx = x(b.start), bw = Math.max(2, x(b.end) - x(b.start));
         bandsHtml += '<div class="' + (b.cls || 'g-qa-band') + '" style="left:' + bx + 'px;width:' + bw + 'px"></div>';
         if (b.label) {
@@ -2511,6 +2538,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           var el = document.elementFromPoint(ev.clientX, ev.clientY);
           var bar = el && el.closest ? el.closest('.g-bar') : null;
           var name = bar ? (bar.getAttribute('data-name') || '') : '';
+          if (isSummer(date)) name = name ? (name + ' • summer slowdown') : 'Summer slowdown';
           tipName.textContent = name;
           tipName.style.display = name ? 'block' : 'none';
           tip.style.display = 'block';
