@@ -1903,7 +1903,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Cert timelines are estimates, not slots.</strong> The dates above are based on typical first-party review windows: ~4 to 6 weeks for Nintendo Lot Check, ~3 to 4 weeks for PlayStation TRC, ~2 to 3 weeks for Xbox. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
+          <li><strong>Cert timelines are estimates, not slots.</strong> The dates above assume a full submission cycle across three cert rounds: roughly 4 to 6 weeks total for Nintendo, 3 to 4 weeks for PlayStation, 2 to 3 weeks for Xbox, including bug-fix time between rounds. A single cert check is far shorter; these ranges account for the whole iterate-and-resubmit loop. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Treat these dates as a planning baseline, not a confirmed calendar.</li>
           <li><strong>First submissions rarely pass, so plan for three rounds.</strong> The schedule above lists three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Treat a first-pass approval as a bonus, not a plan.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
           <li><strong>Store and build are separate tracks, with one exception.</strong> On Steam, Xbox and PlayStation the coming-soon store page can go live before the build is even submitted. On Nintendo Switch it cannot: the eShop page can only be submitted after the build passes lot check, and it needs at least 10 working days of review, so the Switch build approval is pulled that far ahead of launch. On every platform the store page must carry a final price and release date and time before it will be accepted for launch. Miss that and the product will not be visible or pre-orderable, even if the build passed.</li>
@@ -2056,7 +2056,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var PLATFORMS = {
     pc:     { name: 'PC / Steam',      store: 14, build: 7 },
     switch: { name: 'Nintendo Switch', store: 35, cert: { check: 10, fix: 5, last: 3 } },
-    ps:     { name: 'PlayStation',     store: 28, cert: { check: 8,  fix: 5, last: 3 } },
+    ps:     { name: 'PlayStation',     store: 28, cert: { check: 5,  fix: 5, last: 3 } },
     xbox:   { name: 'Xbox',            store: 24, cert: { check: 6,  fix: 5, last: 3 } }
   };
 
