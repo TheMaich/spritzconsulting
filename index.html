@@ -1986,12 +1986,15 @@ body.is-tab-hidden .dot{
 .testi-card--r3{ --testi-tilt: -3deg; }
 .testi-card--r4{ --testi-tilt: 7deg; }
 .testi-card--r5{ --testi-tilt: -5deg; }
-.testi-monogram{
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(72px, 9vw, 120px);
-  line-height: 1;
-  color: var(--clay);
+/* Company logo on the decorative cards; picture unwraps so the img is the
+   centered grid item and its % sizing resolves against the card */
+.testi-visual-card picture{ display: contents; }
+.testi-logo{
+  max-width: 60%;
+  max-height: 40%;
+  width: auto; height: auto;
+  object-fit: contain;
+  display: block;
 }
 /* Right: the active testimonial's text. Entries share one grid cell so the
    column is always as tall as the longest quote and never jumps. */
@@ -2695,13 +2698,13 @@ body.is-tab-hidden .dot{
     </div>
 
     <div class="testi-grid" data-reveal>
-      <!-- Decorative tilted card stack; monogram initials pair card N with entry N -->
+      <!-- Decorative tilted card stack; company logos pair card N with entry N -->
       <div class="testi-stage" aria-hidden="true">
-        <div class="testi-visual-card testi-card--r1 is-active"><span class="testi-monogram">I</span></div>
-        <div class="testi-visual-card testi-card--r2"><span class="testi-monogram">V</span></div>
-        <div class="testi-visual-card testi-card--r3"><span class="testi-monogram">D</span></div>
-        <div class="testi-visual-card testi-card--r4"><span class="testi-monogram">J</span></div>
-        <div class="testi-visual-card testi-card--r5"><span class="testi-monogram">I</span></div>
+        <div class="testi-visual-card testi-card--r1 is-active"><img class="testi-logo" src="assets/logo-goldpact-alpha.png" alt="" width="1018" height="573" loading="lazy" decoding="async" /></div>
+        <div class="testi-visual-card testi-card--r2"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="lazy" decoding="async" /></picture></div>
+        <div class="testi-visual-card testi-card--r3"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="lazy" decoding="async" /></picture></div>
+        <div class="testi-visual-card testi-card--r4"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="lazy" decoding="async" /></picture></div>
+        <div class="testi-visual-card testi-card--r5"><picture><source srcset="assets/logo-rebellion.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rebellion.png" alt="" width="500" height="222" loading="lazy" decoding="async" /></picture></div>
       </div>
 
       <div class="testi-copy">
