@@ -494,6 +494,7 @@ body.is-tab-hidden .dot{
 #consultancy .about-title{ font-size: clamp(28px, 3.4vw, 44px); }
 #services{ padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(16px, 2vw, 28px); }
 #faq{ padding-top: clamp(16px, 2vw, 28px); padding-bottom: clamp(40px, 6vw, 72px); }
+#testimonials{ padding-top: clamp(24px, 3vw, 48px); padding-bottom: clamp(40px, 6vw, 72px); }
 #contact{ padding-top: clamp(28px, 4vw, 56px); padding-bottom: clamp(64px, 9vw, 120px); }
 .kicker{
   display: inline-flex; align-items: center; gap: 10px;
@@ -1922,6 +1923,155 @@ body.is-tab-hidden .dot{
 .blur-reveal.is-visible {
   animation: blur-reveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Testimonials: tilted quote-card stack on the left, active testimonial text on
+   the right. Fully scoped under testi- names; must never share selectors with
+   the hero deck. */
+.testi-head{ max-width: 720px; }
+/* Heading sized like the sibling sections (mirrors .faq-head h2) */
+.testi-head h2{
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 64px);
+  font-variation-settings: "opsz" 96;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 18px 0 0;
+  text-wrap: balance;
+}
+.testi-head h2 em{
+  font-style: italic;
+  color: var(--clay);
+  font-variation-settings: "opsz" 96;
+}
+.testi-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  margin-top: clamp(48px, 6vw, 88px);
+}
+/* Left: decorative card stack. Fixed per-card tilts, active card rotates into place. */
+.testi-stage{
+  position: relative;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+}
+.testi-visual-card{
+  position: absolute; inset: 0;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+  display: grid;
+  place-items: center;
+  opacity: 0.5;
+  transform: rotate(var(--testi-tilt, 0deg)) scale(0.92) translateY(12px);
+  transition: transform .55s var(--ease), opacity .55s var(--ease);
+}
+.testi-visual-card::before{
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.testi-visual-card.is-active{
+  opacity: 1;
+  transform: rotate(0deg) scale(1) translateY(0);
+}
+.testi-card--r1{ --testi-tilt: -6deg; }
+.testi-card--r2{ --testi-tilt: 4deg; }
+.testi-card--r3{ --testi-tilt: -3deg; }
+.testi-card--r4{ --testi-tilt: 7deg; }
+.testi-card--r5{ --testi-tilt: -5deg; }
+.testi-monogram{
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(72px, 9vw, 120px);
+  line-height: 1;
+  color: var(--clay);
+}
+/* Right: the active testimonial's text. Entries share one grid cell so the
+   column is always as tall as the longest quote and never jumps. */
+.testi-entries{ display: grid; }
+.testi-entry{
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+  pointer-events: none;
+  align-self: start;
+}
+.testi-entry.is-active{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.testi-entry.is-leaving{
+  opacity: 0;
+  transform: translateY(-16px);
+}
+.testi-name{
+  margin: 0;
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.testi-role{
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.testi-quote{
+  margin: clamp(18px, 2vw, 28px) 0 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(19px, 1.7vw, 24px);
+  font-variation-settings: "opsz" 48;
+  letter-spacing: -0.018em;
+  line-height: 1.35;
+  color: var(--ink);
+}
+/* Controls: round prev/next, arrows micro-slide on hover */
+.testi-controls{
+  display: flex;
+  gap: 14px;
+  margin-top: clamp(24px, 3vw, 36px);
+}
+.testi-btn{
+  appearance: none;
+  width: 44px; height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  color: var(--ink);
+  display: grid; place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color .25s var(--ease), color .25s var(--ease), transform .2s var(--ease);
+}
+.testi-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.testi-btn:active{ transform: scale(0.94); }
+.testi-btn svg{
+  width: 18px; height: 18px;
+  stroke: currentColor; stroke-width: 1.7;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .2s var(--ease);
+}
+.testi-btn[data-testi-prev]:hover svg{ transform: translateX(-2px); }
+.testi-btn[data-testi-next]:hover svg{ transform: translateX(2px); }
+@media (prefers-reduced-motion: reduce){
+  .testi-visual-card,
+  .testi-entry,
+  .testi-btn svg{ transition: none; }
+}
+@media (max-width: 760px){
+  .testi-grid{ grid-template-columns: 1fr; gap: 36px; }
+  .testi-stage{ max-width: 320px; }
+}
 </style>
 
 <script type="application/ld+json">
@@ -1967,7 +2117,8 @@ body.is-tab-hidden .dot{
         <a href="#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">My Experience</span></a>
         <a href="#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="#faq"><span class="num">03</span><span data-i18n="nav.faq">FAQ</span></a>
-        <a href="#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
+        <a href="#testimonials"><span class="num">04</span><span data-i18n="nav.testimonials">Testimonials</span></a>
+        <a href="#contact"><span class="num">05</span><span data-i18n="nav.contact">Contact</span></a>
         <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
@@ -1988,7 +2139,8 @@ body.is-tab-hidden .dot{
     <a href="#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">My Experience</span></a>
     <a href="#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
     <a href="#faq" data-menu-link><span class="num">03</span> <span data-i18n="nav.faq">FAQ</span></a>
-    <a href="#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
+    <a href="#testimonials" data-menu-link><span class="num">04</span> <span data-i18n="nav.testimonials">Testimonials</span></a>
+    <a href="#contact" data-menu-link><span class="num">05</span> <span data-i18n="nav.contact">Contact</span></a>
     <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
   </nav>
   <div class="foot">
@@ -2535,6 +2687,68 @@ body.is-tab-hidden .dot{
     </div>
   </section>
 
+  <!-- Testimonials -->
+  <section class="section wrap" id="testimonials" aria-labelledby="testimonials-h">
+    <div class="testi-head">
+      <span class="kicker" data-reveal data-i18n="testimonials.kicker" data-i18n-html><span class="num">04</span> Testimonials</span>
+      <h2 class="blur-reveal" id="testimonials-h" data-reveal data-i18n="testimonials.h" data-i18n-html>What it&rsquo;s like to <em>work with me</em>.</h2>
+    </div>
+
+    <div class="testi-grid" data-reveal>
+      <!-- Decorative tilted card stack; monogram initials pair card N with entry N -->
+      <div class="testi-stage" aria-hidden="true">
+        <div class="testi-visual-card testi-card--r1 is-active"><span class="testi-monogram">I</span></div>
+        <div class="testi-visual-card testi-card--r2"><span class="testi-monogram">V</span></div>
+        <div class="testi-visual-card testi-card--r3"><span class="testi-monogram">D</span></div>
+        <div class="testi-visual-card testi-card--r4"><span class="testi-monogram">J</span></div>
+        <div class="testi-visual-card testi-card--r5"><span class="testi-monogram">I</span></div>
+      </div>
+
+      <div class="testi-copy">
+        <div class="testi-entries">
+          <article class="testi-entry is-active" data-testi-entry="0">
+            <h3 class="testi-name">Iain</h3>
+            <p class="testi-role" data-i18n="testi1.role">CEO of Goldpact Goblins</p>
+            <blockquote class="testi-quote" data-i18n="testi1.q" data-i18n-html>&ldquo;When I hit some issues I wasn&rsquo;t certain how to resolve, Spritz Consulting was the obvious choice to bring in.&rdquo;</blockquote>
+          </article>
+
+          <article class="testi-entry" data-testi-entry="1" aria-hidden="true" inert>
+            <h3 class="testi-name">V&eacute;ronique</h3>
+            <p class="testi-role" data-i18n="testi2.role">Product Manager at Raw Fury</p>
+            <blockquote class="testi-quote" data-i18n="testi2.q" data-i18n-html>&ldquo;I was particularly impressed by Michele&rsquo;s ability to create contact with developers, understand their vision very quickly [...] and deliver an analysis on the best developer / publisher match for their game. This always seems to come easily to him, and it&rsquo;s far from a given in the video game industry.&rdquo;</blockquote>
+          </article>
+
+          <article class="testi-entry" data-testi-entry="2" aria-hidden="true" inert>
+            <h3 class="testi-name">Daria</h3>
+            <p class="testi-role" data-i18n="testi3.role">Senior Community Marketing Manager at Raw Fury</p>
+            <blockquote class="testi-quote" data-i18n="testi3.q" data-i18n-html>&ldquo;If you&rsquo;re considering Michele for your project, look no further [...] with him on board the project is sure to deliver its best.&rdquo;</blockquote>
+          </article>
+
+          <article class="testi-entry" data-testi-entry="3" aria-hidden="true" inert>
+            <h3 class="testi-name">Johan</h3>
+            <p class="testi-role" data-i18n="testi4.role">Head of Scouting at Raw Fury</p>
+            <blockquote class="testi-quote" data-i18n="testi4.q" data-i18n-html>&ldquo;You put a problem in front of Michele and he will find not only a way to solve it, but to do it with a great attitude. Can&rsquo;t recommend him enough.&rdquo;</blockquote>
+          </article>
+
+          <article class="testi-entry" data-testi-entry="4" aria-hidden="true" inert>
+            <h3 class="testi-name">Ilya</h3>
+            <p class="testi-role" data-i18n="testi5.role">QA Director, ex-Rebellion</p>
+            <blockquote class="testi-quote" data-i18n="testi5.q" data-i18n-html>&ldquo;His dedication, positivity and most importantly can do attitude made him a key player within our teams! [...] This included leading all QA efforts on several successive projects on a completely new platform with its own unique pipeline and challenges.&rdquo;</blockquote>
+          </article>
+        </div>
+
+        <div class="testi-controls" role="group" data-i18n-aria="testi.nav.aria" aria-label="Browse testimonials">
+          <button type="button" class="testi-btn" data-testi-prev data-i18n-aria="testi.prev.aria" aria-label="Previous testimonial">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button type="button" class="testi-btn" data-testi-next data-i18n-aria="testi.next.aria" aria-label="Next testimonial">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <style>
     .field select{
       font: 400 16px/1.4 var(--sans);
@@ -2564,7 +2778,7 @@ body.is-tab-hidden .dot{
   <section class="section contact" id="contact" aria-labelledby="contact-h">
     <div class="wrap contact-grid">
       <div class="contact-copy">
-        <span class="kicker" data-reveal data-i18n="contact.kicker" data-i18n-html><span class="num">04</span> Get in touch</span>
+        <span class="kicker" data-reveal data-i18n="contact.kicker" data-i18n-html><span class="num">05</span> Get in touch</span>
         <h2 class="blur-reveal" id="contact-h" data-reveal data-i18n="contact.h">
           Tell me what you&rsquo;re working on.
         </h2>
@@ -2686,6 +2900,7 @@ body.is-tab-hidden .dot{
     'nav.consultancy': 'La Mia Esperienza',
     'nav.services': 'Servizi',
     'nav.faq': 'FAQ',
+    'nav.testimonials': 'Testimonianze',
     'nav.contact': 'Contatti',
     'nav.resources': 'Risorse',
     'menu.open': 'Apri menu',
@@ -2833,7 +3048,20 @@ body.is-tab-hidden .dot{
     'faq6.q': 'Siamo pre-funding o pre-publisher. Parli con noi lo stesso?',
     'faq6.a': 'Sì. La call conoscitiva non guarda in che stadio siete. Se vi serve costruzione del pitch deck o publisher demo prep, è un servizio a sé. Se davvero non potete permettervi nulla, vi indirizzo alle letture giuste o alle persone giuste, senza vincoli.',
 
-    'contact.kicker': '<span class="num">04</span> Mettiti in contatto',
+    /* Testimonials: le citazioni restano volutamente in inglese (testi1.q..testi5.q
+       non hanno voce nel dizionario, quindi resta l'originale del DOM) */
+    'testimonials.kicker': '<span class="num">04</span> Testimonianze',
+    'testimonials.h': 'Cosa significa <em>lavorare con me</em>.',
+    'testi1.role': 'CEO di Goldpact Goblins',
+    'testi2.role': 'Product Manager presso Raw Fury',
+    'testi3.role': 'Senior Community Marketing Manager presso Raw Fury',
+    'testi4.role': 'Head of Scouting presso Raw Fury',
+    'testi5.role': 'QA Director, ex-Rebellion',
+    'testi.nav.aria': 'Sfoglia le testimonianze',
+    'testi.prev.aria': 'Testimonianza precedente',
+    'testi.next.aria': 'Testimonianza successiva',
+
+    'contact.kicker': '<span class="num">05</span> Mettiti in contatto',
     'contact.h': 'Dimmi a cosa stai lavorando.',
     'contact.p': 'Raccontami il gioco, dove sta, e cosa lo sta frenando. Se siamo compatibili, fissiamo una call conoscitiva di 30 minuti. Altrimenti, ti indirizzo a qualcuno più adatto.',
     'contact.note': 'P.S. Di norma rispondo entro 1 o 3 giorni lavorativi.<br />Se non ricevi niente in quella finestra, puoi scrivermi di nuovo senza problemi.',
@@ -2868,6 +3096,7 @@ body.is-tab-hidden .dot{
     'nav.consultancy': 'Mon Parcours',
     'nav.services': 'Services',
     'nav.faq': 'FAQ',
+    'nav.testimonials': 'Témoignages',
     'nav.contact': 'Contact',
     'nav.resources': 'Ressources',
     'menu.open': 'Ouvrir le menu',
@@ -3031,8 +3260,21 @@ body.is-tab-hidden .dot{
 
     'faq.note': 'Ce sont mes conditions habituelles. Si votre situation est particulière, on en parle lors de l\'appel — je préfère trouver une formule qui convient plutôt que de passer à côté d\'un bon projet.',
 
+    // Testimonials: les citations restent volontairement en anglais (testi1.q..testi5.q
+    // absents du dictionnaire, l'original du DOM est conservé)
+    'testimonials.kicker': '<span class="num">04</span> Témoignages',
+    'testimonials.h': 'Ce que ça fait de <em>travailler avec moi</em>.',
+    'testi1.role': 'CEO de Goldpact Goblins',
+    'testi2.role': 'Product Manager chez Raw Fury',
+    'testi3.role': 'Senior Community Marketing Manager chez Raw Fury',
+    'testi4.role': 'Head of Scouting chez Raw Fury',
+    'testi5.role': 'QA Director, ex-Rebellion',
+    'testi.nav.aria': 'Parcourir les témoignages',
+    'testi.prev.aria': 'Témoignage précédent',
+    'testi.next.aria': 'Témoignage suivant',
+
     // Contact
-    'contact.kicker': '<span class="num">04</span> Parlons-en',
+    'contact.kicker': '<span class="num">05</span> Parlons-en',
     'contact.h': 'Dites-moi sur quoi vous travaillez.',
     'contact.p': 'Parlez-moi du jeu, de son avancement, et de ce qui coince. Si le profil correspond, on fixe un appel de trente minutes. Sinon, je vous oriente vers quelqu\'un de plus adapté.',
     'contact.note': 'P.S. Je réponds en général sous un à trois jours ouvrés. Sans nouvelles passé ce délai, relancez-moi sans hésiter.',
@@ -3068,6 +3310,7 @@ body.is-tab-hidden .dot{
     'nav.consultancy': 'Mi Trayectoria',
     'nav.services': 'Servicios',
     'nav.faq': 'FAQ',
+    'nav.testimonials': 'Testimonios',
     'nav.contact': 'Contacto',
     'nav.resources': 'Recursos',
     'menu.open': 'Abrir menú',
@@ -3196,7 +3439,19 @@ body.is-tab-hidden .dot{
     'faq5.a': 'Sí. Nueve años en la industria han construido una red de estudios de confianza, porting houses, socios de QA, equipos de audio y vendors de localización. Los presento, los informo y los coordino como parte del engagement. Sin comisiones de ningún lado.',
     'faq6.q': 'Somos pre-funding o no tenemos publisher. ¿Hablarás con nosotros igualmente?',
     'faq6.a': 'Sí. La llamada de descubrimiento no mira en qué fase estás. Si necesitas estructurar un pitch deck o preparar una publisher demo, es un servicio en sí mismo. Si realmente no puedes permitirte nada todavía, te oriento hacia las lecturas correctas o las personas correctas, sin ataduras.',
-    'contact.kicker': '<span class="num">04</span> Hablemos',
+    /* Testimonials: las citas se mantienen a propósito en inglés (testi1.q..testi5.q
+       no figuran en el diccionario, se conserva el original del DOM) */
+    'testimonials.kicker': '<span class="num">04</span> Testimonios',
+    'testimonials.h': 'Cómo es <em>trabajar conmigo</em>.',
+    'testi1.role': 'CEO de Goldpact Goblins',
+    'testi2.role': 'Product Manager en Raw Fury',
+    'testi3.role': 'Senior Community Marketing Manager en Raw Fury',
+    'testi4.role': 'Head of Scouting en Raw Fury',
+    'testi5.role': 'QA Director, ex-Rebellion',
+    'testi.nav.aria': 'Explorar los testimonios',
+    'testi.prev.aria': 'Testimonio anterior',
+    'testi.next.aria': 'Testimonio siguiente',
+    'contact.kicker': '<span class="num">05</span> Hablemos',
     'contact.h': 'Cuéntame en qué estás trabajando.',
     'contact.p': 'Háblame del juego, en qué fase está, y qué lo está frenando. Si encajamos, fijamos una llamada de 30 minutos. Si no, te oriento hacia alguien más adecuado.',
     'contact.note': 'P.S. Normalmente respondo en 1 a 3 días hábiles. Si no recibes nada en ese plazo, no dudes en escribirme de nuevo.',
@@ -3441,6 +3696,77 @@ body.is-tab-hidden .dot{
       if (document.hidden) pause(); else resume();
     });
 
+    schedule();
+  })();
+
+  // Testimonials: tilted visual stack (left) + sliding text entries (right).
+  // Fully scoped to #testimonials (testi- namespace): no shared selectors, so
+  // the dormant hero deck can come back without colliding.
+  (function initTestimonials(){
+    const section = document.getElementById('testimonials');
+    if (!section) return;
+    const visuals = Array.from(section.querySelectorAll('.testi-visual-card'));
+    const entries = Array.from(section.querySelectorAll('.testi-entry'));
+    if (entries.length < 2 || visuals.length !== entries.length) return;
+    const prev = section.querySelector('[data-testi-prev]');
+    const next = section.querySelector('[data-testi-next]');
+    const AUTO_MS = 6000;
+    const LEAVE_MS = 400; // slightly past the .35s exit transition
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let idx = 0;
+    let timer = null;
+
+    function layerVisuals(){
+      visuals.forEach((v, i) => {
+        const raw = Math.abs(i - idx);
+        const dist = Math.min(raw, visuals.length - raw); // circular distance
+        v.classList.toggle('is-active', i === idx);
+        v.style.zIndex = String(visuals.length - dist);
+      });
+    }
+    function swapEntry(from, to){
+      const leaving = entries[from];
+      const entering = entries[to];
+      leaving.classList.remove('is-active');
+      leaving.setAttribute('aria-hidden', 'true');
+      leaving.toggleAttribute('inert', true);
+      if (!reduceMotion){
+        leaving.classList.add('is-leaving');
+        setTimeout(() => leaving.classList.remove('is-leaving'), LEAVE_MS);
+      }
+      // a fast return trip can land while the exit class is still pending
+      entering.classList.remove('is-leaving');
+      entering.classList.add('is-active');
+      entering.removeAttribute('aria-hidden');
+      entering.toggleAttribute('inert', false);
+    }
+    function show(n){
+      const to = (n + entries.length) % entries.length;
+      if (to === idx) return;
+      const from = idx;
+      idx = to;
+      swapEntry(from, to);
+      layerVisuals();
+    }
+    function schedule(){
+      clearTimeout(timer);
+      if (reduceMotion) return;
+      timer = setTimeout(() => { show(idx + 1); schedule(); }, AUTO_MS);
+    }
+    function pause(){
+      clearTimeout(timer);
+    }
+
+    if (prev) prev.addEventListener('click', () => { show(idx - 1); schedule(); });
+    if (next) next.addEventListener('click', () => { show(idx + 1); schedule(); });
+
+    section.addEventListener('pointerenter', pause);
+    section.addEventListener('pointerleave', schedule);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) pause(); else schedule();
+    });
+
+    layerVisuals();
     schedule();
   })();
 
