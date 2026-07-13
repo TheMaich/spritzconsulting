@@ -1986,12 +1986,15 @@ body.is-tab-hidden .dot{
 .testi-card--r3{ --testi-tilt: -3deg; }
 .testi-card--r4{ --testi-tilt: 7deg; }
 .testi-card--r5{ --testi-tilt: -5deg; }
-/* Company logo on the decorative cards; picture unwraps so the img is the
-   centered grid item and its % sizing resolves against the card */
-.testi-visual-card picture{ display: contents; }
+/* Company logo, dead-centered on the card. Absolutely positioned with auto
+   margins so centering binds to the img itself and the card, immune to the
+   picture wrapper (display:contents made Chrome mis-resolve % heights).
+   Forced width because the webp sources are smaller than the card and
+   max-width never upscales; object-fit keeps the art centered on clamp. */
 .testi-logo{
-  /* forced width: the webp sources are smaller than the card and max-width
-     never upscales; object-fit keeps the image centered when height clamps */
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: 78%;
   height: auto;
   max-height: 55%;
@@ -2707,7 +2710,7 @@ body.is-tab-hidden .dot{
     <div class="testi-grid" data-reveal>
       <!-- Decorative tilted card stack; company logos pair card N with entry N -->
       <div class="testi-stage" aria-hidden="true">
-        <div class="testi-visual-card testi-card--r1 is-active"><img class="testi-logo testi-logo--wide" src="assets/logo-goldpact-alpha.png" alt="" width="1018" height="573" loading="eager" decoding="async" /></div>
+        <div class="testi-visual-card testi-card--r1 is-active"><img class="testi-logo testi-logo--wide" src="assets/logo-goldpact-alpha.png" alt="" width="879" height="340" loading="eager" decoding="async" /></div>
         <div class="testi-visual-card testi-card--r2"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="eager" decoding="async" /></picture></div>
         <div class="testi-visual-card testi-card--r3"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="eager" decoding="async" /></picture></div>
         <div class="testi-visual-card testi-card--r4"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="eager" decoding="async" /></picture></div>
