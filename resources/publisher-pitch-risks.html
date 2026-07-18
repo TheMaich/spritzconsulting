@@ -679,6 +679,47 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   background: var(--clay);
   margin-bottom: 24px;
 }
+.related {
+  margin: 64px 0 0;
+  padding-top: 34px;
+  border-top: 1px solid var(--rule);
+}
+.related-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--ink-3);
+  margin-bottom: 18px;
+}
+.related ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.related li { margin: 0; }
+.related a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 17px;
+  line-height: 1.5;
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.related a:hover, .related a:focus-visible {
+  color: var(--clay);
+  border-bottom-color: var(--clay);
+}
+.related .related-note {
+  display: block;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 4px;
+}
 .tldr {
   background: var(--paper-2);
   border: 1px solid var(--rule);
@@ -1054,6 +1095,23 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </ul>
     </div>
 
+    <div class="related">
+      <span class="related-label">KEEP READING</span>
+      <ul>
+        <li>
+          <a href="/resources/publisher-pitch-deck-template.html">Publisher Pitch Deck Template</a>
+          <span class="related-note">Fourteen slides, from elevator pitch to budget request. Free, no email.</span>
+        </li>
+        <li>
+          <a href="/resources/what-5050-means.html">What '50/50' actually means</a>
+          <span class="related-note">The split percentage is the last number to look at. Net Revenue is the first.</span>
+        </li>
+        <li>
+          <a href="/resources/tools/publishing-break-even-calculator.html">Publishing Break-Even Calculator</a>
+          <span class="related-note">Turn the budget in your pitch into the units you need to clear recoupment.</span>
+        </li>
+      </ul>
+    </div>
     <div class="cta-card">
       <div class="cta-card-text">
         <p class="cta-card-headline">
