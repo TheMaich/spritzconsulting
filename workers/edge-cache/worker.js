@@ -3,7 +3,7 @@
  *
  * Only deploy this if a Cloudflare cache rule is not an option. A cache rule
  * does the same job with zero Worker invocations. See
- * docs/cloudflare-html-cache.md. Never run both at once.
+ * cloudflare-html-cache.md. Never run both at once.
  *
  * Behaviour: GET/HEAD requests for HTML paths are served from the Cloudflare
  * cache with a 2 hour edge TTL. Everything else passes straight through.

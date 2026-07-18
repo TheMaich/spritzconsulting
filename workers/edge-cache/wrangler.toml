@@ -2,7 +2,7 @@ name = "spritz-edge-cache"
 main = "worker.js"
 compatibility_date = "2026-07-01"
 
-# Fallback only. Prefer a Cloudflare cache rule (docs/cloudflare-html-cache.md).
+# Fallback only. Prefer a Cloudflare cache rule (cloudflare-html-cache.md).
 # Do not deploy this alongside a cache rule covering the same paths.
 #
 # The route is deliberately zone wide: the Worker itself decides what is

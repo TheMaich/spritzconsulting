@@ -2,7 +2,7 @@
 
 Caches static HTML at the Cloudflare edge for 2 hours. This exists as a
 fallback for SPR-46. **Prefer the cache rule** described in
-`docs/cloudflare-html-cache.md` — it achieves the same result with no Worker
+`cloudflare-html-cache.md` — it achieves the same result with no Worker
 invocations and no code to maintain. Do not run both.
 
 ## What it caches
