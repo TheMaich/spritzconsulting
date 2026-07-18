@@ -2050,6 +2050,23 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   </div>
 </main>
 
+<div class="wrap tool-footer-note-wrap">
+  <style>
+    .tool-footer-note-wrap{ margin: clamp(32px, 4vw, 48px) auto 0; }
+    .tool-footer-note{ margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-3); }
+    .tool-footer-note a{ color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
+    .tool-footer-note a:hover{ color: var(--clay-deep); }
+  </style>
+  <p class="tool-footer-note">Built by Michele Di Nardo. 15+ shipped titles across 6 platforms. <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-tool-footer-booking>Book a 30-minute call.</a></p>
+  <script>
+    document.querySelectorAll('[data-tool-footer-booking]').forEach(function(el){
+      el.addEventListener('click', function(){
+        if (window.zaraz) { zaraz.track('booking_click', { placement: 'tool_footer', page: location.pathname }); }
+      });
+    });
+  </script>
+</div>
+
 <footer class="site-footer">
   <div class="wrap footer-grid">
     <h2 class="say-hi" data-i18n="footer.sayhi" data-i18n-html>Say <em>Ciao</em>, anytime.</h2>

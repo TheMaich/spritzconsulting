@@ -1680,14 +1680,142 @@ body.is-tab-hidden .dot{
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.form-success{
+/* Contact booking option + form states */
+.contact-booking{
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+.contact-booking p{
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.form-gdpr{
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin: 14px 0 0;
+}
+.form-server-err{
   display: none;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--danger);
+  margin: 14px 0 0;
+}
+.form-server-err[data-visible="true"]{ display: block; }
+.form-done{
+  display: none;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: clamp(22px, 2.4vw, 32px);
+  box-shadow: var(--shadow-md);
+}
+.form-done[data-visible="true"]{ display: block; }
+.form-done h3{
+  font-family: var(--serif);
+  font-size: 22px;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.form-done p{
+  margin: 0;
+  font-size: 15.5px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.form-done a{ color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
+.hp-field{
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.noscript-contact{
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink-2);
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+/* Rate on-ramp note in the hero capsule */
+.capsule-note{
+  margin: 10px 0 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+.capsule-note a{ color: var(--clay); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Services situation router */
+.services-router{
+  margin: 0 0 26px;
+}
+.services-router-intro{
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.services-router ul{
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  gap: 0;
+}
+.services-router li{ border-top: 1px solid var(--rule-soft); }
+.services-router li:last-child{ border-bottom: 1px solid var(--rule-soft); }
+.services-router a{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 12px 10px;
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink-2);
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.services-router a:hover{
+  background: color-mix(in srgb, var(--clay) 6%, transparent);
+  color: var(--ink);
+}
+.services-router .router-svc{
   font-family: var(--mono);
-  font-size: 14.5px; color: var(--success);
+  font-size: 13.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  color: var(--clay);
+  white-space: nowrap;
 }
-.form-success[data-visible="true"]{ display: inline; }
+
+/* Related resources inside a service card */
+.service-related{
+  margin: 14px 0 0;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+.service-related a{
+  color: var(--clay);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.service-related a:hover{ color: var(--clay-deep); }
 
 /* Footer */
 .site-footer{
@@ -2131,8 +2259,8 @@ body.is-tab-hidden .dot{
         <a href="#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="#faq"><span class="num">03</span><span data-i18n="nav.faq">FAQ</span></a>
         <a href="#testimonials"><span class="num">04</span><span data-i18n="nav.testimonials">Testimonials</span></a>
-        <a href="#contact"><span class="num">05</span><span data-i18n="nav.contact">Contact</span></a>
-        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
+        <a href="#contact" data-cta="nav_contact"><span class="num">05</span><span data-i18n="nav.contact">Book a call</span></a>
+        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -2153,8 +2281,8 @@ body.is-tab-hidden .dot{
     <a href="#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
     <a href="#faq" data-menu-link><span class="num">03</span> <span data-i18n="nav.faq">FAQ</span></a>
     <a href="#testimonials" data-menu-link><span class="num">04</span> <span data-i18n="nav.testimonials">Testimonials</span></a>
-    <a href="#contact" data-menu-link><span class="num">05</span> <span data-i18n="nav.contact">Contact</span></a>
-    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
+    <a href="#contact" data-menu-link data-cta="nav_contact"><span class="num">05</span> <span data-i18n="nav.contact">Book a call</span></a>
+    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span></a>
   </nav>
   <div class="foot">
     <span class="menu-tagline">production · publishing · audit</span>
@@ -2176,11 +2304,11 @@ body.is-tab-hidden .dot{
           I work across the full production chain: QA to indie publishing, certification to platform delivery. I help studios and publishers move faster, ship cleaner, and handle everything between a promising pitch and a finished game.
         </p>
         <div class="cta-row" data-reveal>
-          <a class="btn btn-primary" href="#contact">
-            <span data-i18n="cta.book">Get in touch</span>
+          <a class="btn btn-primary" href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="hero">
+            <span data-i18n="cta.book">Book a 30-minute call</span>
             <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
           </a>
-          <a class="btn btn-ghost" href="#services">
+          <a class="btn btn-ghost" href="#services" data-cta="hero_services">
             <span data-i18n="cta.services">See services</span>
             <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
           </a>
@@ -2230,6 +2358,7 @@ body.is-tab-hidden .dot{
                 <dd data-i18n="meta.rate.dd" data-i18n-html>€250/day · €3,500/month retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">see FAQ</a>)</dd>
               </div>
             </dl>
+            <p class="capsule-note" data-i18n="meta.rate.onramp" data-i18n-html>Start smaller: a <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="rate_line">free 30-minute discovery call</a>, or a €120 two-hour consultation for a sanity check on one decision.</p>
           </aside>
           <!-- TEMP_HIDDEN: Mario card (re-enable when portrait photo is ready) -->
           <!--
@@ -2429,6 +2558,28 @@ body.is-tab-hidden .dot{
       </p>
     </div>
 
+    <nav class="services-router" data-reveal aria-label="Jump to a service">
+      <p class="services-router-intro" data-i18n="router.intro">Sound familiar? Jump straight to the right service.</p>
+      <ul>
+        <li><a href="#svc-platform-release" data-router-link data-router-tab="tab-developers">
+          <span data-i18n="router.q1">We are three months from console cert and nobody on the team has done one.</span>
+          <span class="router-svc" data-i18n="router.s1">Platform &amp; Release Management</span>
+        </a></li>
+        <li><a href="#svc-publishing-support" data-router-link data-router-tab="tab-developers">
+          <span data-i18n="router.q2">We have a publisher call coming and a pitch deck we do not trust.</span>
+          <span class="router-svc" data-i18n="router.s2">Strategic Publishing Support</span>
+        </a></li>
+        <li><a href="#svc-physical-editions" data-router-link data-router-tab="tab-developers">
+          <span data-i18n="router.q3">We committed to a boxed edition and the timeline does not add up.</span>
+          <span class="router-svc" data-i18n="router.s3">Physical &amp; Boxed Editions</span>
+        </a></li>
+        <li><a href="#svc-production-oversight" data-router-link data-router-tab="tab-publishers">
+          <span data-i18n="router.q4">We are signed and the milestones are slipping.</span>
+          <span class="router-svc" data-i18n="router.s4">External Production Oversight</span>
+        </a></li>
+      </ul>
+    </nav>
+
     <div class="services-tabs" role="tablist" aria-label="Services audience" data-reveal>
       <button type="button" class="services-tab is-active" role="tab" aria-selected="true" aria-controls="tab-developers" id="tabbtn-developers" data-tab-target="tab-developers">For Developers</button>
       <button type="button" class="services-tab" role="tab" aria-selected="false" aria-controls="tab-publishers" id="tabbtn-publishers" data-tab-target="tab-publishers" tabindex="-1">For Publishers</button>
@@ -2458,7 +2609,7 @@ body.is-tab-hidden .dot{
         </ul>
       </article>
 
-      <article class="service service--icon-lead" data-reveal>
+      <article class="service service--icon-lead" id="svc-platform-release" data-reveal>
         <div class="service-icon service-icon--lead" aria-hidden="true">
           <svg viewBox="0 0 24 24"><rect x="3" y="8" width="14" height="10" rx="1.5"/><path d="M17 11h3l1 3v4h-4"/><circle cx="7" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg>
         </div>
@@ -2479,9 +2630,10 @@ body.is-tab-hidden .dot{
           <li data-i18n="svc2.b5">PC, Nintendo, PlayStation, Xbox developer platforms</li>
           <li data-i18n="svc2.b6">Globally consistent release execution</li>
         </ul>
+        <p class="service-related" data-i18n="svc2.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a></p>
       </article>
 
-      <article class="service service--icon-lead" data-reveal>
+      <article class="service service--icon-lead" id="svc-publishing-support" data-reveal>
         <div class="service-icon service-icon--lead" aria-hidden="true">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8 16 3-7 5-3-3 7z"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
         </div>
@@ -2501,9 +2653,10 @@ body.is-tab-hidden .dot{
           <li data-i18n="svc3.b4">Publisher demo prep and feedback</li>
           <li data-i18n="svc3.b5">Deal milestone &amp; schedule sanity check</li>
         </ul>
+        <p class="service-related" data-i18n="svc3.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> · <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> · <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">What a publisher actually reads in your pitch deck</a></p>
       </article>
 
-      <article class="service service--icon-lead" data-reveal>
+      <article class="service service--icon-lead" id="svc-physical-editions" data-reveal>
         <div class="service-icon service-icon--lead" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/><path d="m7.5 5.5 9 5"/></svg>
         </div>
@@ -2527,7 +2680,7 @@ body.is-tab-hidden .dot{
     </div>
 
     <div class="services-panel" id="tab-publishers" role="tabpanel" aria-labelledby="tabbtn-publishers" hidden>
-      <article class="service service--icon-lead" data-reveal>
+      <article class="service service--icon-lead" id="svc-production-oversight" data-reveal>
         <div class="service-icon service-icon--lead" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/><circle cx="8" cy="5" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="11" cy="19" r="1.6"/></svg>
         </div>
@@ -2800,44 +2953,64 @@ body.is-tab-hidden .dot{
         <p data-reveal data-i18n="contact.p">
           Tell me about the game, the stage it&rsquo;s in, and what&rsquo;s getting in the way. If we fit, we&rsquo;ll set up a 30-minute discovery call. If we don&rsquo;t, I&rsquo;ll send you to someone who does.
         </p>
+        <div class="contact-booking" data-reveal>
+          <p data-i18n="contact.booking.p">Prefer to talk? Book a free 30-minute discovery call.</p>
+          <a class="btn btn-ghost" href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="contact_section">
+            <span data-i18n="contact.booking.cta">Book a 30-minute call</span>
+            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+          </a>
+        </div>
         <p class="contact-note" data-reveal data-i18n="contact.note" data-i18n-html>
-          P.S. Replies usually go out within 1 to 3 working days.<br />
-          If you don&rsquo;t hear back in that window, don&rsquo;t hesitate to ping me again.
+          Replies usually go out within a couple of working days. For anything time-critical, <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="contact_section">book a call directly</a> or say so in the message.
         </p>
       </div>
 
-      <form class="form" id="contact-form" data-reveal aria-describedby="form-status">
-        <div class="form-grid">
-          <div class="field">
-            <label for="f-name" data-i18n="form.name.label" data-i18n-html>Your name <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-name" name="name" required autocomplete="name" data-i18n-placeholder="form.name.placeholder" placeholder="Your name" />
-            <span class="err" data-err-for="f-name" aria-live="polite"></span>
+      <div class="contact-form-wrap" data-reveal>
+        <noscript>
+          <style>#contact-form{ display:none; }</style>
+          <p class="noscript-contact">JavaScript is off in your browser. Email me directly at hello@spritzconsulting.com and I will take it from there.</p>
+        </noscript>
+        <form class="form" id="contact-form" aria-describedby="form-gdpr">
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-name" data-i18n="form.name.label">Your name</label>
+              <input id="f-name" name="name" autocomplete="name" data-i18n-placeholder="form.name.placeholder" placeholder="Your name" />
+              <span class="err" data-err-for="f-name" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="f-company" data-i18n="form.company.label">Company</label>
+              <input id="f-company" name="company" autocomplete="organization" data-i18n-placeholder="form.company.placeholder" placeholder="Your studio or company" />
+              <span class="err" data-err-for="f-company" aria-live="polite"></span>
+            </div>
+            <div class="field wide">
+              <label for="f-email" data-i18n="form.email.label" data-i18n-html>Email <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" required autocomplete="email" data-i18n-placeholder="form.email.placeholder" placeholder="you@studio.com" />
+              <span class="err" data-err-for="f-email" aria-live="polite"></span>
+            </div>
+            <div class="field wide">
+              <label for="f-msg" data-i18n="form.msg.label" data-i18n-html>Message <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-msg" name="message" required rows="5" data-i18n-placeholder="form.msg.placeholder" placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
+              <span class="err" data-err-for="f-msg" aria-live="polite"></span>
+            </div>
+            <div class="hp-field" aria-hidden="true">
+              <label for="f-website" tabindex="-1">Website</label>
+              <input id="f-website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
           </div>
-          <div class="field">
-            <label for="f-company" data-i18n="form.company.label">Company</label>
-            <input id="f-company" name="company" autocomplete="organization" data-i18n-placeholder="form.company.placeholder" placeholder="Your studio or company" />
-            <span class="err" data-err-for="f-company" aria-live="polite"></span>
+          <div class="form-foot">
+            <button type="submit" class="btn btn-primary">
+              <span data-i18n="form.submit">Submit</span>
+              <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+            </button>
           </div>
-          <div class="field wide">
-            <label for="f-email" data-i18n="form.email.label" data-i18n-html>Email <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-email" name="email" type="email" required autocomplete="email" data-i18n-placeholder="form.email.placeholder" placeholder="you@studio.com" />
-            <span class="err" data-err-for="f-email" aria-live="polite"></span>
-          </div>
-          <div class="field wide">
-            <label for="f-msg" data-i18n="form.msg.label" data-i18n-html>Message <span class="req" aria-hidden="true">*</span></label>
-            <textarea id="f-msg" name="message" required rows="5" data-i18n-placeholder="form.msg.placeholder" placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
-            <span class="err" data-err-for="f-msg" aria-live="polite"></span>
-          </div>
+          <p class="form-server-err" id="form-server-err" role="alert" data-i18n="form.err.server">Something went wrong sending your message. Your text is still here, try again in a moment.</p>
+          <p class="form-gdpr" id="form-gdpr" data-i18n="form.gdpr">Submissions are stored so I can reply and follow up. No marketing, no sharing.</p>
+        </form>
+        <div class="form-done" id="form-done" role="status" aria-live="polite" data-visible="false">
+          <h3 data-i18n="form.done.h">Thanks, it&rsquo;s in. I&rsquo;ll get back to you within a couple of working days.</h3>
+          <p data-i18n="form.done.p" data-i18n-html>Want to skip the wait? <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="nav_success">Book a 30-minute call.</a></p>
         </div>
-        <div class="form-foot">
-          <small id="form-status" data-i18n="form.status">Opens your mail client &middot; no data stored.</small>
-          <span class="form-success" id="form-success" role="status" aria-live="polite" data-i18n="form.success">Message drafted. Check your mail client.</span>
-          <button type="submit" class="btn btn-primary">
-            <span data-i18n="form.submit">Submit</span>
-            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   </section>
 
@@ -2916,7 +3089,7 @@ body.is-tab-hidden .dot{
     'nav.services': 'Servizi',
     'nav.faq': 'FAQ',
     'nav.testimonials': 'Testimonianze',
-    'nav.contact': 'Contatti',
+    'nav.contact': 'Prenota una call',
     'nav.resources': 'Risorse',
     'menu.open': 'Apri menu',
     'menu.close': 'Chiudi menu',
@@ -2931,7 +3104,7 @@ body.is-tab-hidden .dot{
     'hero.kicker': 'Consulenza in Produzione & Publishing',
     'hero.h1': 'Uno <em>Shot</em> di Produzione<br />&amp; Publishing per la games industry.',
     'hero.intro': "Lavoro su tutta la catena produttiva: dal QA all'indie publishing, dalla certification alla platform delivery. Aiuto studi e publisher a muoversi più velocemente, shippare meglio e gestire tutto quello che sta tra un pitch promettente e un gioco finito.",
-    'cta.book': 'Prenota una call conoscitiva',
+    'cta.book': 'Prenota una call di 30 minuti',
     'cta.services': 'Vedi i servizi',
 
     'portrait.alt': 'Michele Di Nardo, con cappello e maglietta neri, su fondo giallo senape.',
@@ -2951,6 +3124,7 @@ body.is-tab-hidden .dot{
     'meta.engage.dd': 'Progetto · Retainer · Audit',
     'meta.rate.dt': 'Tariffa',
     'meta.rate.dd': '€250/giorno · €3.500/mese retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">vedi FAQ</a>)',
+    'meta.rate.onramp': 'Parti in piccolo: una <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="rate_line">call conoscitiva gratuita di 30 minuti</a>, oppure una consulenza di due ore a €120 per un sanity check su una decisione.',
 
     'marquee.h': 'Studi, organizzazioni e giochi con cui ho lavorato',
 
@@ -3046,6 +3220,19 @@ body.is-tab-hidden .dot{
     'svcP5.b5': 'Anticipazioni su progetti interessanti prima che girino',
     'svcP5.b6': 'Coverage di festival & showcase (Gamescom, IAB, GDC)',
 
+    'router.intro': 'Ti suona familiare? Vai dritto al servizio giusto.',
+    'router.q1': 'Siamo a tre mesi dalla cert console e nessuno nel team ne ha mai fatta una.',
+    'router.s1': 'Platform & Release Management',
+    'router.q2': 'Abbiamo una call con un publisher in arrivo e un pitch deck di cui non ci fidiamo.',
+    'router.s2': 'Strategic Publishing Support',
+    'router.q3': 'Ci siamo impegnati per un’edizione fisica e la timeline non torna.',
+    'router.s3': 'Physical & Boxed Editions',
+    'router.q4': 'Abbiamo firmato e le milestone stanno slittando.',
+    'router.s4': 'External Production Oversight',
+
+    'svc2.related': '<span class="related-label">Correlati:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a>',
+    'svc3.related': '<span class="related-label">Correlati:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> · <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> · <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">Cosa legge davvero un publisher nel tuo pitch deck</a>',
+
     'faq.kicker': '<span class="num">03</span> Domande frequenti',
     'faq.h': 'Domande, <em>prima</em> ancora di vederci.',
     'faq.intro': 'Le cose che mi chiedono al primo contatto, con risposte già pronte. Se la tua non è qui, scrivila pure: meglio per entrambi sapere su cosa ci stiamo accordando.',
@@ -3079,9 +3266,11 @@ body.is-tab-hidden .dot{
     'contact.kicker': '<span class="num">05</span> Mettiti in contatto',
     'contact.h': 'Dimmi a cosa stai lavorando.',
     'contact.p': 'Raccontami il gioco, dove sta, e cosa lo sta frenando. Se siamo compatibili, fissiamo una call conoscitiva di 30 minuti. Altrimenti, ti indirizzo a qualcuno più adatto.',
-    'contact.note': 'P.S. Di norma rispondo entro 1 o 3 giorni lavorativi.<br />Se non ricevi niente in quella finestra, puoi scrivermi di nuovo senza problemi.',
+    'contact.note': 'Di norma rispondo entro un paio di giorni lavorativi. Per qualcosa di urgente, <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="contact_section">prenota direttamente una call</a> o segnalalo nel messaggio.',
+    'contact.booking.p': 'Preferisci parlarne a voce? Prenota una call conoscitiva gratuita di 30 minuti.',
+    'contact.booking.cta': 'Prenota una call di 30 minuti',
 
-    'form.name.label': 'Il tuo nome <span class="req" aria-hidden="true">*</span>',
+    'form.name.label': 'Il tuo nome',
     'form.name.placeholder': 'Il tuo nome',
     'form.company.label': 'Azienda',
     'form.company.placeholder': 'Il tuo studio o azienda',
@@ -3089,15 +3278,15 @@ body.is-tab-hidden .dot{
     'form.email.placeholder': 'tu@studio.com',
     'form.msg.label': 'Messaggio <span class="req" aria-hidden="true">*</span>',
     'form.msg.placeholder': 'Su cosa stai lavorando, dove sei bloccato, quando ti serve shippato.',
-    'form.status': 'Apre il tuo client email · nessun dato archiviato.',
-    'form.success': 'Messaggio pronto. Controlla il tuo client email.',
     'form.submit': 'Invia',
-    'form.submitting': 'Apertura mail…',
-    'form.err.name': 'Aggiungi il tuo nome.',
+    'form.submitting': 'Invio…',
     'form.err.email.required': 'L’email è obbligatoria.',
     'form.err.email.invalid': 'Email non valida.',
     'form.err.msg': 'Scrivi un breve messaggio, per favore.',
-    'form.subject': 'Richiesta progetto: ',
+    'form.err.server': 'Qualcosa è andato storto nell’invio. Il testo è ancora qui, riprova tra un momento.',
+    'form.gdpr': 'I messaggi vengono conservati per poterti rispondere e ricontattare. Niente marketing, nessuna condivisione.',
+    'form.done.h': 'Fatto, è arrivato. Ti rispondo entro un paio di giorni lavorativi.',
+    'form.done.p': 'Vuoi saltare l’attesa? <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="nav_success">Prenota una call di 30 minuti.</a>',
 
     'footer.sayhi': 'Fatti sentire, <em>quando vuoi.</em>',
     'footer.email': 'Email',
@@ -3495,12 +3684,10 @@ body.is-tab-hidden .dot{
     'footer.copy': '© 2026 Spritz Consulting · Todos los derechos reservados',
   };
   const EN_OVERRIDES = {
-    'form.err.name': 'Please add your name.',
     'form.err.email.required': 'Email is required.',
     'form.err.email.invalid': 'That email looks off.',
     'form.err.msg': 'A short message, please.',
-    'form.subject': 'Project enquiry: ',
-    'form.submitting': 'Opening mail…',
+    'form.submitting': 'Sending…',
   };
 
   const DICTS = { it: IT, fr: FR, es: ES };
@@ -3860,9 +4047,35 @@ body.is-tab-hidden .dot{
     }
   }
 
-  // Form validation + mailto submit
+  // Analytics helpers (Zaraz is injected by Cloudflare; guard every call)
+  const track = (event, props) => {
+    if (window.zaraz) { zaraz.track(event, props || {}); }
+  };
+  // Delegated so links re-rendered by the language switcher keep firing.
+  document.addEventListener('click', (e) => {
+    const booking = e.target.closest('[data-booking]');
+    if (booking) {
+      // booking_click: every zcal link carries data-booking="<placement>"
+      track('booking_click', { placement: booking.dataset.booking, page: location.pathname });
+      return;
+    }
+    const cta = e.target.closest('[data-cta]');
+    if (cta) {
+      // cta_click gaps: hero secondary + nav contact (hero primary is a booking link)
+      track('cta_click', { page: location.pathname, placement: cta.dataset.cta });
+      return;
+    }
+    const resource = e.target.closest('[data-resource-link]');
+    if (resource) {
+      // resource_link_click: in-service related resource links
+      track('resource_link_click', { resource: resource.dataset.resourceLink, page: location.pathname });
+    }
+  });
+
+  // Form validation + fetch submit to the contact Worker
   const form = document.getElementById('contact-form');
-  const success = document.getElementById('form-success');
+  const formDone = document.getElementById('form-done');
+  const serverErr = document.getElementById('form-server-err');
   // Progressive enhancement: JS handles validation; native takes over if script never reaches here.
   if (form) form.noValidate = true;
   const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
@@ -3888,13 +4101,8 @@ body.is-tab-hidden .dot{
   const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   const validate = (showAll) => {
     let ok = true;
-    const name = form.querySelector('#f-name');
     const email = form.querySelector('#f-email');
     const msg = form.querySelector('#f-msg');
-    if (!name.value.trim()) {
-      if (showAll) setFieldError(name, tr('form.err.name'));
-      ok = false;
-    } else setFieldError(name, '');
     if (!email.value.trim()) {
       if (showAll) setFieldError(email, tr('form.err.email.required'));
       ok = false;
@@ -3908,43 +4116,65 @@ body.is-tab-hidden .dot{
     } else setFieldError(msg, '');
     return ok;
   };
+  // form_start: first focus on any contact field, once per page view
+  let formStarted = false;
+  if (form) form.addEventListener('focusin', (e) => {
+    if (formStarted || !e.target.matches('input, textarea')) return;
+    formStarted = true;
+    track('form_start', { page: location.pathname });
+  });
   let submitAttempted = false;
-  form.addEventListener('submit', (e) => {
+  const setBusy = (busy) => {
+    if (submitBtn) {
+      submitBtn.disabled = busy;
+      if (busy) submitBtn.setAttribute('aria-busy', 'true');
+      else submitBtn.removeAttribute('aria-busy');
+      if (submitBtnLabel) submitBtnLabel.textContent = busy ? (tr('form.submitting') || 'Sending…') : submitBtnText;
+    }
+    if (busy) form.setAttribute('aria-busy', 'true');
+    else form.removeAttribute('aria-busy');
+  };
+  if (form) form.addEventListener('submit', async (e) => {
     e.preventDefault();
     submitAttempted = true;
+    serverErr.dataset.visible = 'false';
     if (!validate(true)) {
+      track('form_error', { type: 'validation', page: location.pathname });
       const firstError = form.querySelector('[data-error="true"] input, [data-error="true"] textarea');
       if (firstError) firstError.focus();
       return;
     }
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.setAttribute('aria-busy', 'true');
-      if (submitBtnLabel) submitBtnLabel.textContent = tr('form.submitting') || 'Opening mail…';
-    }
-    form.setAttribute('aria-busy', 'true');
+    setBusy(true);
     const data = new FormData(form);
-    const body =
-      'Name: ' + (data.get('name') || '') + '\n' +
-      'Company: ' + (data.get('company') || '') + '\n' +
-      'Email: ' + (data.get('email') || '') + '\n\n' +
-      (data.get('message') || '');
-    const subject = tr('form.subject') + (data.get('name') || '');
-    const href = 'mailto:hello@spritzconsulting.com' +
-      '?subject=' + encodeURIComponent(subject) +
-      '&body=' + encodeURIComponent(body);
-    window.location.href = href;
-    success.dataset.visible = 'true';
-    setTimeout(() => {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.removeAttribute('aria-busy');
-        if (submitBtnLabel) submitBtnLabel.textContent = submitBtnText;
-      }
-      form.removeAttribute('aria-busy');
-    }, 1200);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: (data.get('name') || '').trim(),
+          company: (data.get('company') || '').trim(),
+          email: (data.get('email') || '').trim(),
+          message: (data.get('message') || '').trim(),
+          website: (data.get('website') || '').trim(),
+          page: location.pathname,
+          referrer: document.referrer || '',
+        }),
+      });
+      if (!res.ok) throw new Error('http_' + res.status);
+      // Success state replaces the form; field contents no longer needed.
+      form.style.display = 'none';
+      formDone.dataset.visible = 'true';
+      // form_submit is the qualified_inquiry conversion.
+      track('form_submit', { page: location.pathname });
+    } catch (err) {
+      // Field contents stay put; only the inline error line appears.
+      serverErr.dataset.visible = 'true';
+      track('form_error', { type: (err && err.message && err.message.indexOf('http_') === 0) ? 'server' : 'network', page: location.pathname });
+    } finally {
+      setBusy(false);
+    }
   });
-  form.addEventListener('blur', (e) => {
+  if (form) form.addEventListener('blur', (e) => {
     if (!submitAttempted) return;
     if (e.target.matches('input, textarea')) validate(true);
   }, true);
@@ -3977,6 +4207,14 @@ body.is-tab-hidden .dot{
         tabs[next].focus();
         stopPulse();
         activate(tabs[next].dataset.tabTarget);
+      });
+    });
+
+    // Situation router: reveal the tab that holds the target service, then let the anchor jump
+    document.querySelectorAll('[data-router-link]').forEach(a => {
+      a.addEventListener('click', () => {
+        stopPulse();
+        activate(a.dataset.routerTab);
       });
     });
 

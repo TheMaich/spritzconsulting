@@ -1,0 +1,24 @@
+name = "spritz-contact-form"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+# Route the Worker on the production zone so the site can POST same origin.
+# Adjust zone_name if the zone label differs in your Cloudflare account.
+routes = [
+  { pattern = "spritzconsulting.com/api/contact", zone_name = "spritzconsulting.com" },
+  { pattern = "www.spritzconsulting.com/api/contact", zone_name = "spritzconsulting.com" }
+]
+
+# KV namespace holding submissions and rate-limit counters.
+# Replace the id after running: wrangler kv namespace create CONTACT_SUBMISSIONS
+[[kv_namespaces]]
+binding = "CONTACT_SUBMISSIONS"
+id = "REPLACE_WITH_NAMESPACE_ID"
+
+# Optional notification email through Cloudflare Email Routing (free tier,
+# no third-party signup). Requires Email Routing enabled on the zone and
+# michele@spritzconsulting.com verified as a destination address.
+# Uncomment after setup; the Worker works KV-only without it.
+# [[send_email]]
+# name = "NOTIFY"
+# destination_address = "michele@spritzconsulting.com"
