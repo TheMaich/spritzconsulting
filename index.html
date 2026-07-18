@@ -1802,20 +1802,40 @@ body.is-tab-hidden .dot{
   white-space: nowrap;
 }
 
-/* Related resources inside a service card */
+/* Related resources inside a service card: full-width chip row */
 .service-related{
-  margin: 14px 0 0;
-  font-family: var(--sans);
-  font-size: 13.5px;
+  grid-column: 1 / -1;
+  margin: 8px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.service-related .related-label{
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-3);
-  line-height: 1.7;
 }
 .service-related a{
-  color: var(--clay);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  display: inline-flex;
+  align-items: center;
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color .2s var(--ease), color .2s var(--ease);
 }
-.service-related a:hover{ color: var(--clay-deep); }
+.service-related a:hover{
+  border-color: var(--clay);
+  color: var(--clay);
+}
 
 /* Footer */
 .site-footer{
@@ -2653,7 +2673,7 @@ body.is-tab-hidden .dot{
           <li data-i18n="svc3.b4">Publisher demo prep and feedback</li>
           <li data-i18n="svc3.b5">Deal milestone &amp; schedule sanity check</li>
         </ul>
-        <p class="service-related" data-i18n="svc3.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> · <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> · <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">What a publisher actually reads in your pitch deck</a></p>
+        <p class="service-related" data-i18n="svc3.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">What a publisher actually reads in your pitch deck</a></p>
       </article>
 
       <article class="service service--icon-lead" id="svc-physical-editions" data-reveal>
@@ -3231,7 +3251,7 @@ body.is-tab-hidden .dot{
     'router.s4': 'External Production Oversight',
 
     'svc2.related': '<span class="related-label">Correlati:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a>',
-    'svc3.related': '<span class="related-label">Correlati:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> · <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> · <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">Cosa legge davvero un publisher nel tuo pitch deck</a>',
+    'svc3.related': '<span class="related-label">Correlati:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">Cosa legge davvero un publisher nel tuo pitch deck</a>',
 
     'faq.kicker': '<span class="num">03</span> Domande frequenti',
     'faq.h': 'Domande, <em>prima</em> ancora di vederci.',
