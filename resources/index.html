@@ -211,6 +211,13 @@ html{
 @media (prefers-reduced-motion: reduce){
   .wordmark .dot{ animation: none; }
 }
+.wordmark .role{
+  font-family: var(--mono);
+  font-size: 13.5px; font-weight: 400;
+  color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase;
+  padding-left: 12px; margin-left: 2px;
+  border-left: 1px solid var(--rule);
+}
 .nav{
   display: flex; align-items: center; gap: 4px;
 }
@@ -279,6 +286,11 @@ html{
 .nav a.resources-link:hover,
 .mobile-menu nav a.resources-link {
   color: var(--clay);
+}
+.nav a.resources-link.is-active,
+.nav a.resources-link.is-active:hover{
+  background: var(--clay);
+  color: var(--paper);
 }
 
 .menu-toggle{
@@ -680,6 +692,7 @@ html{
 @media (max-width: 960px){
   .nav{ display: none; }
   .menu-toggle{ display: inline-flex; }
+  .wordmark .role{ display: none; }
 }
 @media (max-width: 640px){
   .footer-meta{ font-size: 12px; }
@@ -759,14 +772,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
   <div class="wrap bar">
     <a href="/" class="wordmark" aria-label="Spritz Consulting, home">
       <span>spritz<span class="dot" aria-hidden="true"></span>consulting</span>
+      <span class="role"></span>
     </a>
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
         <a href="/#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">My Experience</span></a>
         <a href="/#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="/#faq"><span class="num">03</span><span data-i18n="nav.faq">FAQ</span></a>
-        <a href="/#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
-        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
+        <a href="/#testimonials"><span class="num">04</span><span data-i18n="nav.testimonials">Testimonials</span></a>
+        <a href="/#contact" data-cta="nav_contact"><span class="num">05</span><span data-i18n="nav.contact">Book a call</span></a>
+        <a href="/resources/" class="resources-link is-active" aria-current="page"><span data-i18n="nav.resources">Resources</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -786,8 +801,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     <a href="/#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">My Experience</span></a>
     <a href="/#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
     <a href="/#faq" data-menu-link><span class="num">03</span> <span data-i18n="nav.faq">FAQ</span></a>
-    <a href="/#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
-    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
+    <a href="/#testimonials" data-menu-link><span class="num">04</span> <span data-i18n="nav.testimonials">Testimonials</span></a>
+    <a href="/#contact" data-menu-link data-cta="nav_contact"><span class="num">05</span> <span data-i18n="nav.contact">Book a call</span></a>
+    <a href="/resources/" class="resources-link" data-menu-link aria-current="page"><span data-i18n="nav.resources">Resources</span></a>
   </nav>
   <div class="foot">
     <span class="menu-tagline">production · publishing · audit</span>
@@ -809,18 +825,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
   </div>
 
   <section class="resources-list wrap">
-    <a href="/resources/tools/" class="res-card is-unlocked" data-category="tools">
-      <div class="res-icon">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      </div>
-      <div class="res-body">
-        <div class="res-text">
-          <h3 class="res-title" style="color:var(--ink);">All calculators and planners</h3>
-          <p class="res-desc">The full tools hub: budget, break-even, wishlist targets, launch outlook, deal comparison, simship and physical release scheduling. All free, no email.</p>
-        </div>
-        <span class="res-cta">Open hub →</span>
-      </div>
-    </a>
     <a href="/resources/tools/simship-calculator.html" class="res-card is-unlocked" data-category="tools" style="position:relative;">
       <div class="res-iconcol">
         <div class="res-icon">
@@ -1144,7 +1148,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     'nav.consultancy': 'La Mia Esperienza',
     'nav.services': 'Servizi',
     'nav.faq': 'FAQ',
-    'nav.contact': 'Contatti',
+    'nav.testimonials': 'Testimonianze',
+    'nav.contact': 'Prenota una call',
     'nav.resources': 'Risorse',
     'menu.open': 'Apri menu',
     'menu.close': 'Chiudi menu',
@@ -1171,6 +1176,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     'nav.consultancy': 'Mon Parcours',
     'nav.services': 'Services',
     'nav.faq': 'FAQ',
+    'nav.testimonials': 'Témoignages',
     'nav.contact': 'Contact',
     'nav.resources': 'Ressources',
     'menu.open': 'Ouvrir le menu',
@@ -1198,6 +1204,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     'nav.consultancy': 'Mi Trayectoria',
     'nav.services': 'Servicios',
     'nav.faq': 'FAQ',
+    'nav.testimonials': 'Testimonios',
     'nav.contact': 'Contacto',
     'nav.resources': 'Recursos',
     'menu.open': 'Abrir menú',
