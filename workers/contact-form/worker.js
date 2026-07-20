@@ -92,17 +92,18 @@ function buildNotificationMime(submission) {
   return headers.join('\r\n') + '\r\n\r\n' + lines.join('\n');
 }
 
+// Throws on any delivery failure so the caller can surface a real error.
+// KV already holds the submission before this runs, so a throw never loses
+// the lead; it only tells the visitor (and our logs) that the notification
+// did not go out, instead of the old silent 200.
 async function sendNotification(env, submission) {
-  if (!env.NOTIFY) return;
-  try {
-    const { EmailMessage } = await import('cloudflare:email');
-    const raw = buildNotificationMime(submission);
-    const message = new EmailMessage(NOTIFY_FROM, NOTIFY_TO, raw);
-    await env.NOTIFY.send(message);
-  } catch (err) {
-    // KV already holds the submission; a failed notification is acceptable.
-    console.log('notification email failed: ' + (err && err.message));
+  if (!env.NOTIFY) {
+    throw new Error('notify_binding_missing');
   }
+  const { EmailMessage } = await import('cloudflare:email');
+  const raw = buildNotificationMime(submission);
+  const message = new EmailMessage(NOTIFY_FROM, NOTIFY_TO, raw);
+  await env.NOTIFY.send(message);
 }
 
 export default {
@@ -160,8 +161,18 @@ export default {
       country: (request.cf && request.cf.country) || '',
     };
 
+    // KV first: the lead is durably captured regardless of email outcome.
     await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(submission));
-    ctx.waitUntil(sendNotification(env, submission));
+
+    // Notification is required, not best effort. If it fails we return a real
+    // error (not 200) so the failure is visible instead of silently losing
+    // the inquiry. The submission is still in KV and recoverable.
+    try {
+      await sendNotification(env, submission);
+    } catch (err) {
+      console.log('notification email failed: ' + (err && err.message));
+      return json(502, { ok: false, error: 'notification_failed' }, origin);
+    }
 
     return json(200, { ok: true }, origin);
   },

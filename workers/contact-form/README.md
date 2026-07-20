@@ -76,19 +76,25 @@ npx wrangler kv key get "<key>" --binding CONTACT_SUBMISSIONS --remote
 Keys look like `submission:2026-07-18T10:00:00.000Z:<uuid>` and sort by
 timestamp. `rl:` keys are rate-limit counters and expire on their own.
 
-## Optional email notification (free, first party)
+## Email notification (required, free, first party)
 
-The Worker can send a notification to michele@spritzconsulting.com through
-Cloudflare Email Routing. No third-party service and no signup, but the
-zone needs Email Routing enabled once:
+The Worker sends a notification to michele@spritzconsulting.com through
+Cloudflare Email Routing. No third-party service and no signup. Notification
+is REQUIRED: if the send fails, or the `NOTIFY` binding is missing, the Worker
+returns `502 {"ok":false,"error":"notification_failed"}` instead of a silent
+200. The submission is still written to KV first, so no lead is lost even on a
+502; it stays recoverable with the read commands above.
+
+One-time setup on the zone (needed before `wrangler deploy` succeeds and mail
+arrives):
 
 1. Cloudflare dashboard, the spritzconsulting.com zone, Email, Email
    Routing: enable it and follow the DNS prompts (MX + SPF records).
 2. Add and verify `michele@spritzconsulting.com` as a destination address
-   (Cloudflare sends a confirmation email).
-3. Uncomment the `[[send_email]]` block in `wrangler.toml`.
-4. `npx wrangler deploy` again.
+   (Cloudflare sends a confirmation email that must be clicked).
+3. The `[[send_email]]` block in `wrangler.toml` is already active.
+4. `npx wrangler deploy`.
 
-Until those steps happen, the Worker runs KV-only: submissions are stored
-and readable with the commands above, and no email goes out. Sending
-failures never block the submission; KV write happens first.
+Note: before deploying, replace `REPLACE_WITH_NAMESPACE_ID` in `wrangler.toml`
+with the live `CONTACT_SUBMISSIONS` namespace id (run
+`npx wrangler kv namespace list`), or the deploy binds an empty KV namespace.

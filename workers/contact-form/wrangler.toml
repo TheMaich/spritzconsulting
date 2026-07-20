@@ -15,10 +15,14 @@ routes = [
 binding = "CONTACT_SUBMISSIONS"
 id = "REPLACE_WITH_NAMESPACE_ID"
 
-# Optional notification email through Cloudflare Email Routing (free tier,
-# no third-party signup). Requires Email Routing enabled on the zone and
-# michele@spritzconsulting.com verified as a destination address.
-# Uncomment after setup; the Worker works KV-only without it.
-# [[send_email]]
-# name = "NOTIFY"
-# destination_address = "michele@spritzconsulting.com"
+# Notification email through Cloudflare Email Routing (free tier, no third
+# party signup). REQUIRES, before `wrangler deploy` will succeed and mail
+# will actually arrive:
+#   1. Email Routing enabled on the spritzconsulting.com zone (adds MX + SPF).
+#   2. michele@spritzconsulting.com verified as a destination address
+#      (Cloudflare sends a confirmation email that must be clicked).
+# The Worker now treats this binding as required: without it every submission
+# returns 502 notification_failed instead of a silent 200, by design.
+[[send_email]]
+name = "NOTIFY"
+destination_address = "michele@spritzconsulting.com"
