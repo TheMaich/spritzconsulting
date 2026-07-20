@@ -22,7 +22,11 @@ const ALLOWED_ORIGINS = [
   'https://www.spritzconsulting.com',
 ];
 
-const NOTIFY_TO = 'michele@spritzconsulting.com';
+// Form notifications go to hello@spritzconsulting.com, which Cloudflare Email
+// Routing forwards to the personal inbox (michele@spritzconsulting.com). The
+// Worker only knows about the hello@ alias; the forward is a zone-side routing
+// rule, so the personal address can change without touching this code.
+const NOTIFY_TO = 'hello@spritzconsulting.com';
 const NOTIFY_FROM = 'contact-form@spritzconsulting.com';
 
 const RATE_WINDOW_SECONDS = 600;

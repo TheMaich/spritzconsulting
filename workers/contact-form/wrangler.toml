@@ -16,13 +16,15 @@ binding = "CONTACT_SUBMISSIONS"
 id = "REPLACE_WITH_NAMESPACE_ID"
 
 # Notification email through Cloudflare Email Routing (free tier, no third
-# party signup). REQUIRES, before `wrangler deploy` will succeed and mail
-# will actually arrive:
+# party signup). Notifications are sent to hello@spritzconsulting.com, which a
+# zone routing rule forwards to the personal inbox (michele@spritzconsulting.com).
+# REQUIRES, before `wrangler deploy` will succeed and mail will actually arrive:
 #   1. Email Routing enabled on the spritzconsulting.com zone (adds MX + SPF).
-#   2. michele@spritzconsulting.com verified as a destination address
-#      (Cloudflare sends a confirmation email that must be clicked).
-# The Worker now treats this binding as required: without it every submission
+#   2. hello@spritzconsulting.com set as the send_email destination and verified
+#      (Cloudflare sends a confirmation email that must be clicked), plus a
+#      routing rule forwarding hello@ -> michele@spritzconsulting.com.
+# The Worker treats this binding as required: without it every submission
 # returns 502 notification_failed instead of a silent 200, by design.
 [[send_email]]
 name = "NOTIFY"
-destination_address = "michele@spritzconsulting.com"
+destination_address = "hello@spritzconsulting.com"

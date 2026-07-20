@@ -78,20 +78,23 @@ timestamp. `rl:` keys are rate-limit counters and expire on their own.
 
 ## Email notification (required, free, first party)
 
-The Worker sends a notification to michele@spritzconsulting.com through
-Cloudflare Email Routing. No third-party service and no signup. Notification
-is REQUIRED: if the send fails, or the `NOTIFY` binding is missing, the Worker
-returns `502 {"ok":false,"error":"notification_failed"}` instead of a silent
-200. The submission is still written to KV first, so no lead is lost even on a
-502; it stays recoverable with the read commands above.
+The Worker sends a notification to hello@spritzconsulting.com through
+Cloudflare Email Routing, and a zone routing rule forwards hello@ to the
+personal inbox (michele@spritzconsulting.com). No third-party service and no
+signup. Notification is REQUIRED: if the send fails, or the `NOTIFY` binding is
+missing, the Worker returns `502 {"ok":false,"error":"notification_failed"}`
+instead of a silent 200. The submission is still written to KV first, so no lead
+is lost even on a 502; it stays recoverable with the read commands above.
 
 One-time setup on the zone (needed before `wrangler deploy` succeeds and mail
 arrives):
 
 1. Cloudflare dashboard, the spritzconsulting.com zone, Email, Email
    Routing: enable it and follow the DNS prompts (MX + SPF records).
-2. Add and verify `michele@spritzconsulting.com` as a destination address
-   (Cloudflare sends a confirmation email that must be clicked).
+2. Set `hello@spritzconsulting.com` as the send_email destination and verify it
+   (Cloudflare sends a confirmation email that must be clicked), then add a
+   routing rule forwarding `hello@` -> `michele@spritzconsulting.com` so the
+   notification reaches the personal inbox.
 3. The `[[send_email]]` block in `wrangler.toml` is already active.
 4. `npx wrangler deploy`.
 
