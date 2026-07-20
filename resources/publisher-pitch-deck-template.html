@@ -1204,9 +1204,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .nav a.book-call-cta span:not(.num){
   background-image: linear-gradient(105deg,
-    var(--ink-2) 0%, var(--ink-2) 42%,
-    color-mix(in srgb, var(--clay) 60%, white 25%) 50%,
-    var(--ink-2) 58%, var(--ink-2) 100%);
+    var(--ink-2) 0%, var(--ink-2) 40%,
+    color-mix(in srgb, white 85%, var(--clay) 15%) 45%,
+    color-mix(in srgb, white 85%, var(--clay) 15%) 55%,
+    var(--ink-2) 60%, var(--ink-2) 100%);
   background-size: 300% 100%;
   background-position: 100% 0;
   background-repeat: no-repeat;
@@ -1214,11 +1215,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: book-call-shimmer 7.5s linear 2s infinite;
+  animation: book-call-shimmer 4.5s linear 2s infinite;
 }
 @keyframes book-call-shimmer{
   0%   { background-position: 100% 0; }
-  12%  { background-position: 0% 0; }
+  27%  { background-position: 0% 0; }
   100% { background-position: 0% 0; }
 }
 .nav a.book-call-cta:hover{ animation-play-state: paused; }
