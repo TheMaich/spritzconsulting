@@ -26,6 +26,10 @@ exclusion keeps intent explicit.
 - Query string handling: **ignore** query strings (no server-rendered
   variation; keeps UTM params from fragmenting the cache)
 
+Note that this also makes 404s cacheable for 2h on paths that match the
+expression (a mistyped `/resources/foo.html` sticks at the edge). That is the
+accepted trade for a 2h TTL; purge on deploy clears it.
+
 2h edge TTL is deliberately short: a deploy to GitHub Pages does not purge
 Cloudflare, so 2h is the worst-case staleness window. Pair it with a purge on
 deploy if that is too long (see "Purge on deploy" below).
@@ -78,7 +82,7 @@ curl -X PUT \
           "browser_ttl": { "mode": "respect_origin" },
           "cache_key": {
             "ignore_query_strings_order": true,
-            "custom_key": { "query_string": { "exclude": "*" } }
+            "custom_key": { "query_string": { "exclude": ["*"] } }
           }
         }
       }
@@ -96,6 +100,12 @@ curl -s "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/rulesets/phases/
 ```
 
 Zone id is on the zone Overview page, bottom right.
+
+If the API rejects the `cache_key` block on the current plan (custom cache key
+options are plan-gated; the dashboard "Ignore query string" toggle is the
+supported path on non-Enterprise), drop `cache_key` entirely and keep
+`cache` + `edge_ttl`. Query-string collapsing only reduces cache
+fragmentation from UTM params; it is not required for the fix.
 
 ## Option C — Workers fallback
 
