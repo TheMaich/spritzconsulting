@@ -18,6 +18,11 @@
 <meta name="description" content="Independent games industry consultancy: production, publishing, game design. For indie studios and publishers that need a sharper operator on the team." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
+<!-- TODO SPR-9: Google Search Console verification. Uncomment and paste the token from
+     Search Console > spritzconsulting.com > Settings > Ownership verification > HTML tag.
+<meta name="google-site-verification" content="PASTE_VERIFICATION_TOKEN_HERE" />
+-->
+
 <meta name="color-scheme" content="dark light" />
 
 <meta property="og:title" content="Spritz Consulting | Production & Publishing Consultancy" />
@@ -2235,26 +2240,93 @@ body.is-tab-hidden .dot{
 }
 </style>
 
+<!-- SPR-37: the Person node carries no sameAs by design. Confirmed with Michele: no public
+     personal profile to point at. The company LinkedIn URL sits on the ProfessionalService,
+     where it belongs. Do not put a company URL on the Person. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Spritz Consulting",
-  "description": "Production & Publishing Consultancy for the games industry",
-  "url": "https://spritzconsulting.com",
-  "founder": {
-    "@type": "Person",
-    "name": "Michele Di Nardo",
-    "jobTitle": "Game Producer",
-    "sameAs": ["https://www.linkedin.com/company/115837121/"]
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Turin",
-    "addressCountry": "IT"
-  },
-  "areaServed": "Worldwide",
-  "knowsAbout": ["Game Production", "Game Publishing", "Console Certification", "Project Management", "Indie Games", "Steam Publishing", "PlayStation Certification", "Xbox Certification", "Nintendo Switch Certification"]
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://spritzconsulting.com/#organization",
+      "name": "Spritz Consulting",
+      "description": "Production & Publishing Consultancy for the games industry",
+      "url": "https://spritzconsulting.com",
+      "sameAs": ["https://www.linkedin.com/company/115837121/"],
+      "founder": { "@id": "https://spritzconsulting.com/#michele-di-nardo" },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Turin",
+        "addressCountry": "IT"
+      },
+      "areaServed": "Worldwide",
+      "knowsAbout": ["Game Production", "Game Publishing", "Console Certification", "Project Management", "Indie Games", "Steam Publishing", "PlayStation Certification", "Xbox Certification", "Nintendo Switch Certification"]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://spritzconsulting.com/#michele-di-nardo",
+      "name": "Michele Di Nardo",
+      "jobTitle": "Game Producer",
+      "url": "https://spritzconsulting.com",
+      "worksFor": { "@id": "https://spritzconsulting.com/#organization" },
+      "knowsAbout": ["Game Production", "Game Publishing", "Console Certification", "Project Management", "Indie Games"]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What's your rate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the format. For audits and project-based work, the rate is €250/day. For retainers (minimum 3 months), the rate is €3,500/month, a better deal for both sides when the engagement is ongoing. All rates include VAT and any applicable taxes on my end. These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you sign NDAs before a discovery call?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, if the project calls for it. For most first conversations, a verbal commitment to confidentiality is sufficient. Discretion is standard practice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who keeps the IP, the documentation, the processes after you leave?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You do. Everything I produce (schedules, GDD reviews, pipelines, cert prep) stays with you. That's the point."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What’s the smallest engagement you take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you co-source vendors? Porting, external QA, audio, localisation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Nine years in the industry built a network of trusted studios, porting houses, QA partners, audio teams, and loc vendors. I introduce, brief, and coordinate them as part of the engagement. No referral fees on either side."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "We’re pre-funding or pre-publisher. Will you still talk?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The discovery call doesn’t care what stage you’re in. If pitch deck shaping or publisher demo prep is what you need, that’s its own service. If you genuinely can’t afford anything yet, I’ll point you at the right reading or the right people, no strings."
+          }
+        }
+      ]
+    }
+  ]
 }
 </script>
 </head>
