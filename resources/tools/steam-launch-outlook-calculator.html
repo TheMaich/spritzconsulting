@@ -1740,6 +1740,40 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   }
 }
 </script>
+<style>
+/* Book a call header pill: pulse ring + shimmer sweep, offset cycles */
+.nav a.book-call-cta{
+  position: relative;
+  overflow: hidden;
+  animation: book-call-pulse 4s var(--ease) infinite;
+}
+@keyframes book-call-pulse{
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 45%, transparent); }
+  30%  { box-shadow: 0 0 0 10px color-mix(in srgb, var(--clay) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 0%, transparent); }
+}
+.nav a.book-call-cta::after{
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: -60%; right: auto;
+  width: 50%; height: auto;
+  background: linear-gradient(105deg, transparent, color-mix(in srgb, var(--clay) 25%, white 10%), transparent);
+  transform: translateX(0);
+  animation: book-call-shimmer 7.5s linear 2s infinite;
+  pointer-events: none;
+}
+@keyframes book-call-shimmer{
+  0%   { transform: translateX(0); }
+  12%  { transform: translateX(340%); }
+  100% { transform: translateX(340%); }
+}
+.nav a.book-call-cta:hover{ animation-play-state: paused; }
+.nav a.book-call-cta:hover::after{ animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce){
+  .nav a.book-call-cta{ animation: none; box-shadow: none; }
+  .nav a.book-call-cta::after{ display: none; }
+}
+</style>
 </head>
 <body>
 
@@ -1762,8 +1796,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <a href="/#consultancy"><span class="num">01</span><span data-i18n="nav.consultancy">My Experience</span></a>
         <a href="/#services"><span class="num">02</span><span data-i18n="nav.services">Services</span></a>
         <a href="/#faq"><span class="num">03</span><span data-i18n="nav.faq">FAQ</span></a>
-        <a href="/#contact"><span class="num">04</span><span data-i18n="nav.contact">Contact</span></a>
-        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
+        <a href="/#testimonials"><span class="num">04</span><span data-i18n="nav.testimonials">Testimonials</span></a>
+        <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" class="book-call-cta" data-booking="tool_header"><span class="num">05</span><span data-i18n="nav.contact">Book a call</span></a>
+        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span></a>
       </nav>
       <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -1783,8 +1818,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     <a href="/#consultancy" data-menu-link><span class="num">01</span> <span data-i18n="nav.consultancy">My Experience</span></a>
     <a href="/#services" data-menu-link><span class="num">02</span> <span data-i18n="nav.services">Services</span></a>
     <a href="/#faq" data-menu-link><span class="num">03</span> <span data-i18n="nav.faq">FAQ</span></a>
-    <a href="/#contact" data-menu-link><span class="num">04</span> <span data-i18n="nav.contact">Contact</span></a>
-    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span> <span class="resources-arrow" aria-hidden="true">↗</span></a>
+    <a href="/#testimonials" data-menu-link><span class="num">04</span> <span data-i18n="nav.testimonials">Testimonials</span></a>
+    <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-menu-link data-booking="tool_header"><span class="num">05</span> <span data-i18n="nav.contact">Book a call</span></a>
+    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span></a>
   </nav>
   <div class="foot">
     <span class="menu-tagline">production · publishing · audit</span>
@@ -3448,6 +3484,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     });
   })();
 })();
+</script>
+<script>
+  document.querySelectorAll('a[data-booking]').forEach(function(el){
+    el.addEventListener('click', function(){
+      if (window.zaraz) { zaraz.track('booking_click', { placement: el.dataset.booking, page: location.pathname }); }
+    });
+  });
 </script>
 </body>
 </html>
