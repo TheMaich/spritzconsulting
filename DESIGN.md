@@ -53,13 +53,13 @@ typography:
     letterSpacing: "-0.015em"
     fontVariation: "opsz 36"
   body:
-    fontFamily: "SF Pro Text, -apple-system, BlinkMacSystemFont, Segoe UI Variable Text, system-ui, sans-serif"
+    fontFamily: "Lato, -apple-system, BlinkMacSystemFont, Segoe UI Variable Text, system-ui, sans-serif"
     fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
   body-article:
-    fontFamily: "SF Pro Text, -apple-system, BlinkMacSystemFont, system-ui, sans-serif"
+    fontFamily: "Lato, -apple-system, BlinkMacSystemFont, system-ui, sans-serif"
     fontSize: "18px"
     fontWeight: 400
     lineHeight: 1.78
@@ -186,7 +186,7 @@ Rejects: SaaS gradient buttons; navy-and-cyan B2B template; glassmorphism beyond
 **Key Characteristics:**
 - Tinted near-black `#0A0B0E` (paper) tilted toward warm-cool, never `#000`.
 - Single saturated accent — clay mustard `#E5B415`. Touches: dot pulse, headline `<em>`, button primary, scrollbar thumb, focus ring, aurora wash.
-- Three families: Bricolage Grotesque (display, variable opsz), SF Pro Text (body), Bebas Neue (mono/label uppercase).
+- Three families: Bricolage Grotesque (display, variable opsz), Lato (body), Bebas Neue (mono/label uppercase).
 - Pill radius (999px) for interactive; 8–18px for panels; 4px focus.
 - Theme-paired: dark mustard-on-near-black; light deep-mustard-on-cream. Magenta promoted to kicker accents in light.
 
@@ -229,10 +229,10 @@ The system runs on a single saturated brand color against a tinted near-black or
 ## 3. Typography
 
 **Display Font:** Bricolage Grotesque (variable, `opsz` axis 12–96).
-**Body Font:** SF Pro Text (system stack with full fallback chain).
+**Body Font:** Lato (self-hosted / Google Fonts; system stack as fallback chain). Static cuts 300/400/700/900 + 400/700 italic — Lato has no 500 or 600, so those weights resolve to 400 and 700.
 **Label/Mono Font:** Bebas Neue (condensed display sans, used as monospace-role).
 
-**Character:** Editorial pairing — variable-opsz serif-leaning grotesque for display does the heavy expression, SF Pro keeps body invisible and fast, Bebas Neue does meta/labels/numerals at small sizes with tight uppercase. Bebas is "mono" by role (tickers, kickers, nav, meta) even though it's a condensed sans — chosen for editorial weight, not for monospace fidelity.
+**Character:** Editorial pairing — variable-opsz serif-leaning grotesque for display does the heavy expression, Lato keeps body warm and legible, Bebas Neue does meta/labels/numerals at small sizes with tight uppercase. Bebas is "mono" by role (tickers, kickers, nav, meta) even though it's a condensed sans — chosen for editorial weight, not for monospace fidelity.
 
 ### Hierarchy
 - **Display** (Bricolage 400, `clamp(44px, 7.4vw, 112px)`, lh 0.94, ls -0.035em, opsz 96): hero H1. Italics in clay for the emphasized phrase.
@@ -241,8 +241,8 @@ The system runs on a single saturated brand color against a tinted near-black or
 - **Article H2** (Bricolage 600, `clamp(26px, 3.4vw, 40px)`, lh 1.12, ls -0.025em, opsz 40): with `01` `02` mono counters in clay above, plus top border-rule.
 - **Title** (Bricolage 500, `clamp(22px, 2.4vw, 32px)`, lh 1.15, ls -0.015em, opsz 36): resource card title, calculator input label.
 - **Deck/Lede** (Bricolage 500, `clamp(20px, 2.4vw, 28px)`, lh 1.5, ls -0.015em): article deck under H1, with bottom rule.
-- **Body** (SF Pro 400, 17px, lh 1.55): default site copy.
-- **Body Article** (SF Pro 400, 18px, lh 1.78): long-form article prose, looser for read-through.
+- **Body** (Lato 400, 17px, lh 1.55): default site copy.
+- **Body Article** (Lato 400, 18px, lh 1.78): long-form article prose, looser for read-through.
 - **Label** (Bebas 400, 14px, ls 0.08em, UPPERCASE): nav, kickers, button text, preset chips.
 - **Meta** (Bebas 400, 12–13px, ls 0.14em, UPPERCASE): byline, footer, breakdown rows, category tags.
 
@@ -300,7 +300,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 ### Inputs
 - **Wrap** (`.calc-input-wrap`): paper-2 fill, rule border, radius 8px, overflow hidden so the prefix/suffix chips read as integral parts. Focus-within → clay border.
 - **Prefix/Suffix** (`.calc-currency`, `.calc-suffix`): paper-3 fill, ink-3 mono text, `padding: 14px 16px`, divided by 1px rule line.
-- **Input** (`.calc-input`): transparent fill, ink text, SF Pro 16px, padding `14px 16px`. Webkit spinners dimmed to opacity 0.3. Wheel-blur on number inputs (JS) to prevent scroll-jumping values.
+- **Input** (`.calc-input`): transparent fill, ink text, Lato 16px, padding `14px 16px`. Webkit spinners dimmed to opacity 0.3. Wheel-blur on number inputs (JS) to prevent scroll-jumping values.
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
