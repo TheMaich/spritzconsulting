@@ -55,7 +55,7 @@
   ────────────────────────────────────────
   key: hero.h1
   EN: A Dash of Production & Publishing for the games industry.
-  IT: Un Dash di Produzione & Publishing per la games industry.
+  IT: Un pizzico di Produzione & Publishing per la games industry.
   ────────────────────────────────────────
   key: hero.intro
   EN: I work across the full production chain: QA to indie publishing, certification to platform delivery. I help
