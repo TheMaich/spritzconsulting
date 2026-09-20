@@ -54,8 +54,8 @@
   IT: Consulenza in Produzione & Publishing
   ────────────────────────────────────────
   key: hero.h1
-  EN: A Shot of Production & Publishing for the games industry.
-  IT: Uno Shot di Produzione & Publishing per la games industry.
+  EN: A Dash of Production & Publishing for the games industry.
+  IT: Un Dash di Produzione & Publishing per la games industry.
   ────────────────────────────────────────
   key: hero.intro
   EN: I work across the full production chain: QA to indie publishing, certification to platform delivery. I help
