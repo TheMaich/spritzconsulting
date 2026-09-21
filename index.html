@@ -1066,6 +1066,65 @@ body.is-tab-hidden .dot{
 }
 #consultancy .step-n{ font-size: 56px; }
 #consultancy .step h3{ font-size: 19px; }
+
+/* About photo — scroll-linked frame reveal */
+.about-photo{
+  margin: 0;
+  max-width: 520px;
+  --p: 1; /* default 1 = final state for no-JS and reduced motion */
+  transform: translateY(calc((1 - var(--p)) * 56px));
+}
+.about-photo-rot{
+  transform: rotate(calc(1.6deg + (1 - var(--p)) * 5.4deg));
+  filter: drop-shadow(0 22px 34px color-mix(in srgb, var(--clay) 24%, transparent));
+}
+.about-photo-frame{
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  clip-path: inset(calc((1 - var(--p)) * 26%) calc((1 - var(--p)) * 22%) round 18px);
+}
+.about-photo-frame img{
+  position: absolute;
+  inset: -9% 0;
+  width: 100%;
+  height: 118%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  filter: saturate(.88) contrast(1.02) brightness(calc(.7 + var(--p) * .3));
+  transform: translateY(calc((var(--p) - .5) * 8%)) scale(calc(1.28 - var(--p) * .28));
+}
+.about-photo-frame::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%);
+  pointer-events: none;
+}
+.about-photo figcaption{
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  opacity: calc((var(--p) - .7) * 3.4);
+}
+@media (prefers-reduced-motion: reduce){
+  .about-photo{ --p: 1; transform: none; }
+  .about-photo-rot{ transform: rotate(1.6deg); }
+}
+@media (min-width: 900px){
+  #consultancy .about-grid{
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+  }
+  #consultancy .about-photo{ max-width: none; }
+  #consultancy .process-rail{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .about-prose{
   margin: 28px 0 0;
   display: grid;
@@ -2642,6 +2701,17 @@ body.is-tab-hidden .dot{
           </div>
         </div>
       </div>
+      <figure class="about-photo" data-scroll-frame>
+        <div class="about-photo-rot">
+          <div class="about-photo-frame">
+            <img src="assets/miki-canary-islands-games-2024.webp"
+                 data-i18n-alt="about.photo.alt"
+                 alt="Michele Di Nardo speaking on stage, seated in a red armchair, wearing a headset microphone and an event badge."
+                 width="819" height="1024" loading="lazy" decoding="async" />
+          </div>
+        </div>
+        <figcaption data-i18n="about.photo.caption">Canary Islands Games forum, June 2024</figcaption>
+      </figure>
     </div>
 
   </section>
@@ -3241,6 +3311,8 @@ body.is-tab-hidden .dot{
     'about.h': 'Lato studio, lato publisher, e tutto quello che c\'è in mezzo.',
     'about.p1': 'QA in <strong>34BigThings</strong> e <strong>Rebellion</strong>. Production di nuovo in 34BigThings. Publishing Production in <strong>Raw Fury</strong>. Più di recente Producer in <strong>Untold Games</strong> su <em>City&nbsp;20</em>. Co-fondatore di Scuola Nash, giurato all&rsquo;Indie Arena Booth.',
     'about.p2': 'Da AAA a studi di un solo sviluppatore. Dal QA al publishing. Ogni lato del tavolo.',
+    'about.photo.alt': 'Michele Di Nardo parla sul palco, seduto su una poltrona rossa, con microfono ad archetto e badge dell\'evento.',
+    'about.photo.caption': 'Forum Canary Islands Games, giugno 2024',
 
     'stats.shipped.h': 'Giochi pubblicati',
     'stats.shipped.p': 'Titoli usciti tra ruoli in QA, publishing e produzione, su PC e console.',
@@ -4097,6 +4169,43 @@ body.is-tab-hidden .dot{
     });
   }, { threshold: 0.12 });
   reveals.forEach(el => revealIO.observe(el));
+
+  // Scroll-linked frame reveal
+  const frames = Array.from(document.querySelectorAll('[data-scroll-frame]'));
+  if (frames.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const liveFrames = new Set();
+    let framePending = false;
+    const paintFrames = () => {
+      framePending = false;
+      const vh = innerHeight;
+      liveFrames.forEach(el => {
+        const r = el.getBoundingClientRect();
+        const start = vh * 0.88;
+        const end = vh * 0.5 - r.height / 2;
+        const t = Math.min(1, Math.max(0, (start - r.top) / (start - end)));
+        const p = t * t * (3 - 2 * t);
+        el.style.setProperty('--p', p.toFixed(4));
+      });
+    };
+    const scheduleFrames = () => {
+      if (framePending) return;
+      framePending = true;
+      requestAnimationFrame(paintFrames);
+    };
+    const frameIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) liveFrames.add(e.target); else liveFrames.delete(e.target); });
+      if (liveFrames.size) {
+        addEventListener('scroll', scheduleFrames, { passive: true });
+        addEventListener('resize', scheduleFrames, { passive: true });
+        scheduleFrames();
+      } else {
+        removeEventListener('scroll', scheduleFrames);
+        removeEventListener('resize', scheduleFrames);
+      }
+    }, { rootMargin: '20% 0px' });
+    frames.forEach(el => { el.style.setProperty('--p', '0'); frameIO.observe(el); });
+    scheduleFrames();
+  }
 
   // Slot-machine animation for stat numbers
   const counters = Array.from(document.querySelectorAll('.step-n[data-count]'));

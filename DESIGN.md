@@ -324,6 +324,8 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 
 **Article H2 counter rules.** `counter-reset: h2` on article root, `counter-increment: h2` per H2, `::before { content: counter(h2, decimal-leading-zero); }` in clay Bebas above, with `border-top: 1px solid rule` and 72px top margin. The numbered, ruled break IS the chapter mark.
 
+**Scroll-linked frame reveal.** At most one frame per page (`[data-scroll-frame]`). A `--p` progress var, 0 → 1, is driven by scroll position and eased with smoothstep (`t*t*(3-2t)`): raw `t` hits 0 when the frame's top sits at 88% of the viewport and 1 when its centre reaches 50%. `clip-path` opens from `inset(26% 22%)` to `inset(0)` (radius 18px throughout); the wrapper unrotates from 7deg to a resting 1.6deg; the frame rises 56px; the image settles from `scale(1.28)` to `scale(1)`, drifts 8% vertically and brightens from 0.7 to 1. The caption fades in late, over the last 30% of `--p`. Depth comes from `drop-shadow` on the rotating wrapper, never `box-shadow` on the frame — `clip-path` would cut a box-shadow off. `--p` defaults to 1 in CSS, so no-JS and reduced-motion visitors get the final state, at rest on 1.6deg, with no listener attached. Used once, on the "01 My Experience" photo — it earns its weight by being rare.
+
 **Theme toggle + Language toggle.** Segmented pill controls. `aria-pressed="true"` button gets ink fill / paper text; inactive buttons hover to ink. Toggle persists to `localStorage` as `mdn-theme`; preload script applies before paint to avoid flash.
 
 ## 6. Do's and Don'ts

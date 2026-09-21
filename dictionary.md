@@ -160,6 +160,14 @@
   EN: From AAA to single-developer indie teams. From QA to Production and Publishing. Every side of the table.
   IT: Da AAA a studi di un solo sviluppatore. Dal QA al publishing. Ogni lato del tavolo.
   ────────────────────────────────────────
+  key: about.photo.alt
+  EN: Michele Di Nardo speaking on stage, seated in a red armchair, wearing a headset microphone and an event badge.
+  IT: Michele Di Nardo parla sul palco, seduto su una poltrona rossa, con microfono ad archetto e badge dell'evento.
+  ────────────────────────────────────────
+  key: about.photo.caption
+  EN: Canary Islands Games forum, June 2024
+  IT: Forum Canary Islands Games, giugno 2024
+  ────────────────────────────────────────
   key: stats.shipped.h
   EN: Games shipped
   IT: Giochi pubblicati
