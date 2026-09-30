@@ -250,6 +250,9 @@ html[data-theme="light"] .kicker .num{ color: var(--accent-2); }
 @media (prefers-reduced-motion: reduce){
   .bg-aurora .blob{ animation: none; }
 }
+/* Hidden: its gold washes put --ink-2 body text under 4.5:1 (with or without
+   the shader). Markup and rules kept; delete this line to bring it back. */
+.bg-aurora{ display: none; }
 
 /* Pause ambient animations when tab is hidden (perf) */
 body.is-tab-hidden .grain,
