@@ -120,6 +120,9 @@ body{ transition: background-color .4s var(--ease), color .4s var(--ease); }
 
 *, *::before, *::after{ box-sizing: border-box; }
 html{ scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
+/* lenis.css contains overscroll on opted-out scrollers, which dead-ends wheel and
+   touch over one with nothing to scroll (an empty textarea). Keep native chaining. */
+html.lenis [data-lenis-prevent]{ overscroll-behavior: auto; }
 body{
   margin:0; background:var(--paper); color:var(--ink);
   font-family: var(--sans);
@@ -3231,6 +3234,7 @@ body.is-tab-hidden .dot{
 </footer>
 
 <script src="assets/vendor/lenis-1.3.26.min.js" defer></script>
+<script src="assets/js/smooth-scroll.js" defer></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).
@@ -3952,33 +3956,6 @@ body.is-tab-hidden .dot{
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // --header-h mirrors the header's real height (breakpoints, .is-scrolled);
-  // it feeds scroll-padding-top, so native jumps land under the header
-  const syncHeaderH = () => document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
-  syncHeaderH();
-  if ('ResizeObserver' in window) new ResizeObserver(syncHeaderH).observe(header);
-
-  // Smooth scrolling (Lenis, homepage only). Off for reduced motion, native on
-  // touch, ?lenis=off is a permanent kill switch. No anchor offset: Lenis
-  // already honours scroll-padding-top (var(--header-h)).
-  const LENIS_CONFIG = {
-    duration: 1.2,
-    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    wheelMultiplier: 1,
-    smoothWheel: true,
-    autoRaf: true,
-    anchors: true
-  };
-  const initLenis = () => {
-    if (!window.Lenis) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (new URLSearchParams(location.search).get('lenis') === 'off') return;
-    window.__lenis = new Lenis(LENIS_CONFIG);
-  };
-  // The vendor script is deferred, so it only exists once parsing is done.
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLenis);
-  else initLenis();
-
   // Mobile menu
   const openBtn = document.getElementById('menu-open');
   const closeBtn = document.getElementById('menu-close');
@@ -3988,7 +3965,6 @@ body.is-tab-hidden .dot{
     menu.setAttribute('aria-hidden', String(!open));
     openBtn.setAttribute('aria-expanded', String(open));
     document.body.style.overflow = open ? 'hidden' : '';
-    if (window.__lenis) open ? window.__lenis.stop() : window.__lenis.start();
   };
   openBtn.addEventListener('click', () => setMenu(true));
   closeBtn.addEventListener('click', () => setMenu(false));

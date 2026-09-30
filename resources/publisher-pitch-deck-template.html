@@ -93,7 +93,7 @@ html{ transition: background-color .4s var(--ease); }
 body{ transition: background-color .4s var(--ease), color .4s var(--ease); }
 
 *, *::before, *::after{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html{ scroll-padding-top: var(--header-h, 75px); -webkit-text-size-adjust: 100%; }
 body{
   margin:0; background:var(--paper); color:var(--ink);
   font-family: var(--sans);
@@ -1254,6 +1254,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .lang-toggle button{ min-height: 44px; }
 }
 </style>
+<link rel="stylesheet" href="/assets/vendor/lenis-1.3.26.css">
+<script src="/assets/vendor/lenis-1.3.26.min.js" defer></script>
+<script src="/assets/js/smooth-scroll.js" defer></script>
 </head>
 <body>
 
