@@ -45,6 +45,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/vendor/lenis-1.3.26.css">
 
 
 <script>
@@ -65,6 +66,8 @@
   --mono: "Bebas Neue", "Impact", "Haettenschweiler", "Arial Narrow", sans-serif;
   --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Sticky header height; JS keeps it live (ResizeObserver), this is the pre-JS default */
+  --header-h: 75px;
 
   /* Dark theme (default) — mustard on near-black */
   --paper:#0A0B0E;
@@ -116,7 +119,7 @@ html{ transition: background-color .4s var(--ease); }
 body{ transition: background-color .4s var(--ease), color .4s var(--ease); }
 
 *, *::before, *::after{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html{ scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
 body{
   margin:0; background:var(--paper); color:var(--ink);
   font-family: var(--sans);
@@ -1958,7 +1961,6 @@ body.is-tab-hidden .dot{
 }
 @media (prefers-reduced-motion: reduce){
   [data-reveal]{ opacity: 1; transform: none; transition: none; }
-  html{ scroll-behavior: auto; }
 }
 
 /* Responsive */
@@ -3168,7 +3170,7 @@ body.is-tab-hidden .dot{
             </div>
             <div class="field wide">
               <label for="f-msg" data-i18n="form.msg.label" data-i18n-html>Message <span class="req" aria-hidden="true">*</span></label>
-              <textarea id="f-msg" name="message" required rows="5" data-i18n-placeholder="form.msg.placeholder" placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
+              <textarea id="f-msg" name="message" required rows="5" data-lenis-prevent data-i18n-placeholder="form.msg.placeholder" placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
               <span class="err" data-err-for="f-msg" aria-live="polite"></span>
             </div>
             <div class="hp-field" aria-hidden="true">
@@ -3228,6 +3230,7 @@ body.is-tab-hidden .dot{
   </div>
 </footer>
 
+<script src="assets/vendor/lenis-1.3.26.min.js" defer></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).
@@ -3949,6 +3952,33 @@ body.is-tab-hidden .dot{
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
+  // --header-h mirrors the header's real height (breakpoints, .is-scrolled);
+  // it feeds scroll-padding-top, so native jumps land under the header
+  const syncHeaderH = () => document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+  syncHeaderH();
+  if ('ResizeObserver' in window) new ResizeObserver(syncHeaderH).observe(header);
+
+  // Smooth scrolling (Lenis, homepage only). Off for reduced motion, native on
+  // touch, ?lenis=off is a permanent kill switch. No anchor offset: Lenis
+  // already honours scroll-padding-top (var(--header-h)).
+  const LENIS_CONFIG = {
+    duration: 1.2,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    wheelMultiplier: 1,
+    smoothWheel: true,
+    autoRaf: true,
+    anchors: true
+  };
+  const initLenis = () => {
+    if (!window.Lenis) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (new URLSearchParams(location.search).get('lenis') === 'off') return;
+    window.__lenis = new Lenis(LENIS_CONFIG);
+  };
+  // The vendor script is deferred, so it only exists once parsing is done.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLenis);
+  else initLenis();
+
   // Mobile menu
   const openBtn = document.getElementById('menu-open');
   const closeBtn = document.getElementById('menu-close');
@@ -3958,6 +3988,7 @@ body.is-tab-hidden .dot{
     menu.setAttribute('aria-hidden', String(!open));
     openBtn.setAttribute('aria-expanded', String(open));
     document.body.style.overflow = open ? 'hidden' : '';
+    if (window.__lenis) open ? window.__lenis.stop() : window.__lenis.start();
   };
   openBtn.addEventListener('click', () => setMenu(true));
   closeBtn.addEventListener('click', () => setMenu(false));
@@ -4508,7 +4539,14 @@ body.is-tab-hidden .dot{
       const btn = document.querySelector('.faq-toggle[aria-controls="faq-answer-1"]');
       if (btn && btn.getAttribute('aria-expanded') !== 'true') btn.click();
       const faq = document.getElementById('faq');
-      if (faq) faq.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!faq) return;
+      if (window.__lenis) {
+        // Lenis' own anchor handler sits on window and would retarget to #faq-answer-1
+        e.stopPropagation();
+        window.__lenis.scrollTo(faq);
+      } else {
+        faq.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   })();
 
