@@ -110,8 +110,8 @@
   IT: Ultimo
   ────────────────────────────────────────
   key: meta.recent.dd
-  EN: Freelancer for Goldpact Goblins
-  IT: Freelance per Goldpact Goblins
+  EN: Publishing services for Goldpact Goblins
+  IT: Servizi di publishing per Goldpact Goblins
   ────────────────────────────────────────
   key: meta.based.dt
   EN: Based
