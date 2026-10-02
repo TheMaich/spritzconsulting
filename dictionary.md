@@ -106,12 +106,12 @@
   IT: 10 anni in Raw Fury, Rebellion & 34BigThings
   ────────────────────────────────────────
   key: meta.recent.dt
-  EN: Recent
-  IT: Recente
+  EN: Latest
+  IT: Ultimo
   ────────────────────────────────────────
   key: meta.recent.dd
-  EN: Producer on City 20 (Untold Games)
-  IT: Producer su City 20 (Untold Games)
+  EN: Freelancer for Goldpact Goblins
+  IT: Freelance per Goldpact Goblins
   ────────────────────────────────────────
   key: meta.based.dt
   EN: Based
