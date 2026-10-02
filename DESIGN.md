@@ -332,6 +332,8 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 
 **Theme toggle + Language toggle.** Segmented pill controls. `aria-pressed="true"` button gets ink fill / paper text; inactive buttons hover to ink. Toggle persists to `localStorage` as `mdn-theme`; preload script applies before paint to avoid flash.
 
+**Pending cleanup.** `assets/logo-saber.png/.webp` kept only for cached pages, delete after 2026-10-09. Nothing references them; the marquee uses `logo-saber-v2`.
+
 ## 6. Do's and Don'ts
 
 ### Do:
