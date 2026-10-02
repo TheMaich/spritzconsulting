@@ -1,0 +1,38 @@
+/* Page background shader, shared by every page.
+   assets/js/bg-shader.js reads the --shader-* tokens and adds .has-bg-shader
+   to <html> only when WebGL runs; without it body keeps its solid paper. */
+
+/* Dark theme (default) */
+:root{
+  --shader-base: var(--paper);
+  --shader-glow: #8A6600;
+  --shader-dark: 1;
+  --shader-veil: 75%;
+}
+/* Inert while <html> carries data-theme="dark" in the markup */
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --shader-glow: var(--clay-soft);
+    --shader-dark: 0;
+  }
+}
+html[data-theme="light"]{
+  --shader-glow: var(--clay-soft);
+  --shader-dark: 0;
+}
+html[data-theme="dark"]{
+  --shader-glow: #8A6600;
+  --shader-dark: 1;
+}
+
+/* Canvas (-2) under a paper veil (-1) */
+html{ background: var(--paper); }
+#bgShader{
+  position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100lvh;
+  z-index: -2; pointer-events: none; display: block;
+}
+.bg-veil{
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--paper) var(--shader-veil), transparent);
+}
+.has-bg-shader body{ background: transparent; }

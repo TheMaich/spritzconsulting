@@ -46,6 +46,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/vendor/lenis-1.3.26.css">
+<link rel="stylesheet" href="/assets/css/bg-shader.css">
 <script src="/assets/js/bg-shader.js" defer></script>
 
 
@@ -89,11 +90,6 @@
   --err-bg:#2A1020;
   --grain-blend: screen;
   --grain-opacity: 0.05;
-  /* Page background shader (assets/js/bg-shader.js reads these) */
-  --shader-base: var(--paper);
-  --shader-glow: #8A6600;
-  --shader-dark: 1;
-  --shader-veil: 75%;
   --shadow-sm: 0 1px 0 rgba(0,0,0,0.55), 0 2px 8px -2px rgba(229,180,21,0.22);
   --shadow-md: 0 1px 0 rgba(0,0,0,0.55), 0 20px 50px -20px rgba(229,180,21,0.26);
 }
@@ -117,8 +113,6 @@ html[data-theme="light"]{
   --err-bg:#FFE7F3;
   --grain-blend: multiply;
   --grain-opacity: 0.05;
-  --shader-glow: var(--clay-soft);
-  --shader-dark: 0;
   --shadow-sm: 0 1px 0 rgba(10,11,14,0.07), 0 2px 6px -2px rgba(138,102,0,0.12);
   --shadow-md: 0 1px 0 rgba(10,11,14,0.07), 0 18px 40px -20px rgba(138,102,0,0.22);
 }
@@ -176,19 +170,6 @@ html{
   z-index: 100;
 }
 .skip:focus{ left: 12px; }
-
-/* Page background shader: canvas (-2) under a paper veil (-1). bg-shader.js adds
-   .has-bg-shader only when WebGL runs; without it body keeps its solid paper. */
-html{ background: var(--paper); }
-#bgShader{
-  position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100lvh;
-  z-index: -2; pointer-events: none; display: block;
-}
-.bg-veil{
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: color-mix(in srgb, var(--paper) var(--shader-veil), transparent);
-}
-.has-bg-shader body{ background: transparent; }
 
 /* Grain overlay */
 .grain{

@@ -31,6 +31,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/css/bg-shader.css">
+<script src="/assets/js/bg-shader.js" defer></script>
 
 <script>
   (function(){
@@ -572,6 +574,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (prefers-reduced-motion: reduce){
   .bg-aurora .blob{ animation: none; }
 }
+/* Hidden: its gold washes put --ink-2 body text under 4.5:1 (with or without
+   the shader). Markup and rules kept; delete this line to bring it back. */
+.bg-aurora{ display: none; }
 </style>
 <style>
 .article-wrap{
@@ -1863,6 +1868,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 </style>
 </head>
 <body>
+<canvas id="bgShader" aria-hidden="true"></canvas>
+<div class="bg-veil" aria-hidden="true"></div>
 
 <a class="skip" href="#main">Skip to content</a>
 <div class="bg-aurora" aria-hidden="true">
