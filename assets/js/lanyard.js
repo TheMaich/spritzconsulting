@@ -24,6 +24,8 @@ const phone = matchMedia('(max-width: 900px)');     // phones keep the HTML card
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js';
 const RAPIER_URL = 'https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js';
 const ASSETS = '/assets/img/lanyard/';
+// Bump whenever the card images or cards.json are regenerated, so browsers and the CDN fetch the new set.
+const ASSETS_V = '?v=20261008';
 
 // Values tuned in the lanyard lab.
 // size: share of the HTML card's height. topGap and bottomGap (px, desktop) keep the whole badge inside the first screen.
@@ -41,7 +43,7 @@ if (cardEl && hero && !phone.matches && webglOK() && params.get('badge') !== 'of
     idle(() => {
       Promise.all([
         import(THREE_URL), import(RAPIER_URL),
-        fetch(ASSETS + 'cards.json').then((r) => { if (!r.ok) throw new Error('cards.json ' + r.status); return r.json(); }),
+        fetch(ASSETS + 'cards.json' + ASSETS_V).then((r) => { if (!r.ok) throw new Error('cards.json ' + r.status); return r.json(); }),
         document.fonts.load('64px "Bebas Neue"'), document.fonts.load('400 64px "Bricolage Grotesque"'),
       ]).then(start).catch((e) => { console.warn('[lanyard] staying on the HTML card:', e); });
     }, { timeout: 2500 });
@@ -73,7 +75,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
 
   /* ---------- Textures ---------- */
   const imgCache = {};
-  const loadImg = (key) => imgCache[key] || (imgCache[key] = new Promise((res, rej) => { const i = new Image(); i.decoding = 'async'; i.onload = () => res(i); i.onerror = rej; i.src = ASSETS + 'card-' + key + '.webp'; }));
+  const loadImg = (key) => imgCache[key] || (imgCache[key] = new Promise((res, rej) => { const i = new Image(); i.decoding = 'async'; i.onload = () => res(i); i.onerror = rej; i.src = ASSETS + 'card-' + key + '.webp' + ASSETS_V; }));
   function texFrom(src) { const t = new THREE.Texture(src); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso; t.needsUpdate = true; return t; }
 
   // The slot is punched through the card's top margin, above the portrait. Sizes are in card CSS px (card is 447 wide).
