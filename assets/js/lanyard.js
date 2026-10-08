@@ -19,6 +19,7 @@ const root = document.documentElement;
 const params = new URLSearchParams(location.search);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const touchOnly = matchMedia('(hover: none) and (pointer: coarse)');
+const phone = matchMedia('(max-width: 900px)');     // phones keep the HTML card
 
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js';
 const RAPIER_URL = 'https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js';
@@ -34,7 +35,7 @@ function webglOK() { try { const c = document.createElement('canvas'); return !!
 
 const cardEl = document.querySelector('.hero-card.is-active');
 const hero = cardEl && cardEl.closest('.hero');
-if (cardEl && hero && webglOK() && params.get('badge') !== 'off') {
+if (cardEl && hero && !phone.matches && webglOK() && params.get('badge') !== 'off') {
   const go = () => {
     const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300));
     idle(() => {
@@ -500,9 +501,11 @@ async function start([THREE, RAPIERmod, CARDS]) {
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   rebuild(true);
   ro.observe(hero); io.observe(hero);
+  // A desktop window narrowed to phone width goes back to the HTML card.
+  phone.addEventListener('change', (e) => { if (e.matches) teardown(); });
   // The desktop size also depends on the window height, which can change without the hero changing.
   let lastH = innerHeight;
-  addEventListener('resize', () => { if (L.mobile || Math.abs(innerHeight - lastH) < 2) return; lastH = innerHeight; clearTimeout(rz); rz = setTimeout(() => { if (!drag) rebuild(false); }, 120); });
+  addEventListener('resize', () => { if (!active || L.mobile || Math.abs(innerHeight - lastH) < 2) return; lastH = innerHeight; clearTimeout(rz); rz = setTimeout(() => { if (!drag) rebuild(false); }, 120); });
   active = true;
   window.__lanyard = { get card() { return card; }, get L() { return L; }, camera, front, linkAt, hitCard, teardown };
   raf = requestAnimationFrame((t) => { lastT = t; frame(t); });
