@@ -168,14 +168,19 @@ async function start([THREE, RAPIERmod, CARDS]) {
   const CARD_H = 2.5;
   let L = {};
   function measure() {
-    const headerH = (document.querySelector('.site-header') || { offsetHeight: 0 }).offsetHeight;
+    // frame-fit.js may zoom header and main by K. Rects are on-screen px; styles set inside main are x K.
+    const K = (window.__frameFit && window.__frameFit.k) || 1;
+    const headerEl = document.querySelector('.site-header');
+    const headerVis = headerEl ? headerEl.getBoundingClientRect().height : 0;
     const heroR = hero.getBoundingClientRect(), vw = root.clientWidth;
     // Full-width canvas from the page top (under the sticky header) to 260px below the hero.
-    Object.assign(cvs.style, { left: -heroR.left + 'px', width: vw + 'px', top: -headerH + 'px', height: heroR.height + headerH + 260 + 'px' });
+    Object.assign(cvs.style, { left: -heroR.left / K + 'px', width: vw / K + 'px', top: -headerVis / K + 'px', height: (heroR.height + headerVis) / K + 260 + 'px' });
     const cR = cvs.getBoundingClientRect(), W = cR.width, H = cR.height;
-    // The HTML card is rotated by CSS; its rect centre is still right, its size comes from the layout box.
-    const r = cardEl.getBoundingClientRect(), cx = r.left + r.width / 2, cyMid = r.top + r.height / 2;
-    const slotH = cardEl.offsetHeight, slotBottom = cyMid + slotH / 2;
+    // The HTML card is rotated by CSS; its rect centre is still right. Its size comes from the deck,
+    // which is not rotated and already includes the page zoom and any short-window card scaling.
+    const r = cardEl.getBoundingClientRect(), cx = r.left + r.width / 2;
+    const dR = (cardEl.closest('.hero-deck') || cardEl).getBoundingClientRect();
+    const slotH = dR.height, slotBottom = dR.bottom;
     const mobile = matchMedia('(max-width: 900px)').matches;
     let cardPxH, cardTop;
     if (mobile) {
@@ -184,9 +189,11 @@ async function start([THREE, RAPIERmod, CARDS]) {
       cardTop = slotBottom - cardPxH;
     } else {
       // Desktop: hang from just under the header, and shrink if needed so the bottom edge stays on screen.
-      const fit = innerHeight - headerH - C.topGap - C.bottomGap;
+      const fit = innerHeight - headerVis - (C.topGap + C.bottomGap) * K;
       cardPxH = Math.max(slotH * 0.55, Math.min(slotH * C.size, fit));
-      cardTop = heroR.top + C.topGap;
+      cardTop = heroR.top + C.topGap * K;
+      // When the hero is framed to the window, the badge centres with the hero copy.
+      if (root.classList.contains('frame-fit')) cardTop = Math.max(cardTop, heroR.top + (heroR.height - cardPxH) / 2 + 20 * K);
     }
     const S = cardPxH / CARD_H;
     const toW = (px, py) => ({ x: (px - cR.left - W / 2) / S, y: -(py - cR.top - H / 2) / S });
@@ -397,7 +404,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
   for (let i = 0; i <= N; i++) pts.push(new THREE.Vector3());
   function writeStrap(mesh, dir, zOff) {
     const pos = mesh.geometry.attributes.position, uv = mesh.geometry.attributes.uv, colr = mesh.geometry.attributes.color;
-    const halfW = (C.strapW / 2) / L.S, spread = L.mobile ? 0.22 : 0.42;
+    const halfW = (C.strapW * ((window.__frameFit && window.__frameFit.k) || 1) / 2) / L.S, spread = L.mobile ? 0.22 : 0.42;
     const fadeLen = L.mobile ? 0.45 : 0.08;          // share of the strap that fades in at the top
     let len = 0;
     for (let i = 0; i <= N; i++) {
@@ -501,6 +508,8 @@ async function start([THREE, RAPIERmod, CARDS]) {
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   rebuild(true);
   ro.observe(hero); io.observe(hero);
+  // frame-fit.js changes the page scale and the hero frame: measure again.
+  addEventListener('framefit', () => { if (active && !drag) rebuild(false); });
   // A desktop window narrowed to phone width goes back to the HTML card.
   phone.addEventListener('change', (e) => { if (e.matches) teardown(); });
   // The desktop size also depends on the window height, which can change without the hero changing.

@@ -1,0 +1,13 @@
+/* Homepage frames (assets/js/frame-fit.js). Desktop only: the script sets html.frame-fit
+   from 901px wide and 560px tall. Sizes come from the script as inline styles. */
+
+/* Measuring pass: the hero row stops stretching, so each column reports what it needs. */
+.frame-measure .hero-grid{ align-items: start !important; }
+.frame-measure .hero, .frame-measure #consultancy{ min-height: 0 !important; }
+
+.frame-fit .hero, .frame-fit #consultancy{ box-sizing: border-box; }
+.frame-fit .hero{ justify-content: center; }
+.frame-fit #consultancy{ display: flex; flex-direction: column; justify-content: center; }
+
+/* Split strips: the games strip sits under My Experience, so its track needs no top gap. */
+.marquee--games .marquee-track--reverse{ margin-top: 0; }
