@@ -1,0 +1,41 @@
+/* Lanyard badge in the hero (assets/js/lanyard.js).
+   The HTML card stays in the layout: it sets the badge's size and resting place,
+   and it comes back for keyboard users and whenever the 3D badge cannot run. */
+.lanyard-canvas{
+  position: absolute; z-index: 2; display: block;
+  pointer-events: none;
+  opacity: 0;
+  animation: lanyard-in .4s var(--ease) forwards;
+}
+@keyframes lanyard-in{ to{ opacity: 1; } }
+
+.has-lanyard .hero-card.is-active{ opacity: 0; pointer-events: none; }
+.has-lanyard.lanyard-focus .hero-card.is-active{ opacity: 1; pointer-events: auto; }
+.lanyard-focus .lanyard-canvas{ visibility: hidden; }
+
+html.lanyard-grabbing, html.lanyard-grabbing *{ cursor: grabbing !important; -webkit-user-select: none; user-select: none; }
+
+/* Phones: room above the card for the strap, which starts under the buttons. */
+@media (max-width: 900px){
+  .has-lanyard .hero-deck{ margin-top: clamp(110px, 30vw, 150px); }
+}
+
+/* iOS only: motion sensors need a tap before the badge can follow the tilt. */
+.lanyard-chip{
+  all: unset; box-sizing: border-box;
+  position: absolute; left: 50%; top: -14px; z-index: 3;
+  transform: translate(-50%, -100%);
+  cursor: pointer; white-space: nowrap;
+  font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+  padding: 7px 14px; border-radius: 999px;
+  background: var(--paper-3); border: 1px solid var(--rule); color: var(--ink-2);
+  box-shadow: var(--shadow-md);
+  transition: transform .2s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
+}
+.lanyard-chip:hover{ border-color: var(--clay); color: var(--clay); }
+.lanyard-chip:active{ transform: translate(-50%, -100%) scale(0.94); }
+
+@media (prefers-reduced-motion: reduce){
+  .lanyard-canvas{ animation: none; opacity: 1; }
+  .lanyard-chip{ transition: none; }
+}

@@ -47,6 +47,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/vendor/lenis-1.3.26.css">
 <link rel="stylesheet" href="/assets/css/bg-shader.css">
+<link rel="stylesheet" href="/assets/css/lanyard.css">
 <script src="/assets/js/bg-shader.js" defer></script>
 
 
@@ -542,6 +543,11 @@ body.is-tab-hidden .dot{
   color: var(--ink);
   text-wrap: balance;
   margin: 16px 0 0;
+}
+/* Desktop: keep the hero buttons inside the first screen. The headline also scales with the window height. */
+@media (min-width: 901px){
+  .hero-left .cta-row{ margin-top: 0; }
+  .hero-h1{ font-size: clamp(44px, min(7.4vw, calc(21.3vh - 89px)), 112px); }
 }
 .hero-h1 em{
   font-style: italic;
@@ -3249,6 +3255,7 @@ html[data-theme="light"] .logo-tile img.logo-light-ink{ filter: brightness(0); }
 
 <script src="assets/vendor/lenis-1.3.26.min.js" defer></script>
 <script src="assets/js/smooth-scroll.js" defer></script>
+<script type="module" src="/assets/js/lanyard.js"></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).
