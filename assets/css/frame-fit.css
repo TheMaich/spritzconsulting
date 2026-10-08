@@ -11,3 +11,7 @@
 
 /* Split strips: the games strip sits under My Experience, so its track needs no top gap. */
 .marquee--games .marquee-track--reverse{ margin-top: 0; }
+
+/* Guard: nothing inside the scaled page may widen it past the window (no horizontal scroll bar).
+   clip (unlike hidden) creates no scroll container, so the sticky header keeps working. */
+html.frame-fit body{ overflow-x: clip; }

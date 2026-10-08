@@ -167,9 +167,11 @@ async function start([THREE, RAPIERmod, CARDS]) {
   // The card is always 2.5 units tall, so the physics feel the same at every size.
   const CARD_H = 2.5;
   let L = {};
+  // The page scale, read from the zoom on <main> itself, so it is right whichever script ran first.
+  function pageK() { const z = parseFloat(getComputedStyle(hero.closest('main') || hero).zoom); return z > 0 ? z : 1; }
   function measure() {
     // frame-fit.js may zoom header and main by K. Rects are on-screen px; styles set inside main are x K.
-    const K = (window.__frameFit && window.__frameFit.k) || 1;
+    const K = pageK();
     const headerEl = document.querySelector('.site-header');
     const headerVis = headerEl ? headerEl.getBoundingClientRect().height : 0;
     const heroR = hero.getBoundingClientRect(), vw = root.clientWidth;
@@ -404,7 +406,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
   for (let i = 0; i <= N; i++) pts.push(new THREE.Vector3());
   function writeStrap(mesh, dir, zOff) {
     const pos = mesh.geometry.attributes.position, uv = mesh.geometry.attributes.uv, colr = mesh.geometry.attributes.color;
-    const halfW = (C.strapW * ((window.__frameFit && window.__frameFit.k) || 1) / 2) / L.S, spread = L.mobile ? 0.22 : 0.42;
+    const halfW = (C.strapW * pageK() / 2) / L.S, spread = L.mobile ? 0.22 : 0.42;
     const fadeLen = L.mobile ? 0.45 : 0.08;          // share of the strap that fades in at the top
     let len = 0;
     for (let i = 0; i <= N; i++) {
