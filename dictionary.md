@@ -134,8 +134,8 @@
   IT: Tariffa
   ────────────────────────────────────────
   key: meta.rate.dd
-  EN: €250/day · €3,200/month retainer (see FAQ)
-  IT: €250/giorno · €3.200/mese retainer (vedi FAQ)
+  EN: €300/day · €3,200/month retainer (see FAQ)
+  IT: €300/giorno · €3.200/mese retainer (vedi FAQ)
   ────────────────────────────────────────
   key: marquee.h
   EN: Studios, orgs and games I've worked with
@@ -520,10 +520,10 @@
   IT: Qual è il tuo rate?
   ────────────────────────────────────────
   key: faq1.a
-  EN: It depends on the format. For audits and project-based work, the rate is €250/day. For retainers (minimum 3
+  EN: It depends on the format. For audits and project-based work, the rate is €300/day. For retainers (minimum 3
     months), the rate is €3,200/month, a better deal for both sides when the engagement is ongoing. All rates are
     exclusive of VAT and any applicable taxes on my end.
-  IT: Dipende dal formato. Per audit e lavori a progetto, il rate è €250/giorno. Per retainer (minimo 3 mesi), il rate è
+  IT: Dipende dal formato. Per audit e lavori a progetto, il rate è €300/giorno. Per retainer (minimo 3 mesi), il rate è
 
     €3.200/mese, più conveniente per entrambi quando l'ingaggio è continuativo. Tutte le tariffe sono da intendersi al
     netto di IVA e di eventuali tasse a mio carico.
