@@ -47,7 +47,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/vendor/lenis-1.3.26.css">
 <link rel="stylesheet" href="/assets/css/bg-shader.css">
-<link rel="stylesheet" href="/assets/css/lanyard.css">
+<link rel="stylesheet" href="/assets/css/lanyard.css?v=20261009">
+<!-- Lanyard badge: fetch the 3D modules early, and keep the HTML card hidden on desktop until the badge is ready (assets/js/lanyard.js removes the class). -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js" crossorigin>
+<script>
+  (function(){
+    try {
+      var html = document.documentElement;
+      if (!matchMedia('(min-width: 901px)').matches || /[?&]badge=off/.test(location.search)) return;
+      html.classList.add('lanyard-pending');
+      // Safety net: whatever happens to lanyard.js, the HTML card comes back after 6 s.
+      setTimeout(function(){ html.classList.remove('lanyard-pending'); }, 6000);
+    } catch (e) {}
+  })();
+</script>
 <link rel="stylesheet" href="/assets/css/frame-fit.css">
 <script src="/assets/js/bg-shader.js" defer></script>
 
@@ -3261,7 +3276,7 @@ html[data-theme="light"] .logo-tile img.logo-light-ink{ filter: brightness(0); }
 <script src="assets/vendor/lenis-1.3.26.min.js" defer></script>
 <script src="assets/js/smooth-scroll.js" defer></script>
 <script src="/assets/js/frame-fit.js" defer></script>
-<script type="module" src="/assets/js/lanyard.js"></script>
+<script type="module" src="/assets/js/lanyard.js?v=20261009"></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).

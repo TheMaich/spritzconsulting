@@ -10,6 +10,11 @@
 @keyframes lanyard-in{ to{ opacity: 1; } }
 
 .has-lanyard .hero-card.is-active{ opacity: 0; pointer-events: none; }
+/* Desktop, while the badge loads: the HTML card stays hidden (class set by an inline script in <head>). */
+.lanyard-pending .hero-card.is-active{ opacity: 0; pointer-events: none; }
+/* A keyboard user who tabs onto the card while the badge loads still sees it. */
+.lanyard-pending .hero-card.is-active:focus-within{ opacity: 1; pointer-events: auto; }
+/* If the badge cannot run, lanyard.js removes lanyard-pending and the card fades in (its own .4s opacity transition). */
 .has-lanyard.lanyard-focus .hero-card.is-active{ opacity: 1; pointer-events: auto; }
 .lanyard-focus .lanyard-canvas{ visibility: hidden; }
 

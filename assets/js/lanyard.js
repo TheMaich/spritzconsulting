@@ -13,6 +13,11 @@
  * the live card (one per language and theme). Regenerate them whenever the card
  * text changes.
  * Off when: no WebGL, ?badge=off, or the modules fail to load.
+ * Loading: an inline script in <head> sets html.lanyard-pending on desktop before the first
+ * paint, so the HTML card is never seen while the badge loads (lanyard.css). The modules are
+ * preloaded from <head> (modulepreload) and requested as soon as this script runs. The class
+ * comes off when the badge is ready, when it cannot run, or after PENDING_MAX ms at most:
+ * then the HTML card fades in as the fallback.
  * Reduced motion: no drop-in, no idle sway, no tilt input. Drag still works.
  */
 const root = document.documentElement;
@@ -31,24 +36,32 @@ const ASSETS_V = '?v=20261008';
 // size: share of the HTML card's height. topGap and bottomGap (px, desktop) keep the whole badge inside the first screen.
 const C = { g: 40, damp: 4.8, yaw: 0.8, size: 0.94, topGap: 60, bottomGap: 40, holeW: 52, strapW: 34, sway: 0.18, tiltRest: -2.5, idle: 0.8, idleT: 5.5 };
 
+const PENDING_MAX = 6000;   // the longest the hero shows no card while the badge loads (ms)
+
 const CHIP = { en: 'Tap to let the badge sway', it: 'Tocca per far oscillare il badge' };
 
 function webglOK() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
 
+// Shows the HTML card again (fallback), or confirms the badge took its place.
+const release = () => root.classList.remove('lanyard-pending');
+
 const cardEl = document.querySelector('.hero-card.is-active');
 const hero = cardEl && cardEl.closest('.hero');
 if (cardEl && hero && !phone.matches && webglOK() && params.get('badge') !== 'off') {
-  const go = () => {
-    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300));
-    idle(() => {
-      Promise.all([
-        import(THREE_URL), import(RAPIER_URL),
-        fetch(ASSETS + 'cards.json' + ASSETS_V).then((r) => { if (!r.ok) throw new Error('cards.json ' + r.status); return r.json(); }),
-        document.fonts.load('64px "Bebas Neue"'), document.fonts.load('400 64px "Bricolage Grotesque"'),
-      ]).then(start).catch((e) => { console.warn('[lanyard] staying on the HTML card:', e); });
-    }, { timeout: 2500 });
-  };
-  if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
+  const safety = setTimeout(release, PENDING_MAX);
+  // Start the card image now, in parallel with the modules (same URL as loadImg, so it comes from cache).
+  const key = (document.documentElement.lang || 'en') + '-' + (root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  new Image().src = ASSETS + 'card-' + key + '.webp' + ASSETS_V;
+  Promise.all([
+    import(THREE_URL), import(RAPIER_URL),
+    fetch(ASSETS + 'cards.json' + ASSETS_V).then((r) => { if (!r.ok) throw new Error('cards.json ' + r.status); return r.json(); }),
+    document.fonts.load('64px "Bebas Neue"'), document.fonts.load('400 64px "Bricolage Grotesque"'),
+  ]).then(start).then(() => clearTimeout(safety)).catch((e) => {
+    clearTimeout(safety); release();
+    console.warn('[lanyard] staying on the HTML card:', e);
+  });
+} else {
+  release();
 }
 
 async function start([THREE, RAPIERmod, CARDS]) {
@@ -500,15 +513,24 @@ async function start([THREE, RAPIERmod, CARDS]) {
 
   function teardown() {
     active = false; cancelAnimationFrame(raf); ro.disconnect(); io.disconnect();
-    root.classList.remove('has-lanyard', 'lanyard-grabbing', 'lanyard-focus');
+    root.classList.remove('has-lanyard', 'lanyard-grabbing', 'lanyard-focus', 'lanyard-pending');
     if (chip) chip.remove();
     setCursor(''); cvs.remove();
   }
 
   await applySkin(false);
-  // Wait for the hero reveal to finish, so the HTML card is in its final place before it is measured.
-  await new Promise((r) => setTimeout(r, 400));
+  // Wait for the hero reveal to finish (the deck slides up 18px as it fades in), so the HTML card
+  // is in its final place before it is measured. At most 1.2 s.
+  const deck = cardEl.closest('.hero-deck');
+  await new Promise((r) => {
+    const t0 = performance.now();
+    (function check() {
+      const settled = !deck || (deck.classList.contains('is-in') && getComputedStyle(deck).transform === 'none') || !deck.hasAttribute('data-reveal');
+      if (settled || performance.now() - t0 > 1200) r(); else requestAnimationFrame(check);
+    })();
+  });
   root.classList.add('has-lanyard');                 // CSS hides the HTML card and adds the phone strap room
+  release();
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   rebuild(true);
   ro.observe(hero); io.observe(hero);
