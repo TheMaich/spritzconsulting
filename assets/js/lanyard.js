@@ -38,6 +38,9 @@ const C = { g: 40, damp: 4.8, yaw: 0.8, size: 0.94, topGap: 60, bottomGap: 40, h
 
 const PENDING_MAX = 6000;   // the longest the hero shows no card while the badge loads (ms)
 
+// Strap stretch (slot-to-anchor distance over strap length) where it starts to straighten, and where it is fully straight.
+const TAUT_START = 1.08, TAUT_END = 1.25;
+
 const CHIP = { en: 'Tap to let the badge sway', it: 'Tocca per far oscillare il badge' };
 
 function webglOK() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
@@ -249,7 +252,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
   }
 
   /* ---------- Physics ---------- */
-  let world, fixed, j = [], card, lerped = [];
+  let world, fixed, j = [], card, lerped = [], ropeLen = 1;
   const NOHIT = 0x00010000;                          // nothing collides; the colliders only give the bodies mass
   function buildWorld(drop) {
     if (world) world.free();
@@ -260,6 +263,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
     const attachY = center.y + L.attach;
     // A hanging rope is always taut, so the three segments add up to exactly the anchor-to-slot distance.
     const segLen = Math.max(0.08, (anchor.y - attachY) / 3);
+    ropeLen = segLen * 3;
     fixed = world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(anchor.x, anchor.y, 0));
     const lift = drop ? (L.mobile ? h * 0.8 : (anchor.y - L.top) + h * 1.6 + 1) : 0;
     const dx = drop ? 0.6 : 0;
@@ -499,6 +503,14 @@ async function start([THREE, RAPIERmod, CARDS]) {
     curve.points[1].copy(lerped[1]);
     curve.points[2].copy(lerped[0]);
     curve.points[3].set(fa.x, fa.y, fa.z);
+    // A stretched strap is straight: once the badge is pulled past the strap's length, the two
+    // middle points slide onto the line from the slot to the anchor (fully straight at TAUT_END).
+    const stretch = slotPos.distanceTo(curve.points[3]) / ropeLen;
+    const taut = THREE.MathUtils.smoothstep(stretch, TAUT_START, TAUT_END);
+    if (taut > 0) {
+      tmp.lerpVectors(slotPos, curve.points[3], 1 / 3); curve.points[1].lerp(tmp, taut);
+      tmp.lerpVectors(slotPos, curve.points[3], 2 / 3); curve.points[2].lerp(tmp, taut);
+    }
     curve.getPoints(N).forEach((p, i) => pts[i].copy(p));
     writeStrap(strapB, -1, -0.012);
     writeStrap(strapA, 1, 0.012);
