@@ -54,7 +54,7 @@ const PENDING_MAX = 6000;   // the longest the hero shows no card while the badg
 // brake: the anchor falls freely, then brakes to a stop at this many times gravity. Higher is a
 //   harder catch (a sudden stop makes the strap bounce the badge back up).
 // Try other values on any page with ?drop=delay,damp,swing,spin,brake (e.g. ?drop=600,0.6,-12,2.2,2.5).
-const ENTER = { delay: 1000, latest: 3000, damp: 0.6, settle: 500, ramp: 900, swing: -12, spin: 2.2, brake: 2.5 };
+const ENTER = { delay: 500, latest: 3000, damp: 0.6, settle: 500, ramp: 900, swing: -12, spin: 2.2, brake: 2.5 };
 if (params.has('drop')) {
   const v = params.get('drop').split(',').map(parseFloat);
   ['delay', 'damp', 'swing', 'spin', 'brake'].forEach((k, i) => { if (Number.isFinite(v[i])) ENTER[k] = v[i]; });
@@ -590,11 +590,12 @@ async function start([THREE, RAPIERmod, CARDS]) {
 
   await applySkin(false);
   // Two waits, side by side:
-  // the hero reveal (the deck slides up 18px as it fades in), so the HTML card is in its final
-  // place before it is measured, at most 1.2 s;
+  // on phones, the hero reveal (the deck and the buttons slide up 18px as they fade in), so the
+  // HTML card is in its final place before it is measured, at most 1.2 s. Desktop measures only
+  // the card's centre x, the deck's height and the hero, which the slide does not move: no wait;
   // the entrance, ENTER.delay after the load event (no wait with reduced motion).
   const deck = cardEl.closest('.hero-deck');
-  const revealed = new Promise((r) => {
+  const revealed = !matchMedia('(max-width: 900px)').matches ? Promise.resolve() : new Promise((r) => {
     const t0 = performance.now();
     (function check() {
       const settled = !deck || (deck.classList.contains('is-in') && getComputedStyle(deck).transform === 'none') || !deck.hasAttribute('data-reveal');
