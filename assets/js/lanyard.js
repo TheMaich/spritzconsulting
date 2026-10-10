@@ -18,6 +18,10 @@
  * preloaded from <head> (modulepreload) and requested as soon as this script runs. The class
  * comes off when the badge is ready, when it cannot run, or after PENDING_MAX ms at most:
  * then the HTML card fades in as the fallback.
+ * Entrance: ENTER.delay ms after the page has loaded (or as soon as the badge is ready, if
+ * that is later), the badge drops in from above the window. The strap's anchor falls with it
+ * and stops at its place, so the strap catches the badge and it swings; then the damping comes
+ * back up and the badge settles.
  * Reduced motion: no drop-in, no idle sway, no tilt input. Drag still works.
  */
 const root = document.documentElement;
@@ -37,6 +41,24 @@ const ASSETS_V = '?v=20261008';
 const C = { g: 40, damp: 4.8, yaw: 0.8, size: 0.94, topGap: 60, bottomGap: 40, holeW: 52, strapW: 34, sway: 0.18, tiltRest: -2.5, idle: 0.8, idleT: 5.5 };
 
 const PENDING_MAX = 6000;   // the longest the hero shows no card while the badge loads (ms)
+
+// Entrance.
+// delay: wait after the load event (ms).
+// latest: a load event later than this (ms from navigation start) counts as this, so a slow
+//   image or script does not hold the badge back.
+// damp: linear damping while the badge falls and swings (C.damp afterwards).
+// settle: when the damping starts coming back (ms after the strap catches the badge).
+// ramp: how long it takes to get back to C.damp (ms).
+// swing: the badge falls turned this far around the anchor (degrees), so it swings once caught.
+// spin: its turn around the vertical axis as it falls (rad/s).
+// brake: the anchor falls freely, then brakes to a stop at this many times gravity. Higher is a
+//   harder catch (a sudden stop makes the strap bounce the badge back up).
+// Try other values on any page with ?drop=delay,damp,swing,spin,brake (e.g. ?drop=600,0.6,-12,2.2,2.5).
+const ENTER = { delay: 1000, latest: 3000, damp: 0.6, settle: 500, ramp: 900, swing: -12, spin: 2.2, brake: 2.5 };
+if (params.has('drop')) {
+  const v = params.get('drop').split(',').map(parseFloat);
+  ['delay', 'damp', 'swing', 'spin', 'brake'].forEach((k, i) => { if (Number.isFinite(v[i])) ENTER[k] = v[i]; });
+}
 
 // Strap stretch (slot-to-anchor distance over strap length) where it starts to straighten, and where it is fully straight.
 const TAUT_START = 1.08, TAUT_END = 1.25;
@@ -253,6 +275,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
 
   /* ---------- Physics ---------- */
   let world, fixed, j = [], card, lerped = [], ropeLen = 1;
+  let fall = null;                                   // the drop in progress (see buildWorld)
   const NOHIT = 0x00010000;                          // nothing collides; the colliders only give the bodies mass
   function buildWorld(drop) {
     if (world) world.free();
@@ -264,26 +287,38 @@ async function start([THREE, RAPIERmod, CARDS]) {
     // A hanging rope is always taut, so the three segments add up to exactly the anchor-to-slot distance.
     const segLen = Math.max(0.08, (anchor.y - attachY) / 3);
     ropeLen = segLen * 3;
-    fixed = world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(anchor.x, anchor.y, 0));
-    const lift = drop ? (L.mobile ? h * 0.8 : (anchor.y - L.top) + h * 1.6 + 1) : 0;
-    const dx = drop ? 0.6 : 0;
-    // Start on the tilted line, so a rebuild does not set the badge swinging.
+    // Drop: the whole rig, anchor included, starts higher by lift: on desktop the card's bottom
+    // edge starts just above the top of the window. The anchor then falls (see frame()).
+    const lift = drop ? (L.mobile ? h * 0.8 : (L.top - center.y) + h * 0.6) : 0;
+    const damp = drop ? ENTER.damp : C.damp;
+    fixed = world.createRigidBody((drop ? RAPIER.RigidBodyDesc.kinematicPositionBased() : RAPIER.RigidBodyDesc.fixed()).setTranslation(anchor.x, anchor.y + lift, 0));
+    // The anchor's fall: free fall until t1, then a steady brake (ENTER.brake x gravity) that stops
+    // it at its place at t2, so the strap catches the badge without a jolt.
+    if (drop) {
+      world.numSolverIterations = 16;                // firmer still while it falls, so the strap does not bounce it back up
+      const b = C.g * Math.max(0.2, ENTER.brake), v = Math.sqrt(2 * lift / (1 / C.g + 1 / b));
+      fall = { y0: anchor.y + lift, t: 0, t1: v / C.g, t2: v / C.g + v / b, v, b };
+    } else fall = null;
+    // Start on the tilted line, so a rebuild does not set the badge swinging. A drop turns the
+    // whole line by ENTER.swing around the anchor and lifts it by lift.
     const ax = center.x - Math.sin(L.rest) * L.attach, ay = center.y + Math.cos(L.rest) * L.attach;
+    const sw = drop ? THREE.MathUtils.degToRad(ENTER.swing) : 0, cs = Math.cos(sw), sn = Math.sin(sw);
+    const place = (x, y) => [anchor.x + (x - anchor.x) * cs - (y - anchor.y) * sn, anchor.y + lift + (x - anchor.x) * sn + (y - anchor.y) * cs, 0];
     const seg = (f) => {
-      const b = world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(anchor.x + (ax - anchor.x) * f + dx, anchor.y + (ay - anchor.y) * f + lift, 0).setLinearDamping(C.damp).setAngularDamping(C.damp).setCanSleep(true));
+      const b = world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(...place(anchor.x + (ax - anchor.x) * f, anchor.y + (ay - anchor.y) * f)).setLinearDamping(damp).setAngularDamping(C.damp).setCanSleep(true));
       world.createCollider(RAPIER.ColliderDesc.ball(0.1).setCollisionGroups(NOHIT).setSolverGroups(NOHIT), b); return b;
     };
     j = [seg(1 / 3), seg(2 / 3), seg(1)];
-    card = world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(center.x + dx * 1.4, center.y + lift, 0)
-      .setRotation({ x: 0, y: 0, z: Math.sin(L.rest / 2), w: Math.cos(L.rest / 2) })
-      .setLinearDamping(C.damp).setAngularDamping(C.damp).setCanSleep(true));
+    card = world.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(...place(center.x, center.y))
+      .setRotation({ x: 0, y: 0, z: Math.sin((L.rest + sw) / 2), w: Math.cos((L.rest + sw) / 2) })
+      .setLinearDamping(damp).setAngularDamping(C.damp).setCanSleep(true));
     world.createCollider(RAPIER.ColliderDesc.cuboid(L.w / 2, h / 2, 0.02).setCollisionGroups(NOHIT).setSolverGroups(NOHIT).setDensity(1.4), card);
     const v0 = { x: 0, y: 0, z: 0 };
     world.createImpulseJoint(RAPIER.JointData.rope(segLen, v0, v0), fixed, j[0], true);
     world.createImpulseJoint(RAPIER.JointData.rope(segLen, v0, v0), j[0], j[1], true);
     world.createImpulseJoint(RAPIER.JointData.rope(segLen, v0, v0), j[1], j[2], true);
     world.createImpulseJoint(RAPIER.JointData.spherical(v0, { x: 0, y: L.attach, z: 0 }), j[2], card, true);
-    if (drop) card.setAngvel({ x: 0.4, y: 2.2, z: -0.6 }, true);
+    if (drop) card.setAngvel({ x: 0, y: ENTER.spin, z: 0 }, true);
     lerped = j.map((b) => new THREE.Vector3().copy(b.translation()));
   }
   const wakeAll = () => { card.wakeUp(); j.forEach((b) => b.wakeUp()); };
@@ -473,9 +508,24 @@ async function start([THREE, RAPIERmod, CARDS]) {
     if (!drag && !dirty && card.isSleeping() && j.every((b) => b.isSleeping())) return;
     dirty = false;
 
+    // Drop: the anchor falls freely and stops at its place; the card follows on its strap. Then
+    // the damping comes back up to C.damp, so the swing settles.
+    if (fall) {
+      wakeAll();
+      const k = THREE.MathUtils.smoothstep(fall.t, fall.t2 + ENTER.settle / 1000, fall.t2 + (ENTER.settle + ENTER.ramp) / 1000);
+      const d = ENTER.damp + (C.damp - ENTER.damp) * k;
+      card.setLinearDamping(d); j.forEach((b) => b.setLinearDamping(d));
+      if (k >= 1) { fall = null; world.numSolverIterations = 8; }
+    }
+
     acc += dt;
     let n = 0;
     while (acc >= world.timestep && n < 4) {
+      if (fall) {
+        const t = (fall.t += world.timestep), { y0, t1, t2, v, b } = fall, u = t - t1;
+        const y = t <= t1 ? y0 - 0.5 * C.g * t * t : t < t2 ? y0 - 0.5 * C.g * t1 * t1 - (v * u - 0.5 * b * u * u) : L.anchor.y;
+        if (t < t2 + 2 * world.timestep) fixed.setNextKinematicTranslation({ x: L.anchor.x, y, z: 0 });
+      }
       // Turn the badge back towards the viewer, as the Vercel badge does.
       const av = card.angvel(), rot = card.rotation();
       if (!drag) card.setAngvel({ x: av.x, y: av.y - rot.y * C.yaw, z: av.z }, false);
@@ -520,7 +570,15 @@ async function start([THREE, RAPIERmod, CARDS]) {
   function rebuild(drop) { measure(); buildCard(); buildWorld(drop && !reduce.matches); dirty = true; }
 
   let rz;
-  const ro = new ResizeObserver(() => { clearTimeout(rz); rz = setTimeout(() => { if (!drag) rebuild(false); }, 120); });
+  // Rebuild only when the hero really changed size: the observer also reports once when it starts
+  // watching, and a rebuild then would cancel the drop.
+  let heroSize = '';
+  const ro = new ResizeObserver(() => {
+    const r = hero.getBoundingClientRect(), size = Math.round(r.width) + 'x' + Math.round(r.height);
+    if (size === heroSize) return;
+    heroSize = size;
+    clearTimeout(rz); rz = setTimeout(() => { if (!drag) rebuild(false); }, 120);
+  });
   const io = new IntersectionObserver((es) => { visible = es[0].isIntersecting; lastT = performance.now(); dirty = true; }, { rootMargin: '0px 0px 260px 0px' });
 
   function teardown() {
@@ -531,20 +589,35 @@ async function start([THREE, RAPIERmod, CARDS]) {
   }
 
   await applySkin(false);
-  // Wait for the hero reveal to finish (the deck slides up 18px as it fades in), so the HTML card
-  // is in its final place before it is measured. At most 1.2 s.
+  // Two waits, side by side:
+  // the hero reveal (the deck slides up 18px as it fades in), so the HTML card is in its final
+  // place before it is measured, at most 1.2 s;
+  // the entrance, ENTER.delay after the load event (no wait with reduced motion).
   const deck = cardEl.closest('.hero-deck');
-  await new Promise((r) => {
+  const revealed = new Promise((r) => {
     const t0 = performance.now();
     (function check() {
       const settled = !deck || (deck.classList.contains('is-in') && getComputedStyle(deck).transform === 'none') || !deck.hasAttribute('data-reveal');
       if (settled || performance.now() - t0 > 1200) r(); else requestAnimationFrame(check);
     })();
   });
+  const entrance = reduce.matches ? Promise.resolve() : new Promise((r) => {
+    let done = false;
+    // t: when the page loaded (ms from navigation start), or ENTER.latest if it has not loaded by then.
+    const go = (t) => { if (done) return; done = true; setTimeout(r, Math.max(0, t + ENTER.delay - performance.now())); };
+    const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    if (document.readyState === 'complete') go(nav && nav.loadEventEnd > 0 ? nav.loadEventEnd : performance.now());
+    else {
+      addEventListener('load', () => go(performance.now()), { once: true });
+      setTimeout(() => go(ENTER.latest), Math.max(0, ENTER.latest - performance.now()));
+    }
+  });
+  await Promise.all([revealed, entrance]);
   root.classList.add('has-lanyard');                 // CSS hides the HTML card and adds the phone strap room
   release();
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   rebuild(true);
+  { const r = hero.getBoundingClientRect(); heroSize = Math.round(r.width) + 'x' + Math.round(r.height); }
   ro.observe(hero); io.observe(hero);
   // frame-fit.js changes the page scale and the hero frame: measure again.
   addEventListener('framefit', () => { if (active && !drag) rebuild(false); });
