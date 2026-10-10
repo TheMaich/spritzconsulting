@@ -4,6 +4,19 @@
 <meta charset="utf-8" />
 <link rel="canonical" href="https://spritzconsulting.com/">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<!-- A reload starts from the top of the page. The browser would otherwise put back the old scroll position while frame-fit.js is still zooming the page, and land in the wrong place. Only reloads without a #hash: back and forward keep the normal restore. -->
+<script>
+(function(){
+  try {
+    if (!('scrollRestoration' in history)) return;
+    var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    var reload = nav ? nav.type === 'reload' : (performance.navigation && performance.navigation.type === 1);
+    if (reload && !location.hash) history.scrollRestoration = 'manual';
+    // Back to the default when leaving, so Back from another page still returns to the same spot.
+    addEventListener('pagehide', function(){ history.scrollRestoration = 'auto'; });
+  } catch (e) {}
+})();
+</script>
 <title>Spritz Consulting | Production &amp; Publishing Consultancy</title>
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
