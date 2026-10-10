@@ -15,6 +15,9 @@
  *    whole screen (Lenis). Momentum after a move is ignored until the wheel goes quiet.
  *    Below the second screen scrolling is free.
  *
+ * First paint: on desktop an inline script in <head> sets html.ff-wait, which keeps the page
+ * hidden (frame-fit.css). The first layout pass removes it and fades the page in, so the page
+ * never shows at the wrong scale.
  * Off: below 901px wide or 560px tall, on touch-only devices for the magnetic part,
  * with prefers-reduced-motion for the magnetic part, and with ?fit=off.
  * Announces every layout pass with a 'framefit' event; window.__frameFit.k is the page scale.
@@ -25,6 +28,18 @@
   if (new URLSearchParams(location.search).get('fit') === 'off') return;
   var root = document.documentElement;
   var $ = function (s) { return document.querySelector(s); };
+
+  // Shows the page after the first layout pass (see html.ff-wait above), with a short fade.
+  function release() {
+    if (!root.classList.contains('ff-wait')) return;
+    requestAnimationFrame(function () {
+      root.classList.remove('ff-wait');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      [$('#site-header'), $('main'), $('.site-footer')].forEach(function (el) {
+        if (el && el.animate) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 320, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+      });
+    });
+  }
 
   var C = {
     minW: 901, minH: 560,
@@ -41,7 +56,7 @@
   var hero = $('.hero'), heroLeft = $('.hero-left'), deck = $('.hero-deck'), h1 = $('.hero-h1');
   var studios = $('.marquee:not(.marquee--games)'), games = $('.marquee--games');
   var exp = $('#consultancy'), aboutGrid = exp && exp.querySelector('.about-grid'), aboutPhoto = exp && exp.querySelector('.about-photo');
-  if (!header || !main || !hero || !heroLeft || !deck || !h1 || !studios || !exp || !aboutGrid) return;
+  if (!header || !main || !hero || !heroLeft || !deck || !h1 || !studios || !exp || !aboutGrid) { release(); return; }
   var zoomed = [header, main, footer].filter(Boolean);
 
   var K = 1, state = { on: false, pair: false };
@@ -243,6 +258,7 @@
   function start() {
     lastW = innerWidth; lastH = innerHeight;
     apply();
+    release();
     if (!hookLenis()) { var tries = 0, t = setInterval(function () { if (hookLenis() || ++tries > 40) clearInterval(t); }, 100); }
     addEventListener('resize', onResize);
     // Language switches change text lengths, so the frames are measured again.

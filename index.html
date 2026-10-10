@@ -76,7 +76,20 @@
     } catch (e) {}
   })();
 </script>
-<link rel="stylesheet" href="/assets/css/frame-fit.css">
+<link rel="stylesheet" href="/assets/css/frame-fit.css?v=20261010">
+<!-- Desktop: keep the page hidden until frame-fit.js has set the page scale, so the first frame
+     shown is already at the right size (frame-fit.js removes the class and fades the page in). -->
+<script>
+  (function(){
+    try {
+      var html = document.documentElement;
+      if (!matchMedia('(min-width: 901px) and (min-height: 560px)').matches || /[?&]fit=off/.test(location.search)) return;
+      html.classList.add('ff-wait');
+      // Safety net: whatever happens to frame-fit.js, the page shows after 2.5 s.
+      setTimeout(function(){ html.classList.remove('ff-wait'); }, 2500);
+    } catch (e) {}
+  })();
+</script>
 <script src="/assets/js/bg-shader.js" defer></script>
 
 
@@ -2185,7 +2198,10 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 }
 
 .blur-reveal.is-visible {
-  animation: blur-reveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: blur-reveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;   /* both: hidden during its delay too */
+}
+@media (prefers-reduced-motion: reduce){
+  .blur-reveal, .blur-reveal.is-visible{ opacity: 1; animation: none; }
 }
 
 /* Testimonials: tilted quote-card stack on the left, active testimonial text on
@@ -3293,7 +3309,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 
 <script src="assets/vendor/lenis-1.3.26.min.js" defer></script>
 <script src="assets/js/smooth-scroll.js" defer></script>
-<script src="/assets/js/frame-fit.js" defer></script>
+<script src="/assets/js/frame-fit.js?v=20261010" defer></script>
 <script type="module" src="/assets/js/lanyard.js?v=20261010b"></script>
 <script>
 (() => {

@@ -15,3 +15,10 @@
 /* Guard: nothing inside the scaled page may widen it past the window (no horizontal scroll bar).
    clip (unlike hidden) creates no scroll container, so the sticky header keeps working. */
 html.frame-fit body{ overflow-x: clip; }
+
+/* First paint (html.ff-wait, set in <head> on desktop): the page stays hidden until frame-fit.js
+   has set the page scale, so the wrong scale never shows. The background stays visible.
+   The reveal animations wait too: they start when the page appears. */
+html.ff-wait #site-header, html.ff-wait main, html.ff-wait .site-footer{ opacity: 0; }
+html.ff-wait .blur-reveal{ animation-play-state: paused !important; }
+html.ff-wait [data-reveal].is-in{ opacity: 0 !important; transform: translateY(18px) !important; }
