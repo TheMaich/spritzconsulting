@@ -367,8 +367,8 @@
   IT: Timeline di produzione & deadline disc/cart
   ────────────────────────────────────────
   key: svcP2.h
-  EN: External Production Oversight
-  IT: External Production Oversight
+  EN: Fractional Publishing Production Support
+  IT: Fractional Publishing Production Support
   ────────────────────────────────────────
   key: svcP2.p
   EN: A producer on your side of the table. Milestones, scope, and risk tracked across signed studios so surprises
@@ -397,40 +397,69 @@
   EN: Cert & launch oversight across platforms
   IT: Cert & launch oversight cross-platform
   ────────────────────────────────────────
+  key: svcP7.h
+  EN: Release Management for Publishing
+  IT: Release Management per il Publishing
+  ────────────────────────────────────────
+  key: svcP7.p
+  EN: Clean releases on every platform, run from the publisher's side of the table. I know what a publisher needs from a launch: certification, stores, logistics, external QA and localisation kept on track across every studio you've signed.
+  IT: Release pulite su ogni piattaforma, gestite dal lato del publisher. So di cosa ha bisogno un publisher al lancio: certification, store, logistica, QA esterno e localizzazione sotto controllo su ogni studio che hai firmato.
+  ────────────────────────────────────────
+  key: svcP7.b1
+  EN: Console certification (PS, Xbox, Switch) across your signed titles
+  IT: Console certification (PS, Xbox, Switch) sui tuoi titoli firmati
+  ────────────────────────────────────────
+  key: svcP7.b2
+  EN: Store setup & submissions on your publisher accounts
+  IT: Setup store & submission sui tuoi account publisher
+  ────────────────────────────────────────
+  key: svcP7.b3
+  EN: Launch logistics: patches, brands, storefronts
+  IT: Logistica di lancio: patch, brand, storefront
+  ────────────────────────────────────────
+  key: svcP7.b4
+  EN: External QA, localisation & TRC/TCR compliance
+  IT: QA esterno, localizzazione & TRC/TCR compliance
+  ────────────────────────────────────────
+  key: svcP7.b5
+  EN: Release dates aligned with marketing beats & platform holders
+  IT: Date di release allineate a marketing & platform holder
+  ────────────────────────────────────────
+  key: svcP7.b6
+  EN: Globally consistent release execution
+  IT: Esecuzione di release coerenti a livello globale
+  ────────────────────────────────────────
   key: svcP4.h
-  EN: Design Consultancy
-  IT: Consulenza di Design
+  EN: Design Consultancy & Mock Reviews
+  IT: Consulenza di Design & Mock Review
   ────────────────────────────────────────
   key: svcP4.p
-  EN: A design read on signed and prospective titles, run with the design partners I work with. Where the design holds,
-    where it leaks players, and what to prototype before greenlighting more scope.
-  IT: Una lettura di design su titoli firmati o prospect. Dove il design tiene, dove perde giocatori, e cosa prototipare
-
-    prima di approvare nuovo scope.
+  EN: I trained as a game designer, so I speak your designers' language. A design read on signed and prospective titles, plus a press-style mock review of the current build: where the design holds, where it leaks players, and what reviewers will pick apart.
+  IT: Ho studiato come game designer, quindi parlo la stessa lingua dei tuoi designer. Una lettura di design su titoli firmati o prospect, più una mock review press-style della build attuale: dove il design tiene, dove perde giocatori, e cosa i critici demoliranno.
   ────────────────────────────────────────
   key: svcP4.b1
   EN: Onboarding & first-session effectiveness
   IT: Onboarding & first-session effectiveness
   ────────────────────────────────────────
   key: svcP4.b2
-  EN: Design risk identification & mitigation
-  IT: Design risk identification & mitigation
-  ────────────────────────────────────────
-  key: svcP4.b3
-  EN: Design prototyping & implementation review
-  IT: Design prototyping & implementation review
-  ────────────────────────────────────────
-  key: svcP4.b4
   EN: Core loop & retention diagnostics
   IT: Core loop & retention diagnostics
   ────────────────────────────────────────
-  key: svcP4.b5
+  key: svcP4.b3
+  EN: Design risk identification & mitigation
+  IT: Design risk identification & mitigation
+  ────────────────────────────────────────
+  key: svcP4.b4
   EN: Playtest design, observation & analysis
   IT: Playtest design, observation & analysis
   ────────────────────────────────────────
+  key: svcP4.b5
+  EN: Press-style mock review on the current build
+  IT: Mock review press-style sulla build attuale
+  ────────────────────────────────────────
   key: svcP4.b6
-  EN: Tutorial, UX flow & difficulty pacing
-  IT: Tutorial, UX flow & difficulty pacing
+  EN: Score range estimate & how to lift it
+  IT: Stima dello score range & come alzarlo
   ────────────────────────────────────────
   key: svcP5.h
   EN: Scouting & Dev Relationships Help
@@ -466,40 +495,6 @@
   key: svcP5.b6
   EN: Festival & showcase coverage (Gamescom, IAB, GDC)
   IT: Coverage di festival & showcase (Gamescom, IAB, GDC)
-  ────────────────────────────────────────
-  key: svcP6.h
-  EN: Mock Reviews for In-Development Games
-  IT: Mock Review per Giochi in Sviluppo
-  ────────────────────────────────────────
-  key: svcP6.p
-  EN: A press-style critique of titles still in development. We play the build, write the review you'd wish you had at
-    launch, and flag what reviewers will likely praise or pick apart.
-  IT: Una critica press-style di titoli ancora in sviluppo. Giochiamo la build, scriviamo la review che vorresti aver
-    letto al lancio, e segnaliamo cosa i critici probabilmente loderanno o demoliranno.
-  ────────────────────────────────────────
-  key: svcP6.b1
-  EN: Press-style written review on current build
-  IT: Review press-style scritta sulla build attuale
-  ────────────────────────────────────────
-  key: svcP6.b2
-  EN: Score range estimate with reasoning
-  IT: Stima dello score range con motivazioni
-  ────────────────────────────────────────
-  key: svcP6.b3
-  EN: Strengths reviewers will highlight
-  IT: Punti di forza che i reviewer evidenzieranno
-  ────────────────────────────────────────
-  key: svcP6.b4
-  EN: Weaknesses likely to land in critique
-  IT: Debolezze probabili nelle critiche
-  ────────────────────────────────────────
-  key: svcP6.b5
-  EN: Comparable titles & positioning notes
-  IT: Titoli comparabili & note di positioning
-  ────────────────────────────────────────
-  key: svcP6.b6
-  EN: Recommendations to lift the perceived score
-  IT: Raccomandazioni per alzare lo score percepito
   ────────────────────────────────────────
   key: faq.kicker
   EN: 03 Common questions
