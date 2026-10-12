@@ -1,0 +1,203 @@
+/* Services on desktop (901px and up): one horizontal section with the two halves side by side.
+   Everything sits inside the media query, so mobile keeps the live section exactly as it is,
+   and the layout never depends on a script measuring first (services-h.js only sizes it).
+   Markup: the live tab strip and panels, wrapped in #svc-h > .svc-h-sticky > .svc-h-view > .svc-h-track. */
+.svc-h-line{ display: none; }       /* the line between the titles: desktop only (below) */
+.svc-h-heading{ display: none; }    /* the heading over the two titles: desktop only (below) */
+/* The line's fill, registered so it animates (browsers without @property just step). */
+@property --svc-fill{ syntax: '<number>'; inherits: true; initial-value: 0; }
+@media (min-width: 901px){
+
+  #services{ padding-bottom: 0; }
+  #services .services-router{ margin-bottom: clamp(32px, 4vw, 56px); }
+
+  /* The section is two frames tall; the frame sticks under the header. */
+  .svc-h{ position: relative; height: calc(2 * var(--svc-frame, calc(100vh - 75px))); }
+  .svc-h-sticky{
+    position: sticky; top: var(--svc-top, 75px);
+    height: var(--svc-frame, calc(100vh - 75px)); box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: center; gap: var(--svc-gap, 22px);
+    padding-block: var(--svc-pad, 24px);
+  }
+
+  /* The heading over the two titles, pinned with the cards: serif like "How I plug in.",
+     between it and the titles in size. */
+  #svc-h .svc-h-heading{
+    display: block; flex: none; margin: 0;
+    font-family: var(--serif); font-weight: 400; font-variation-settings: "opsz" 96;
+    font-size: var(--svc-heading, 48px); line-height: 1; letter-spacing: -0.03em;
+    color: var(--ink); text-wrap: balance;
+  }
+
+  /* Titles in place of the pill: the first half's title on the left margin, the second's on the
+     right. The title of the half on screen turns clay. They stay buttons, with no button look. */
+  #svc-h .services-tabs{
+    display: flex; justify-content: space-between; align-items: baseline;
+    width: auto; margin: 0; padding: 0; flex: none;
+    border: 0; border-radius: 0; background: none; box-shadow: none;
+  }
+  #svc-h .services-tab{
+    min-width: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
+    font-family: var(--serif); font-weight: 400; font-variation-settings: "opsz" 96;
+    font-size: var(--svc-title, 40px); line-height: 1; letter-spacing: -0.025em;
+    color: var(--ink-3); cursor: pointer;
+    transition: color .35s var(--ease), transform .18s var(--ease);
+  }
+  #svc-h .services-tab:hover{ color: var(--ink); border: 0; }
+  #svc-h .services-tab.is-active{ color: var(--clay); background: none; border: 0; }
+  #svc-h .services-tab.is-pulsing{ animation: none; }
+  #svc-h .services-tab:active{ transform: scale(0.97); }
+
+  /* The line between the titles (services-h.js adds it and sets its left and width): centred
+     on the page column, so its middle falls between the second and third card. Grey at rest;
+     a switch fills it in clay, from the left going to the second half (.from-right going back),
+     half way with the first scroll and fully with the slide, then it fades back (.is-done). */
+  #svc-h .services-tabs{ position: relative; }
+  #svc-h .svc-h-line{
+    display: block; position: absolute; top: 50%; left: 0; width: 0;
+    height: 2px; margin-top: -1px; border-radius: 2px;
+    background: var(--rule); overflow: hidden; pointer-events: none;
+    /* Soft tips: both ends fade out over --svc-tip, the track and the fill alike. */
+    --svc-tip: 40px;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--svc-tip), #000 calc(100% - var(--svc-tip)), transparent);
+            mask-image: linear-gradient(to right, transparent, #000 var(--svc-tip), #000 calc(100% - var(--svc-tip)), transparent);
+  }
+  /* The clay fill (--svc-fill, 0 to 1, set by services-h.js) ends in a soft tip like the
+     line's ends: a --svc-tip fade, centred on the fill point, that slides off the far end
+     when the fill is full. */
+  #svc-h .svc-h-line > span{
+    --svc-fill-to: calc(var(--svc-fill) * (100% + var(--svc-tip)));
+    display: block; height: 100%; background: var(--clay);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(var(--svc-fill-to) - var(--svc-tip)), transparent var(--svc-fill-to));
+            mask-image: linear-gradient(to right, #000 calc(var(--svc-fill-to) - var(--svc-tip)), transparent var(--svc-fill-to));
+    transition: --svc-fill .35s var(--ease), opacity .6s var(--ease);
+  }
+  #svc-h .svc-h-line.from-right > span{
+    -webkit-mask-image: linear-gradient(to left, #000 calc(var(--svc-fill-to) - var(--svc-tip)), transparent var(--svc-fill-to));
+            mask-image: linear-gradient(to left, #000 calc(var(--svc-fill-to) - var(--svc-tip)), transparent var(--svc-fill-to));
+  }
+  #svc-h .svc-h-line.is-done > span{ opacity: 0; }
+  #svc-h .svc-h-line.is-reset > span{ transition: none; }
+
+  /* Track: the two halves side by side, full bleed (window edge to window edge). */
+  /* Clipped sideways only, so a hovered card can grow and glow above and below its row. */
+  .svc-h-view{ overflow-x: clip; overflow-y: visible; margin-inline: calc(-1 * var(--svc-gutter, 0px)); }
+  .svc-h-track{
+    display: flex; width: 200%;
+    transform: translate3d(calc(var(--svc-p, 0) * -50%), 0, 0);
+    will-change: transform;
+  }
+  /* Order: Publishers first by default (data-svc-first on <html>). Markup order stays as is. */
+  html[data-svc-first="pub"] #tabbtn-publishers,
+  html[data-svc-first="pub"] #tab-publishers{ order: -1; }
+
+  /* Each half is one window wide; its four cards line up with the page column.
+     Both halves always render here, with or without [hidden] (the script also removes it). */
+  #svc-h .services-panel,
+  #svc-h .services-panel[hidden]{
+    display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px;
+    flex: 0 0 50%; box-sizing: border-box;
+    padding-inline: var(--svc-gutter, 0px);
+    height: var(--svc-card-h, 560px);
+    grid-template-rows: auto auto auto 1fr;          /* title, intro, bullets, related: shared by the four cards */
+    row-gap: 0;
+  }
+
+  /* Cards, like the hero card: --paper-3, 1px --rule, 18px corners, --shadow-md, clay wash.
+     No icon on desktop: title, intro, bullets, and related resources at the bottom. */
+  #svc-h .services-panel .service{
+    --fs: var(--svc-fs, 1);
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr);
+    /* Text aligned across the four cards: every card uses the panel's rows (subgrid), so the
+       titles, intros and bullet lists start at the same height in all four. */
+    grid-row: 1 / span 4; grid-template-rows: subgrid;
+    row-gap: calc(12px * var(--fs));
+    min-height: 0; margin: 0; overflow: hidden;
+    padding: calc(24px * var(--fs)) 24px calc(24px + var(--svc-reserve, 0px));
+    border: 1px solid var(--rule); border-radius: 18px;
+    background-color: var(--paper-3);
+    background-image: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%);
+    box-shadow: var(--shadow-md);
+    font-size: calc(15px * var(--fs));
+    scale: 1; transform-origin: 50% 50%;      /* scale, not transform: the scroll reveal owns transform */
+    transition: scale .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  /* The cards show without the live [data-reveal] fade. When the page switches half,
+     services-h.js animates the new half in from its side; until then it waits hidden. */
+  #svc-h .services-panel .service[data-reveal]{ opacity: 1; transform: none; }
+  #svc-h .services-panel.is-waiting .service{ opacity: 0; }
+  /* Hover: the card grows a touch and glows clay. The live cursor glow (::before) is off here. */
+  #svc-h .services-panel .service::before{ display: none; }
+  #svc-h .services-panel .service:hover{
+    z-index: 2; scale: 1.03;
+    border-color: color-mix(in srgb, var(--clay) 55%, var(--rule));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--clay) 30%, transparent),
+      0 0 36px -4px color-mix(in srgb, var(--clay) 42%, transparent),
+      0 24px 60px -24px color-mix(in srgb, var(--clay) 50%, transparent);
+  }
+  /* The hovered card's title turns clay. */
+  #svc-h .services-panel .service-head h3{ transition: color .35s var(--ease); }
+  #svc-h .services-panel .service:hover .service-head h3{ color: var(--clay); }
+  #svc-h .services-panel .service-icon--lead{ display: none; }
+  #svc-h .services-panel .service-head{ display: contents; }
+  #svc-h .services-panel .service-header{ grid-column: 1; grid-row: 1; align-self: start; margin: 0; display: block; }
+  #svc-h .services-panel .service-toggle{ display: none; }
+  #svc-h .services-panel .service-head h3{
+    margin: 0; font-weight: 500; font-variation-settings: "opsz" 24;
+    font-size: calc(21px * var(--fs)); line-height: 1.15; letter-spacing: -0.01em;
+    text-box: trim-start cap alphabetic;            /* top of the capitals = top padding edge */
+  }
+  @supports not (text-box: trim-start cap alphabetic){
+    #svc-h .services-panel .service-head h3{ margin-top: -0.2em; }
+  }
+  #svc-h .services-panel .service-head p{ grid-column: 1 / -1; grid-row: 2; margin: 0; max-width: none; line-height: 1.5; color: var(--ink-2); }
+  #svc-h .services-panel .service-bullets,
+  #svc-h .services-panel .service-bullets[hidden]{
+    grid-column: 1 / -1; grid-row: 3; align-self: start;
+    display: grid !important; gap: calc(6px * var(--fs)); columns: auto;
+    margin: 0; padding: calc(12px * var(--fs)) 0 0; border-top: 1px solid var(--rule);
+    font-size: .93em;
+  }
+  #svc-h .services-panel .service ul li{ padding: 0 0 0 16px; border: 0; font-size: 1em; line-height: 1.4; }
+  #svc-h .services-panel .service ul li::before{ top: .7em; width: 8px; }
+  #svc-h .services-panel .service-related{ grid-column: 1 / -1; grid-row: 4; align-self: end; margin: 0; gap: 6px; }
+  #svc-h .services-panel .service-related .related-label{ width: 100%; font-size: .8em; }
+  #svc-h .services-panel .service-related a{ white-space: normal; padding: 6px 11px; font-size: .86em; line-height: 1.3; }
+  #svc-h .services-panel .service.is-flash{ border-color: var(--clay); box-shadow: 0 0 0 2px color-mix(in srgb, var(--clay) 45%, transparent), var(--shadow-md); }
+}
+
+@media (min-width: 901px) and (prefers-reduced-motion: reduce){
+  #svc-h .services-tab, #svc-h .services-panel .service, #svc-h .svc-h-line > span{ transition: none; }
+  #svc-h .services-panel .service:hover{ scale: 1; }
+}
+
+/* Hover texture: a field of small clay dots at low opacity, drifting diagonally up and to the
+   right, behind the text of the hovered card. It sits on ::after, under the text and over the
+   card background (the card isolates its own stacking), and only moves while its card is
+   hovered. Approved values (Services lab, 2026-10-12): opacity 0.08, dots 1.2px every 10px,
+   5px per second. */
+@media (min-width: 901px){
+  #svc-h .services-panel .service{
+    isolation: isolate;
+    --svc-dot-alpha: 0.08; --svc-dot-size: 1.2px; --svc-dot-gap: 10px; --svc-dot-dur: 2s;   /* 10px at 5px/s */
+  }
+  #svc-h .services-panel .service::after{
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+    background-image: radial-gradient(circle at center,
+      color-mix(in srgb, var(--clay) calc(var(--svc-dot-alpha) * 100%), transparent) 0 calc(var(--svc-dot-size) / 2),
+      transparent calc(var(--svc-dot-size) / 2 + 0.7px));
+    background-size: var(--svc-dot-gap) var(--svc-dot-gap);
+    background-position: 0 0;
+    opacity: 0;
+    transition: opacity 450ms var(--ease);
+    animation: svc-dots-drift var(--svc-dot-dur) linear infinite paused;
+  }
+  #svc-h .services-panel .service:hover::after{ opacity: 1; animation-play-state: running; }
+}
+@keyframes svc-dots-drift{
+  to{ background-position: var(--svc-dot-gap) calc(-1 * var(--svc-dot-gap)); }
+}
+@media (min-width: 901px) and (prefers-reduced-motion: reduce){
+  #svc-h .services-panel .service::after{ animation: none; transition: none; }
+}

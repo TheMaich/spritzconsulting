@@ -11,16 +11,28 @@
  *    My Experience is framed on its own.
  * 3. Short windows. The hero card shrinks as a picture and the headline steps down
  *    until the hero copy fits; My Experience gives up padding.
- * 4. Magnetic scroll. Inside the two screens one wheel gesture or key press moves one
- *    whole screen (Lenis). Once a gesture has moved a screen, the rest of it (trackpad
- *    momentum) is its tail and is ignored wherever it lands, so it never carries on into
- *    Services. A new gesture is not ignored: one that starts after a pause of 160 ms, one
- *    that reverses direction, and a fresh swipe on top of the momentum, which shows as
+ * 4. Services: services-h.js lays the section out on desktop. This script only adds its
+ *    stops (window.__svcH.group()) to the magnetic scroll.
+ * 5. Magnetic scroll. Two groups of stops: hero, second screen, end of the second screen;
+ *    then the two halves of Services and the end of the section. Inside a group one wheel
+ *    gesture or key press moves one stop (Lenis). Between the groups scrolling is free;
+ *    going down, a scroll that brings the Services cards close (C.entry) lands on their
+ *    first half, and going up, a scroll into the cards lands on their second half.
+ *    A free scroll that comes to rest inside a group (scroll bar, a long fling) moves on to
+ *    the nearest stop in its direction. Once a gesture has moved a stop, the rest of it
+ *    (trackpad momentum) is its tail and is ignored wherever it lands, so it never carries
+ *    on past a stop. A new gesture is not ignored: one that starts after a pause of 160 ms,
+ *    one that reverses direction, and a fresh swipe on top of the momentum, which shows as
  *    |deltaY| jumping well above its lowest point after the momentum has decayed. A new
  *    gesture, or a key press, during a move moves on at once from the stop the page is
- *    heading to, not from wherever the animation happens to be. Below the second screen
- *    scrolling is free. ?mag=floor,factor,tail,hold overrides the fresh-swipe thresholds
- *    (C.magFloor, magRise, magTail, magHold) for tuning on a real trackpad.
+ *    heading to, not from wherever the animation happens to be.
+ *    Rubber band: the wheel switches the halves of Services in C.bandSteps gestures, either
+ *    way, with no time limit between them. The first fills the line between the titles half
+ *    way (from the left going on, from the right going back) and leaves the cards still; the second slides
+ *    on. A gesture the other way takes the step back. Keys, the titles and the router links
+ *    still switch at once, and any other move lets the band go.
+ *    ?mag=floor,factor,tail,hold overrides the fresh-swipe thresholds (C.magFloor, magRise,
+ *    magTail, magHold) for tuning on a real trackpad.
  *
  * First paint: on desktop an inline script in <head> sets html.ff-wait, which keeps the page
  * hidden (frame-fit.css). The first layout pass removes it and fades the page in, so the page
@@ -57,6 +69,7 @@
     headMin: 40,                        // short windows: smallest headline size (px)
     expPadMin: 24,                      // short windows: least My Experience padding (px, both together)
     magDur: 0.75,                       // magnetic move duration (s)
+    magDurSvc: 0.55,                    // the same for moves onto a Services stop (the sideways slide)
     magBusy: 0.85,                      // share of a move after which the page counts as arrived
     magQuiet: 160,                      // a pause this long (ms) between wheel events ends a gesture
     // A fresh swipe on top of momentum: |deltaY| at least magFloor (px) and magRise times the
@@ -64,8 +77,16 @@
     // peak and the gesture has decayed (magFall events in a row that did not grow), and no
     // sooner than magHold (ms) after the move began. Chrome can merge up to three momentum
     // events into one, which stays under 3 times the lowest, so magRise is at least 3.
-    magFloor: 8, magRise: 3, magTail: 0.4, magFall: 3, magHold: 200
+    magFloor: 8, magRise: 3, magTail: 0.4, magFall: 3, magHold: 200,
+    entry: 0.5,                         // free area: snap into the next group once it is this close (share of the window)
+    // Rubber band on every Services switch, both ways: a switch takes bandSteps scroll gestures.
+    // Each one before the last fills the line between the titles by one share (half, with two);
+    // the last one slides on.
+    bandSteps: 2
   };
+  // Tuning hook: a page may preset values (window.__frameFitConfig) before this script runs.
+  if (window.__frameFitConfig) Object.assign(C, window.__frameFitConfig);
+  window.__frameFitConfig = C;
   // ?mag=floor,factor,tail,hold overrides those thresholds, to tune them on a real trackpad.
   (new URLSearchParams(location.search).get('mag') || '').split(',').forEach(function (v, i) {
     var key = ['magFloor', 'magRise', 'magTail', 'magHold'][i], n = parseFloat(v);
@@ -138,7 +159,7 @@
     var vw = root.clientWidth, vh = innerHeight;
     var on = vw >= C.minW && vh >= C.minH;
     state = { on: on, pair: false };
-    if (!on) { root.style.scrollPaddingTop = ''; window.__frameFit = { k: 1, on: false }; dispatchEvent(new Event('framefit')); return; }
+    if (!on) { root.style.scrollPaddingTop = ''; window.__frameFit = { k: 1, on: false, apply: apply, stops: namedStops }; dispatchEvent(new Event('framefit')); return; }
 
     setK(findK(vh));
     var hdr = header.offsetHeight;                 // page units (on screen: x K)
@@ -197,7 +218,7 @@
     exp.style.minHeight = px(expFrame);
     // Anchor jumps (nav links, Lenis anchors) stop under the scaled header.
     root.style.scrollPaddingTop = vis(header) + 'px';
-    window.__frameFit = { k: K, on: true, pair: pair };
+    window.__frameFit = { k: K, on: true, pair: pair, apply: apply, stops: namedStops };
     dispatchEvent(new Event('framefit'));
   }
 
@@ -208,34 +229,92 @@
   // way: time of its last event, direction, previous, peak and lowest-since-peak |deltaY|, events
   // in a row that did not grow, whether it has decayed since its peak, and whether it has already
   // moved a screen.
-  var mag = { target: 0, start: -1e9, end: 0, g: { last: -1e9, sign: 0, prev: 0, peak: 0, low: 0, fall: 0, decayed: false, held: false } };
+  var mag = { target: 0, start: -1e9, end: 0, dur: 0.75, g: { last: -1e9, sign: 0, prev: 0, peak: 0, low: 0, fall: 0, decayed: false, held: false } };
   function lenis() { return window.__lenis || null; }
   function magActive() { return state.on && lenis() && !touchOnly.matches && !reduce.matches; }
   function moving(now) { return now < mag.end; }
-  function busy(now) { return now < mag.start + C.magDur * C.magBusy * 1000; }
+  function busy(now) { return now < mag.start + mag.dur * C.magBusy * 1000; }
   // During a move the page counts as already at the stop it is heading to, so the next move
   // starts from there and not from wherever the animation happens to be.
   function here() { return moving(performance.now()) ? mag.target : scrollY; }
-  function stops() {
-    var first = state.pair ? studios : exp;
-    var p1 = Math.round(first.getBoundingClientRect().top + scrollY - vis(header));
-    return [0, p1, Math.round(p1 + innerHeight - vis(header))];
+  // Two groups of stops, each a list of scroll positions: [hero, second screen, end of it]
+  // and [first half of Services, second half, end of the section]. Between them scrolling is free.
+  function topOf(el) { return Math.round(el.getBoundingClientRect().top + scrollY - vis(header)); }
+  function frameV() { return Math.round(innerHeight - vis(header)); }
+  function groups() {
+    var p1 = topOf(state.pair ? studios : exp), G = [[0, p1, p1 + frameV()]];
+    var sg = window.__svcH && window.__svcH.group(); if (sg) G.push(sg);
+    return G;
   }
-  function inZone(dir) {
-    var y = here(), end = stops()[2];
-    if (y > end + 2) return false;                 // below the two screens: free
-    if (y >= end - 2 && dir > 0) return false;     // leaving them downwards: free
-    return true;
+  function namedStops() {
+    var G = groups(), S = window.__svcH, out = [['hero', G[0][0]], ['exp', G[0][1]], ['lead', G[0][2]]];
+    if (G[1]) out.push(['svc-dev', S.stopOf('dev')], ['svc-pub', S.stopOf('pub')], ['after', G[1][2]]);
+    return out;
   }
-  function magGo(dir) {
-    var y = here(), pts = stops(), next = null, i, now = performance.now();
-    if (dir > 0) { for (i = 0; i < pts.length; i++) if (pts[i] > y + 2) { next = pts[i]; break; } }
-    else { for (i = pts.length - 1; i >= 0; i--) if (pts[i] < y - 2) { next = pts[i]; break; } }
+  // Where one step in direction dir goes from here, or null when scrolling is free.
+  var lastDir = 0;
+  function decide(dir) {
+    lastDir = dir;
+    var y = here(), G = groups(), fv = frameV(), zone = C.entry * fv, i, j, s, last;
+    var l = lenis(), aim = moving(performance.now()) ? mag.target : (l && typeof l.targetScroll === 'number' ? l.targetScroll : y);
+    for (i = 0; i < G.length; i++) {
+      s = G[i]; last = s[s.length - 1];
+      if (y < s[0] - 2 || y > last + 2) continue;
+      if (dir > 0 && y >= last - 2) continue;      // leaving the group downwards: free
+      if (dir < 0 && y <= s[0] + 2) {
+        // Leaving upwards is free, unless the text above fits the window: then it is one stop.
+        if (i > 0 && s[0] - G[i - 1][G[i - 1].length - 1] <= fv) return G[i - 1][G[i - 1].length - 1];
+        continue;
+      }
+      if (dir > 0) { for (j = 0; j < s.length; j++) if (s[j] > y + 2) return s[j]; }
+      else { for (j = s.length - 1; j >= 0; j--) if (s[j] < y - 2) return s[j]; }
+    }
+    // Free area. Going down, a group close enough (C.entry) pulls the page onto its first stop.
+    // Going up, a scroll that would cross into a group lands on its last screen.
+    for (i = 0; i < G.length; i++) {
+      s = G[i]; last = s[s.length - 1];
+      if (dir > 0 && y < s[0] - 2 && (s[0] - y <= zone || aim > s[0])) return s[0];
+      if (dir < 0 && y > last + 2 && aim < last) return s[s.length - 2];
+    }
+    return null;
+  }
+  function magGo(next) {
     if (next === null) return false;
-    mag.target = next; mag.start = now; mag.end = now + C.magDur * 1000;
-    lenis().scrollTo(next, { duration: C.magDur, lock: true, force: true });
+    var now = performance.now(), G = groups(), dur = G[1] && G[1].indexOf(next) >= 0 ? C.magDurSvc : C.magDur;
+    mag.target = next; mag.start = now; mag.end = now + dur * 1000; mag.dur = dur;
+    lenis().scrollTo(next, { duration: dur, lock: true, force: true });
+    // A new move hands the Services line back to the scroll (a rubber band switch then holds it again).
+    if (window.__svcH && window.__svcH.band) window.__svcH.band(null);
     return true;
   }
+  // A free scroll that comes to rest inside a group (scroll bar, a long fling) moves on to the
+  // next stop in the direction it was going.
+  var settleT = null, mouseDown = false;
+  addEventListener('mousedown', function () { mouseDown = true; });
+  addEventListener('mouseup', function () { mouseDown = false; settle(); });
+  function settle() {
+    clearTimeout(settleT);
+    settleT = setTimeout(function () {
+      if (!magActive() || moving(performance.now()) || mouseDown) return;
+      var y = scrollY, best = null;
+      groups().forEach(function (s) {
+        if (y <= s[0] + 2 || y >= s[s.length - 1] - 2) return;
+        s.forEach(function (p) {
+          // scrollY lands on device pixels, a fraction past the stop a move just reached
+          // (2958.18 for 2958), so that stop still counts as being in the direction of travel.
+          if (lastDir > 0 && p < y - 2) return;
+          if (lastDir < 0 && p > y + 2) return;
+          if (best === null || Math.abs(p - y) < Math.abs(best - y)) best = p;
+        });
+      });
+      if (best !== null && Math.abs(best - y) > 2) magGo(best);
+    }, 220);
+  }
+  addEventListener('scroll', function () {
+    // The page moved some other way (keys, a title, the scroll bar): the rubber band lets go.
+    if (band.dir && Math.abs(scrollY - band.at) > 2) bandRelease();
+    settle();
+  }, { passive: true });
   // Tells a new wheel gesture from the rest of the one under way. A pause ends a gesture, and a
   // reversed direction always starts a new one. A swipe that starts while the last one's momentum
   // is still arriving shows as |deltaY| growing again after it had decayed (see C.magFloor and
@@ -259,6 +338,26 @@
     }
     return fresh;
   }
+  // Rubber band (see 5. above). band.dir is the way it pulls (1 to the second half, -1 back to
+  // the first), band.step the gestures so far, band.at the scroll position it started from.
+  // Only the line moves: the page does not scroll and the cards stay put until the switch.
+  var band = { dir: 0, step: 0, at: 0 };
+  // Returns the line, or on a switch (slide) leaves it to the slide.
+  function bandRelease(slide) {
+    band.dir = 0; band.step = 0;
+    var S = window.__svcH;
+    if (!slide && S && S.band) S.band(null);
+  }
+  // Whether a wheel event in direction dir goes to the rubber band: one already pulling, or the
+  // page at rest on a half of Services with the wheel heading for the other half.
+  function inBand(dir, now) {
+    var S = window.__svcH;
+    if (!S || !S.band) return false;
+    if (band.dir) return true;
+    var G = groups();
+    if (!G[1] || moving(now)) return false;
+    return Math.abs(scrollY - (dir > 0 ? G[1][0] : G[1][1])) <= 2;
+  }
   function onVirtual(d) {
     if (!magActive()) return true;
     var e = d.event;
@@ -269,11 +368,32 @@
     // The rest of a gesture that already moved a screen is swallowed, wherever it lands,
     // so trackpad momentum never carries on into Services.
     if (!newGesture(dy, now) && mag.g.held) { e.preventDefault(); return false; }
+    // On a half of Services, the wheel towards the other half goes to the rubber band, one
+    // step per gesture (the rest of the gesture is swallowed as its tail). A gesture the other
+    // way takes a step back; the last step slides on to the other half.
+    if (inBand(dir, now)) {
+      e.preventDefault();
+      if (Math.abs(dy) < 2) return false;
+      mag.g.held = true;
+      if (!band.dir) { band.dir = dir; band.at = scrollY; }
+      band.step += dir === band.dir ? 1 : -1;
+      if (band.step <= 0) { bandRelease(); return false; }
+      var S = window.__svcH, bd = band.dir;
+      if (band.step >= C.bandSteps) {
+        // The line shows the switch done and stays so through the slide.
+        bandRelease(true);
+        if (magGo(decide(bd))) S.band(1, bd); else S.band(null);
+        return false;
+      }
+      S.band(band.step / C.bandSteps, bd);
+      return false;
+    }
     // A new gesture moves on from the stop the page is heading to. Until the move is nearly
     // done, one that has nowhere to go is swallowed too, since the page is still travelling.
-    if (!busy(now) && !inZone(dir)) return true;
+    var next = decide(dir);
+    if (next === null && !busy(now)) return true;
     e.preventDefault();
-    if (Math.abs(dy) >= 2 && magGo(dir)) mag.g.held = true;
+    if (Math.abs(dy) >= 2 && magGo(next)) mag.g.held = true;
     return false;
   }
   addEventListener('keydown', function (e) {
@@ -286,13 +406,13 @@
     // During a move a key press moves on from the stop the page is heading to, and the browser's
     // own key scroll is always cancelled, so it cannot nudge the page off the stop. A held key
     // repeats only once the move is nearly done.
+    var next = decide(dir);
     if (moving(now)) {
       e.preventDefault();
-      if (!(e.repeat && busy(now)) && inZone(dir)) magGo(dir);
+      if (!(e.repeat && busy(now))) magGo(next);
       return;
     }
-    if (!inZone(dir)) return;
-    if (magGo(dir)) e.preventDefault();
+    if (magGo(next)) e.preventDefault();
   });
   // Links to #consultancy (nav, mobile menu) land on the second screen's first stop,
   // which is the studios strip when the three share the screen.
@@ -300,7 +420,7 @@
     var a = e.target.closest && e.target.closest('a[href="#consultancy"]');
     if (!a || !state.on || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault(); e.stopPropagation();
-    var t = stops()[1], l = lenis();
+    var t = groups()[0][1], l = lenis();
     if (l && !reduce.matches) l.scrollTo(t, { duration: 1.2 }); else scrollTo({ top: t, behavior: reduce.matches ? 'auto' : 'smooth' });
   }, true);
 
