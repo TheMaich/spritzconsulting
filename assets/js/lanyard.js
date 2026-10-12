@@ -9,8 +9,8 @@
  * keyboard users get it back on focus. Links drawn on the badge click the real
  * anchors inside it, so Zaraz tracking and Lenis anchor scrolling still run.
  *
- * Needs: /assets/img/lanyard/cards.json and card-{lang}-{theme}.webp, made from
- * the live card (one per language and theme). Regenerate them whenever the card
+ * Needs: /assets/img/lanyard/cards.json and card-en-{theme}.webp, made from
+ * the live card (one per theme). Regenerate them whenever the card
  * text changes.
  * Off when: no WebGL, ?badge=off, or the modules fail to load.
  * Loading: an inline script in <head> sets html.lanyard-pending on desktop before the first
@@ -63,7 +63,7 @@ if (params.has('drop')) {
 // Strap stretch (slot-to-anchor distance over strap length) where it starts to straighten, and where it is fully straight.
 const TAUT_START = 1.08, TAUT_END = 1.25;
 
-const CHIP = { en: 'Tap to let the badge sway', it: 'Tocca per far oscillare il badge' };
+const CHIP = 'Tap to let the badge sway';
 
 function webglOK() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }
 
@@ -75,7 +75,7 @@ const hero = cardEl && cardEl.closest('.hero');
 if (cardEl && hero && !phone.matches && webglOK() && params.get('badge') !== 'off') {
   const safety = setTimeout(release, PENDING_MAX);
   // Start the card image now, in parallel with the modules (same URL as loadImg, so it comes from cache).
-  const key = (document.documentElement.lang || 'en') + '-' + (root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  const key = 'en-' + (root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
   new Image().src = ASSETS + 'card-' + key + '.webp' + ASSETS_V;
   Promise.all([
     import(THREE_URL), import(RAPIER_URL),
@@ -95,7 +95,6 @@ async function start([THREE, RAPIERmod, CARDS]) {
 
   const css = (n) => getComputedStyle(root).getPropertyValue(n).trim();
   const theme = () => (root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
-  const lang = () => (CARDS[root.lang] ? root.lang : 'en');
 
   /* ---------- Canvas ---------- */
   const cvs = document.createElement('canvas');
@@ -343,7 +342,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
   function linkAt(hit) {
     if (!hit || hit.object !== front || !hit.uv) return null;
     const u = hit.uv.x, v = 1 - hit.uv.y, pad = 0.006;
-    return CARDS[lang()].links.find((l) => u >= l.x - pad && u <= l.x + l.w + pad && v >= l.y - pad * 1.6 && v <= l.y + l.h + pad * 1.6) || null;
+    return CARDS.en.links.find((l) => u >= l.x - pad && u <= l.x + l.w + pad && v >= l.y - pad * 1.6 && v <= l.y + l.h + pad * 1.6) || null;
   }
   // Clicking the real anchor keeps target, rel, Zaraz booking_click and Lenis anchor scrolling.
   function follow(l) { const a = cardEl.querySelectorAll('a')[l.i]; if (a) a.click(); }
@@ -427,7 +426,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
       // iOS asks for permission, and only after a tap.
       chip = document.createElement('button');
       chip.type = 'button'; chip.className = 'lanyard-chip';
-      chip.textContent = CHIP[root.lang] || CHIP.en;
+      chip.textContent = CHIP;
       cardEl.parentElement.appendChild(chip);
       chip.addEventListener('click', () => {
         DeviceOrientationEvent.requestPermission().then((s) => { if (s === 'granted') addEventListener('deviceorientation', onOrient); }).catch(() => {}).finally(() => chip.remove());
@@ -435,10 +434,10 @@ async function start([THREE, RAPIERmod, CARDS]) {
     } else { addEventListener('deviceorientation', onOrient); }
   }
 
-  /* ---------- Theme and language ---------- */
+  /* ---------- Theme ---------- */
   let shownKey = '';
   async function applySkin(rebuildIfNeeded) {
-    const key = lang() + '-' + theme();
+    const key = 'en-' + theme();
     if (key !== shownKey) {
       const img = await loadImg(key);
       shownKey = key;
@@ -449,10 +448,10 @@ async function start([THREE, RAPIERmod, CARDS]) {
     }
     drawBack(); drawStrap();
     edgeMat.color.setStyle(css('--rule'), THREE.SRGBColorSpace);
-    if (chip) chip.textContent = CHIP[root.lang] || CHIP.en;
+    if (chip) chip.textContent = CHIP;
     dirty = true;
   }
-  new MutationObserver(() => applySkin(true).catch(() => {})).observe(root, { attributes: true, attributeFilter: ['data-theme', 'lang'] });
+  new MutationObserver(() => applySkin(true).catch(() => {})).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
   /* ---------- Strap geometry ---------- */
   const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()], false, 'chordal');

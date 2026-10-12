@@ -444,8 +444,6 @@
     release();
     if (!hookLenis()) { var tries = 0, t = setInterval(function () { if (hookLenis() || ++tries > 40) clearInterval(t); }, 100); }
     addEventListener('resize', onResize);
-    // Language switches change text lengths, so the frames are measured again.
-    new MutationObserver(function () { clearTimeout(rz); rz = setTimeout(apply, 60); }).observe(root, { attributes: true, attributeFilter: ['lang'] });
   }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else addEventListener('load', start);
 })();

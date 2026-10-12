@@ -155,7 +155,7 @@
   }
   // The line between the titles: centred on the page column, where its middle falls between
   // the second and the third card, and as long as the shorter side allows, C.lineGap from
-  // each title. Titles change width with the language, so this runs with every layout.
+  // each title. Titles change width as the fonts load, so this runs with every layout.
   function placeLine() {
     var a = document.getElementById(C.first === 'pub' ? 'tabbtn-publishers' : 'tabbtn-developers');
     var b = document.getElementById(C.first === 'pub' ? 'tabbtn-developers' : 'tabbtn-publishers');
@@ -406,5 +406,4 @@
     if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { later(); });
   }
   addEventListener('load', function () { later(); });
-  new MutationObserver(function () { later(); }).observe(root, { attributes: true, attributeFilter: ['lang'] });
 })();

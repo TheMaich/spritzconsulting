@@ -467,37 +467,7 @@ body.is-tab-hidden .dot{
 }
 .theme-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
 
-/* Language toggle — segmented pill (mirrors theme-toggle) */
-.lang-toggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  padding: 3px;
-  border: 1px solid var(--rule);
-  background: var(--paper-3);
-  border-radius: 999px;
-}
-.lang-toggle button{
-  padding: 6px 12px;
-  min-height: 38px;
-  display: inline-flex; align-items: center;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  border-radius: 999px;
-  transition: color .25s var(--ease), background .25s var(--ease);
-  white-space: nowrap;
-}
-.lang-toggle button[aria-pressed="true"]{
-  background: var(--ink);
-  color: var(--paper);
-}
-.lang-toggle button:not([aria-pressed="true"]):hover{ color: var(--ink); }
-.lang-toggle button[hidden]{ display: none; }
-
-/* Footer settings row — groups theme + language toggles */
+/* Footer settings row — the theme toggle */
 .footer-settings{
   display: inline-flex;
   align-items: center;
@@ -2463,8 +2433,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
    44px floor. Fine pointers keep the DESIGN.md component paddings unchanged. */
 @media (pointer: coarse){
   .nav a,
-  .theme-toggle button,
-  .lang-toggle button{ min-height: 44px; }
+  .theme-toggle button{ min-height: 44px; }
 }
 </style>
 </head>
@@ -2487,14 +2456,14 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     </a>
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
-        <a href="#consultancy"><span data-i18n="nav.consultancy">My Experience</span></a>
-        <a href="#services"><span data-i18n="nav.services">Services</span></a>
-        <a href="#faq"><span data-i18n="nav.faq">FAQ</span></a>
-        <a href="#testimonials"><span data-i18n="nav.testimonials">Testimonials</span></a>
-        <a href="#contact" data-cta="nav_contact"><span data-i18n="nav.contact">Book a call</span></a>
-        <a href="/resources/" class="resources-link"><span data-i18n="nav.resources">Resources</span></a>
+        <a href="#consultancy"><span>My Experience</span></a>
+        <a href="#services"><span>Services</span></a>
+        <a href="#faq"><span>FAQ</span></a>
+        <a href="#testimonials"><span>Testimonials</span></a>
+        <a href="#contact" data-cta="nav_contact"><span>Book a call</span></a>
+        <a href="/resources/" class="resources-link"><span>Resources</span></a>
       </nav>
-      <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.open" aria-label="Open menu" id="menu-open">
+      <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" id="menu-open">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
@@ -2504,17 +2473,17 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 <div class="mobile-menu" id="mobile-menu" data-open="false" aria-hidden="true">
   <div class="top">
     <span class="wordmark"><span>spritz<span class="dot" aria-hidden="true"></span> consulting</span></span>
-    <button class="menu-toggle" id="menu-close" data-i18n-aria="menu.close" aria-label="Close menu">
+    <button class="menu-toggle" id="menu-close" aria-label="Close menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </button>
   </div>
   <nav aria-label="Mobile">
-    <a href="#consultancy" data-menu-link><span data-i18n="nav.consultancy">My Experience</span></a>
-    <a href="#services" data-menu-link><span data-i18n="nav.services">Services</span></a>
-    <a href="#faq" data-menu-link><span data-i18n="nav.faq">FAQ</span></a>
-    <a href="#testimonials" data-menu-link><span data-i18n="nav.testimonials">Testimonials</span></a>
-    <a href="#contact" data-menu-link data-cta="nav_contact"><span data-i18n="nav.contact">Book a call</span></a>
-    <a href="/resources/" class="resources-link" data-menu-link><span data-i18n="nav.resources">Resources</span></a>
+    <a href="#consultancy" data-menu-link><span>My Experience</span></a>
+    <a href="#services" data-menu-link><span>Services</span></a>
+    <a href="#faq" data-menu-link><span>FAQ</span></a>
+    <a href="#testimonials" data-menu-link><span>Testimonials</span></a>
+    <a href="#contact" data-menu-link data-cta="nav_contact"><span>Book a call</span></a>
+    <a href="/resources/" class="resources-link" data-menu-link><span>Resources</span></a>
   </nav>
   <div class="foot">
     <span class="menu-tagline">production · publishing · audit</span>
@@ -2527,21 +2496,21 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <section class="hero wrap" id="top" aria-labelledby="hero-h1">
     <div class="hero-grid">
       <div class="hero-left">
-        <span class="kicker blur-reveal" style="animation-delay: 0s" data-reveal><span data-i18n="hero.kicker">Production &amp; Publishing Consultancy</span></span>
-        <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1" data-reveal data-i18n="hero.h1" data-i18n-html>
+        <span class="kicker blur-reveal" style="animation-delay: 0s" data-reveal><span>Production &amp; Publishing Consultancy</span></span>
+        <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1" data-reveal>
           A <em>Dash</em> of Production<br />
           &amp; Publishing for the games industry.
         </h1>
-        <p class="hero-intro blur-reveal" style="animation-delay: 0.3s" data-reveal data-i18n="hero.intro">
+        <p class="hero-intro blur-reveal" style="animation-delay: 0.3s" data-reveal>
           I work across the full production chain: QA to indie publishing, certification to platform delivery. I help studios and publishers ship cleaner, and I handle the unglamorous stretch between a signed pitch and a finished game.
         </p>
         <div class="cta-row" data-reveal>
           <a class="btn btn-primary" href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="hero">
-            <span data-i18n="cta.book">Book a 30-minute call</span>
+            <span>Book a 30-minute call</span>
             <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
           </a>
           <a class="btn btn-ghost" href="#services" data-cta="hero_services">
-            <span data-i18n="cta.services">See services</span>
+            <span>See services</span>
             <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
           </a>
         </div>
@@ -2552,11 +2521,11 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <aside class="hero-right hero-card hero-card--tilt-1 is-active" data-card="0" aria-label="Current status">
             <div class="portrait-tilt">
               <figure class="portrait">
-                <picture><source srcset="assets/miki-portrait.webp" type="image/webp" /><img src="assets/miki-portrait.png" data-i18n-alt="portrait.alt" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async" /></picture>
-                <div class="speech-bubble" role="note" data-i18n-aria="bubble.aria" aria-label="A greeting from Michele">
+                <picture><source srcset="assets/miki-portrait.webp" type="image/webp" /><img src="assets/miki-portrait.png" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async" /></picture>
+                <div class="speech-bubble" role="note" aria-label="A greeting from Michele">
                   <div class="bubble-body">
-                    <span class="bubble-title" data-i18n="bubble.title" data-i18n-html><span class="hola">Ciao! </span>I&rsquo;m Michele</span>
-                    <span class="bubble-sub" data-i18n="bubble.sub">(or Miki for short)</span>
+                    <span class="bubble-title"><span class="hola">Ciao! </span>I&rsquo;m Michele</span>
+                    <span class="bubble-sub">(or Miki for short)</span>
                   </div>
                   <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                     <path d="M 2 20 L 10 2 L 28 20" />
@@ -2566,31 +2535,31 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
             </div>
             <dl class="capsule-meta">
               <div class="meta-row">
-                <dt data-i18n="meta.now.dt">Now</dt>
-                <dd data-i18n="meta.now.dd">Independent producer · Spritz Consulting</dd>
+                <dt>Now</dt>
+                <dd>Independent producer · Spritz Consulting</dd>
               </div>
               <div class="meta-row">
-                <dt data-i18n="meta.also.dt">Also</dt>
-                <dd data-i18n="meta.also.dd">10 yrs across Raw Fury, Rebellion &amp; 34BigThings</dd>
+                <dt>Also</dt>
+                <dd>10 yrs across Raw Fury, Rebellion &amp; 34BigThings</dd>
               </div>
               <div class="meta-row">
-                <dt data-i18n="meta.recent.dt">Latest</dt>
-                <dd data-i18n="meta.recent.dd" data-i18n-html>Publishing services for Goldpact Goblins</dd>
+                <dt>Latest</dt>
+                <dd>Publishing services for Goldpact Goblins</dd>
               </div>
               <div class="meta-row">
-                <dt data-i18n="meta.based.dt">Based</dt>
-                <dd data-i18n="meta.based.dd">Europe · CET</dd>
+                <dt>Based</dt>
+                <dd>Europe · CET</dd>
               </div>
               <div class="meta-row">
-                <dt data-i18n="meta.engage.dt">Engage</dt>
-                <dd data-i18n="meta.engage.dd">Project · Retainer · Audit</dd>
+                <dt>Engage</dt>
+                <dd>Project · Retainer · Audit</dd>
               </div>
               <div class="meta-row">
-                <dt data-i18n="meta.rate.dt">Rate</dt>
-                <dd data-i18n="meta.rate.dd" data-i18n-html>€300/day · €3,500/month retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">see FAQ</a>)</dd>
+                <dt>Rate</dt>
+                <dd>€300/day · €3,500/month retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">see FAQ</a>)</dd>
               </div>
             </dl>
-            <p class="capsule-note" data-i18n="meta.rate.onramp" data-i18n-html>Start smaller: a <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="rate_line">free 30-minute discovery call</a>, or a €120 two-hour consultation for a sanity check on one decision.</p>
+            <p class="capsule-note">Start smaller: a <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="rate_line">free 30-minute discovery call</a>, or a €120 two-hour consultation for a sanity check on one decision.</p>
           </aside>
           <!-- TEMP_HIDDEN: Mario card (re-enable when portrait photo is ready) -->
           <!--
@@ -2658,7 +2627,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <!-- Marquee / Studios -->
   <section class="marquee" aria-labelledby="marquee-h">
     <div class="wrap marquee-kicker">
-      <span id="marquee-h" data-i18n="marquee.h">Studios and orgs I&rsquo;ve worked with</span>
+      <span id="marquee-h">Studios and orgs I&rsquo;ve worked with</span>
     </div>
     <div class="marquee-track">
       <div class="logo-tile"><a href="https://34bigthings.com/" target="_blank" rel="noopener noreferrer" aria-label="34BigThings"><picture><source srcset="assets/logo-34bigthings.webp" type="image/webp" /><img src="assets/logo-34bigthings.png" alt="34BigThings" title="34BigThings · Studio" width="200" height="200" loading="lazy" decoding="async" /></picture></a></div>
@@ -2702,45 +2671,45 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <section class="section wrap" id="consultancy" aria-labelledby="about-h">
     <div class="about-grid">
       <div>
-        <span class="kicker" data-reveal data-i18n="about.kicker" data-i18n-html><span class="num">01</span> My Experience</span>
-        <h2 class="about-title blur-reveal" id="about-h" data-reveal data-i18n="about.h">
+        <span class="kicker" data-reveal><span class="num">01</span> My Experience</span>
+        <h2 class="about-title blur-reveal" id="about-h" data-reveal>
           Studio side, publisher side, and everything in between.
         </h2>
         <div class="about-prose" data-reveal>
-          <p data-i18n="about.p1" data-i18n-html>QA at <strong>34BigThings</strong> and <strong>Rebellion</strong>. Production back at 34BigThings. Publishing Production at <strong>Raw Fury</strong>. Most recently Producer at <strong>Untold Games</strong> on <em>City&nbsp;20</em>. Now, Independent Producer, Co-founder of Scuola Nash and juror at Indie Arena Booth.</p>
-          <p data-i18n="about.p2" data-i18n-html>AAA down to one-person indie teams. QA, production, publishing. I have sat on every side of the table and it changes what you notice.</p>
+          <p>QA at <strong>34BigThings</strong> and <strong>Rebellion</strong>. Production back at 34BigThings. Publishing Production at <strong>Raw Fury</strong>. Most recently Producer at <strong>Untold Games</strong> on <em>City&nbsp;20</em>. Now, Independent Producer, Co-founder of Scuola Nash and juror at Indie Arena Booth.</p>
+          <p>AAA down to one-person indie teams. QA, production, publishing. I have sat on every side of the table and it changes what you notice.</p>
         </div>
         <div class="process-rail" data-reveal>
           <div class="step">
             <div class="step-n" data-count="15+">15+</div>
             <div>
-              <h3 data-i18n="stats.shipped.h">Games shipped</h3>
+              <h3>Games shipped</h3>
             </div>
           </div>
           <!-- Hidden for now, may reactivate later
           <div class="step">
             <div class="step-n" data-count="1">1</div>
             <div>
-              <h3 data-i18n="stats.positive.h">Overwhelmingly Positive title</h3>
+              <h3>Overwhelmingly Positive title</h3>
             </div>
           </div>
           -->
           <div class="step">
             <div class="step-n" data-count="10">10</div>
             <div>
-              <h3 data-i18n="stats.years.h">Years in games</h3>
+              <h3>Years in games</h3>
             </div>
           </div>
           <div class="step">
             <div class="step-n" data-count="6">6</div>
             <div>
-              <h3 data-i18n="stats.platforms.h">Platforms shipped on</h3>
+              <h3>Platforms shipped on</h3>
             </div>
           </div>
           <div class="step">
             <div class="step-n" data-count="3">3</div>
             <div>
-              <h3 data-i18n="stats.publishers.h">Publishers worked with</h3>
+              <h3>Publishers worked with</h3>
             </div>
           </div>
         </div>
@@ -2749,19 +2718,18 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         <div class="about-photo-rot">
           <div class="about-photo-frame">
             <img src="assets/miki-canary-islands-games-2024.webp"
-                 data-i18n-alt="about.photo.alt"
                  alt="Michele Di Nardo speaking on stage, seated in a red armchair, wearing a headset microphone and an event badge."
                  width="819" height="1024" loading="lazy" decoding="async" />
           </div>
         </div>
-        <figcaption data-i18n="about.photo.caption">Canary Islands Games forum, June 2024</figcaption>
+        <figcaption>Canary Islands Games forum, June 2024</figcaption>
       </figure>
     </div>
 
   </section>
 
   <!-- Marquee / Games -->
-  <section class="marquee marquee--games" data-i18n-aria="marquee.games.aria" aria-label="Games I&rsquo;ve worked on">
+  <section class="marquee marquee--games" aria-label="Games I&rsquo;ve worked on">
     <div class="marquee-track marquee-track--reverse">
       <div class="logo-tile"><a href="https://store.steampowered.com/app/1637320/Dome_Keeper/" target="_blank" rel="noopener noreferrer" aria-label="Dome Keeper"><picture><source srcset="assets-2/logo-01.webp" type="image/webp" /><img src="assets-2/logo-01.png" alt="Dome Keeper logo · Bippinbits / Raw Fury" title="Dome Keeper · Bippinbits / Raw Fury" width="417" height="239" loading="lazy" decoding="async" /></picture></a></div>
       <div class="logo-tile"><a href="https://store.steampowered.com/app/1658150/Moonstone_Island/" target="_blank" rel="noopener noreferrer" aria-label="Moonstone Island"><picture><source srcset="assets-2/logo-02.webp" type="image/webp" /><img src="assets-2/logo-02.jpg" alt="Moonstone Island logo" title="Moonstone Island · Studio Supersoft / Raw Fury" width="616" height="353" loading="lazy" decoding="async" /></picture></a></div>
@@ -2800,41 +2768,41 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <section class="section wrap services" id="services" aria-labelledby="services-h">
     <div class="services-intro">
       <div>
-        <span class="kicker" data-reveal data-i18n="services.kicker" data-i18n-html><span class="num">02</span> Services</span>
-        <h2 class="services-title blur-reveal" id="services-h" data-reveal data-i18n="services.h" data-i18n-html>
+        <span class="kicker" data-reveal><span class="num">02</span> Services</span>
+        <h2 class="services-title blur-reveal" id="services-h" data-reveal>
           How I <em>plug in</em>.
         </h2>
       </div>
-      <p data-reveal data-i18n="services.intro">
+      <p data-reveal>
         Project by project, on retainer, or as a focused audit. The engagement format adapts. You get the same work either way. Two distinct toolkits depending on which side of the deal you&rsquo;re on.
       </p>
     </div>
 
     <nav class="services-router" data-reveal aria-label="Jump to a service">
-      <p class="services-router-intro" data-i18n="router.intro">Sound familiar? Jump straight to the right service.</p>
+      <p class="services-router-intro">Sound familiar? Jump straight to the right service.</p>
       <ul>
         <li><a href="#svc-platform-release" data-router-link data-router-tab="tab-developers">
-          <span data-i18n="router.q1">We are three months from console cert and nobody on the team has done one.</span>
-          <span class="router-svc" data-i18n="router.s1">Platform &amp; Release Management</span>
+          <span>We are three months from console cert and nobody on the team has done one.</span>
+          <span class="router-svc">Platform &amp; Release Management</span>
         </a></li>
         <li><a href="#svc-publishing-support" data-router-link data-router-tab="tab-developers">
-          <span data-i18n="router.q2">We have a publisher call coming and a pitch deck we do not trust.</span>
-          <span class="router-svc" data-i18n="router.s2">Strategic Publishing Support</span>
+          <span>We have a publisher call coming and a pitch deck we do not trust.</span>
+          <span class="router-svc">Strategic Publishing Support</span>
         </a></li>
         <li><a href="#svc-physical-editions" data-router-link data-router-tab="tab-developers">
-          <span data-i18n="router.q3">We committed to a boxed edition and the timeline does not add up.</span>
-          <span class="router-svc" data-i18n="router.s3">Physical &amp; Boxed Editions</span>
+          <span>We committed to a boxed edition and the timeline does not add up.</span>
+          <span class="router-svc">Physical &amp; Boxed Editions</span>
         </a></li>
         <li><a href="#svc-production-oversight" data-router-link data-router-tab="tab-publishers">
-          <span data-i18n="router.q4">We are signed and the milestones are slipping.</span>
-          <span class="router-svc" data-i18n="router.s4">Fractional Publishing Production Support</span>
+          <span>We are signed and the milestones are slipping.</span>
+          <span class="router-svc">Fractional Publishing Production Support</span>
         </a></li>
       </ul>
     </nav>
 
     <div class="svc-h" id="svc-h">
       <div class="svc-h-sticky">
-        <h3 class="svc-h-heading" data-i18n="services.cardsTitle">The Services I can help you with</h3>
+        <h3 class="svc-h-heading">The Services I can help you with</h3>
     <div class="services-tabs" role="tablist" aria-label="Services audience" data-reveal>
       <button type="button" class="services-tab is-active" role="tab" aria-selected="true" aria-controls="tab-developers" id="tabbtn-developers" data-tab-target="tab-developers">For Developers</button>
       <button type="button" class="services-tab" role="tab" aria-selected="false" aria-controls="tab-publishers" id="tabbtn-publishers" data-tab-target="tab-publishers" tabindex="-1">For Publishers</button>
@@ -2848,20 +2816,20 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svc1.h">Production &amp; Project Operations</h3>
+            <h3 class="service-title">Production &amp; Project Operations</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-2" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svc1.p">Deciding what gets built this month and what waits. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
+          <p class="service-intro">Deciding what gets built this month and what waits. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-2" hidden>
-          <li data-i18n="svc1.b1">End-to-end project management</li>
-          <li data-i18n="svc1.b2">GDD review &amp; docs management</li>
-          <li data-i18n="svc1.b3">Workflow audits &amp; pipeline optimisation</li>
-          <li data-i18n="svc1.b4">Scope &amp; risk assessment</li>
-          <li data-i18n="svc1.b5">Project financial planning</li>
-          <li data-i18n="svc1.b6">Ad hoc consultations &amp; peer review</li>
+          <li>End-to-end project management</li>
+          <li>GDD review &amp; docs management</li>
+          <li>Workflow audits &amp; pipeline optimisation</li>
+          <li>Scope &amp; risk assessment</li>
+          <li>Project financial planning</li>
+          <li>Ad hoc consultations &amp; peer review</li>
         </ul>
       </article>
 
@@ -2871,22 +2839,22 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svc2.h">Platform &amp; Release Management</h3>
+            <h3 class="service-title">Platform &amp; Release Management</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-3" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svc2.p">Clean releases on every platform you ship to. Certifications, stores, launch logistics, external QA, and localisation.</p>
+          <p class="service-intro">Clean releases on every platform you ship to. Certifications, stores, launch logistics, external QA, and localisation.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-3" hidden>
-          <li data-i18n="svc2.b1">Console certification (PS, Xbox, Switch)</li>
-          <li data-i18n="svc2.b2">Digital store setup &amp; submissions</li>
-          <li data-i18n="svc2.b3">Launch logistics: patches, brands, storefronts</li>
-          <li data-i18n="svc2.b4">External QA, localisation coordination &amp; TRC/TCR compliance</li>
-          <li data-i18n="svc2.b5">PC, Nintendo, PlayStation, Xbox developer platforms</li>
-          <li data-i18n="svc2.b6">Globally consistent release execution</li>
+          <li>Console certification (PS, Xbox, Switch)</li>
+          <li>Digital store setup &amp; submissions</li>
+          <li>Launch logistics: patches, brands, storefronts</li>
+          <li>External QA, localisation coordination &amp; TRC/TCR compliance</li>
+          <li>PC, Nintendo, PlayStation, Xbox developer platforms</li>
+          <li>Globally consistent release execution</li>
         </ul>
-        <p class="service-related" data-i18n="svc2.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a></p>
+        <p class="service-related"><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a></p>
       </article>
 
       <article class="service service--icon-lead" id="svc-publishing-support" data-reveal>
@@ -2895,21 +2863,21 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svc3.h">Strategic Publishing Support</h3>
+            <h3 class="service-title">Strategic Publishing Support</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-1" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svc3.p">Built my publishing chops at Raw Fury. I share the network and an honest read on how to reach the players. I do not become your publisher.</p>
+          <p class="service-intro">Built my publishing chops at Raw Fury. I share the network and an honest read on how to reach the players. I do not become your publisher.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-1" hidden>
-          <li data-i18n="svc3.b1">Realistic roadmap &amp; publishing strategy</li>
-          <li data-i18n="svc3.b2">Network of co-dev studios, porting houses, vendors</li>
-          <li data-i18n="svc3.b3">Pitch deck shaping and review for funding &amp; deals</li>
-          <li data-i18n="svc3.b4">Publisher demo prep and feedback</li>
-          <li data-i18n="svc3.b5">Deal milestone &amp; schedule sanity check</li>
+          <li>Realistic roadmap &amp; publishing strategy</li>
+          <li>Network of co-dev studios, porting houses, vendors</li>
+          <li>Pitch deck shaping and review for funding &amp; deals</li>
+          <li>Publisher demo prep and feedback</li>
+          <li>Deal milestone &amp; schedule sanity check</li>
         </ul>
-        <p class="service-related" data-i18n="svc3.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">What a publisher actually reads in your pitch deck</a></p>
+        <p class="service-related"><span class="related-label">Related:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">What a publisher actually reads in your pitch deck</a></p>
       </article>
 
       <article class="service service--icon-lead" id="svc-physical-editions" data-reveal>
@@ -2918,19 +2886,19 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svc4.h">Physical &amp; Boxed Editions</h3>
+            <h3 class="service-title">Physical &amp; Boxed Editions</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-4" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svc4.p">Boxed editions are their own world. Distributors, replication, rating boards, all on different timelines. I&rsquo;ve run that pipeline before, including Switch boxed and PS/Xbox discs.</p>
+          <p class="service-intro">Boxed editions are their own world. Distributors, replication, rating boards, all on different timelines. I&rsquo;ve run that pipeline before, including Switch boxed and PS/Xbox discs.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-4" hidden>
-          <li data-i18n="svc4.b1">Distributor relationships (US, EU, JP regions)</li>
-          <li data-i18n="svc4.b2">Replication &amp; manufacturing coordination</li>
-          <li data-i18n="svc4.b3">Physical SKU planning</li>
-          <li data-i18n="svc4.b4">ESRB / PEGI / USK / CERO age rating submissions</li>
-          <li data-i18n="svc4.b5">Production timeline &amp; disc/cart deadlines</li>
+          <li>Distributor relationships (US, EU, JP regions)</li>
+          <li>Replication &amp; manufacturing coordination</li>
+          <li>Physical SKU planning</li>
+          <li>ESRB / PEGI / USK / CERO age rating submissions</li>
+          <li>Production timeline &amp; disc/cart deadlines</li>
         </ul>
       </article>
     </div>
@@ -2942,19 +2910,19 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svcP2.h">Fractional Publishing Production Support</h3>
+            <h3 class="service-title">Fractional Publishing Production Support</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-5" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svcP2.p">A producer on your side of the table. Milestones, scope, risk and burn tracked across signed studios so surprises surface early, before Portfolio Review meetings.</p>
+          <p class="service-intro">A producer on your side of the table. Milestones, scope, risk and burn tracked across signed studios so surprises surface early, before Portfolio Review meetings.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-5" hidden>
-          <li data-i18n="svcP2.b1">Publisher-side line producing</li>
-          <li data-i18n="svcP2.b2">Milestone &amp; deliverable tracking</li>
-          <li data-i18n="svcP2.b3">Scope &amp; schedule risk monitoring</li>
-          <li data-i18n="svcP2.b4">Vendor coordination: port, QA, audio, loc</li>
-          <li data-i18n="svcP2.b5">Cert &amp; launch oversight across platforms</li>
+          <li>Publisher-side line producing</li>
+          <li>Milestone &amp; deliverable tracking</li>
+          <li>Scope &amp; schedule risk monitoring</li>
+          <li>Vendor coordination: port, QA, audio, loc</li>
+          <li>Cert &amp; launch oversight across platforms</li>
         </ul>
       </article>
 
@@ -2964,22 +2932,22 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svcP7.h">Release Management for Publishing</h3>
+            <h3 class="service-title">Release Management for Publishing</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-7" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svcP7.p">Clean releases on every platform, run from the publisher&rsquo;s side of the table. I know what a publisher needs from a launch: certification, stores, logistics, external QA and localisation kept on track across every studio you&rsquo;ve signed.</p>
+          <p class="service-intro">Clean releases on every platform, run from the publisher&rsquo;s side of the table. I know what a publisher needs from a launch: certification, stores, logistics, external QA and localisation kept on track across every studio you&rsquo;ve signed.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-7" hidden>
-          <li data-i18n="svcP7.b1">Console certification (PS, Xbox, Switch) across your signed titles</li>
-          <li data-i18n="svcP7.b2">Store setup &amp; submissions on your publisher accounts</li>
-          <li data-i18n="svcP7.b3">Launch logistics: patches, brands, storefronts</li>
-          <li data-i18n="svcP7.b4">External QA, localisation &amp; TRC/TCR compliance</li>
-          <li data-i18n="svcP7.b5">Release dates aligned with marketing beats &amp; platform holders</li>
-          <li data-i18n="svcP7.b6">Globally consistent release execution</li>
+          <li>Console certification (PS, Xbox, Switch) across your signed titles</li>
+          <li>Store setup &amp; submissions on your publisher accounts</li>
+          <li>Launch logistics: patches, brands, storefronts</li>
+          <li>External QA, localisation &amp; TRC/TCR compliance</li>
+          <li>Release dates aligned with marketing beats &amp; platform holders</li>
+          <li>Globally consistent release execution</li>
         </ul>
-        <p class="service-related" data-i18n="svcP7.related" data-i18n-html><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a></p>
+        <p class="service-related"><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a></p>
       </article>
 
       <article class="service service--icon-lead" data-reveal>
@@ -2988,20 +2956,20 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svcP5.h">Scouting &amp; Dev Relationships Help</h3>
+            <h3 class="service-title">Scouting &amp; Dev Relationships Help</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-8" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svcP5.p">Freelance scouting on the ground when your team can&rsquo;t be present. Direct dev conversations, plus feedback on trends and projects worth watching.</p>
+          <p class="service-intro">Freelance scouting on the ground when your team can&rsquo;t be present. Direct dev conversations, plus feedback on trends and projects worth watching.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-8" hidden>
-          <li data-i18n="svcP5.b1">Event coverage when your scouts are double-booked</li>
-          <li data-i18n="svcP5.b2">Booth walks, dev meetings &amp; pitch sessions on your behalf</li>
-          <li data-i18n="svcP5.b3">Trend reports across genres &amp; regions</li>
-          <li data-i18n="svcP5.b4">Studio feedback drawn from direct dev conversations</li>
-          <li data-i18n="svcP5.b5">Heads-up on interesting projects before they make rounds</li>
-          <li data-i18n="svcP5.b6">Festival &amp; showcase coverage (Gamescom, IAB, GDC)</li>
+          <li>Event coverage when your scouts are double-booked</li>
+          <li>Booth walks, dev meetings &amp; pitch sessions on your behalf</li>
+          <li>Trend reports across genres &amp; regions</li>
+          <li>Studio feedback drawn from direct dev conversations</li>
+          <li>Heads-up on interesting projects before they make rounds</li>
+          <li>Festival &amp; showcase coverage (Gamescom, IAB, GDC)</li>
         </ul>
       </article>
 
@@ -3011,20 +2979,20 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </div>
         <div class="service-head">
           <div class="service-header">
-            <h3 class="service-title" data-i18n="svcP4.h">Design Consultancy &amp; Mock Reviews</h3>
+            <h3 class="service-title">Design Consultancy &amp; Mock Reviews</h3>
             <button class="service-toggle" type="button" aria-expanded="false" aria-controls="service-bullets-6" aria-label="Show details">
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro" data-i18n="svcP4.p">I trained as a game designer, so I speak your designers&rsquo; language. A design read on signed and prospective titles, plus a press-style mock review of the current build: where the design holds, where it leaks players, and what reviewers will pick apart.</p>
+          <p class="service-intro">I trained as a game designer, so I speak your designers&rsquo; language. A design read on signed and prospective titles, plus a press-style mock review of the current build: where the design holds, where it leaks players, and what reviewers will pick apart.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-6" hidden>
-          <li data-i18n="svcP4.b1">Onboarding &amp; first-session effectiveness</li>
-          <li data-i18n="svcP4.b2">Core loop &amp; retention diagnostics</li>
-          <li data-i18n="svcP4.b3">Design risk identification &amp; mitigation</li>
-          <li data-i18n="svcP4.b4">Playtest design, observation &amp; analysis</li>
-          <li data-i18n="svcP4.b5">Press-style mock review on the current build</li>
-          <li data-i18n="svcP4.b6">Score range estimate &amp; how to lift it</li>
+          <li>Onboarding &amp; first-session effectiveness</li>
+          <li>Core loop &amp; retention diagnostics</li>
+          <li>Design risk identification &amp; mitigation</li>
+          <li>Playtest design, observation &amp; analysis</li>
+          <li>Press-style mock review on the current build</li>
+          <li>Score range estimate &amp; how to lift it</li>
         </ul>
       </article>
     </div>
@@ -3038,10 +3006,10 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <section class="section wrap" id="faq" aria-labelledby="faq-h">
     <div class="faq-head">
       <div>
-        <span class="kicker" data-reveal data-i18n="faq.kicker" data-i18n-html><span class="num">03</span> Common questions</span>
-        <h2 class="blur-reveal" id="faq-h" data-reveal data-i18n="faq.h">Questions, <em>before</em> we even meet.</h2>
+        <span class="kicker" data-reveal><span class="num">03</span> Common questions</span>
+        <h2 class="blur-reveal" id="faq-h" data-reveal>Questions, <em>before</em> we even meet.</h2>
       </div>
-      <p data-reveal data-i18n="faq.intro">
+      <p data-reveal>
         The things people ask me on a first call, answered upfront. If yours isn&rsquo;t here, send it through. I&rsquo;d rather we both know what we&rsquo;re agreeing to.
       </p>
     </div>
@@ -3049,68 +3017,68 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     <div class="faq-list" data-reveal>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question" data-i18n="faq1.q">What's your rate?</h3>
+          <h3 class="faq-question">What's your rate?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-1" aria-label="Show answer">
             <span class="toggle-icon">+</span>
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-1" hidden>
-          <p data-i18n="faq1.a" data-i18n-html>It depends on the format. For audits and project-based work, the rate is €300/day. For retainers (minimum 3 months), the rate is €3,500/month, a better deal for both sides when the engagement is ongoing. All rates include VAT and any applicable taxes on my end.<br /><br />These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number.</p>
+          <p>It depends on the format. For audits and project-based work, the rate is €300/day. For retainers (minimum 3 months), the rate is €3,500/month, a better deal for both sides when the engagement is ongoing. All rates include VAT and any applicable taxes on my end.<br /><br />These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question" data-i18n="faq2.q">Do you sign NDAs before a discovery call?</h3>
+          <h3 class="faq-question">Do you sign NDAs before a discovery call?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer">
             <span class="toggle-icon">+</span>
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-2" hidden>
-          <p data-i18n="faq2.a">Yes, if the project calls for it. For most first conversations, a verbal commitment to confidentiality is sufficient. Discretion is standard practice.</p>
+          <p>Yes, if the project calls for it. For most first conversations, a verbal commitment to confidentiality is sufficient. Discretion is standard practice.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question" data-i18n="faq3.q">Who keeps the IP, the documentation, the processes after you leave?</h3>
+          <h3 class="faq-question">Who keeps the IP, the documentation, the processes after you leave?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-3" aria-label="Show answer">
             <span class="toggle-icon">+</span>
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-3" hidden>
-          <p data-i18n="faq3.a">You do. Everything I produce (schedules, GDD reviews, pipelines, cert prep) stays with you. That's the point.</p>
+          <p>You do. Everything I produce (schedules, GDD reviews, pipelines, cert prep) stays with you. That's the point.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question" data-i18n="faq4.q">What&rsquo;s the smallest engagement you take?</h3>
+          <h3 class="faq-question">What&rsquo;s the smallest engagement you take?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-4" aria-label="Show answer">
             <span class="toggle-icon">+</span>
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-4" hidden>
-          <p data-i18n="faq4.a">A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
+          <p>A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question" data-i18n="faq5.q">Can you co-source vendors? Porting, external QA, audio, localisation?</h3>
+          <h3 class="faq-question">Can you co-source vendors? Porting, external QA, audio, localisation?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-5" aria-label="Show answer">
             <span class="toggle-icon">+</span>
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-5" hidden>
-          <p data-i18n="faq5.a">Yes. Ten years in the industry built a network of trusted studios, porting houses, QA partners, audio teams, and loc vendors. I introduce, brief, and coordinate them as part of the engagement. No referral fees on either side.</p>
+          <p>Yes. Ten years in the industry built a network of trusted studios, porting houses, QA partners, audio teams, and loc vendors. I introduce, brief, and coordinate them as part of the engagement. No referral fees on either side.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question" data-i18n="faq6.q">We&rsquo;re pre-funding or pre-publisher. Will you still talk?</h3>
+          <h3 class="faq-question">We&rsquo;re pre-funding or pre-publisher. Will you still talk?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-6" aria-label="Show answer">
             <span class="toggle-icon">+</span>
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-6" hidden>
-          <p data-i18n="faq6.a">Yes. The discovery call doesn&rsquo;t care what stage you&rsquo;re in. If pitch deck shaping or publisher demo prep is what you need, that&rsquo;s its own service. If you genuinely can&rsquo;t afford anything yet, I&rsquo;ll point you at the right reading or the right people, no strings.</p>
+          <p>Yes. The discovery call doesn&rsquo;t care what stage you&rsquo;re in. If pitch deck shaping or publisher demo prep is what you need, that&rsquo;s its own service. If you genuinely can&rsquo;t afford anything yet, I&rsquo;ll point you at the right reading or the right people, no strings.</p>
         </div>
       </div>
     </div>
@@ -3119,8 +3087,8 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <!-- Testimonials -->
   <section class="section wrap" id="testimonials" aria-labelledby="testimonials-h">
     <div class="testi-head">
-      <span class="kicker" data-reveal data-i18n="testimonials.kicker" data-i18n-html><span class="num">04</span> Testimonials</span>
-      <h2 class="blur-reveal" id="testimonials-h" data-reveal data-i18n="testimonials.h" data-i18n-html>What it&rsquo;s like to <em>work with me</em>.</h2>
+      <span class="kicker" data-reveal><span class="num">04</span> Testimonials</span>
+      <h2 class="blur-reveal" id="testimonials-h" data-reveal>What it&rsquo;s like to <em>work with me</em>.</h2>
     </div>
 
     <div class="testi-grid" data-reveal>
@@ -3138,46 +3106,46 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         <div class="testi-entries">
           <article class="testi-entry is-active" data-testi-entry="0">
             <h3 class="testi-name">Iain G.</h3>
-            <p class="testi-role" data-i18n="testi1.role">CEO of Goldpact Goblins</p>
-            <blockquote class="testi-quote" data-i18n="testi1.q" data-i18n-html>&ldquo;When I hit some issues I wasn&rsquo;t certain how to resolve, Spritz Consulting was the obvious choice to bring in.&rdquo;</blockquote>
+            <p class="testi-role">CEO of Goldpact Goblins</p>
+            <blockquote class="testi-quote">&ldquo;When I hit some issues I wasn&rsquo;t certain how to resolve, Spritz Consulting was the obvious choice to bring in.&rdquo;</blockquote>
           </article>
 
           <article class="testi-entry" data-testi-entry="1" aria-hidden="true" inert>
             <h3 class="testi-name">V&eacute;ronique R.</h3>
-            <p class="testi-role" data-i18n="testi2.role">Product Manager at Raw Fury</p>
-            <blockquote class="testi-quote" data-i18n="testi2.q" data-i18n-html>&ldquo;I was particularly impressed by Michele&rsquo;s ability to create contact with developers, understand their vision very quickly [...] and deliver an analysis on the best developer / publisher match for their game. This always seems to come easily to him, and it&rsquo;s far from a given in the video game industry.&rdquo;</blockquote>
+            <p class="testi-role">Product Manager at Raw Fury</p>
+            <blockquote class="testi-quote">&ldquo;I was particularly impressed by Michele&rsquo;s ability to create contact with developers, understand their vision very quickly [...] and deliver an analysis on the best developer / publisher match for their game. This always seems to come easily to him, and it&rsquo;s far from a given in the video game industry.&rdquo;</blockquote>
           </article>
 
           <article class="testi-entry" data-testi-entry="2" aria-hidden="true" inert>
             <h3 class="testi-name">Daria V.</h3>
-            <p class="testi-role" data-i18n="testi3.role">Senior Community Marketing Manager at Raw Fury</p>
-            <blockquote class="testi-quote" data-i18n="testi3.q" data-i18n-html>&ldquo;If you&rsquo;re considering Michele for your project, look no further [...] with him on board the project is sure to deliver its best.&rdquo;</blockquote>
+            <p class="testi-role">Senior Community Marketing Manager at Raw Fury</p>
+            <blockquote class="testi-quote">&ldquo;If you&rsquo;re considering Michele for your project, look no further [...] with him on board the project is sure to deliver its best.&rdquo;</blockquote>
           </article>
 
           <article class="testi-entry" data-testi-entry="3" aria-hidden="true" inert>
             <h3 class="testi-name">Johan T.</h3>
-            <p class="testi-role" data-i18n="testi4.role">Head of Scouting at Raw Fury</p>
-            <blockquote class="testi-quote" data-i18n="testi4.q" data-i18n-html>&ldquo;You put a problem in front of Michele and he will find not only a way to solve it, but to do it with a great attitude. Can&rsquo;t recommend him enough.&rdquo;</blockquote>
+            <p class="testi-role">Head of Scouting at Raw Fury</p>
+            <blockquote class="testi-quote">&ldquo;You put a problem in front of Michele and he will find not only a way to solve it, but to do it with a great attitude. Can&rsquo;t recommend him enough.&rdquo;</blockquote>
           </article>
 
           <article class="testi-entry" data-testi-entry="4" aria-hidden="true" inert>
             <h3 class="testi-name">Ilya Z.</h3>
-            <p class="testi-role" data-i18n="testi5.role">QA Director, ex-Rebellion</p>
-            <blockquote class="testi-quote" data-i18n="testi5.q" data-i18n-html>&ldquo;His dedication, positivity and most importantly can do attitude made him a key player within our teams! [...] This included leading all QA efforts on several successive projects on a completely new platform with its own unique pipeline and challenges.&rdquo;</blockquote>
+            <p class="testi-role">QA Director, ex-Rebellion</p>
+            <blockquote class="testi-quote">&ldquo;His dedication, positivity and most importantly can do attitude made him a key player within our teams! [...] This included leading all QA efforts on several successive projects on a completely new platform with its own unique pipeline and challenges.&rdquo;</blockquote>
           </article>
 
           <article class="testi-entry" data-testi-entry="5" aria-hidden="true" inert>
             <h3 class="testi-name">Michele B.</h3>
-            <p class="testi-role" data-i18n="testi6.role">Videogame Producer at Untold Games</p>
-            <blockquote class="testi-quote" data-i18n="testi6.q" data-i18n-html>&ldquo;As a Producer, he demonstrated great listening skills, and the ability to break down game dev challenges into practical solutions. He is a thoughtful professional who brings order to production with a good balance of pragmatism and empathy.&rdquo;</blockquote>
+            <p class="testi-role">Videogame Producer at Untold Games</p>
+            <blockquote class="testi-quote">&ldquo;As a Producer, he demonstrated great listening skills, and the ability to break down game dev challenges into practical solutions. He is a thoughtful professional who brings order to production with a good balance of pragmatism and empathy.&rdquo;</blockquote>
           </article>
         </div>
 
-        <div class="testi-controls" role="group" data-i18n-aria="testi.nav.aria" aria-label="Browse testimonials">
-          <button type="button" class="testi-btn" data-testi-prev data-i18n-aria="testi.prev.aria" aria-label="Previous testimonial">
+        <div class="testi-controls" role="group" aria-label="Browse testimonials">
+          <button type="button" class="testi-btn" data-testi-prev aria-label="Previous testimonial">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <button type="button" class="testi-btn" data-testi-next data-i18n-aria="testi.next.aria" aria-label="Next testimonial">
+          <button type="button" class="testi-btn" data-testi-next aria-label="Next testimonial">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
           </button>
         </div>
@@ -3214,21 +3182,21 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <section class="section contact" id="contact" aria-labelledby="contact-h">
     <div class="wrap contact-grid">
       <div class="contact-copy">
-        <span class="kicker" data-reveal data-i18n="contact.kicker" data-i18n-html><span class="num">05</span> Get in touch</span>
-        <h2 class="blur-reveal" id="contact-h" data-reveal data-i18n="contact.h">
+        <span class="kicker" data-reveal><span class="num">05</span> Get in touch</span>
+        <h2 class="blur-reveal" id="contact-h" data-reveal>
           Tell me what you&rsquo;re working on.
         </h2>
-        <p data-reveal data-i18n="contact.p">
+        <p data-reveal>
           Tell me about the game, the stage it&rsquo;s in, and what&rsquo;s getting in the way. If we fit, we&rsquo;ll set up a 30-minute discovery call. If we don&rsquo;t, I&rsquo;ll send you to someone who does.
         </p>
         <div class="contact-booking" data-reveal>
-          <p data-i18n="contact.booking.p">Prefer to talk? Book a free 30-minute discovery call.</p>
+          <p>Prefer to talk? Book a free 30-minute discovery call.</p>
           <a class="btn btn-ghost" href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="contact_section">
-            <span data-i18n="contact.booking.cta">Book a 30-minute call</span>
+            <span>Book a 30-minute call</span>
             <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
           </a>
         </div>
-        <p class="contact-note" data-reveal data-i18n="contact.note" data-i18n-html>
+        <p class="contact-note" data-reveal>
           Replies usually go out within a couple of working days. For anything time-critical, <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="contact_section">book a call directly</a> or say so in the message.
         </p>
       </div>
@@ -3241,23 +3209,23 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         <form class="form" id="contact-form" aria-describedby="form-gdpr">
           <div class="form-grid">
             <div class="field">
-              <label for="f-name" data-i18n="form.name.label">Your name</label>
-              <input id="f-name" name="name" autocomplete="name" data-i18n-placeholder="form.name.placeholder" placeholder="Your name" />
+              <label for="f-name">Your name</label>
+              <input id="f-name" name="name" autocomplete="name" placeholder="Your name" />
               <span class="err" data-err-for="f-name" aria-live="polite"></span>
             </div>
             <div class="field">
-              <label for="f-company" data-i18n="form.company.label">Company</label>
-              <input id="f-company" name="company" autocomplete="organization" data-i18n-placeholder="form.company.placeholder" placeholder="Your studio or company" />
+              <label for="f-company">Company</label>
+              <input id="f-company" name="company" autocomplete="organization" placeholder="Your studio or company" />
               <span class="err" data-err-for="f-company" aria-live="polite"></span>
             </div>
             <div class="field wide">
-              <label for="f-email" data-i18n="form.email.label" data-i18n-html>Email <span class="req" aria-hidden="true">*</span></label>
-              <input id="f-email" name="email" type="email" required autocomplete="email" data-i18n-placeholder="form.email.placeholder" placeholder="you@studio.com" />
+              <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com" />
               <span class="err" data-err-for="f-email" aria-live="polite"></span>
             </div>
             <div class="field wide">
-              <label for="f-msg" data-i18n="form.msg.label" data-i18n-html>Message <span class="req" aria-hidden="true">*</span></label>
-              <textarea id="f-msg" name="message" required rows="5" data-lenis-prevent data-i18n-placeholder="form.msg.placeholder" placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
+              <label for="f-msg">Message <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-msg" name="message" required rows="5" data-lenis-prevent placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
               <span class="err" data-err-for="f-msg" aria-live="polite"></span>
             </div>
             <div class="hp-field" aria-hidden="true">
@@ -3267,16 +3235,16 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           </div>
           <div class="form-foot">
             <button type="submit" class="btn btn-primary">
-              <span data-i18n="form.submit">Submit</span>
+              <span>Submit</span>
               <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
             </button>
           </div>
-          <p class="form-server-err" id="form-server-err" role="alert" data-i18n="form.err.server">Something went wrong sending your message. Your text is still here, try again in a moment.</p>
-          <p class="form-gdpr" id="form-gdpr" data-i18n="form.gdpr">Submissions are stored so I can reply and follow up. No marketing, no sharing.</p>
+          <p class="form-server-err" id="form-server-err" role="alert">Something went wrong sending your message. Your text is still here, try again in a moment.</p>
+          <p class="form-gdpr" id="form-gdpr">Submissions are stored so I can reply and follow up. No marketing, no sharing.</p>
         </form>
         <div class="form-done" id="form-done" role="status" aria-live="polite" data-visible="false">
-          <h3 data-i18n="form.done.h">Thanks, it&rsquo;s in. I&rsquo;ll get back to you within a couple of working days.</h3>
-          <p data-i18n="form.done.p" data-i18n-html>Want to skip the wait? <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="nav_success">Book a 30-minute call.</a></p>
+          <h3>Thanks, it&rsquo;s in. I&rsquo;ll get back to you within a couple of working days.</h3>
+          <p>Want to skip the wait? <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="nav_success">Book a 30-minute call.</a></p>
         </div>
       </div>
     </div>
@@ -3286,42 +3254,36 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 
 <footer class="site-footer">
   <div class="wrap footer-grid">
-    <h2 class="say-hi" data-i18n="footer.sayhi" data-i18n-html>Say <em>Ciao</em>, anytime.</h2>
+    <h2 class="say-hi">Say <em>Ciao</em>, anytime.</h2>
   </div>
   <div class="wrap footer-meta">
     <div class="links">
-      <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" data-i18n-aria="footer.linkedin.aria" aria-label="LinkedIn profile">
-        <span data-i18n="footer.linkedin">LinkedIn</span>
+      <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+        <span>LinkedIn</span>
         <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
       </a>
     </div>
     <div class="footer-settings">
-      <div class="theme-toggle" role="group" data-i18n-aria="theme.aria.group" aria-label="Colour theme">
-        <button type="button" data-theme-target="light" aria-pressed="false" data-i18n-aria="theme.aria.day" aria-label="Switch to light theme">
+      <div class="theme-toggle" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-target="light" aria-pressed="false" aria-label="Switch to light theme">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>
-          <span data-i18n="theme.day">Light</span>
+          <span>Light</span>
         </button>
-        <button type="button" data-theme-target="dark" aria-pressed="true" data-i18n-aria="theme.aria.night" aria-label="Switch to dark theme">
+        <button type="button" data-theme-target="dark" aria-pressed="true" aria-label="Switch to dark theme">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
-          <span data-i18n="theme.night">Dark</span>
+          <span>Dark</span>
         </button>
-      </div>
-      <div class="lang-toggle notranslate" translate="no" role="group" data-i18n-aria="lang.aria.group" aria-label="Language">
-        <button type="button" data-lang-target="en" aria-pressed="true" aria-label="English">EN</button>
-        <button type="button" data-lang-target="it" aria-pressed="false" aria-label="Italiano">IT</button>
-        <button type="button" data-lang-target="fr" aria-pressed="false" aria-label="Passer en français" hidden>FR</button>
-        <button type="button" data-lang-target="es" aria-pressed="false" aria-label="Cambiar a español" hidden>ES</button>
       </div>
     </div>
-    <span class="copy" data-i18n="footer.copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
+    <span class="copy">&copy; 2026 Spritz Consulting &middot; All rights reserved</span>
   </div>
 </footer>
 
 <script src="assets/vendor/lenis-1.3.26.min.js" defer></script>
 <script src="assets/js/smooth-scroll.js" defer></script>
-<script src="/assets/js/services-h.js?v=20261012j" defer></script>
-<script src="/assets/js/frame-fit.js?v=20261012j" defer></script>
-<script type="module" src="/assets/js/lanyard.js?v=20261010b"></script>
+<script src="/assets/js/services-h.js?v=20261012k" defer></script>
+<script src="/assets/js/frame-fit.js?v=20261012k" defer></script>
+<script type="module" src="/assets/js/lanyard.js?v=20261012"></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).
@@ -3351,692 +3313,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       const tgt = btn.dataset.themeTarget;
       try { localStorage.setItem(THEME_KEY, tgt); } catch (e) {}
       applyTheme(tgt);
-    });
-  });
-
-  // i18n — EN comes from DOM originals, IT comes from dict
-  const LANG_KEY = 'mdn-lang';
-  const ORIG = new WeakMap();
-  const IT = {
-    'nav.consultancy': 'La Mia Esperienza',
-    'nav.services': 'Servizi',
-    'nav.faq': 'FAQ',
-    'nav.testimonials': 'Testimonianze',
-    'nav.contact': 'Prenota una call',
-    'nav.resources': 'Risorse',
-    'menu.open': 'Apri menu',
-    'menu.close': 'Chiudi menu',
-
-    'theme.day': 'Chiaro',
-    'theme.night': 'Scuro',
-    'theme.aria.day': 'Passa al tema chiaro',
-    'theme.aria.night': 'Passa al tema scuro',
-    'theme.aria.group': 'Tema',
-    'lang.aria.group': 'Lingua',
-
-    'hero.kicker': 'Consulenza in Produzione & Publishing',
-    'hero.h1': 'Un <em>pizzico</em> di Produzione<br />&amp; Publishing per la games industry.',
-    'hero.intro': "Lavoro su tutta la catena produttiva: dal QA all'indie publishing, dalla certification alla platform delivery. Aiuto studi e publisher a muoversi più velocemente, shippare meglio e gestire tutto quello che sta tra un pitch promettente e un gioco finito.",
-    'cta.book': 'Prenota una call di 30 minuti',
-    'cta.services': 'Vedi i servizi',
-
-    'portrait.alt': 'Michele Di Nardo, con cappello e maglietta neri, su fondo giallo senape.',
-    'bubble.aria': 'Un saluto da Michele',
-    'bubble.title': '<span class="hola">Ciao! </span>Sono Michele',
-    'bubble.sub': '(o Miki, in breve)',
-
-    'meta.now.dt': 'Ora',
-    'meta.now.dd': 'Producer indipendente · Spritz Consulting',
-    'meta.also.dt': 'Inoltre',
-    'meta.also.dd': '10 anni in Raw Fury, Rebellion & 34BigThings',
-    'meta.recent.dt': 'Ultimo',
-    'meta.recent.dd': 'Servizi di publishing per Goldpact Goblins',
-    'meta.based.dt': 'Base',
-    'meta.based.dd': 'Europe · CET',
-    'meta.engage.dt': 'Formati',
-    'meta.engage.dd': 'Progetto · Retainer · Audit',
-    'meta.rate.dt': 'Tariffa',
-    'meta.rate.dd': '€300/giorno · €3.500/mese retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">vedi FAQ</a>)',
-    'meta.rate.onramp': 'Parti in piccolo: una <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="rate_line">call conoscitiva gratuita di 30 minuti</a>, oppure una consulenza di due ore a €120 per un sanity check su una decisione.',
-
-    'marquee.h': 'Studi e organizzazioni con cui ho lavorato',
-    'marquee.games.aria': 'Giochi su cui ho lavorato',
-
-    'about.kicker': '<span class="num">01</span> La Mia Esperienza',
-    'about.h': 'Lato studio, lato publisher, e tutto quello che c\'è in mezzo.',
-    'about.p1': 'QA in <strong>34BigThings</strong> e <strong>Rebellion</strong>. Production di nuovo in 34BigThings. Publishing Production in <strong>Raw Fury</strong>. Più di recente Producer in <strong>Untold Games</strong> su <em>City&nbsp;20</em>. Co-fondatore di Scuola Nash, giurato all&rsquo;Indie Arena Booth.',
-    'about.p2': 'Da AAA a studi di un solo sviluppatore. Dal QA al publishing. Ogni lato del tavolo.',
-    'about.photo.alt': 'Michele Di Nardo parla sul palco, seduto su una poltrona rossa, con microfono ad archetto e badge dell\'evento.',
-    'about.photo.caption': 'Forum Canary Islands Games, giugno 2024',
-
-    'stats.shipped.h': 'Giochi pubblicati',
-    'stats.shipped.p': 'Titoli usciti tra ruoli in QA, publishing e produzione, su PC e console.',
-    'stats.shipped.tag': 'Tra più studi',
-    'stats.positive.h': 'Overwhelmingly Positive',
-    'stats.positive.p': 'Ho pubblicato un titolo che tiene la fascia più alta di recensioni utente su Steam: il rating più raro sullo store.',
-    'stats.positive.tag': 'Valutazione Steam',
-    'stats.years.h': 'Anni nei videogiochi',
-    'stats.years.p': 'Da QA Tester a Publishing Producer a consulente indipendente. Ogni lato della pipeline.',
-    'stats.years.tag': 'Dal 2016',
-    'stats.platforms.h': 'Piattaforme di pubblicazione',
-    'stats.platforms.p': 'Certificazioni, submission e pipeline di release sui principali store e console.',
-    'stats.platforms.tag': 'PS · Xbox · PC · Switch · Stadia',
-    'stats.publishers.h': 'Publisher con cui ho lavorato',
-
-    'services.kicker': '<span class="num">02</span> Servizi',
-    'services.h': 'Come <em>porto valore</em>.',
-    'services.intro': 'Progetto per progetto, in retainer, o come audit mirato. Il formato di ingaggio si adatta. L\'output no. Due toolkit distinti, a seconda di che lato del tavolo sei.',
-    'services.cardsTitle': 'I servizi con cui posso aiutarti',
-
-    'svc1.h': 'Produzione & Project Operations',
-    'svc1.p': 'Le cose giuste al momento giusto. Schedule, documentazione e budget, dalla pre-produzione fino al gold master.',
-    'svc1.b1': 'Project management end-to-end',
-    'svc1.b2': 'GDD review & knowledge management',
-    'svc1.b3': 'Audit dei workflow & ottimizzazione delle pipeline',
-    'svc1.b4': 'Scope & risk assessment',
-    'svc1.b5': 'Pianificazione finanziaria di progetto',
-    'svc1.b6': 'Consulenze ad hoc & peer review',
-
-    'svc2.h': 'Platform & Release Management',
-    'svc2.p': 'Release pulite, ogni piattaforma, ogni mercato. Certification, store, logistica di lancio, QA esterno e localizzazione.',
-    'svc2.b1': 'Console certification (PS, Xbox, Switch)',
-    'svc2.b2': 'Setup digital store & submission',
-    'svc2.b3': 'Logistica di lancio: patch, brand, storefront',
-    'svc2.b4': 'QA esterno, coordinamento localizzazione & TRC/TCR compliance',
-    'svc2.b5': 'Piattaforme developer PC, Nintendo, PlayStation, Xbox',
-    'svc2.b6': 'Esecuzione di release coerenti a livello globale',
-
-    'svc3.h': 'Supporto Strategico al Publishing',
-    'svc3.p': 'Cresciuto nel publishing dentro Raw Fury. Condivido il network, l’esperienza, e una visione onesta su come raggiungere i giocatori, senza diventare il tuo publisher.',
-    'svc3.b1': 'Roadmap realistica & strategia di publishing',
-    'svc3.b2': 'Network di studi co-dev, porting house, vendor',
-    'svc3.b3': 'Pitch deck shaping e review per fundraising & deal',
-    'svc3.b4': 'Publisher demo prep & feedback',
-    'svc3.b5': 'Deal milestone & schedule sanity check',
-
-    'svc4.h': 'Physical & Edizioni Fisiche',
-    'svc4.p': 'Le edizioni fisiche sono un mondo a parte. Distributori, replication, rating board, tutti con tempi diversi. Ho gestito quella pipeline prima, incluse boxed Switch e disc PS/Xbox.',
-    'svc4.b1': 'Relazioni con distributori (US, EU, JP)',
-    'svc4.b2': 'Coordinamento replication & manufacturing',
-    'svc4.b3': 'Pianificazione SKU fisici',
-    'svc4.b4': 'Submission rating ESRB / PEGI / USK / CERO',
-    'svc4.b5': 'Timeline di produzione & deadline disc/cart',
-
-    'svcP2.h': 'Fractional Publishing Production Support',
-    'svcP2.p': 'Un producer dal tuo lato del tavolo. Milestone, scope e rischi tracciati attraverso gli studio firmati, così che le sorprese emergano presto, non al Portfolio Review.',
-    'svcP2.b1': 'Line producing publisher-side',
-    'svcP2.b2': 'Tracking di milestone & deliverable',
-    'svcP2.b3': 'Monitoraggio rischi su scope & schedule',
-    'svcP2.b4': 'Coordinamento vendor: port, QA, audio, loc',
-    'svcP2.b5': 'Cert & launch oversight cross-platform',
-
-    'svcP7.h': 'Release Management per il Publishing',
-    'svcP7.p': 'Release pulite su ogni piattaforma, gestite dal lato del publisher. So di cosa ha bisogno un publisher al lancio: certification, store, logistica, QA esterno e localizzazione sotto controllo su ogni studio che hai firmato.',
-    'svcP7.b1': 'Console certification (PS, Xbox, Switch) sui tuoi titoli firmati',
-    'svcP7.b2': 'Setup store & submission sui tuoi account publisher',
-    'svcP7.b3': 'Logistica di lancio: patch, brand, storefront',
-    'svcP7.b4': 'QA esterno, localizzazione & TRC/TCR compliance',
-    'svcP7.b5': 'Date di release allineate a marketing & platform holder',
-    'svcP7.b6': 'Esecuzione di release coerenti a livello globale',
-
-    'svcP4.h': 'Consulenza di Design & Mock Review',
-    'svcP4.p': 'Ho studiato come game designer, quindi parlo la stessa lingua dei tuoi designer. Una lettura di design su titoli firmati o prospect, più una mock review press-style della build attuale: dove il design tiene, dove perde giocatori, e cosa i critici demoliranno.',
-    'svcP4.b1': 'Onboarding & first-session effectiveness',
-    'svcP4.b2': 'Core loop & retention diagnostics',
-    'svcP4.b3': 'Design risk identification & mitigation',
-    'svcP4.b4': 'Playtest design, observation & analysis',
-    'svcP4.b5': 'Mock review press-style sulla build attuale',
-    'svcP4.b6': 'Stima dello score range & come alzarlo',
-
-    'svcP5.h': 'Scouting & Dev Relations',
-    'svcP5.p': 'Scouting freelance sul campo quando il tuo team non può essere presente. Conversazioni dirette con i dev, più feedback su trend e progetti che vale la pena seguire.',
-    'svcP5.b1': 'Coverage di eventi quando i tuoi scout sono impegnati',
-    'svcP5.b2': 'Booth walk, dev meeting & pitch session per conto tuo',
-    'svcP5.b3': 'Trend report cross-genre & cross-region',
-    'svcP5.b4': 'Feedback sugli studio da conversazioni dirette',
-    'svcP5.b5': 'Anticipazioni su progetti interessanti prima che girino',
-    'svcP5.b6': 'Coverage di festival & showcase (Gamescom, IAB, GDC)',
-
-    'router.intro': 'Ti suona familiare? Vai dritto al servizio giusto.',
-    'router.q1': 'Siamo a tre mesi dalla cert console e nessuno nel team ne ha mai fatta una.',
-    'router.s1': 'Platform & Release Management',
-    'router.q2': 'Abbiamo una call con un publisher in arrivo e un pitch deck di cui non ci fidiamo.',
-    'router.s2': 'Strategic Publishing Support',
-    'router.q3': 'Ci siamo impegnati per un’edizione fisica e la timeline non torna.',
-    'router.s3': 'Physical & Boxed Editions',
-    'router.q4': 'Abbiamo firmato e le milestone stanno slittando.',
-    'router.s4': 'Fractional Publishing Production Support',
-
-    'svc2.related': '<span class="related-label">Correlati:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a>',
-    'svcP7.related': '<span class="related-label">Correlati:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner">Simship Work-Back Schedule Planner</a>',
-    'svc3.related': '<span class="related-label">Correlati:</span> <a href="/resources/publisher-pitch-deck-template.html" data-resource-link="pitch_deck_template">Publisher Pitch Deck Template</a> <a href="/resources/tools/publishing-break-even-calculator.html" data-resource-link="break_even_calculator">Publishing Break-Even Calculator</a> <a href="/resources/publisher-pitch-risks.html" data-resource-link="pitch_deck_article">Cosa legge davvero un publisher nel tuo pitch deck</a>',
-
-    'faq.kicker': '<span class="num">03</span> Domande frequenti',
-    'faq.h': 'Domande, <em>prima</em> ancora di vederci.',
-    'faq.intro': 'Le cose che mi chiedono al primo contatto, con risposte già pronte. Se la tua non è qui, scrivila pure: meglio per entrambi sapere su cosa ci stiamo accordando.',
-
-    'faq1.q': 'Qual è il tuo rate?',
-    'faq1.a': "Dipende dal formato. Per audit e lavori a progetto, il rate è €300/giorno. Per retainer (minimo 3 mesi), il rate è €3.500/mese, più conveniente per entrambi quando l'ingaggio è continuativo. Tutte le tariffe sono comprensive di IVA e di eventuali tasse a mio carico.<br /><br />Questi sono i miei termini standard. Se la tua situazione è diversa, parliamone in call. Preferisco trovare un formato che funzioni piuttosto che perdere un buon progetto per una questione di numeri.",
-    'faq2.q': 'Firmi NDA prima della call conoscitiva?',
-    'faq2.a': 'Sì, se il progetto lo richiede. Per la maggior parte delle prime conversazioni, un impegno verbale alla riservatezza è sufficiente. La discrezione è prassi standard.',
-    'faq3.q': 'Chi tiene IP, documentazione e processi quando te ne vai?',
-    'faq3.a': 'Tu. Tutto quello che produco (schedule, GDD review, pipeline, cert prep) rimane tuo. È questo il senso dell\'ingaggio.',
-    'faq4.q': 'Qual è l’ingaggio più piccolo che prendi?',
-    'faq4.a': "Una consulenza a pagamento di due ore a €120 se hai bisogno di un parere su una decisione specifica. Al di sotto, la discovery call è gratuita: mezz'ora, senza pitch.",
-    'faq5.q': 'Puoi co-sourciare fornitori? Porting, QA esterno, audio, localizzazione?',
-    'faq5.a': 'Sì. Dieci anni nel settore hanno costruito una rete di studi, porting house, partner QA, team audio e fornitori di localizzazione fidati. Faccio introduzioni, brief e coordinamento come parte dell’ingaggio. Niente referral fee da nessuna parte.',
-    'faq6.q': 'Siamo pre-funding o pre-publisher. Parli con noi lo stesso?',
-    'faq6.a': 'Sì. La call conoscitiva non guarda in che stadio siete. Se vi serve costruzione del pitch deck o publisher demo prep, è un servizio a sé. Se davvero non potete permettervi nulla, vi indirizzo alle letture giuste o alle persone giuste, senza vincoli.',
-
-    /* Testimonials: le citazioni restano volutamente in inglese (testi1.q..testi6.q
-       non hanno voce nel dizionario, quindi resta l'originale del DOM) */
-    'testimonials.kicker': '<span class="num">04</span> Testimonianze',
-    'testimonials.h': 'Cosa significa <em>lavorare con me</em>.',
-    'testi1.role': 'CEO di Goldpact Goblins',
-    'testi2.role': 'Product Manager presso Raw Fury',
-    'testi3.role': 'Senior Community Marketing Manager presso Raw Fury',
-    'testi4.role': 'Head of Scouting presso Raw Fury',
-    'testi5.role': 'QA Director, ex-Rebellion',
-    'testi6.role': 'Videogame Producer presso Untold Games',
-    'testi.nav.aria': 'Sfoglia le testimonianze',
-    'testi.prev.aria': 'Testimonianza precedente',
-    'testi.next.aria': 'Testimonianza successiva',
-
-    'contact.kicker': '<span class="num">05</span> Mettiti in contatto',
-    'contact.h': 'Dimmi a cosa stai lavorando.',
-    'contact.p': 'Raccontami il gioco, dove sta, e cosa lo sta frenando. Se siamo compatibili, fissiamo una call conoscitiva di 30 minuti. Altrimenti, ti indirizzo a qualcuno più adatto.',
-    'contact.note': 'Di norma rispondo entro un paio di giorni lavorativi. Per qualcosa di urgente, <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="contact_section">prenota direttamente una call</a> o segnalalo nel messaggio.',
-    'contact.booking.p': 'Preferisci parlarne a voce? Prenota una call conoscitiva gratuita di 30 minuti.',
-    'contact.booking.cta': 'Prenota una call di 30 minuti',
-
-    'form.name.label': 'Il tuo nome',
-    'form.name.placeholder': 'Il tuo nome',
-    'form.company.label': 'Azienda',
-    'form.company.placeholder': 'Il tuo studio o azienda',
-    'form.email.label': 'Email <span class="req" aria-hidden="true">*</span>',
-    'form.email.placeholder': 'tu@studio.com',
-    'form.msg.label': 'Messaggio <span class="req" aria-hidden="true">*</span>',
-    'form.msg.placeholder': 'Su cosa stai lavorando, dove sei bloccato, quando ti serve shippato.',
-    'form.submit': 'Invia',
-    'form.submitting': 'Invio…',
-    'form.err.email.required': 'L’email è obbligatoria.',
-    'form.err.email.invalid': 'Email non valida.',
-    'form.err.msg': 'Scrivi un breve messaggio, per favore.',
-    'form.err.server': 'Qualcosa è andato storto nell’invio. Il testo è ancora qui, riprova tra un momento.',
-    'form.gdpr': 'I messaggi vengono conservati per poterti rispondere e ricontattare. Niente marketing, nessuna condivisione.',
-    'form.done.h': 'Fatto, è arrivato. Ti rispondo entro un paio di giorni lavorativi.',
-    'form.done.p': 'Vuoi saltare l’attesa? <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="nav_success">Prenota una call di 30 minuti.</a>',
-
-    'footer.sayhi': 'Fatti sentire, <em>quando vuoi.</em>',
-    'footer.email': 'Email',
-    'footer.email.aria': 'Scrivi a Michele',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'Profilo LinkedIn',
-    'footer.copy': '© 2026 Spritz Consulting · Tutti i diritti riservati',
-  };
-  const FR = {
-    // Navigation
-    'nav.consultancy': 'Mon Parcours',
-    'nav.services': 'Services',
-    'nav.faq': 'FAQ',
-    'nav.testimonials': 'Témoignages',
-    'nav.contact': 'Contact',
-    'nav.resources': 'Ressources',
-    'menu.open': 'Ouvrir le menu',
-    'menu.close': 'Fermer le menu',
-    'theme.day': 'Clair',
-    'theme.night': 'Sombre',
-    'theme.aria.day': 'Passer au thème clair',
-    'theme.aria.night': 'Passer au thème sombre',
-    'theme.aria.group': 'Thème',
-    'lang.aria.group': 'Langue',
-
-    // Hero
-    'hero.kicker': 'Conseil en Production & Publishing',
-    'hero.h1': 'Un <em>Shot</em> de Production<br />& Publishing pour la games industry.',
-    'hero.intro': 'J\'interviens sur toute la chaîne de production : du QA au publishing, en passant par la certification et le release management. J\'aide les studios et les publishers à aller plus vite, à sortir des jeux de qualité, et à gérer tout ce qui peut intervenir entre un pitch prometteur et un jeu fini.',
-    'cta.book': 'Prendre rendez-vous',
-    'cta.services': 'Voir les services',
-
-    // Portrait & bubble
-    'portrait.alt': 'Michele Di Nardo, casquette et t-shirt noirs, sur fond jaune moutarde.',
-    'bubble.aria': 'Un salut de Michele',
-    'bubble.title': '<span class="hola">Ciao ! </span>Je suis Michele',
-    'bubble.sub': '(ou Miki, pour les intimes)',
-
-    // Hero card meta
-    'meta.now.dt': 'Aujourd\'hui',
-    'meta.now.dd': 'Producer indépendant · Spritz Consulting',
-    'meta.also.dt': 'Avant',
-    'meta.also.dd': '10 ans entre Raw Fury, Rebellion & 34BigThings',
-    'meta.recent.dt': 'Récemment',
-    'meta.recent.dd': 'Producer sur <em>City 20</em> (Untold Games)',
-    'meta.based.dt': 'Localisation',
-    'meta.based.dd': 'Europe · CET',
-    'meta.engage.dt': 'Formats',
-    'meta.engage.dd': 'Projet · Retainer · Audit',
-    'meta.rate.dt': 'Tarif',
-    'meta.rate.dd': '€300/jour · €3 500/mois en retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">voir FAQ</a>)',
-
-    // Marquee
-    'marquee.h': 'Studios, organisations et jeux sur lesquels j\'ai travaillé',
-
-    // About
-    'about.kicker': '<span class="num">01</span> Mon Parcours',
-    'about.h': 'Studio, publisher, et tout ce qu\'il y a entre les deux.',
-    'about.p1': 'QA chez <strong>34BigThings</strong> et <strong>Rebellion</strong>. Production de retour chez <strong>34BigThings</strong>. Publishing Production chez <strong>Raw Fury</strong>. Puis Producer chez <strong>Untold Games</strong> sur <em>City 20</em>. Aujourd\'hui consultant indépendant, co-fondateur de Scuola Nash et juré à l\'Indie Arena Booth.',
-    'about.p2': 'Du AAA aux équipes d\'un seul développeur. Du QA au publishing. Tous les angles.',
-
-    // Stats
-    'stats.shipped.h': 'Jeux sortis',
-    'stats.shipped.p': 'Titres publiés en QA, publishing et production, sur PC et consoles.',
-    'stats.shipped.tag': 'Sur plusieurs studios',
-    'stats.positive.h': 'Titre Overwhelmingly Positive',
-    'stats.positive.p': 'Un titre sorti avec la note la plus haute des avis utilisateurs sur Steam — le rating le plus rare du store.',
-    'stats.positive.tag': 'Note Steam',
-    'stats.years.h': 'Ans dans le jeu vidéo',
-    'stats.years.p': 'De QA Tester à Publishing Producer à consultant indépendant. Chaque maillon de la chaîne.',
-    'stats.years.tag': 'Depuis 2016',
-    'stats.platforms.h': 'Plateformes de sortie',
-    'stats.platforms.p': 'Certifications, submissions et pipelines de release sur les principaux stores et consoles.',
-    'stats.platforms.tag': 'PS · Xbox · PC · Switch · Stadia',
-    'stats.publishers.h': 'Publishers avec qui j\'ai travaillé',
-
-    // Services
-    'services.kicker': '<span class="num">02</span> Services',
-    'services.h': 'Comment <em>j\'interviens</em>.',
-    'services.intro': 'Projet ponctuel, retainer ou audit ciblé — la forme s\'adapte à votre situation, pas le niveau d\'exigence. Deux offres distinctes selon que vous êtes studio ou publisher.',
-    'services.cardsTitle': 'Les services avec lesquels je peux vous aider',
-
-    // Services — Developers tab
-    'svc1.h': 'Production & Project Operations',
-    'svc1.p': 'Ce qu\'il faut, quand il le faut. Schedules, documentation et budgets, de la pré-production jusqu\'au gold master.',
-    'svc1.b1': 'Project management end-to-end',
-    'svc1.b2': 'GDD review & gestion documentaire',
-    'svc1.b3': 'Workflow audits & optimisation des pipelines',
-    'svc1.b4': 'Scope & risk assessment',
-    'svc1.b5': 'Planification financière de projet',
-    'svc1.b6': 'Consultations ad hoc & peer review',
-
-    'svc2.h': 'Platform & Release Management',
-    'svc2.p': 'Des sorties sans accroc, sur chaque plateforme et chaque marché. Certifications, stores, logistique de lancement, QA externe et localisation.',
-    'svc2.b1': 'Console certification (PS, Xbox, Switch)',
-    'svc2.b2': 'Setup des digital stores & submissions',
-    'svc2.b3': 'Logistique de lancement : patches, brands, storefronts',
-    'svc2.b4': 'QA externe, coordination localisation & conformité TRC/TCR',
-    'svc2.b5': 'Plateformes développeur PC, Nintendo, PlayStation, Xbox',
-    'svc2.b6': 'Cohérence des releases à l\'échelle mondiale',
-
-    'svc3.h': 'Accompagnement Stratégique Publishing',
-    'svc3.p': 'Mon expérience publishing vient de chez Raw Fury. Je mets à disposition ce réseau, ce vécu, et un regard sans détour sur la meilleure façon d\'atteindre les joueurs — sans endosser le rôle de votre publisher.',
-    'svc3.b1': 'Roadmap réaliste & stratégie de publishing',
-    'svc3.b2': 'Réseau de studios co-dev, porting houses, vendors',
-    'svc3.b3': 'Pitch deck shaping & review pour fundraising et deals',
-    'svc3.b4': 'Publisher demo prep & feedback',
-    'svc3.b5': 'Deal milestone & schedule sanity check',
-
-    'svc4.h': 'Éditions Physiques & Boîtes',
-    'svc4.p': 'Un univers à part. Distributeurs, replication, organismes de classification — chacun avec son propre calendrier. J\'ai déjà piloté ce pipeline, Switch boxed et disques PS/Xbox inclus.',
-    'svc4.b1': 'Relations distributeurs (US, EU, JP)',
-    'svc4.b2': 'Coordination replication & manufacturing',
-    'svc4.b3': 'Planification des SKU physiques',
-    'svc4.b4': 'Submissions ESRB / PEGI / USK / CERO',
-    'svc4.b5': 'Timeline de production & deadlines disc/cart',
-
-    // Services — Publishers tab
-    'svcP2.h': 'Support Production Publishing à Temps Partagé',
-    'svcP2.p': 'Un producer de votre côté. Milestones, scope et risques suivis sur les studios signés — pour que les problèmes remontent avant le Portfolio Review, pas pendant.',
-    'svcP2.b1': 'Line producing côté publisher',
-    'svcP2.b2': 'Suivi des milestones & deliverables',
-    'svcP2.b3': 'Surveillance des risques scope & schedule',
-    'svcP2.b4': 'Coordination vendors : port, QA, audio, loc',
-    'svcP2.b5': 'Cert & launch oversight cross-plateforme',
-
-    'svcP7.h': 'Release Management pour le Publishing',
-    'svcP7.p': 'Des sorties sans accroc sur chaque plateforme, pilotées côté publisher. Je sais ce dont un publisher a besoin au lancement : certifications, stores, logistique, QA externe et localisation tenus sur chaque studio signé.',
-    'svcP7.b1': 'Console certification (PS, Xbox, Switch) sur vos titres signés',
-    'svcP7.b2': 'Setup des stores & submissions sur vos comptes publisher',
-    'svcP7.b3': 'Logistique de lancement : patches, brands, storefronts',
-    'svcP7.b4': 'QA externe, localisation & conformité TRC/TCR',
-    'svcP7.b5': 'Dates de sortie alignées sur le marketing & les platform holders',
-    'svcP7.b6': 'Cohérence des releases à l\'échelle mondiale',
-
-    'svcP4.h': 'Conseil en Design & Mock Reviews',
-    'svcP4.p': 'J\'ai été formé comme game designer : je parle la même langue que vos designers. Une analyse design sur vos titres signés ou en prospection, plus une mock review façon presse de la build actuelle : ce qui tient, ce qui fait perdre des joueurs, et ce que la critique relèvera.',
-    'svcP4.b1': 'Onboarding & efficacité de la première session',
-    'svcP4.b2': 'Core loop & diagnostics de rétention',
-    'svcP4.b3': 'Identification & mitigation des risques design',
-    'svcP4.b4': 'Playtest design, observation & analyse',
-    'svcP4.b5': 'Mock review façon presse sur la build actuelle',
-    'svcP4.b6': 'Fourchette de score estimée & pistes pour la rehausser',
-
-    'svcP5.h': 'Scouting & Relations Développeurs',
-    'svcP5.p': 'Présence terrain quand votre équipe n\'est pas disponible. Échanges directs avec les devs, retours sur les tendances et les projets qui méritent attention.',
-    'svcP5.b1': 'Couverture d\'événements quand vos scouts sont pris',
-    'svcP5.b2': 'Booth walks, dev meetings & pitch sessions en votre nom',
-    'svcP5.b3': 'Trend reports cross-genres & cross-régions',
-    'svcP5.b4': 'Retours studios issus d\'échanges directs avec les devs',
-    'svcP5.b5': 'Signalement de projets avant qu\'ils ne circulent',
-    'svcP5.b6': 'Couverture festivals & showcases (Gamescom, IAB, GDC)',
-
-    // FAQ
-    'faq.kicker': '<span class="num">03</span> Questions fréquentes',
-    'faq.h': 'Des questions, <em>avant même</em> qu\'on se parle.',
-    'faq.intro': 'Ce qu\'on me demande dès le premier contact, avec les réponses. Si la vôtre n\'y figure pas, posez-la — mieux vaut s\'entendre sur les bases avant de commencer.',
-
-    'faq1.q': 'Quels sont vos tarifs ?',
-    'faq1.a': 'Cela dépend du format. Pour les audits et les projets ponctuels, le tarif est de 250 € par jour. En retainer sur une durée minimale de trois mois, il passe à 3 500 € par mois, une formule plus avantageuse sur la durée. Tous les tarifs s\'entendent TVA et charges comprises.<br /><br />Ce sont mes conditions habituelles : si votre situation est particulière, on en parle lors de l\'appel. Je préfère trouver une formule qui convient plutôt que de passer à côté d\'un bon projet.',
-
-    'faq2.q': 'Signez-vous un NDA avant l\'appel de découverte ?',
-    'faq2.a': 'Volontiers, si le projet le justifie. Pour la plupart des premiers échanges, une confirmation verbale de confidentialité suffit amplement. Je suis dans le secteur depuis assez longtemps pour savoir ce qui se partage et ce qui ne se partage pas.',
-
-    'faq3.q': 'À qui appartiennent l\'IP, la documentation et les processus après votre départ ?',
-    'faq3.a': 'À vous. Tout ce que je produis — schedules, GDD reviews, pipelines, cert prep — reste entre vos mains. C\'est précisément le but : que la valeur demeure chez vous, pas chez moi.',
-
-    'faq4.q': 'Quelle est la plus petite mission que vous acceptez ?',
-    'faq4.a': 'Une consultation de deux heures à 120 € pour un avis sur une décision précise. En dessous, l\'appel de découverte est gratuit : trente minutes, sans argumentaire commercial.',
-
-    'faq5.q': 'Pouvez-vous coordonner des prestataires externes ? Porting, QA, audio, localisation ?',
-    'faq5.a': 'Oui. Dix ans dans le secteur, c\'est un réseau de studios, porting houses, partenaires QA, équipes audio et prestataires de localisation sur lesquels je peux compter. Je les présente, les briefe et les coordonne dans le cadre de la mission. Sans commission d\'aucun côté.',
-
-    'faq6.q': 'Vous n\'avez pas encore de financement ni de publisher. Vous nous recevrez quand même ?',
-    'faq6.a': 'Oui. L\'appel de découverte ne tient pas compte du stade où vous en êtes. Si vous avez besoin de structurer un pitch deck ou de préparer une démo publisher, c\'est une prestation à part entière. Si vous ne pouvez encore rien vous permettre, je vous oriente vers les bonnes ressources ou les bonnes personnes — sans contrepartie.',
-
-    'faq.note': 'Ce sont mes conditions habituelles. Si votre situation est particulière, on en parle lors de l\'appel — je préfère trouver une formule qui convient plutôt que de passer à côté d\'un bon projet.',
-
-    // Testimonials: les citations restent volontairement en anglais (testi1.q..testi6.q
-    // absents du dictionnaire, l'original du DOM est conservé)
-    'testimonials.kicker': '<span class="num">04</span> Témoignages',
-    'testimonials.h': 'Ce que ça fait de <em>travailler avec moi</em>.',
-    'testi1.role': 'CEO de Goldpact Goblins',
-    'testi2.role': 'Product Manager chez Raw Fury',
-    'testi3.role': 'Senior Community Marketing Manager chez Raw Fury',
-    'testi4.role': 'Head of Scouting chez Raw Fury',
-    'testi5.role': 'QA Director, ex-Rebellion',
-    'testi6.role': 'Videogame Producer chez Untold Games',
-    'testi.nav.aria': 'Parcourir les témoignages',
-    'testi.prev.aria': 'Témoignage précédent',
-    'testi.next.aria': 'Témoignage suivant',
-
-    // Contact
-    'contact.kicker': '<span class="num">05</span> Parlons-en',
-    'contact.h': 'Dites-moi sur quoi vous travaillez.',
-    'contact.p': 'Parlez-moi du jeu, de son avancement, et de ce qui coince. Si le profil correspond, on fixe un appel de trente minutes. Sinon, je vous oriente vers quelqu\'un de plus adapté.',
-    'contact.note': 'P.S. Je réponds en général sous un à trois jours ouvrés. Sans nouvelles passé ce délai, relancez-moi sans hésiter.',
-
-    // Form
-    'form.name.label': 'Votre nom <span class="req" aria-hidden="true">*</span>',
-    'form.name.placeholder': 'Votre nom',
-    'form.company.label': 'Studio ou société',
-    'form.company.placeholder': 'Votre studio ou société',
-    'form.email.label': 'Email <span class="req" aria-hidden="true">*</span>',
-    'form.email.placeholder': 'vous@studio.com',
-    'form.msg.label': 'Message <span class="req" aria-hidden="true">*</span>',
-    'form.msg.placeholder': 'Sur quoi vous travaillez, où vous êtes bloqués, pour quand.',
-    'form.status': 'Ouvre votre messagerie · aucune donnée enregistrée.',
-    'form.success': 'Message prêt. Vérifiez votre messagerie.',
-    'form.submit': 'Envoyer',
-    'form.submitting': 'Ouverture de la messagerie…',
-    'form.err.name': 'Merci d\'indiquer votre nom.',
-    'form.err.email.required': 'L\'adresse email est requise.',
-    'form.err.email.invalid': 'Cette adresse email ne semble pas valide.',
-    'form.err.msg': 'Un message, même court, s\'il vous plaît.',
-    'form.subject': 'Demande de mission :',
-
-    // Footer
-    'footer.sayhi': 'Écrivez-nous, <em>quand vous voulez.</em>',
-    'footer.email': 'Email',
-    'footer.email.aria': 'Écrire à Michele',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'LinkedIn Spritz Consulting',
-    'footer.copy': '© 2026 Spritz Consulting · Tous droits réservés',
-  };
-  const ES = {
-    'nav.consultancy': 'Mi Trayectoria',
-    'nav.services': 'Servicios',
-    'nav.faq': 'FAQ',
-    'nav.testimonials': 'Testimonios',
-    'nav.contact': 'Contacto',
-    'nav.resources': 'Recursos',
-    'menu.open': 'Abrir menú',
-    'menu.close': 'Cerrar menú',
-    'theme.day': 'Claro',
-    'theme.night': 'Oscuro',
-    'theme.aria.day': 'Cambiar a tema claro',
-    'theme.aria.night': 'Cambiar a tema oscuro',
-    'theme.aria.group': 'Tema',
-    'lang.aria.group': 'Idioma',
-    'hero.kicker': 'Consultoría en Producción & Publishing',
-    'hero.h1': 'Un <em>Shot</em> de Production<br />& Publishing para la games industry.',
-    'hero.intro': 'Trabajo en toda la cadena de producción: del QA al indie publishing, de la certification a la entrega en store. Ayudo a estudios y publishers a moverse más rápido, a lanzar juegos sin errores, y a gestionar todo lo que hay entre un pitch prometedor y un juego terminado.',
-    'cta.book': 'Reservar una llamada de descubrimiento',
-    'cta.services': 'Ver servicios',
-    'portrait.alt': 'Michele Di Nardo, con gorra y camiseta negras, sobre fondo amarillo mostaza.',
-    'bubble.aria': 'Un saludo de Michele',
-    'bubble.title': '<span class="hola">Ciao! </span>Soy Michele',
-    'bubble.sub': '(o Miki, para abreviar)',
-    'meta.now.dt': 'Ahora',
-    'meta.now.dd': 'Producer independiente · Spritz Consulting',
-    'meta.also.dt': 'También',
-    'meta.also.dd': '10 años entre Raw Fury, Rebellion & 34BigThings',
-    'meta.recent.dt': 'Reciente',
-    'meta.recent.dd': 'Producer en <em>City 20</em> (Untold Games)',
-    'meta.based.dt': 'Base',
-    'meta.based.dd': 'Europa · CET',
-    'meta.engage.dt': 'Formatos',
-    'meta.engage.dd': 'Proyecto · Retainer · Audit',
-    'meta.rate.dt': 'Tarifa',
-    'meta.rate.dd': '€300/día · €3.500/mes retainer (<a href="#faq-answer-1" class="rate-faq-link" aria-label="See rate FAQ">ver FAQ</a>)',
-    'marquee.h': 'Estudios, organizaciones y juegos con los que he trabajado',
-    'about.kicker': '<span class="num">01</span> Mi Trayectoria',
-    'about.h': 'Lado estudio, lado publisher, y todo lo que hay en medio.',
-    'about.p1': 'QA en <strong>34BigThings</strong> y <strong>Rebellion</strong>. Producción de vuelta en <strong>34BigThings</strong>. Publishing Production en <strong>Raw Fury</strong>. Más recientemente Producer en <strong>Untold Games</strong> en <em>City 20</em>. Hoy Producer independiente, co-fundador de Scuola Nash y jurado en el Indie Arena Booth.',
-    'about.p2': 'De AAA a equipos de un solo desarrollador. Del QA al publishing. Cada lado de la mesa.',
-    'stats.shipped.h': 'Juegos lanzados',
-    'stats.shipped.p': 'Títulos publicados entre roles de QA, publishing y producción, en PC y consolas.',
-    'stats.shipped.tag': 'En varios estudios',
-    'stats.positive.h': 'Título Overwhelmingly Positive',
-    'stats.positive.p': 'He lanzado un título que mantiene la nota más alta de reseñas de usuarios en Steam: el rating más raro del store.',
-    'stats.positive.tag': 'Valoración Steam',
-    'stats.years.h': 'Años en los videojuegos',
-    'stats.years.p': 'De QA Tester a Publishing Producer a consultor independiente. Cada eslabón de la pipeline.',
-    'stats.years.tag': 'Desde 2016',
-    'stats.platforms.h': 'Plataformas de lanzamiento',
-    'stats.platforms.p': 'Certificaciones, submissions y pipelines de release en los principales stores y consolas.',
-    'stats.platforms.tag': 'PS · Xbox · PC · Switch · Stadia',
-    'stats.publishers.h': 'Publishers con los que he trabajado',
-    'services.kicker': '<span class="num">02</span> Servicios',
-    'services.h': 'Cómo <em>encajo</em>.',
-    'services.intro': 'Proyecto a proyecto, en retainer, o como audit específico. El formato de engagement se adapta. El resultado, no. Dos toolkits distintos según en qué lado del deal te encuentres.',
-    'services.cardsTitle': 'Los servicios con los que puedo ayudarte',
-    'svc1.h': 'Producción & Project Operations',
-    'svc1.p': 'Las cosas correctas en el momento correcto. Schedules, documentación y presupuestos, desde la pre-producción hasta el gold master.',
-    'svc1.b1': 'Project management end-to-end',
-    'svc1.b2': 'GDD review & gestión de la documentación',
-    'svc1.b3': 'Workflow audits & optimización de pipelines',
-    'svc1.b4': 'Scope & risk assessment',
-    'svc1.b5': 'Planificación financiera de proyecto',
-    'svc1.b6': 'Consultas ad hoc & peer review',
-    'svc2.h': 'Platform & Release Management',
-    'svc2.p': 'Releases limpias, en cada plataforma, en cada mercado. Certifications, stores, logística de lanzamiento, QA externo y localización.',
-    'svc2.b1': 'Console certification (PS, Xbox, Switch)',
-    'svc2.b2': 'Setup de digital stores & submissions',
-    'svc2.b3': 'Logística de lanzamiento: patches, brands, storefronts',
-    'svc2.b4': 'QA externo, coordinación de localización & conformidad TRC/TCR',
-    'svc2.b5': 'Plataformas developer PC, Nintendo, PlayStation, Xbox',
-    'svc2.b6': 'Ejecución de release coherente a escala global',
-    'svc3.h': 'Apoyo Estratégico en Publishing',
-    'svc3.p': 'Construí mi experiencia en publishing dentro de Raw Fury. Comparto la red de contactos, la experiencia, y una visión honesta sobre cómo llegar a los jugadores, sin convertirme en tu publisher.',
-    'svc3.b1': 'Roadmap realista & estrategia de publishing',
-    'svc3.b2': 'Red de estudios co-dev, porting houses, vendors',
-    'svc3.b3': 'Pitch deck shaping y review para fundraising & deals',
-    'svc3.b4': 'Publisher demo prep y feedback',
-    'svc3.b5': 'Deal milestone & schedule sanity check',
-    'svc4.h': 'Ediciones Físicas & en Caja',
-    'svc4.p': 'Las ediciones físicas son un mundo aparte. Distribuidores, replication, boards de clasificación, cada uno con sus propios plazos. Ya he gestionado ese pipeline antes, incluyendo cajas Switch y discos PS/Xbox.',
-    'svc4.b1': 'Relaciones con distribuidores (US, EU, JP)',
-    'svc4.b2': 'Coordinación de replication & manufacturing',
-    'svc4.b3': 'Planificación de SKU físicos',
-    'svc4.b4': 'Submissions de clasificación ESRB / PEGI / USK / CERO',
-    'svc4.b5': 'Timeline de producción & deadlines disc/cart',
-    'svcP2.h': 'Soporte Fraccional de Producción Publishing',
-    'svcP2.p': 'Un producer de tu lado de la mesa. Milestones, scope y riesgos seguidos en los estudios firmados, para que las sorpresas salgan a la superficie pronto, no en las reuniones de Portfolio Review.',
-    'svcP2.b1': 'Line producing lado publisher',
-    'svcP2.b2': 'Seguimiento de milestones & deliverables',
-    'svcP2.b3': 'Monitorización de riesgos en scope & schedule',
-    'svcP2.b4': 'Coordinación de vendors: port, QA, audio, loc',
-    'svcP2.b5': 'Cert & launch oversight cross-plataforma',
-    'svcP7.h': 'Release Management para Publishing',
-    'svcP7.p': 'Releases limpias en cada plataforma, gestionadas desde el lado del publisher. Sé lo que un publisher necesita en un lanzamiento: certifications, stores, logística, QA externo y localización bajo control en cada estudio que has firmado.',
-    'svcP7.b1': 'Console certification (PS, Xbox, Switch) en tus títulos firmados',
-    'svcP7.b2': 'Setup de stores & submissions en tus cuentas de publisher',
-    'svcP7.b3': 'Logística de lanzamiento: patches, brands, storefronts',
-    'svcP7.b4': 'QA externo, localización & conformidad TRC/TCR',
-    'svcP7.b5': 'Fechas de release alineadas con marketing & platform holders',
-    'svcP7.b6': 'Ejecución de release coherente a escala global',
-    'svcP4.h': 'Consultoría de Diseño & Mock Reviews',
-    'svcP4.p': 'Me formé como game designer, así que hablo el mismo idioma que tus diseñadores. Una lectura de diseño sobre títulos firmados o en prospección, más una mock review estilo prensa de la build actual: dónde funciona el diseño, dónde pierde jugadores y qué señalará la crítica.',
-    'svcP4.b1': 'Onboarding & efectividad de la primera sesión',
-    'svcP4.b2': 'Core loop & diagnósticos de retención',
-    'svcP4.b3': 'Identificación & mitigación de riesgos de diseño',
-    'svcP4.b4': 'Diseño de playtest, observación & análisis',
-    'svcP4.b5': 'Mock review estilo prensa sobre la build actual',
-    'svcP4.b6': 'Estimación del rango de score & cómo mejorarlo',
-    'svcP5.h': 'Scouting & Relaciones con Desarrolladores',
-    'svcP5.p': 'Scouting freelance sobre el terreno cuando tu equipo no puede estar presente. Conversaciones directas con devs, más feedback sobre tendencias y proyectos que vale la pena seguir.',
-    'svcP5.b1': 'Cobertura de eventos cuando tus scouts están ocupados',
-    'svcP5.b2': 'Booth walks, dev meetings & pitch sessions en tu nombre',
-    'svcP5.b3': 'Trend reports cross-género & cross-región',
-    'svcP5.b4': 'Feedback sobre estudios de conversaciones directas con devs',
-    'svcP5.b5': 'Aviso de proyectos interesantes antes de que circulen',
-    'svcP5.b6': 'Cobertura de festivales & showcases (Gamescom, IAB, GDC)',
-    'faq.kicker': '<span class="num">03</span> Preguntas frecuentes',
-    'faq.h': 'Preguntas, <em>antes</em> de que nos conozcamos.',
-    'faq.intro': 'Lo que me preguntan en el primer contacto, con respuestas ya preparadas. Si la tuya no está aquí, escríbela: mejor saber en qué nos estamos poniendo de acuerdo desde el principio.',
-    'faq1.q': '¿Cuáles son tus tarifas?',
-    'faq1.a': 'Depende del formato. Para audits y proyectos definidos, la tarifa es de €300/día. Para retainers (mínimo 3 meses), la tarifa es de €3.500/mes, mejor trato para ambas partes cuando el engagement es continuado. Todas las tarifas incluyen IVA y cualquier carga a mi cargo.<br /><br />Estas son mis condiciones estándar. Si tu situación es diferente, menciónalo en la llamada. Prefiero encontrar un formato que funcione antes que perder un buen proyecto por un número.',
-    'faq2.q': '¿Firmas NDAs antes de la llamada de descubrimiento?',
-    'faq2.a': 'Con mucho gusto, si tu proyecto lo requiere. Para la mayoría de las primeras conversaciones, un "esto queda entre nosotros" verbal es suficiente. Llevo suficiente tiempo en la industria como para saber cuándo mantener la boca cerrada.',
-    'faq3.q': '¿Quién se queda con la IP, la documentación, los procesos cuando te vas?',
-    'faq3.a': 'Tú. Todo lo que produzco, desde schedules hasta GDD reviews, desde pipelines hasta cert prep, es tuyo. El sentido del engagement es que el valor se quede contigo, no conmigo.',
-    'faq4.q': '¿Cuál es el engagement más pequeño que aceptas?',
-    'faq4.a': 'Una consulta pagada de dos horas a €120 si necesitas un sanity check sobre una decisión concreta. Por debajo de eso, la llamada de descubrimiento es gratuita: media hora, sin pitch.',
-    'faq5.q': '¿Puedes co-sourcer vendors? ¿Porting, QA externo, audio, localización?',
-    'faq5.a': 'Sí. Diez años en la industria han construido una red de estudios de confianza, porting houses, socios de QA, equipos de audio y vendors de localización. Los presento, los informo y los coordino como parte del engagement. Sin comisiones de ningún lado.',
-    'faq6.q': 'Somos pre-funding o no tenemos publisher. ¿Hablarás con nosotros igualmente?',
-    'faq6.a': 'Sí. La llamada de descubrimiento no mira en qué fase estás. Si necesitas estructurar un pitch deck o preparar una publisher demo, es un servicio en sí mismo. Si realmente no puedes permitirte nada todavía, te oriento hacia las lecturas correctas o las personas correctas, sin ataduras.',
-    /* Testimonials: las citas se mantienen a propósito en inglés (testi1.q..testi6.q
-       no figuran en el diccionario, se conserva el original del DOM) */
-    'testimonials.kicker': '<span class="num">04</span> Testimonios',
-    'testimonials.h': 'Cómo es <em>trabajar conmigo</em>.',
-    'testi1.role': 'CEO de Goldpact Goblins',
-    'testi2.role': 'Product Manager en Raw Fury',
-    'testi3.role': 'Senior Community Marketing Manager en Raw Fury',
-    'testi4.role': 'Head of Scouting en Raw Fury',
-    'testi5.role': 'QA Director, ex-Rebellion',
-    'testi6.role': 'Videogame Producer en Untold Games',
-    'testi.nav.aria': 'Explorar los testimonios',
-    'testi.prev.aria': 'Testimonio anterior',
-    'testi.next.aria': 'Testimonio siguiente',
-    'contact.kicker': '<span class="num">05</span> Hablemos',
-    'contact.h': 'Cuéntame en qué estás trabajando.',
-    'contact.p': 'Háblame del juego, en qué fase está, y qué lo está frenando. Si encajamos, fijamos una llamada de 30 minutos. Si no, te oriento hacia alguien más adecuado.',
-    'contact.note': 'P.S. Normalmente respondo en 1 a 3 días hábiles. Si no recibes nada en ese plazo, no dudes en escribirme de nuevo.',
-    'form.name.label': 'Tu nombre <span class="req" aria-hidden="true">*</span>',
-    'form.name.placeholder': 'Tu nombre',
-    'form.company.label': 'Estudio o empresa',
-    'form.company.placeholder': 'Tu estudio o empresa',
-    'form.email.label': 'Email <span class="req" aria-hidden="true">*</span>',
-    'form.email.placeholder': 'tu@estudio.com',
-    'form.msg.label': 'Mensaje <span class="req" aria-hidden="true">*</span>',
-    'form.msg.placeholder': 'En qué estás trabajando, dónde estás atascado, cuándo lo necesitas.',
-    'form.status': 'Abre tu cliente de correo · ningún dato almacenado.',
-    'form.success': 'Mensaje listo. Comprueba tu cliente de correo.',
-    'form.submit': 'Enviar',
-    'form.submitting': 'Abriendo correo…',
-    'form.err.name': 'Por favor, añade tu nombre.',
-    'form.err.email.required': 'El email es obligatorio.',
-    'form.err.email.invalid': 'Ese email no parece válido.',
-    'form.err.msg': 'Un mensaje breve, por favor.',
-    'form.subject': 'Consulta de proyecto:',
-    'footer.sayhi': 'Di hola, <em>cuando quieras.</em>',
-    'footer.email': 'Email',
-    'footer.email.aria': 'Escribir a Michele',
-    'footer.linkedin': 'LinkedIn',
-    'footer.linkedin.aria': 'LinkedIn de Spritz Consulting',
-    'footer.copy': '© 2026 Spritz Consulting · Todos los derechos reservados',
-  };
-  const EN_OVERRIDES = {
-    'form.err.email.required': 'Email is required.',
-    'form.err.email.invalid': 'That email looks off.',
-    'form.err.msg': 'A short message, please.',
-    'form.submitting': 'Sending…',
-  };
-
-  const DICTS = { it: IT, fr: FR, es: ES };
-  let currentLang = 'en';
-  const tr = (key) => (currentLang === 'en' ? (EN_OVERRIDES[key] ?? '') : (DICTS[currentLang]?.[key] ?? ''));
-
-  const cacheOriginal = (el) => {
-    let entry = ORIG.get(el);
-    if (entry) return entry;
-    entry = {
-      text: el.textContent,
-      html: el.innerHTML,
-      placeholder: el.getAttribute('placeholder'),
-      alt: el.getAttribute('alt'),
-      aria: el.getAttribute('aria-label'),
-    };
-    ORIG.set(el, entry);
-    return entry;
-  };
-
-  const applyLang = (lang) => {
-    currentLang = DICTS[lang] ? lang : 'en';
-    document.documentElement.setAttribute('lang', currentLang);
-
-    const dict = DICTS[currentLang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18n;
-      if (dict) {
-        const val = dict[key];
-        if (val == null) return;
-        el.innerHTML = val;
-      } else {
-        el.innerHTML = orig.html;
-      }
-    });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18nPlaceholder;
-      el.setAttribute('placeholder', dict ? (dict[key] ?? orig.placeholder ?? '') : (orig.placeholder ?? ''));
-    });
-    document.querySelectorAll('[data-i18n-alt]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18nAlt;
-      el.setAttribute('alt', dict ? (dict[key] ?? orig.alt ?? '') : (orig.alt ?? ''));
-    });
-    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-      const orig = cacheOriginal(el);
-      const key = el.dataset.i18nAria;
-      el.setAttribute('aria-label', dict ? (dict[key] ?? orig.aria ?? '') : (orig.aria ?? ''));
-    });
-
-    document.querySelectorAll('[data-lang-target]').forEach(btn => {
-      btn.setAttribute('aria-pressed', String(btn.dataset.langTarget === currentLang));
-    });
-
-    if (typeof submitAttempted !== 'undefined' && submitAttempted && typeof validate === 'function') {
-      validate(true);
-    }
-  };
-
-  document.querySelectorAll('[data-lang-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const l = btn.dataset.langTarget;
-      try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
-      applyLang(l);
     });
   });
 
@@ -4399,7 +3675,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   // Progressive enhancement: JS handles validation; native takes over if script never reaches here.
   if (form) form.noValidate = true;
   const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
-  const submitBtnLabel = submitBtn ? submitBtn.querySelector('[data-i18n="form.submit"]') : null;
+  const submitBtnLabel = submitBtn ? submitBtn.querySelector('span') : null;
   const submitBtnText = submitBtnLabel ? submitBtnLabel.textContent : '';
   const setFieldError = (input, message) => {
     const field = input.closest('.field');
@@ -4424,14 +3700,14 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     const email = form.querySelector('#f-email');
     const msg = form.querySelector('#f-msg');
     if (!email.value.trim()) {
-      if (showAll) setFieldError(email, tr('form.err.email.required'));
+      if (showAll) setFieldError(email, 'Email is required.');
       ok = false;
     } else if (!emailOk(email.value.trim())) {
-      if (showAll) setFieldError(email, tr('form.err.email.invalid'));
+      if (showAll) setFieldError(email, 'That email looks off.');
       ok = false;
     } else setFieldError(email, '');
     if (!msg.value.trim()) {
-      if (showAll) setFieldError(msg, tr('form.err.msg'));
+      if (showAll) setFieldError(msg, 'A short message, please.');
       ok = false;
     } else setFieldError(msg, '');
     return ok;
@@ -4449,7 +3725,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       submitBtn.disabled = busy;
       if (busy) submitBtn.setAttribute('aria-busy', 'true');
       else submitBtn.removeAttribute('aria-busy');
-      if (submitBtnLabel) submitBtnLabel.textContent = busy ? (tr('form.submitting') || 'Sending…') : submitBtnText;
+      if (submitBtnLabel) submitBtnLabel.textContent = busy ? 'Sending…' : submitBtnText;
     }
     if (busy) form.setAttribute('aria-busy', 'true');
     else form.removeAttribute('aria-busy');
@@ -4701,25 +3977,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       m.addEventListener('pointerleave', hide);
     });
   })();
-
-  // Bootstrap language (after form/validate are in scope)
-  let savedLang = null;
-  try { savedLang = localStorage.getItem(LANG_KEY); } catch (e) {}
-  if (savedLang) {
-    applyLang(savedLang);
-  } else {
-    applyLang('en');
-    fetch('/cdn-cgi/trace', { cache: 'no-store' })
-      .then(r => r.ok ? r.text() : '')
-      .then(t => {
-        const m = t.match(/^loc=([A-Z]{2})$/m);
-        const country = m ? m[1] : null;
-        const COUNTRY_LANG = { FR: 'fr', BE: 'fr', CH: 'fr', LU: 'fr', ES: 'es', AR: 'es', MX: 'es', CL: 'es', CO: 'es' };
-        const detected = country && COUNTRY_LANG[country];
-        if (detected) applyLang(detected);
-      })
-      .catch(() => {});
-  }
 })();
 
 /* Pause ambient animations when tab loses focus (perf budget) */
@@ -4753,11 +4010,9 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 
   if (nameInput) {
     nameInput.placeholder = pick(names);
-    nameInput.removeAttribute('data-i18n-placeholder');   // keep i18n from overwriting it
   }
   if (companyInput) {
     companyInput.placeholder = pick(companies);
-    companyInput.removeAttribute('data-i18n-placeholder');
   }
 })();
 
