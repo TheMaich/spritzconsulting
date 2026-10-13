@@ -126,15 +126,15 @@
      services-h.js animates the new half in from its side; until then it waits hidden. */
   #svc-h .services-panel .service[data-reveal]{ opacity: 1; transform: none; }
   #svc-h .services-panel.is-waiting .service{ opacity: 0; }
-  /* Hover: the card grows a touch and glows clay. The live cursor glow (::before) is off here. */
+  /* Hover: the card grows a touch and glows softly in clay. The live cursor glow (::before) is off here. */
   #svc-h .services-panel .service::before{ display: none; }
   #svc-h .services-panel .service:hover{
     z-index: 2; scale: 1.03;
-    border-color: color-mix(in srgb, var(--clay) 55%, var(--rule));
+    border-color: color-mix(in srgb, var(--clay) 35%, var(--rule));
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--clay) 30%, transparent),
-      0 0 36px -4px color-mix(in srgb, var(--clay) 42%, transparent),
-      0 24px 60px -24px color-mix(in srgb, var(--clay) 50%, transparent);
+      0 0 0 1px color-mix(in srgb, var(--clay) 15%, transparent),
+      0 0 28px -10px color-mix(in srgb, var(--clay) 22%, transparent),
+      0 22px 50px -28px color-mix(in srgb, var(--clay) 32%, transparent);
   }
   /* The hovered card's title turns clay. */
   #svc-h .services-panel .service-head h3{ transition: color .35s var(--ease); }
@@ -170,34 +170,4 @@
 @media (min-width: 901px) and (prefers-reduced-motion: reduce){
   #svc-h .services-tab, #svc-h .services-panel .service, #svc-h .svc-h-line > span{ transition: none; }
   #svc-h .services-panel .service:hover{ scale: 1; }
-}
-
-/* Hover texture: a field of small clay dots at low opacity, drifting diagonally up and to the
-   right, behind the text of the hovered card. It sits on ::after, under the text and over the
-   card background (the card isolates its own stacking), and only moves while its card is
-   hovered. Approved values (Services lab, 2026-10-12): opacity 0.08, dots 1.2px every 10px,
-   5px per second. */
-@media (min-width: 901px){
-  #svc-h .services-panel .service{
-    isolation: isolate;
-    --svc-dot-alpha: 0.08; --svc-dot-size: 1.2px; --svc-dot-gap: 10px; --svc-dot-dur: 2s;   /* 10px at 5px/s */
-  }
-  #svc-h .services-panel .service::after{
-    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
-    background-image: radial-gradient(circle at center,
-      color-mix(in srgb, var(--clay) calc(var(--svc-dot-alpha) * 100%), transparent) 0 calc(var(--svc-dot-size) / 2),
-      transparent calc(var(--svc-dot-size) / 2 + 0.7px));
-    background-size: var(--svc-dot-gap) var(--svc-dot-gap);
-    background-position: 0 0;
-    opacity: 0;
-    transition: opacity 450ms var(--ease);
-    animation: svc-dots-drift var(--svc-dot-dur) linear infinite paused;
-  }
-  #svc-h .services-panel .service:hover::after{ opacity: 1; animation-play-state: running; }
-}
-@keyframes svc-dots-drift{
-  to{ background-position: var(--svc-dot-gap) calc(-1 * var(--svc-dot-gap)); }
-}
-@media (min-width: 901px) and (prefers-reduced-motion: reduce){
-  #svc-h .services-panel .service::after{ animation: none; transition: none; }
 }
