@@ -14,10 +14,11 @@
  * 4. Services: services-h.js lays the section out on desktop. This script only adds its
  *    stops (window.__svcH.group()) to the magnetic scroll.
  * 5. Magnetic scroll. Two groups of stops: hero, second screen, end of the second screen;
- *    then the two halves of Services and the end of the section. Inside a group one wheel
- *    gesture or key press moves one stop (Lenis). Between the groups scrolling is free;
- *    going down, a scroll that brings the Services cards close (C.entry) lands on their
- *    first half, and going up, a scroll into the cards lands on their second half.
+ *    then the two halves of Services. Inside a group one wheel gesture or key press moves
+ *    one stop (Lenis). Between the groups, and from the second half of Services down to the
+ *    FAQ, scrolling is free; going down, a scroll that brings the Services cards close
+ *    (C.entry) lands on their first half, and going up, a scroll into the cards lands on
+ *    their second half.
  *    A free scroll that comes to rest inside a group (scroll bar, a long fling) moves on to
  *    the nearest stop in its direction. Once a gesture has moved a stop, the rest of it
  *    (trackpad momentum) is its tail and is ignored wherever it lands, so it never carries
@@ -238,17 +239,20 @@
   // starts from there and not from wherever the animation happens to be.
   function here() { return moving(performance.now()) ? mag.target : scrollY; }
   // Two groups of stops, each a list of scroll positions: [hero, second screen, end of it]
-  // and [first half of Services, second half, end of the section]. Between them scrolling is free.
+  // and [first half of Services, second half]. Between them scrolling is free. The Services
+  // group leaves out the end of the section, so the way down to the FAQ is free scrolling too
+  // (openEnd: a scroll up into the group lands on its last stop, the second half).
   function topOf(el) { return Math.round(el.getBoundingClientRect().top + scrollY - vis(header)); }
   function frameV() { return Math.round(innerHeight - vis(header)); }
   function groups() {
     var p1 = topOf(state.pair ? studios : exp), G = [[0, p1, p1 + frameV()]];
-    var sg = window.__svcH && window.__svcH.group(); if (sg) G.push(sg);
+    var sg = window.__svcH && window.__svcH.group();
+    if (sg) { var s = sg.slice(0, 2); s.openEnd = true; G.push(s); }
     return G;
   }
   function namedStops() {
     var G = groups(), S = window.__svcH, out = [['hero', G[0][0]], ['exp', G[0][1]], ['lead', G[0][2]]];
-    if (G[1]) out.push(['svc-dev', S.stopOf('dev')], ['svc-pub', S.stopOf('pub')], ['after', G[1][2]]);
+    if (G[1]) out.push(['svc-dev', S.stopOf('dev')], ['svc-pub', S.stopOf('pub')], ['after', S.group()[2]]);
     return out;
   }
   // Where one step in direction dir goes from here, or null when scrolling is free.
@@ -274,7 +278,7 @@
     for (i = 0; i < G.length; i++) {
       s = G[i]; last = s[s.length - 1];
       if (dir > 0 && y < s[0] - 2 && (s[0] - y <= zone || aim > s[0])) return s[0];
-      if (dir < 0 && y > last + 2 && aim < last) return s[s.length - 2];
+      if (dir < 0 && y > last + 2 && aim < last) return s.openEnd ? last : s[s.length - 2];
     }
     return null;
   }
