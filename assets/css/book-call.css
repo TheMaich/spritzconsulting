@@ -1,0 +1,56 @@
+/* Book a call link in the site header: a pulse ring on the button and a shimmer sweep on the label, on offset cycles.
+   The highlight uses var(--clay), so the sweep stays legible in both themes (10.19:1 dark, 4.74:1 light) and the brand mustard stays the only chromatic accent.
+   Shared by every page with a site header. Before this file existed, each page carried its own inline copy. */
+.nav a.book-call-cta{
+  position: relative;
+  animation: book-call-pulse 4s var(--ease) infinite;
+}
+@keyframes book-call-pulse{
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 45%, transparent); }
+  30%  { box-shadow: 0 0 0 10px color-mix(in srgb, var(--clay) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 0%, transparent); }
+}
+.nav a.book-call-cta span{
+  background-image: linear-gradient(105deg,
+    var(--ink-2) 0%, var(--ink-2) 40%,
+    var(--clay) 45%,
+    var(--clay) 55%,
+    var(--ink-2) 60%, var(--ink-2) 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: book-call-shimmer 4.5s linear 2s infinite;
+}
+@keyframes book-call-shimmer{
+  0%   { background-position: 100% 0; }
+  27%  { background-position: 0% 0; }
+  100% { background-position: 0% 0; }
+}
+.nav a.book-call-cta:hover{ animation-play-state: paused; }
+/* Plain text on hover, and on the homepage while the link is the active clay pill (the Book a call section is in view): the shimmer would paint ink on clay there. */
+.nav a.book-call-cta:hover span,
+.nav a.book-call-cta.is-active span{
+  background-image: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  color: inherit;
+  animation-play-state: paused;
+}
+.nav a.book-call-cta.is-active{ animation: none; box-shadow: none; }
+.nav a.book-call-cta.is-active span{ animation: none; }
+@media (prefers-reduced-motion: reduce){
+  .nav a.book-call-cta{ animation: none; box-shadow: none; }
+  .nav a.book-call-cta span{
+    background-image: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: currentColor;
+    color: inherit;
+    animation: none;
+  }
+}
