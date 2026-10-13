@@ -171,3 +171,40 @@
   #svc-h .services-tab, #svc-h .services-panel .service, #svc-h .svc-h-line > span{ transition: none; }
   #svc-h .services-panel .service:hover{ scale: 1; }
 }
+
+/* Related-resource chips on a hovered card: the label gets the header Book a call shimmer.
+   The gradient sits on the inner span, so the chip keeps its paper fill and border.
+   The first sweep starts on hover (no 2s wait), and each extra chip in the card starts 150ms after the one before.
+   Hovering the chip itself shows plain clay text, its normal hover state. Desktop with a mouse only. */
+@media (min-width: 901px) and (hover: hover) and (prefers-reduced-motion: no-preference){
+  #svc-h .services-panel .service:hover .service-related a .related-text{
+    background-image: linear-gradient(105deg,
+      var(--ink) 0%, var(--ink) 40%,
+      var(--clay) 45%,
+      var(--clay) 55%,
+      var(--ink) 60%, var(--ink) 100%);
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: related-shimmer 4.5s linear infinite;
+  }
+  #svc-h .services-panel .service:hover .service-related a:nth-of-type(2) .related-text{ animation-delay: .15s; }
+  #svc-h .services-panel .service:hover .service-related a:nth-of-type(3) .related-text{ animation-delay: .3s; }
+  #svc-h .services-panel .service:hover .service-related a:hover .related-text{
+    background-image: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: currentColor;
+    color: inherit;
+    animation: none;
+  }
+  @keyframes related-shimmer{
+    0%   { background-position: 100% 0; }
+    27%  { background-position: 0% 0; }
+    100% { background-position: 0% 0; }
+  }
+}
