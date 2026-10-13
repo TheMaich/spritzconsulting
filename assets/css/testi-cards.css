@@ -1,0 +1,141 @@
+/* Testimonials: portrait cards. Desktop (901px and wider): an endless marquee that pauses on
+   hover, with a side shade that sinks the cards at the screen edges. Phone (900px and narrower):
+   a tilted deck that cycles every 5 seconds and follows swipes. testi-cards.js sets
+   data-layout on .tc-wrap; without the script the cards sit in a row the reader scrolls.
+   Card colours match the Services cards: --rule border, --paper-3 fill, clay wash, and on hover
+   the border warms toward clay and the name turns clay. --logo-tile keeps the company badge
+   light in both themes, so every logo stays legible. */
+:root{
+  --tc-gap: 22px; --tc-w: 350px; --tc-pad: 28px; --tc-radius: 18px; --tc-ring: 2px;
+  --tc-photo: 146px; --tc-logo: 56px; --tc-name: 22px; --tc-role: 14px; --tc-q: 17px; --tc-lh: 1.5;
+  --tc-mq: 65s; --tc-dur: 300ms; --tc-shade-w: 30vw; --tc-shade: .85;
+  --logo-tile: var(--ink);
+}
+html[data-theme="light"]{ --logo-tile: var(--paper-3); }
+
+.tc-wrap{ position: relative; margin-top: clamp(32px, 4vw, 52px); }
+
+/* ---------- The card ---------- */
+.tc{
+  --tc-border: var(--rule);
+  position: relative; isolation: isolate; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: calc(var(--tc-pad) + 8px) var(--tc-pad) var(--tc-pad);
+  border: 1px solid var(--tc-border); border-radius: var(--tc-radius);
+  background-color: var(--paper-3);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.tc::before{
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%);
+}
+@media (hover: hover){
+  .tc:hover{
+    --tc-border: color-mix(in srgb, var(--clay) 35%, var(--rule));
+    transform: translateY(-6px);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--clay) 15%, transparent),
+      0 0 28px -10px color-mix(in srgb, var(--clay) 22%, transparent),
+      0 22px 50px -28px color-mix(in srgb, var(--clay) 32%, transparent);
+  }
+  .tc:hover .tc-name{ color: var(--clay); }
+}
+
+/* Portrait and company badge */
+.tc-media{ position: relative; width: var(--tc-photo); height: var(--tc-photo); flex: none; margin-bottom: 22px; }
+.tc-photo{
+  box-sizing: border-box; display: grid; place-items: center; overflow: hidden;
+  width: 100%; height: 100%; border-radius: 50%;
+  border: var(--tc-ring) solid var(--clay);
+  background: color-mix(in srgb, var(--ink) 12%, var(--paper-3));
+  box-shadow: 0 14px 28px -16px color-mix(in srgb, var(--clay) 55%, transparent);
+}
+.tc-photo img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+.tc-initials{ font-family: var(--serif); font-weight: 500; font-size: calc(var(--tc-photo) * .3); letter-spacing: -0.02em; color: var(--ink-2); }
+.tc-logo{
+  box-sizing: border-box; display: grid; place-items: center; overflow: hidden;
+  position: absolute; right: calc(var(--tc-logo) * -0.22); bottom: 0;
+  width: var(--tc-logo); height: var(--tc-logo); border-radius: 24%;
+  border: var(--tc-ring) solid var(--clay);
+  background: var(--logo-tile); padding: calc(var(--tc-logo) * .12);
+  box-shadow: 0 10px 20px -12px color-mix(in srgb, var(--clay) 60%, transparent);
+}
+.tc-logo img{ width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.tc-name{ margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--tc-name); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); transition: color .35s var(--ease); }
+.tc-role{ margin: 6px 0 0; font-family: var(--sans); font-size: var(--tc-role); line-height: 1.35; color: var(--ink-2); }
+.tc-quote{
+  margin: 24px 0 0; padding: 0; align-self: stretch;
+  font-family: var(--serif); font-size: var(--tc-q); line-height: var(--tc-lh);
+  color: var(--ink); text-align: left; text-wrap: pretty;
+}
+
+/* ---------- No script yet: a row the reader scrolls ---------- */
+.tc-track{ display: flex; gap: var(--tc-gap); align-items: flex-start; overflow-x: auto; scrollbar-width: none; padding-block: 18px 30px; }
+.tc-track::-webkit-scrollbar{ display: none; }
+.tc-track > .tc{ width: min(var(--tc-w), 86vw); flex: none; }
+
+/* ---------- Desktop: marquee ---------- */
+/* testi-cards.js sets the bleed (margin-left and width) so the strip spans the whole window
+   whatever page scale frame-fit.js applies. */
+.tc-wrap[data-layout="marquee"]{ overflow: hidden; padding-block: 18px 30px; }
+.tc-wrap[data-layout="marquee"]::before,
+.tc-wrap[data-layout="marquee"]::after{
+  content: ""; position: absolute; top: 0; bottom: 0; z-index: 3; pointer-events: none;
+  width: var(--tc-shade-w); opacity: var(--tc-shade);
+  background: linear-gradient(90deg,
+    var(--paper) 0%,
+    color-mix(in srgb, var(--paper) 82%, transparent) 22%,
+    color-mix(in srgb, var(--paper) 52%, transparent) 50%,
+    color-mix(in srgb, var(--paper) 20%, transparent) 78%,
+    transparent 100%);
+}
+.tc-wrap[data-layout="marquee"]::before{ left: 0; }
+.tc-wrap[data-layout="marquee"]::after{ right: 0; transform: scaleX(-1); }
+.tc-wrap[data-layout="marquee"] .tc-track{ width: max-content; overflow: visible; padding: 0; animation: tc-marquee var(--tc-mq) linear infinite; }
+.tc-wrap[data-layout="marquee"]:hover .tc-track,
+.tc-wrap[data-layout="marquee"].is-offscreen .tc-track,
+body.is-tab-hidden .tc-track{ animation-play-state: paused; }
+@keyframes tc-marquee{ to { transform: translateX(calc(-50% - var(--tc-gap) / 2)); } }
+
+/* ---------- Phone: deck ---------- */
+.tc-wrap[data-layout="deck"] .tc-track{ display: block; position: relative; overflow: visible; padding: 0; height: calc(var(--tc-deck-h, 560px) + 44px); touch-action: pan-y; }
+.tc-wrap[data-layout="deck"] .tc{
+  position: absolute; top: 0; left: 50%; width: min(var(--tc-w), 86vw); margin-left: calc(min(var(--tc-w), 86vw) / -2);
+  height: var(--tc-deck-h, auto);
+  transition: transform var(--tc-dur) var(--ease), opacity var(--tc-dur) var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+  transform: var(--tc-pose);
+}
+.tc-wrap[data-layout="deck"] .tc:not(.is-front){ pointer-events: none; }
+.tc-wrap[data-layout="deck"] .tc.is-front:hover{ transform: var(--tc-pose) translateY(-6px); }
+.tc-wrap[data-layout="deck"] .tc.is-out{ transition-duration: calc(var(--tc-dur) * .6); }
+
+/* The back cards of the deck lean out past the side gutters; clip them at the window edge so
+   the phone page never scrolls sideways. */
+@media (max-width: 900px){ #testimonials{ overflow-x: clip; } }
+
+/* Deck controls */
+.tc-controls{ display: none; align-items: center; justify-content: center; gap: 14px; margin-top: 26px; }
+.tc-wrap[data-layout="deck"] .tc-controls{ display: flex; }
+.tc-btn{
+  all: unset; box-sizing: border-box; cursor: pointer; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; border: 1px solid var(--rule); color: var(--ink-2);
+  transition: border-color .2s var(--ease), color .2s var(--ease), transform .18s var(--ease);
+}
+.tc-btn svg{ width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.tc-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.tc-btn:active{ transform: scale(0.94); }
+.tc-btn:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
+.tc-dots{ display: flex; gap: 8px; }
+.tc-dot{ all: unset; cursor: pointer; width: 8px; height: 8px; border-radius: 999px; background: var(--rule); transition: width .3s var(--ease), background-color .3s var(--ease); }
+.tc-dot.is-active{ width: 22px; background: var(--clay); }
+.tc-dot:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce){
+  .tc, .tc-wrap[data-layout="deck"] .tc{ transition: none; }
+  .tc:hover{ transform: none; }
+  .tc-wrap[data-layout="marquee"] .tc-track{ animation: none; }
+  .tc-wrap[data-layout="marquee"]{ overflow-x: auto; }
+}

@@ -78,6 +78,7 @@
 </script>
 <link rel="stylesheet" href="/assets/css/frame-fit.css?v=20261010">
 <link rel="stylesheet" href="/assets/css/services-h.css?v=20261013b">
+<link rel="stylesheet" href="/assets/css/testi-cards.css?v=20261013">
 <!-- Desktop: keep the page hidden until frame-fit.js has set the page scale, so the first frame
      shown is already at the right size (frame-fit.js removes the class and fades the page in). -->
 <script>
@@ -2175,9 +2176,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   .blur-reveal, .blur-reveal.is-visible{ opacity: 1; animation: none; }
 }
 
-/* Testimonials: tilted quote-card stack on the left, active testimonial text on
-   the right. Fully scoped under testi- names; must never share selectors with
-   the hero deck. */
+/* Testimonials heading. The portrait cards live in assets/css/testi-cards.css. */
 .testi-head{ max-width: 720px; }
 /* Heading sized like the sibling sections (mirrors .faq-head h2) */
 .testi-head h2{
@@ -2194,148 +2193,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   font-style: italic;
   color: var(--clay);
   font-variation-settings: "opsz" 96;
-}
-.testi-grid{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: clamp(32px, 5vw, 72px);
-  align-items: center;
-  margin-top: clamp(48px, 6vw, 88px);
-}
-/* Left: decorative card stack. Fixed per-card tilts, active card rotates into place. */
-.testi-stage{
-  position: relative;
-  aspect-ratio: 4 / 3;
-  width: 100%;
-  max-width: 420px;
-  margin-inline: auto;
-}
-.testi-visual-card{
-  position: absolute; inset: 0;
-  background: var(--paper-3);
-  border: 1px solid var(--rule);
-  border-radius: 18px;
-  box-shadow: var(--shadow-md);
-  display: grid;
-  place-items: center;
-  opacity: 0.5;
-  transform: rotate(var(--testi-tilt, 0deg)) scale(0.92) translateY(12px);
-  transition: transform .55s var(--ease), opacity .55s var(--ease);
-}
-.testi-visual-card::before{
-  content: ""; position: absolute; inset: 0;
-  background: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%);
-  border-radius: inherit;
-  pointer-events: none;
-}
-.testi-visual-card.is-active{
-  opacity: 1;
-  transform: rotate(0deg) scale(1) translateY(0);
-}
-.testi-card--r1{ --testi-tilt: -6deg; }
-.testi-card--r2{ --testi-tilt: 4deg; }
-.testi-card--r3{ --testi-tilt: -3deg; }
-.testi-card--r4{ --testi-tilt: 7deg; }
-.testi-card--r5{ --testi-tilt: -5deg; }
-.testi-card--r6{ --testi-tilt: 6deg; }
-/* Company logo, dead-centered on the card. Absolutely positioned with auto
-   margins so centering binds to the img itself and the card, immune to the
-   picture wrapper (display:contents made Chrome mis-resolve % heights).
-   Forced width because the webp sources are smaller than the card and
-   max-width never upscales; object-fit keeps the art centered on clamp. */
-.testi-logo{
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 78%;
-  height: auto;
-  max-height: 55%;
-  object-fit: contain;
-  display: block;
-}
-/* Wide wordmark strips span the card instead of floating in it */
-.testi-logo--wide{
-  width: 82%;
-  max-height: 62%;
-}
-/* Right: the active testimonial's text. Entries share one grid cell so the
-   column is always as tall as the longest quote and never jumps. */
-.testi-entries{ display: grid; }
-.testi-entry{
-  grid-area: 1 / 1;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity .35s var(--ease), transform .35s var(--ease);
-  pointer-events: none;
-  align-self: start;
-}
-.testi-entry.is-active{
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-.testi-entry.is-leaving{
-  opacity: 0;
-  transform: translateY(-16px);
-}
-.testi-name{
-  margin: 0;
-  font-size: clamp(22px, 2vw, 28px);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-.testi-role{
-  margin: 4px 0 0;
-  font-size: 14.5px;
-  color: var(--ink-2);
-}
-.testi-quote{
-  margin: clamp(18px, 2vw, 28px) 0 0;
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(19px, 1.7vw, 24px);
-  font-variation-settings: "opsz" 48;
-  letter-spacing: -0.018em;
-  line-height: 1.35;
-  color: var(--ink);
-}
-/* Controls: round prev/next, arrows micro-slide on hover */
-.testi-controls{
-  display: flex;
-  gap: 14px;
-  margin-top: clamp(24px, 3vw, 36px);
-}
-.testi-btn{
-  appearance: none;
-  width: 44px; height: 44px;
-  border-radius: 999px;
-  border: 1px solid var(--rule);
-  background: var(--paper-3);
-  color: var(--ink);
-  display: grid; place-items: center;
-  cursor: pointer;
-  padding: 0;
-  transition: border-color .25s var(--ease), color .25s var(--ease), transform .2s var(--ease);
-}
-.testi-btn:hover{ border-color: var(--clay); color: var(--clay); }
-.testi-btn:active{ transform: scale(0.94); }
-.testi-btn svg{
-  width: 18px; height: 18px;
-  stroke: currentColor; stroke-width: 1.7;
-  fill: none; stroke-linecap: round; stroke-linejoin: round;
-  transition: transform .2s var(--ease);
-}
-.testi-btn[data-testi-prev]:hover svg{ transform: translateX(-2px); }
-.testi-btn[data-testi-next]:hover svg{ transform: translateX(2px); }
-@media (prefers-reduced-motion: reduce){
-  .testi-visual-card,
-  .testi-entry,
-  .testi-btn svg{ transition: none; }
-}
-@media (max-width: 760px){
-  .testi-grid{ grid-template-columns: 1fr; gap: 36px; }
-  .testi-stage{ max-width: 320px; }
 }
 </style>
 
@@ -3094,64 +2951,69 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       <h2 class="blur-reveal" id="testimonials-h" data-reveal>What it&rsquo;s like to <em>work with me</em>.</h2>
     </div>
 
-    <div class="testi-grid" data-reveal>
-      <!-- Decorative tilted card stack; company logos pair card N with entry N -->
-      <div class="testi-stage" aria-hidden="true">
-        <div class="testi-visual-card testi-card--r1 is-active"><img class="testi-logo testi-logo--wide" src="assets/logo-goldpact-alpha.png" alt="" width="879" height="340" loading="eager" decoding="async" /></div>
-        <div class="testi-visual-card testi-card--r2"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="eager" decoding="async" /></picture></div>
-        <div class="testi-visual-card testi-card--r3"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="eager" decoding="async" /></picture></div>
-        <div class="testi-visual-card testi-card--r4"><picture><source srcset="assets/logo-rawfury.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-rawfury.png" alt="" width="270" height="186" loading="eager" decoding="async" /></picture></div>
-        <div class="testi-visual-card testi-card--r5"><picture><source srcset="assets/logo-rebellion.webp" type="image/webp" /><img class="testi-logo testi-logo--wide" src="assets/logo-rebellion.png" alt="" width="500" height="222" loading="eager" decoding="async" /></picture></div>
-        <div class="testi-visual-card testi-card--r6"><picture><source srcset="assets/logo-untoldgames.webp" type="image/webp" /><img class="testi-logo" src="assets/logo-untoldgames.png" alt="" width="257" height="196" loading="eager" decoding="async" /></picture></div>
+    <!-- Portrait cards: a marquee on desktop, a deck on the phone (assets/js/testi-cards.js).
+         Photos used with each person's permission. Ilya Z. keeps initials until he sends a photo. -->
+    <div class="tc-wrap" data-reveal>
+      <div class="tc-track">
+        <article class="tc">
+          <div class="tc-media">
+            <div class="tc-photo"><img src="/assets/testimonials/iain.jpg" alt="" width="300" height="300" loading="lazy" decoding="async"></div>
+            <div class="tc-logo"><img src="/assets/testimonials/logo-goldpact-icon.webp" alt="Goldpact Goblins" loading="lazy" decoding="async"></div>
+          </div>
+          <h3 class="tc-name">Iain G.</h3>
+          <p class="tc-role">CEO, Goldpact Goblins</p>
+          <blockquote class="tc-quote">&ldquo;When I hit some issues I wasn&rsquo;t certain how to resolve, Spritz Consulting was the obvious choice to bring in.&rdquo;</blockquote>
+        </article>
+        <article class="tc">
+          <div class="tc-media">
+            <div class="tc-photo"><img src="/assets/testimonials/veronique.jpg" alt="" width="300" height="300" loading="lazy" decoding="async"></div>
+            <div class="tc-logo"><img src="/assets/logo-rawfury.webp" alt="Raw Fury" loading="lazy" decoding="async"></div>
+          </div>
+          <h3 class="tc-name">V&eacute;ronique R.</h3>
+          <p class="tc-role">Product Manager, Raw Fury</p>
+          <blockquote class="tc-quote">&ldquo;I was particularly impressed by Michele&rsquo;s ability to create contact with developers, understand their vision very quickly [...] and deliver an analysis on the best developer / publisher match for their game. This always seems to come easily to him, and it&rsquo;s far from a given in the video game industry.&rdquo;</blockquote>
+        </article>
+        <article class="tc">
+          <div class="tc-media">
+            <div class="tc-photo"><img src="/assets/testimonials/daria.jpg" alt="" width="300" height="300" loading="lazy" decoding="async"></div>
+            <div class="tc-logo"><img src="/assets/logo-rawfury.webp" alt="Raw Fury" loading="lazy" decoding="async"></div>
+          </div>
+          <h3 class="tc-name">Daria V.</h3>
+          <p class="tc-role">Senior Community Marketing Manager, Raw Fury</p>
+          <blockquote class="tc-quote">&ldquo;If you&rsquo;re considering Michele for your project, look no further [...] with him on board the project is sure to deliver its best.&rdquo;</blockquote>
+        </article>
+        <article class="tc">
+          <div class="tc-media">
+            <div class="tc-photo"><img src="/assets/testimonials/johan.jpg" alt="" width="300" height="300" loading="lazy" decoding="async"></div>
+            <div class="tc-logo"><img src="/assets/logo-rawfury.webp" alt="Raw Fury" loading="lazy" decoding="async"></div>
+          </div>
+          <h3 class="tc-name">Johan T.</h3>
+          <p class="tc-role">Head of Scouting, Raw Fury</p>
+          <blockquote class="tc-quote">&ldquo;You put a problem in front of Michele and he will find not only a way to solve it, but to do it with a great attitude. Can&rsquo;t recommend him enough.&rdquo;</blockquote>
+        </article>
+        <article class="tc">
+          <div class="tc-media">
+            <div class="tc-photo"><span class="tc-initials" aria-hidden="true">IZ</span></div>
+            <div class="tc-logo"><img src="/assets/logo-rebellion.webp" alt="Rebellion" loading="lazy" decoding="async"></div>
+          </div>
+          <h3 class="tc-name">Ilya Z.</h3>
+          <p class="tc-role">QA Director, ex-Rebellion</p>
+          <blockquote class="tc-quote">&ldquo;His dedication, positivity and most importantly can do attitude made him a key player within our teams! [...] This included leading all QA efforts on several successive projects on a completely new platform with its own unique pipeline and challenges.&rdquo;</blockquote>
+        </article>
+        <article class="tc">
+          <div class="tc-media">
+            <div class="tc-photo"><img src="/assets/testimonials/michele.jpg" alt="" width="300" height="300" loading="lazy" decoding="async"></div>
+            <div class="tc-logo"><img src="/assets/testimonials/logo-untold-icon.webp" alt="Untold Games" loading="lazy" decoding="async"></div>
+          </div>
+          <h3 class="tc-name">Michele B.</h3>
+          <p class="tc-role">Videogame Producer, Untold Games</p>
+          <blockquote class="tc-quote">&ldquo;As a Producer, he demonstrated great listening skills, and the ability to break down game dev challenges into practical solutions. He is a thoughtful professional who brings order to production with a good balance of pragmatism and empathy.&rdquo;</blockquote>
+        </article>
       </div>
-
-      <div class="testi-copy">
-        <div class="testi-entries">
-          <article class="testi-entry is-active" data-testi-entry="0">
-            <h3 class="testi-name">Iain G.</h3>
-            <p class="testi-role">CEO of Goldpact Goblins</p>
-            <blockquote class="testi-quote">&ldquo;When I hit some issues I wasn&rsquo;t certain how to resolve, Spritz Consulting was the obvious choice to bring in.&rdquo;</blockquote>
-          </article>
-
-          <article class="testi-entry" data-testi-entry="1" aria-hidden="true" inert>
-            <h3 class="testi-name">V&eacute;ronique R.</h3>
-            <p class="testi-role">Product Manager at Raw Fury</p>
-            <blockquote class="testi-quote">&ldquo;I was particularly impressed by Michele&rsquo;s ability to create contact with developers, understand their vision very quickly [...] and deliver an analysis on the best developer / publisher match for their game. This always seems to come easily to him, and it&rsquo;s far from a given in the video game industry.&rdquo;</blockquote>
-          </article>
-
-          <article class="testi-entry" data-testi-entry="2" aria-hidden="true" inert>
-            <h3 class="testi-name">Daria V.</h3>
-            <p class="testi-role">Senior Community Marketing Manager at Raw Fury</p>
-            <blockquote class="testi-quote">&ldquo;If you&rsquo;re considering Michele for your project, look no further [...] with him on board the project is sure to deliver its best.&rdquo;</blockquote>
-          </article>
-
-          <article class="testi-entry" data-testi-entry="3" aria-hidden="true" inert>
-            <h3 class="testi-name">Johan T.</h3>
-            <p class="testi-role">Head of Scouting at Raw Fury</p>
-            <blockquote class="testi-quote">&ldquo;You put a problem in front of Michele and he will find not only a way to solve it, but to do it with a great attitude. Can&rsquo;t recommend him enough.&rdquo;</blockquote>
-          </article>
-
-          <article class="testi-entry" data-testi-entry="4" aria-hidden="true" inert>
-            <h3 class="testi-name">Ilya Z.</h3>
-            <p class="testi-role">QA Director, ex-Rebellion</p>
-            <blockquote class="testi-quote">&ldquo;His dedication, positivity and most importantly can do attitude made him a key player within our teams! [...] This included leading all QA efforts on several successive projects on a completely new platform with its own unique pipeline and challenges.&rdquo;</blockquote>
-          </article>
-
-          <article class="testi-entry" data-testi-entry="5" aria-hidden="true" inert>
-            <h3 class="testi-name">Michele B.</h3>
-            <p class="testi-role">Videogame Producer at Untold Games</p>
-            <blockquote class="testi-quote">&ldquo;As a Producer, he demonstrated great listening skills, and the ability to break down game dev challenges into practical solutions. He is a thoughtful professional who brings order to production with a good balance of pragmatism and empathy.&rdquo;</blockquote>
-          </article>
-        </div>
-
-        <div class="testi-controls" role="group" aria-label="Browse testimonials">
-          <button type="button" class="testi-btn" data-testi-prev aria-label="Previous testimonial">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-          </button>
-          <button type="button" class="testi-btn" data-testi-next aria-label="Next testimonial">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-          </button>
-        </div>
+      <div class="tc-controls" role="group" aria-label="Browse testimonials">
+        <button type="button" class="tc-btn" data-tc-prev aria-label="Previous testimonial"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="tc-dots"></div>
+        <button type="button" class="tc-btn" data-tc-next aria-label="Next testimonial"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
       </div>
     </div>
   </section>
@@ -3286,6 +3148,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 <script src="assets/js/smooth-scroll.js" defer></script>
 <script src="/assets/js/services-h.js?v=20261012k" defer></script>
 <script src="/assets/js/frame-fit.js?v=20261013" defer></script>
+<script src="/assets/js/testi-cards.js?v=20261013" defer></script>
 <script type="module" src="/assets/js/lanyard.js?v=20261012"></script>
 <script>
 (() => {
@@ -3463,76 +3326,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     schedule();
   })();
 
-  // Testimonials: tilted visual stack (left) + sliding text entries (right).
-  // Fully scoped to #testimonials (testi- namespace): no shared selectors, so
-  // the dormant hero deck can come back without colliding.
-  (function initTestimonials(){
-    const section = document.getElementById('testimonials');
-    if (!section) return;
-    const visuals = Array.from(section.querySelectorAll('.testi-visual-card'));
-    const entries = Array.from(section.querySelectorAll('.testi-entry'));
-    if (entries.length < 2 || visuals.length !== entries.length) return;
-    const prev = section.querySelector('[data-testi-prev]');
-    const next = section.querySelector('[data-testi-next]');
-    const AUTO_MS = 6000;
-    const LEAVE_MS = 400; // slightly past the .35s exit transition
-    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let idx = 0;
-    let timer = null;
-
-    function layerVisuals(){
-      visuals.forEach((v, i) => {
-        const raw = Math.abs(i - idx);
-        const dist = Math.min(raw, visuals.length - raw); // circular distance
-        v.classList.toggle('is-active', i === idx);
-        v.style.zIndex = String(visuals.length - dist);
-      });
-    }
-    function swapEntry(from, to){
-      const leaving = entries[from];
-      const entering = entries[to];
-      leaving.classList.remove('is-active');
-      leaving.setAttribute('aria-hidden', 'true');
-      leaving.toggleAttribute('inert', true);
-      if (!reduceMotion){
-        leaving.classList.add('is-leaving');
-        setTimeout(() => leaving.classList.remove('is-leaving'), LEAVE_MS);
-      }
-      // a fast return trip can land while the exit class is still pending
-      entering.classList.remove('is-leaving');
-      entering.classList.add('is-active');
-      entering.removeAttribute('aria-hidden');
-      entering.toggleAttribute('inert', false);
-    }
-    function show(n){
-      const to = (n + entries.length) % entries.length;
-      if (to === idx) return;
-      const from = idx;
-      idx = to;
-      swapEntry(from, to);
-      layerVisuals();
-    }
-    function schedule(){
-      clearTimeout(timer);
-      if (reduceMotion) return;
-      timer = setTimeout(() => { show(idx + 1); schedule(); }, AUTO_MS);
-    }
-    function pause(){
-      clearTimeout(timer);
-    }
-
-    if (prev) prev.addEventListener('click', () => { show(idx - 1); schedule(); });
-    if (next) next.addEventListener('click', () => { show(idx + 1); schedule(); });
-
-    section.addEventListener('pointerenter', pause);
-    section.addEventListener('pointerleave', schedule);
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) pause(); else schedule();
-    });
-
-    layerVisuals();
-    schedule();
-  })();
 
   // Reveal-on-scroll cascade
   const reveals = document.querySelectorAll('[data-reveal]');
