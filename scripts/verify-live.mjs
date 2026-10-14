@@ -1,4 +1,4 @@
-// Usage: node scripts/verify-live.mjs [baseUrl] [--resolve <ip>]   (default https://spritzconsulting.com; --resolve pins the host to one IP, e.g. GitHub Pages 185.199.108.153, to check the origin past Cloudflare)
+// Usage: node scripts/verify-live.mjs [baseUrl] [--resolve <ip>]   (default $VERIFY_BASE_URL or https://spritzconsulting.com; --resolve pins the host to one IP, e.g. GitHub Pages 185.199.108.153, to check the origin past Cloudflare)
 //
 // Checks every sitemap URL plus /, /about/ and /resources/ on the live site: status, head tags,
 // robots, breadcrumbs, About in the nav, "Updated" dates, images, and links to the private tools
@@ -11,7 +11,7 @@ import http from 'node:http';
 const args = process.argv.slice(2);
 const ri = args.indexOf('--resolve');
 const PIN = ri >= 0 ? args.splice(ri, 2)[1] : null;
-const BASE = (args[0] || 'https://spritzconsulting.com').replace(/\/$/, '');
+const BASE = (args[0] || process.env.VERIFY_BASE_URL || 'https://spritzconsulting.com').replace(/\/$/, '');
 const HOST = new URL(BASE).host;
 const TOOLS_INDEX = '/resources/tools/';
 
