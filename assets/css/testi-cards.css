@@ -1,6 +1,8 @@
 /* Testimonials: portrait cards. Desktop (901px and wider): an endless marquee that pauses on
    hover, with a side shade that sinks the cards at the screen edges. Phone (900px and narrower):
-   a tilted deck that cycles every 5 seconds and follows swipes. testi-cards.js sets
+   a straight deck, the two cards behind stepping up and to the right inside the side gutters,
+   that cycles every 5 seconds and follows swipes. Phone cards are compact (smaller portrait and
+   text) and their clay wash sits at the top centre, away from the stepped corner. testi-cards.js sets
    data-layout on .tc-wrap; without the script the cards sit in a row the reader scrolls.
    Card colours match the Services cards: --rule border, --paper-3 fill, clay wash, and on hover
    the border warms toward clay and the name turns clay. --logo-tile keeps the company badge
@@ -8,7 +10,7 @@
 :root{
   --tc-gap: 22px; --tc-w: 350px; --tc-pad: 28px; --tc-radius: 18px; --tc-ring: 2px;
   --tc-photo: 146px; --tc-logo: 56px; --tc-name: 22px; --tc-role: 14px; --tc-q: 17px; --tc-lh: 1.5;
-  --tc-mq: 65s; --tc-dur: 300ms; --tc-shade-w: 30vw; --tc-shade: .85;
+  --tc-mq: 65s; --tc-dur: 300ms; --tc-shade-w: 30vw; --tc-shade: .85; --tc-dx: 14px; --tc-dy: 14px;
   --logo-tile: var(--ink);
 }
 html[data-theme="light"]{ --logo-tile: var(--paper-3); }
@@ -101,9 +103,9 @@ body.is-tab-hidden .tc-track{ animation-play-state: paused; }
 @keyframes tc-marquee{ to { transform: translateX(calc(-50% - var(--tc-gap) / 2)); } }
 
 /* ---------- Phone: deck ---------- */
-.tc-wrap[data-layout="deck"] .tc-track{ display: block; position: relative; overflow: visible; padding: 0; height: calc(var(--tc-deck-h, 560px) + 44px); touch-action: pan-y; }
+.tc-wrap[data-layout="deck"] .tc-track{ display: block; position: relative; overflow: visible; padding: 0; height: calc(var(--tc-deck-h, 420px) + 2 * var(--tc-dy) + 8px); touch-action: pan-y; }
 .tc-wrap[data-layout="deck"] .tc{
-  position: absolute; top: 0; left: 50%; width: min(var(--tc-w), 86vw); margin-left: calc(min(var(--tc-w), 86vw) / -2);
+  position: absolute; top: calc(2 * var(--tc-dy)); left: 0; width: calc(100% - 2 * var(--tc-dx));
   height: var(--tc-deck-h, auto);
   transition: transform var(--tc-dur) var(--ease), opacity var(--tc-dur) var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
   transform: var(--tc-pose);
@@ -112,8 +114,17 @@ body.is-tab-hidden .tc-track{ animation-play-state: paused; }
 .tc-wrap[data-layout="deck"] .tc.is-front:hover{ transform: var(--tc-pose) translateY(-6px); }
 .tc-wrap[data-layout="deck"] .tc.is-out{ transition-duration: calc(var(--tc-dur) * .6); }
 
-/* The back cards of the deck lean out past the side gutters; clip them at the window edge so
-   the phone page never scrolls sideways. */
+/* Phone cards: smaller portrait and badge, tighter text, so the card is shorter; the clay wash
+   moves to the top centre, behind the portrait. */
+@media (max-width: 900px){
+  .tc{ --tc-photo: 96px; --tc-logo: 40px; --tc-name: 20px; --tc-q: 15px; --tc-pad: 22px; --tc-lh: 1.45; }
+  .tc .tc-media{ margin-bottom: 14px; }
+  .tc .tc-quote{ margin-top: 16px; }
+  .tc::before{ background: radial-gradient(120% 60% at 50% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%); }
+}
+
+/* Safety net: anything in the deck that reaches past the side gutters is clipped at the window
+   edge, so the phone page never scrolls sideways. */
 @media (max-width: 900px){ #testimonials{ overflow-x: clip; } }
 
 /* Deck controls */

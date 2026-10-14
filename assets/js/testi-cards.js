@@ -2,7 +2,8 @@
    Desktop (901px and wider): marquee. The cards are copied once (aria-hidden, inert) so the
    strip loops without a seam; the strip bleeds to both window edges at any frame-fit.js page
    scale; it pauses on hover (CSS) and while the section is off screen.
-   Phone (900px and narrower): deck. A tilted stack, one card in front, that moves on every
+   Phone (900px and narrower): deck. A straight stack, the two cards behind stepping up and to
+   the right (CSS --tc-dx, --tc-dy), one card in front, that moves on every
    AUTO seconds. It pauses for a mouse hover, keyboard focus inside, the section off screen, or a
    hidden tab; a tap on the arrows does not pause it. Swipe left for the next card, right for
    the previous one. Reduced motion: no copies, no drift, no autoplay. */
@@ -14,7 +15,7 @@
   var dotsBox = wrap.querySelector('.tc-dots');
   var phone = matchMedia('(max-width: 900px)');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  var AUTO = 5, TILT = 2;
+  var AUTO = 5;
   var cards = Array.prototype.slice.call(track.querySelectorAll('.tc'));
   var order = cards.map(function (c, i) { return i; });
   var timer = 0, hovering = false, focused = false, inView = true, busy = false;
@@ -50,9 +51,8 @@
     if (h) wrap.style.setProperty('--tc-deck-h', h + 'px');
   }
   function poseFor(k) {
-    var s = k % 2 ? -1 : 1;
-    if (k === 0) return 'translate(0, 0) rotate(0deg) scale(1)';
-    return 'translate(' + (s * (10 + k * 14)) + 'px, ' + (k * 10) + 'px) rotate(' + (s * TILT * (0.6 + k * 0.4)) + 'deg) scale(' + (1 - k * 0.04) + ')';
+    var m = Math.min(k, 2);
+    return 'translate(calc(' + m + ' * var(--tc-dx)), calc(' + (-m) + ' * var(--tc-dy)))';
   }
   function pose() {
     var n = order.length;
@@ -60,7 +60,7 @@
       var c = cards[ci];
       c.style.setProperty('--tc-pose', poseFor(k));
       c.style.zIndex = String(n - k);
-      c.style.opacity = k > 3 ? '0' : '1';
+      c.style.opacity = k > 2 ? '0' : '1';
       c.classList.toggle('is-front', k === 0);
       if (k === 0) c.removeAttribute('aria-hidden'); else c.setAttribute('aria-hidden', 'true');
       c.inert = k !== 0;
@@ -84,7 +84,7 @@
       var f = cards[order[0]];
       f.classList.add('is-out');
       f.style.zIndex = String(order.length + 1);
-      f.style.setProperty('--tc-pose', 'translate(-70%, 24px) rotate(-12deg) scale(.96)');
+      f.style.setProperty('--tc-pose', 'translate(-35%, 36px) scale(.96)');
       f.style.opacity = '0';
       setTimeout(function () { f.classList.remove('is-out'); order.push(order.shift()); pose(); busy = false; }, 180);
     } else if (dir > 0) { order.push(order.shift()); pose(); }
