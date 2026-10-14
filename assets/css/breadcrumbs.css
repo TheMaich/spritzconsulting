@@ -1,7 +1,7 @@
 /* Breadcrumbs on guides, calculators and the About page: Home > Resources > Page.
    Mono caps like the article meta row; the current page is plain text, the levels above link.
    Uses the page tokens (--mono, --ink-2, --ink-3, --clay). */
-.crumbs{ margin: 0 0 22px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.crumbs{ margin: 0 0 22px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
 .crumbs ol{ list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .crumbs li{ display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
 .crumbs li + li::before{ content: "/"; color: var(--ink-3); opacity: .6; }

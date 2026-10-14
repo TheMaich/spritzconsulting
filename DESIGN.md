@@ -32,26 +32,26 @@ colors:
   accent-2-light: "#BE1383"
 typography:
   display:
-    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Familjen Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(44px, 7.4vw, 112px)"
     fontWeight: 400
     lineHeight: 0.94
-    letterSpacing: "-0.035em"
-    fontVariation: "opsz 96"
+    letterSpacing: "-0.06em"
+    fontVariation: "normal"
   headline:
-    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Familjen Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(40px, 5.4vw, 76px)"
     fontWeight: 400
     lineHeight: 1.0
-    letterSpacing: "-0.03em"
-    fontVariation: "opsz 80"
+    letterSpacing: "-0.055em"
+    fontVariation: "normal"
   title:
-    fontFamily: "Bricolage Grotesque, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Familjen Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(22px, 2.4vw, 32px)"
     fontWeight: 500
     lineHeight: 1.15
-    letterSpacing: "-0.015em"
-    fontVariation: "opsz 36"
+    letterSpacing: "-0.04em"
+    fontVariation: "normal"
   body:
     fontFamily: "Lato, -apple-system, BlinkMacSystemFont, Segoe UI Variable Text, system-ui, sans-serif"
     fontSize: "17px"
@@ -65,17 +65,17 @@ typography:
     lineHeight: 1.78
     letterSpacing: "normal"
   label:
-    fontFamily: "Bebas Neue, Impact, Haettenschweiler, Arial Narrow, sans-serif"
+    fontFamily: "Sofia Sans Extra Condensed, Arial Narrow, sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: "0.08em"
+    letterSpacing: "0.065em"
   meta:
-    fontFamily: "Bebas Neue, Impact, sans-serif"
+    fontFamily: "Sofia Sans Extra Condensed, Arial Narrow, sans-serif"
     fontSize: "12px"
     fontWeight: 400
     lineHeight: 1
-    letterSpacing: "0.14em"
+    letterSpacing: "0.125em"
 rounded:
   xs: "4px"
   sm: "6px"
@@ -186,7 +186,7 @@ Rejects: SaaS gradient buttons; navy-and-cyan B2B template; glassmorphism beyond
 **Key Characteristics:**
 - Tinted near-black `#0A0B0E` (paper) tilted toward warm-cool, never `#000`.
 - Single saturated accent — clay mustard `#E5B415`. Touches: dot pulse, headline `<em>`, button primary, scrollbar thumb, focus ring, aurora wash.
-- Three families: Bricolage Grotesque (display, variable opsz), Lato (body), Bebas Neue (mono/label uppercase).
+- Three families: Familjen Grotesk (display, variable wght), Lato (body), Sofia Sans Extra Condensed 600 (mono/label uppercase). The wordmark alone keeps Bricolage Grotesque 500.
 - Pill radius (999px) for interactive; 8–18px for panels; 4px focus.
 - Theme-paired: dark mustard-on-near-black; light deep-mustard-on-cream. Magenta promoted to kicker accents in light.
 
@@ -228,31 +228,32 @@ The system runs on a single saturated brand color against a tinted near-black or
 
 ## 3. Typography
 
-**Display Font:** Bricolage Grotesque (variable, `opsz` axis 12–96).
+**Display Font:** Familjen Grotesk (variable, `wght` 400–700, real italic), self-hosted, `size-adjust: 105.6%` so its x-height matches the 0.528em of the Bricolage Grotesque it replaced.
 **Body Font:** Lato (self-hosted / Google Fonts; system stack as fallback chain). Static cuts 300/400/700/900 + 400/700 italic — Lato has no 500 or 600, so those weights resolve to 400 and 700.
-**Label/Mono Font:** Bebas Neue (condensed display sans, used as monospace-role).
+**Label/Mono Font:** Sofia Sans Extra Condensed 600 (condensed sans, used as monospace-role), self-hosted, one weight for every requested weight, `size-adjust: 106.9%` so its cap height matches the 0.70em of the Bebas Neue it replaced.
+**Wordmark Font:** Bricolage Grotesque 500 at opsz 24, self-hosted as a subset of only the letters of `spritz consulting`.
 
-**Character:** Editorial pairing — variable-opsz serif-leaning grotesque for display does the heavy expression, Lato keeps body warm and legible, Bebas Neue does meta/labels/numerals at small sizes with tight uppercase. Bebas is "mono" by role (tickers, kickers, nav, meta) even though it's a condensed sans — chosen for editorial weight, not for monospace fidelity.
+**Character:** Editorial pairing — a characterful grotesque for display does the heavy expression, Lato keeps body warm and legible, Sofia Sans Extra Condensed does meta/labels/numerals at small sizes with tight uppercase. Sofia is "mono" by role (tickers, kickers, nav, meta) even though it's a condensed sans — chosen for editorial weight, not for monospace fidelity.
 
 ### Hierarchy
-- **Display** (Bricolage 400, `clamp(44px, 7.4vw, 112px)`, lh 0.94, ls -0.035em, opsz 96): hero H1. Italics in clay for the emphasized phrase.
-- **Headline** (Bricolage 400, `clamp(40px, 5.4vw, 76px)`, lh 1.0, ls -0.03em, opsz 80): resources hero, calculator hero.
-- **Article H1** (Bricolage 600, `clamp(48px, 8vw, 104px)`, lh 1.02, ls -0.04em, opsz 96): article title.
-- **Article H2** (Bricolage 600, `clamp(26px, 3.4vw, 40px)`, lh 1.12, ls -0.025em, opsz 40): with `01` `02` mono counters in clay above, plus top border-rule.
-- **Title** (Bricolage 500, `clamp(22px, 2.4vw, 32px)`, lh 1.15, ls -0.015em, opsz 36): resource card title, calculator input label.
-- **Deck/Lede** (Bricolage 500, `clamp(20px, 2.4vw, 28px)`, lh 1.5, ls -0.015em): article deck under H1, with bottom rule.
+- **Display** (Familjen 400, `clamp(44px, 7.4vw, 112px)`, lh 0.94, ls -0.06em): hero H1. Italics in clay for the emphasized phrase.
+- **Headline** (Familjen 400, `clamp(40px, 5.4vw, 76px)`, lh 1.0, ls -0.055em): resources hero, calculator hero.
+- **Article H1** (Familjen 600, `clamp(48px, 8vw, 104px)`, lh 1.02, ls -0.065em): article title.
+- **Article H2** (Familjen 600, `clamp(26px, 3.4vw, 40px)`, lh 1.12, ls -0.05em): with `01` `02` mono counters in clay above, plus top border-rule.
+- **Title** (Familjen 500, `clamp(22px, 2.4vw, 32px)`, lh 1.15, ls -0.04em): resource card title, calculator input label.
+- **Deck/Lede** (Familjen 500, `clamp(20px, 2.4vw, 28px)`, lh 1.5, ls -0.04em): article deck under H1, with bottom rule.
 - **Body** (Lato 400, 17px, lh 1.55): default site copy.
 - **Body Article** (Lato 400, 18px, lh 1.78): long-form article prose, looser for read-through.
-- **Label** (Bebas 400, 14px, ls 0.08em, UPPERCASE): nav, kickers, button text, preset chips.
-- **Meta** (Bebas 400, 12–13px, ls 0.14em, UPPERCASE): byline, footer, breakdown rows, category tags.
+- **Label** (Sofia XCond 400, 14px, ls 0.065em, UPPERCASE): nav, kickers, button text, preset chips.
+- **Meta** (Sofia XCond 400, 12–13px, ls 0.125em, UPPERCASE): byline, footer, breakdown rows, category tags.
 
 ### Named Rules
 
 **The Italic-Means-Clay Rule.** Italic text is always clay (`em` in headlines, `em` in body, deck italics). Never an italic in default ink.
 
-**The Counter-Header Rule.** Article H2 carries an `::before` numeral counter (`01`, `02`) in clay Bebas above the heading. The number is the marker, the heading is the content.
+**The Counter-Header Rule.** Article H2 carries an `::before` numeral counter (`01`, `02`) in clay Sofia above the heading. The number is the marker, the heading is the content.
 
-**The Op-Size Rule.** Bricolage uses `font-variation-settings: "opsz" N` matched to the rendered size (opsz 24 for 20px wordmark, opsz 40 for H2, opsz 96 for display). Don't render a 100px headline at opsz 24.
+**The Op-Size Rule.** Only the wordmark still uses Bricolage, baked at opsz 24 for its 20px size. Familjen Grotesk has no `opsz` axis, so display sizes need no `font-variation-settings`.
 
 **The Mono-For-Numbers Rule.** Any numeric value rendered in chrome (nav `01`–`05`, article counter, breakdown rows, calc result) uses `font-variant-numeric: tabular-nums`.
 
@@ -292,7 +293,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 
 ### Cards / Containers
 - **Hero-right panel:** rule border, paper-3 fill, `border-radius: 18px`, `padding: 28px`, `shadow-md`. Deck cards inside tilt ±1.6° at rest, slide-and-blur out of focus when inactive.
-- **TL;DR card:** paper-2 fill, rule border, radius 14px, `padding: 32px 34px`. Label is a clay pill with paper text, 12px Bebas, ls 0.16em. List items get a clay `·` bullet.
+- **TL;DR card:** paper-2 fill, rule border, radius 14px, `padding: 32px 34px`. Label is a clay pill with paper text, 12px Sofia XCond, ls 0.145em. List items get a clay `·` bullet.
 - **CTA card:** paper-2 fill, rule border, radius 16px, `padding: 48px`. `::before` adds a soft clay radial wash at 100% 50%. Hover scales 1.025, clay-mix border, clay-tinted box-shadow; `::after` gradient frame fades in. The whole card is the hover target. (Single-column on mobile.)
 - **Resource card (`.res-card`):** flat divided row, `border-bottom: 1px solid rule`, 56px icon column + 1fr body. Hover bg → 4%-mix clay tint, title color → clay. Unlocked variant promotes the icon stroke and border to clay (30%-mix).
 - **Icon box (`.res-icon`):** 48px paper-3 square, rule border, radius 12px. Houses a 22px stroked icon at 1.5 stroke-width.
@@ -306,11 +307,11 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
 - **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with a clay italic `Σ` prefix and a clay-tinted rule extending to the right.
 - **Value**: serif 600, `clamp(56px, 10vw, 104px)`, ls -0.045em, opsz 96, tabular-nums.
-- **Breakdown rows**: Bebas 13px mono, ls 0.06em, tabular-nums, separated by 1px clay-tinted rule.
+- **Breakdown rows**: Sofia XCond 13px mono, ls 0.045em, tabular-nums, separated by 1px clay-tinted rule.
 
 ### Navigation
 - **Bar:** sticky, `backdrop-filter: saturate(140%) blur(14px)`, paper at 82% opacity. Scrolled state → 92% opacity, rule-soft bottom border.
-- **Links:** Bebas 14px ls 0.04em UPPERCASE, ink-2 default. Number prefix (`01`–`04`) in clay tabular-nums. Hover → underline `::after` scales to 0.6. Active → clay pill background, paper text.
+- **Links:** Sofia XCond 14px ls 0.025em UPPERCASE, ink-2 default. Number prefix (`01`–`04`) in clay tabular-nums. Hover → underline `::after` scales to 0.6. Active → clay pill background, paper text.
 - **Resources link:** opted out of the numbered scheme — clay color at opacity 0.85, trailing `↗` arrow, distinct from the in-page anchors.
 - **Mobile menu:** full-bleed paper overlay, serif 36px (opsz 60) nav list, mono `01`-style numbers in clay.
 
@@ -322,7 +323,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 
 **Grain.** Inline SVG fractalNoise filter, baseFrequency 0.9, `position: fixed inset: -10%`, `background-position` animated 140px loop, blend-mode `screen` dark / `multiply` light, opacity 0.05. Permanent, never decorative; it's the texture of the page itself.
 
-**Article H2 counter rules.** `counter-reset: h2` on article root, `counter-increment: h2` per H2, `::before { content: counter(h2, decimal-leading-zero); }` in clay Bebas above, with `border-top: 1px solid rule` and 72px top margin. The numbered, ruled break IS the chapter mark.
+**Article H2 counter rules.** `counter-reset: h2` on article root, `counter-increment: h2` per H2, `::before { content: counter(h2, decimal-leading-zero); }` in clay Sofia above, with `border-top: 1px solid rule` and 72px top margin. The numbered, ruled break IS the chapter mark.
 
 **Scroll-linked frame reveal.** At most one frame per page (`[data-scroll-frame]`). A `--p` progress var, 0 → 1, is driven by scroll position and eased with smoothstep (`t*t*(3-2t)`): raw `t` hits 0 when the frame's top sits at 88% of the viewport and 1 when its centre reaches 50%. `clip-path` opens from `inset(26% 22%)` to `inset(0)` (radius 18px throughout); the wrapper unrotates from 7deg to a resting 1.6deg; the frame rises 56px; the image settles from `scale(1.28)` to `scale(1)`, drifts 8% vertically and brightens from 0.7 to 1. The caption fades in late, over the last 30% of `--p`. Depth comes from `drop-shadow` on the rotating wrapper, never `box-shadow` on the frame — `clip-path` would cut a box-shadow off. `--p` defaults to 1 in CSS, so no-JS and reduced-motion visitors get the final state, at rest on 1.6deg, with no listener attached. Used once, on the "01 My Experience" photo — it earns its weight by being rare.
 
@@ -339,9 +340,9 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 ### Do:
 - **Do** tint every neutral toward the brand hue. Paper `#0A0B0E` not `#000`; cream `#F4F3ED` not `#fff`.
 - **Do** keep clay (`#E5B415`) as the single chromatic accent. If light theme, deepen to `#8A6600` for legibility on cream.
-- **Do** use Bricolage Grotesque for any display text and set `font-variation-settings: "opsz" N` matched to render size.
-- **Do** use Bebas Neue uppercase for labels, kickers, nav, and meta — never for body.
-- **Do** use the `::before` counter pattern (`decimal-leading-zero` in clay Bebas) for article H2 chapter marks.
+- **Do** use Familjen Grotesk (`--serif`, "Spritz Display") for any display text; keep Bricolage Grotesque for the wordmark only.
+- **Do** use Sofia Sans Extra Condensed 600 uppercase for labels, kickers, nav, and meta — never for body.
+- **Do** use the `::before` counter pattern (`decimal-leading-zero` in clay Sofia) for article H2 chapter marks.
 - **Do** apply `font-variant-numeric: tabular-nums` to every chrome number (counters, breakdown values, calculator results, nav numerals).
 - **Do** italicize the emphasized phrase in headlines in clay (`<em>`).
 - **Do** keep CTA cards, TL;DR cards, and result cards at radius 14–18px; pills at 999px; inputs at 8px.
@@ -359,7 +360,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Don't** wrap the resource list in icon-tile cards. The current flat divided list is intentional — keep it.
 - **Don't** nest cards. The hero-right panel is a card; the deck inside it is not a card-in-a-card, it's tilted absolute-positioned items.
 - **Don't** use neutral grey shadows. Every shadow tints toward clay.
-- **Don't** render Bricolage Grotesque at the wrong `opsz` (e.g. 96 on a 14px label). Match opsz to size.
+- **Don't** load Bricolage Grotesque or Bebas Neue anywhere but the wordmark subset; display and labels go through `--serif` and `--mono`.
 - **Don't** use em dashes in UI copy or articles (project convention — commas/colons/parens instead).
 - **Don't** let scroll-wheel change number-input values on the calculators. Blur on wheel.
 - **Don't** ship animations that ignore `prefers-reduced-motion`. Aurora, grain drift, dot pulse, and `.res-cta` magnetic transform all opt out correctly — keep that contract.

@@ -32,7 +32,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+<link rel="preload" href="/assets/fonts/familjen-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/sofia-sans-xcond-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/bricolage-wordmark.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/fonts.css?v=20261014">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/assets/css/bg-shader.css">
 <link rel="stylesheet" href="/assets/css/breadcrumbs.css?v=20261014">
 <script src="/assets/js/bg-shader.js" defer></script>
@@ -51,8 +55,8 @@
 <style>
 :root{
   --sans: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
-  --mono: "Bebas Neue", "Impact", "Haettenschweiler", "Arial Narrow", sans-serif;
-  --serif: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Spritz Label", "Arial Narrow", sans-serif;
+  --serif: "Spritz Display", ui-sans-serif, system-ui, sans-serif;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   --paper:#0A0B0E;
@@ -228,7 +232,7 @@ html{
 }
 .nav a{
   font-family: var(--mono);
-  font-size: 14px; letter-spacing: 0.04em;
+  font-size: 14px; letter-spacing: 0.025em;
   text-transform: uppercase;
   color: var(--ink-2);
   padding: 8px 14px;
@@ -319,7 +323,7 @@ html{
   min-height: 38px;
   font-family: var(--mono);
   font-size: 13px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
   color: var(--ink-3);
   border-radius: 999px;
@@ -363,14 +367,14 @@ html{
   display: flex; flex-direction: column; gap: 24px;
   font-family: var(--serif);
   font-size: 36px; font-variation-settings: "opsz" 60;
-  letter-spacing: -0.02em; line-height: 1;
+  letter-spacing: -0.045em; line-height: 1;
 }
 .mobile-menu nav a{ display: flex; align-items: baseline; gap: 16px; }
-.mobile-menu nav a .num{ font-family: var(--mono); font-size: 13px; color: var(--clay); letter-spacing: 0.06em; }
+.mobile-menu nav a .num{ font-family: var(--mono); font-size: 13px; color: var(--clay); letter-spacing: 0.045em; }
 .mobile-menu .foot{
   margin-top: auto;
   font-family: var(--mono); font-size: 14px; color: var(--ink-2);
-  letter-spacing: 0.04em; text-transform: uppercase;
+  letter-spacing: 0.025em; text-transform: uppercase;
   display: flex; justify-content: center; padding: 32px 0 16px;
   border-top: 1px solid var(--rule);
 }
@@ -378,7 +382,7 @@ html{
 .kicker{
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--mono);
-  font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: 14px; letter-spacing: 0.065em; text-transform: uppercase;
   color: var(--clay);
 }
 
@@ -398,7 +402,7 @@ html{
   font-size: clamp(40px, 6vw, 96px);
   font-variation-settings: "opsz" 80;
   line-height: 0.96;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.055em;
   margin: 0;
   text-wrap: balance;
 }
@@ -412,7 +416,7 @@ html{
   padding-top: 28px;
   border-top: 1px solid var(--rule);
   font-family: var(--mono);
-  font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-size: 13px; letter-spacing: 0.045em; text-transform: uppercase;
   color: var(--ink-2);
 }
 .footer-meta .links{
@@ -440,7 +444,7 @@ html{
   font-size: clamp(40px, 5.4vw, 76px);
   font-variation-settings: "opsz" 80;
   line-height: 1.0;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.055em;
   color: var(--ink);
   margin: 0 0 22px;
   text-wrap: balance;
@@ -476,7 +480,7 @@ html{
 .res-num{
   font-family: var(--mono);
   font-size: clamp(22px, 2.2vw, 28px);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.025em;
   color: var(--clay);
   padding-top: 6px;
   font-variant-numeric: tabular-nums;
@@ -491,7 +495,7 @@ html{
   font-size: clamp(22px, 2.4vw, 32px);
   font-variation-settings: "opsz" 36;
   line-height: 1.15;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.04em;
   color: var(--ink);
   margin: 0;
   transition: color .25s var(--ease);
@@ -507,7 +511,7 @@ html{
 .res-link{
   font-family: var(--mono);
   font-size: 14px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.045em;
   text-transform: uppercase;
   color: var(--ink-2);
   margin-top: 4px;
@@ -591,7 +595,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .article-wrap .category{
   font-family: var(--mono);
   font-size: 13px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.125em;
   color: var(--clay);
   margin-bottom: 20px;
 }
@@ -617,7 +621,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   margin-bottom: 44px;
   font-family: var(--mono);
   font-size: 12px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   color: var(--ink-3);
 }
 .article-wrap .meta b{ color: var(--ink); font-weight: 400; font-size: 12px; }
@@ -641,7 +645,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-family: var(--serif);
   font-size: clamp(26px, 3.4vw, 40px);
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.05em;
   font-variation-settings: "opsz" 40;
   color: var(--ink);
   text-transform: none;
@@ -655,7 +659,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-size: clamp(22px, 2.8vw, 32px);
   font-weight: 500;
   line-height: 1.32;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.045em;
   color: var(--ink);
   margin: 56px 0;
   padding: 0;
@@ -677,7 +681,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   display: block;
   font-family: var(--mono);
   font-size: 12px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.145em;
   color: var(--ink-3);
   margin-bottom: 18px;
 }
@@ -721,7 +725,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   display: inline-block;
   font-family: var(--mono);
   font-size: 12px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.145em;
   color: var(--paper);
   background: var(--clay);
   padding: 5px 12px;

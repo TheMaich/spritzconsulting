@@ -25,7 +25,7 @@
   #svc-h .svc-h-heading{
     display: block; flex: none; margin: 0;
     font-family: var(--serif); font-weight: 400; font-variation-settings: "opsz" 96;
-    font-size: var(--svc-heading, 48px); line-height: 1; letter-spacing: -0.03em;
+    font-size: var(--svc-heading, 48px); line-height: 1; letter-spacing: -0.055em;
     color: var(--ink); text-wrap: balance;
   }
 
@@ -39,7 +39,7 @@
   #svc-h .services-tab{
     min-width: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
     font-family: var(--serif); font-weight: 400; font-variation-settings: "opsz" 96;
-    font-size: var(--svc-title, 40px); line-height: 1; letter-spacing: -0.025em;
+    font-size: var(--svc-title, 40px); line-height: 1; letter-spacing: -0.05em;
     color: var(--ink-3); cursor: pointer;
     transition: color .35s var(--ease), transform .18s var(--ease);
   }

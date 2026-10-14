@@ -31,7 +31,7 @@ html.lanyard-grabbing, html.lanyard-grabbing *{ cursor: grabbing !important; -we
   position: absolute; left: 50%; top: -14px; z-index: 3;
   transform: translate(-50%, -100%);
   cursor: pointer; white-space: nowrap;
-  font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+  font-family: var(--mono); font-size: 13px; letter-spacing: .065em; text-transform: uppercase;
   padding: 7px 14px; border-radius: 999px;
   background: var(--paper-3); border: 1px solid var(--rule); color: var(--ink-2);
   box-shadow: var(--shadow-md);

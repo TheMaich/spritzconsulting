@@ -80,7 +80,7 @@ if (cardEl && hero && !phone.matches && webglOK() && params.get('badge') !== 'of
   Promise.all([
     import(THREE_URL), import(RAPIER_URL),
     fetch(ASSETS + 'cards.json' + ASSETS_V).then((r) => { if (!r.ok) throw new Error('cards.json ' + r.status); return r.json(); }),
-    document.fonts.load('64px "Bebas Neue"'), document.fonts.load('400 64px "Bricolage Grotesque"'),
+    document.fonts.load('64px "Spritz Label"'), document.fonts.load('400 64px "Spritz Display"'),
   ]).then(start).then(() => clearTimeout(safety)).catch((e) => {
     clearTimeout(safety); release();
     console.warn('[lanyard] staying on the HTML card:', e);
@@ -144,13 +144,13 @@ async function start([THREE, RAPIERmod, CARDS]) {
     x.globalAlpha = 0.12; x.fillStyle = g; x.fillRect(0, 0, W, H); x.globalAlpha = 1; x.restore();
     x.lineWidth = 2 * k; x.strokeStyle = css('--rule'); rr(x, k, k, W - 2 * k, H - 2 * k, 18 * k); x.stroke();
     x.textAlign = 'center'; x.textBaseline = 'alphabetic';
-    x.fillStyle = css('--ink'); x.font = `400 ${56 * k}px "Bricolage Grotesque"`;
+    x.fillStyle = css('--ink'); x.font = `400 ${56 * k}px "Spritz Display"`;
     const word = 'spritz consulting', ww = x.measureText(word).width;
     x.fillText(word, W / 2 - 8 * k, H * 0.47);
     x.fillStyle = css('--clay'); x.beginPath(); x.arc(W / 2 + ww / 2 + 2 * k, H * 0.47 - 6 * k, 9 * k, 0, Math.PI * 2); x.fill();
-    x.fillStyle = css('--ink-2'); x.font = `400 ${22 * k}px "Bebas Neue"`;
+    x.fillStyle = css('--ink-2'); x.font = `400 ${22 * k}px "Spritz Label"`;
     x.fillText('PRODUCTION  &  PUBLISHING  CONSULTANCY', W / 2, H * 0.47 + 46 * k);
-    x.fillStyle = css('--clay'); x.font = `400 ${20 * k}px "Bebas Neue"`;
+    x.fillStyle = css('--clay'); x.font = `400 ${20 * k}px "Spritz Label"`;
     x.fillText('SPRITZCONSULTING.COM', W / 2, H - 48 * k);
     punch(x, W);
     backTex.dispose(); backTex.image = backCv; backTex.needsUpdate = true;
@@ -170,7 +170,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
     x.beginPath(); x.moveTo(13, 0); x.lineTo(13, H); x.moveTo(W - 13, 0); x.lineTo(W - 13, H); x.stroke(); x.setLineDash([]);
     x.globalAlpha = 1; x.fillStyle = ink;
     x.save(); x.translate(W / 2, H / 2); x.rotate(-Math.PI / 2);
-    x.font = '400 66px "Bebas Neue"'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.font = '400 66px "Spritz Label"'; x.textAlign = 'center'; x.textBaseline = 'middle';
     x.fillText('SPRITZ CONSULTING  ·  ', 0, 4);
     x.restore();
     strapTex.needsUpdate = true;

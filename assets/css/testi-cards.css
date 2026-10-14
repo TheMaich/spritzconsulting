@@ -55,7 +55,7 @@ html[data-theme="light"]{ --logo-tile: var(--paper-3); }
   box-shadow: 0 14px 28px -16px color-mix(in srgb, var(--clay) 55%, transparent);
 }
 .tc-photo img{ width: 100%; height: 100%; object-fit: cover; display: block; }
-.tc-initials{ font-family: var(--serif); font-weight: 500; font-size: calc(var(--tc-photo) * .3); letter-spacing: -0.02em; color: var(--ink-2); }
+.tc-initials{ font-family: var(--serif); font-weight: 500; font-size: calc(var(--tc-photo) * .3); letter-spacing: -0.045em; color: var(--ink-2); }
 .tc-logo{
   box-sizing: border-box; display: grid; place-items: center; overflow: hidden;
   position: absolute; right: calc(var(--tc-logo) * -0.22); bottom: 0;
@@ -66,7 +66,7 @@ html[data-theme="light"]{ --logo-tile: var(--paper-3); }
 }
 .tc-logo img{ width: 100%; height: 100%; object-fit: contain; display: block; }
 
-.tc-name{ margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--tc-name); line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); transition: color .35s var(--ease); }
+.tc-name{ margin: 0; font-family: var(--serif); font-weight: 500; font-size: var(--tc-name); line-height: 1.15; letter-spacing: -0.035em; color: var(--ink); transition: color .35s var(--ease); }
 .tc-role{ margin: 6px 0 0; font-family: var(--sans); font-size: var(--tc-role); line-height: 1.35; color: var(--ink-2); }
 .tc-quote{
   margin: 24px 0 0; padding: 0; align-self: stretch;
