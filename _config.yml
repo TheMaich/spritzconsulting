@@ -1,0 +1,16 @@
+# GitHub Pages (Jekyll) build settings. Only used to keep repo-internal files off the
+# public site: docs, design notes, Worker source, scripts and the design system.
+# The site pages themselves have no front matter, so Jekyll copies them unchanged.
+exclude:
+  - DESIGN.md
+  - DESIGN.json
+  - skills-lock.json
+  - cloudflare-html-cache.md
+  - search-console-setup.md
+  - docs/
+  - workers/
+  - scripts/
+  - tools/
+  - design-system/
+  - assets-raw/
+  - assets/vendor/README.md
