@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <link rel="canonical" href="https://spritzconsulting.com/resources/ip-ownership.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>You own the IP. What for? — Spritz Consulting</title>
+<title>Publishing Contract IP Ownership and Reversion | Spritz</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -20,13 +20,13 @@
 <meta name="color-scheme" content="dark light" />
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://spritzconsulting.com/resources/ip-ownership.html">
-<meta property="og:title" content="You own the IP. What for? — Spritz Consulting">
+<meta property="og:title" content="Publishing Contract IP Ownership and Reversion | Spritz">
 <meta property="og:description" content="'You keep your IP' sounds like the good news. But ownership and control are different things, and the gap between them is where most of the risk lives.">
 <meta property="og:image" content="https://spritzconsulting.com/assets/og-image.png?v=4">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="You own the IP. What for? — Spritz Consulting">
+<meta name="twitter:title" content="Publishing Contract IP Ownership and Reversion | Spritz">
 <meta name="twitter:description" content="'You keep your IP' sounds like the good news. But ownership and control are different things, and the gap between them is where most of the risk lives.">
 <meta name="twitter:image" content="https://spritzconsulting.com/assets/og-image.png?v=4">
 
@@ -34,6 +34,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Bebas+Neue&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/assets/css/bg-shader.css">
+<link rel="stylesheet" href="/assets/css/breadcrumbs.css?v=20261014">
 <script src="/assets/js/bg-shader.js" defer></script>
 
 <script>
@@ -620,6 +621,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-3);
 }
 .article-wrap .meta b{ color: var(--ink); font-weight: 400; font-size: 12px; }
+.byline{ font-size: 14px; color: var(--ink-3); }
+.article-wrap .byline{ margin: -28px 0 44px; }
+.byline a{ color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+.byline a:hover{ color: var(--clay); text-decoration-color: currentColor; }
 .article-wrap .deck{
   font-size: clamp(20px, 2.4vw, 28px);
   line-height: 1.5;
@@ -936,51 +941,65 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "IP ownership and what it actually gives you",
-  "description": "Ownership and control are different things, and the gap between them is where most of the risk lives.",
-  "url": "https://spritzconsulting.com/resources/ip-ownership.html",
-  "datePublished": "2026-05-20",
-  "dateModified": "2026-07-18",
-  "author": {
-    "@type": "Person",
-    "name": "Michele Di Nardo",
-    "url": "https://spritzconsulting.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Spritz Consulting",
-    "url": "https://spritzconsulting.com"
-  },
-  "image": "https://spritzconsulting.com/assets/og-image.png?v=4",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://spritzconsulting.com/resources/ip-ownership.html"
-  }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://spritzconsulting.com/"
+      "@type": "Article",
+      "@id": "https://spritzconsulting.com/resources/ip-ownership.html#article",
+      "headline": "You own the IP. What for?",
+      "description": "'You keep your IP' sounds like the good news. But ownership and control are different things, and the gap between them is where most of the risk lives.",
+      "image": "https://spritzconsulting.com/assets/og-image.png?v=4",
+      "author": {
+        "@type": "Person",
+        "@id": "https://spritzconsulting.com/#michele-di-nardo",
+        "name": "Michele Di Nardo",
+        "url": "https://spritzconsulting.com/about/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://spritzconsulting.com/#organization",
+        "name": "Spritz Consulting",
+        "url": "https://spritzconsulting.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://spritzconsulting.com/android-chrome-512x512.png",
+          "width": 512,
+          "height": 512
+        }
+      },
+      "datePublished": "2026-05-20",
+      "dateModified": "2026-07-18",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://spritzconsulting.com/resources/ip-ownership.html"
+      },
+      "isPartOf": {
+        "@id": "https://spritzconsulting.com/resources/#webpage"
+      },
+      "inLanguage": "en"
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Resources",
-      "item": "https://spritzconsulting.com/resources/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "You own the IP. What for?",
-      "item": "https://spritzconsulting.com/resources/ip-ownership.html"
+      "@type": "BreadcrumbList",
+      "@id": "https://spritzconsulting.com/resources/ip-ownership.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spritzconsulting.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Resources",
+          "item": "https://spritzconsulting.com/resources/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "You own the IP. What for?",
+          "item": "https://spritzconsulting.com/resources/ip-ownership.html"
+        }
+      ]
     }
   ]
 }
@@ -1019,6 +1038,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
         <a href="/#consultancy"><span>My Experience</span></a>
+        <a href="/about/"><span>About</span></a>
         <a href="/#services"><span>Services</span></a>
         <a href="/#faq"><span>FAQ</span></a>
         <a href="/#testimonials"><span>Testimonials</span></a>
@@ -1041,6 +1061,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   </div>
   <nav aria-label="Mobile">
     <a href="/#consultancy" data-menu-link><span>My Experience</span></a>
+    <a href="/about/" data-menu-link><span>About</span></a>
     <a href="/#services" data-menu-link><span>Services</span></a>
     <a href="/#faq" data-menu-link><span>FAQ</span></a>
     <a href="/#testimonials" data-menu-link><span>Testimonials</span></a>
@@ -1054,6 +1075,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 <main id="main">
   <div class="article-wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/resources/">Resources</a></li>
+        <li aria-current="page">You own the IP. What for?</li>
+      </ol>
+    </nav>
     <article>
       <p class="category">Intellectual Property</p>
       <h1>You own the IP. <em>What for?</em></h1>
@@ -1064,6 +1092,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Published <b><time datetime="2026-05-20">20 May 2026</time></b></div>
         <div>Updated <b><time datetime="2026-07-18">18 July 2026</time></b></div>
       </div>
+      <p class="byline">By <a href="/about/">Michele Di Nardo</a>, independent producer. 10 years across Raw Fury, Rebellion and 34BigThings.</p>
       <p class="deck">There's a version of "you keep your game" that means almost nothing in practice. Ownership and control are different things, and the gap between them is where most of the risk lives.</p>
       <p>"You keep your IP" is something publishers say early and often in a pitch. It sounds like the good news. Sometimes it is.</p>
       <p>IP ownership and IP control are different things. You can technically own your game and still be unable to release it on a new platform, publish a sequel, or do anything commercially meaningful with it, because the publisher holds a perpetual exclusive licence covering every exploitation of the work, everywhere in the world, for as long as the agreement is in effect. In a perpetual contract, that's forever.</p>
@@ -1079,6 +1108,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <h2>The question to ask</h2>
       <p>Don't ask "do I keep my IP?" That question gets a yes in almost every pitch, regardless of what the contract actually says. Ask instead: what does my IP ownership let me do if this relationship doesn't work out?</p>
       <p>If the honest answer is "not much," that's not necessarily a deal-breaker. It depends on the publisher, the relationship, the deal structure, and what you're getting in return. But it should be a conscious decision, not something you discover two years later when you want to make a remaster and find out you need their sign-off.</p>
+      <p>To see what a deal actually pays before you sign, run it through the <a href="/resources/tools/publishing-break-even-calculator.html">Publishing Break-Even Calculator</a>. Deal milestone and schedule sanity checks are part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
     </article>
 
     <div class="tldr">
@@ -1126,6 +1156,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   </div>
   <div class="wrap footer-meta">
     <div class="links">
+      <a href="/about/"><span>About</span></a>
       <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
         <span>LinkedIn</span>
         <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>

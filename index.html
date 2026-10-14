@@ -2206,25 +2206,59 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       "@id": "https://spritzconsulting.com/#organization",
       "name": "Spritz Consulting",
       "description": "Production & Publishing Consultancy for the games industry",
-      "url": "https://spritzconsulting.com",
-      "sameAs": ["https://www.linkedin.com/company/115837121/"],
-      "founder": { "@id": "https://spritzconsulting.com/#michele-di-nardo" },
+      "url": "https://spritzconsulting.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://spritzconsulting.com/android-chrome-512x512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://spritzconsulting.com/assets/og-image.png",
+      "sameAs": [
+        "https://www.linkedin.com/company/115837121/"
+      ],
+      "founder": {
+        "@id": "https://spritzconsulting.com/#michele-di-nardo"
+      },
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Turin",
         "addressCountry": "IT"
       },
-      "areaServed": "Worldwide",
-      "knowsAbout": ["Game Production", "Game Publishing", "Console Certification", "Project Management", "Indie Games", "Steam Publishing", "PlayStation Certification", "Xbox Certification", "Nintendo Switch Certification"]
+      "areaServed": {
+        "@type": "Place",
+        "name": "Europe"
+      },
+      "knowsAbout": [
+        "Game Production",
+        "Game Publishing",
+        "Console Certification",
+        "Project Management",
+        "Indie Games",
+        "Steam Publishing",
+        "PlayStation Certification",
+        "Xbox Certification",
+        "Nintendo Switch Certification"
+      ]
     },
     {
       "@type": "Person",
       "@id": "https://spritzconsulting.com/#michele-di-nardo",
       "name": "Michele Di Nardo",
-      "jobTitle": "Game Producer",
-      "url": "https://spritzconsulting.com",
-      "worksFor": { "@id": "https://spritzconsulting.com/#organization" },
-      "knowsAbout": ["Game Production", "Game Publishing", "Console Certification", "Project Management", "Indie Games"]
+      "alternateName": "Miki",
+      "jobTitle": "Independent Producer",
+      "url": "https://spritzconsulting.com/about/",
+      "image": "https://spritzconsulting.com/assets/miki-portrait.webp",
+      "worksFor": {
+        "@id": "https://spritzconsulting.com/#organization"
+      },
+      "knowsAbout": [
+        "Game Production",
+        "Game Publishing",
+        "Console Certification",
+        "Project Management",
+        "Indie Games"
+      ]
     },
     {
       "@type": "FAQPage",
@@ -2313,6 +2347,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
         <a href="#consultancy"><span>My Experience</span></a>
+        <a href="/about/"><span>About</span></a>
         <a href="#services"><span>Services</span></a>
         <a href="#faq"><span>FAQ</span></a>
         <a href="#testimonials"><span>Testimonials</span></a>
@@ -2335,6 +2370,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   </div>
   <nav aria-label="Mobile">
     <a href="#consultancy" data-menu-link><span>My Experience</span></a>
+    <a href="/about/" data-menu-link><span>About</span></a>
     <a href="#services" data-menu-link><span>Services</span></a>
     <a href="#faq" data-menu-link><span>FAQ</span></a>
     <a href="#testimonials" data-menu-link><span>Testimonials</span></a>
@@ -3121,6 +3157,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   </div>
   <div class="wrap footer-meta">
     <div class="links">
+      <a href="/about/"><span>About</span></a>
       <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
         <span>LinkedIn</span>
         <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>

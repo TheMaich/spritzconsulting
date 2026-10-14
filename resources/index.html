@@ -721,19 +721,47 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://spritzconsulting.com/"
+      "@type": "CollectionPage",
+      "@id": "https://spritzconsulting.com/resources/#webpage",
+      "url": "https://spritzconsulting.com/resources/",
+      "name": "Resources | Spritz Consulting",
+      "description": "Guides from the production side. Practical writing on publishing contracts, production, and platform delivery.",
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://spritzconsulting.com/#organization",
+        "name": "Spritz Consulting",
+        "url": "https://spritzconsulting.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://spritzconsulting.com/android-chrome-512x512.png",
+          "width": 512,
+          "height": 512
+        }
+      },
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://spritzconsulting.com/resources/#breadcrumb"
+      }
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Resources",
-      "item": "https://spritzconsulting.com/resources/"
+      "@type": "BreadcrumbList",
+      "@id": "https://spritzconsulting.com/resources/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://spritzconsulting.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Resources",
+          "item": "https://spritzconsulting.com/resources/"
+        }
+      ]
     }
   ]
 }
@@ -772,6 +800,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
         <a href="/#consultancy"><span>My Experience</span></a>
+        <a href="/about/"><span>About</span></a>
         <a href="/#services"><span>Services</span></a>
         <a href="/#faq"><span>FAQ</span></a>
         <a href="/#testimonials"><span>Testimonials</span></a>
@@ -794,6 +823,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
   </div>
   <nav aria-label="Mobile">
     <a href="/#consultancy" data-menu-link><span>My Experience</span></a>
+    <a href="/about/" data-menu-link><span>About</span></a>
     <a href="/#services" data-menu-link><span>Services</span></a>
     <a href="/#faq" data-menu-link><span>FAQ</span></a>
     <a href="/#testimonials" data-menu-link><span>Testimonials</span></a>
@@ -921,6 +951,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
   </div>
   <div class="wrap footer-meta">
     <div class="links">
+      <a href="/about/"><span>About</span></a>
       <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
         <span>LinkedIn</span>
         <svg class="arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>

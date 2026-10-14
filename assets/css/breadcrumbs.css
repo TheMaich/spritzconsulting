@@ -1,0 +1,13 @@
+/* Breadcrumbs on guides, calculators and the About page: Home > Resources > Page.
+   Mono caps like the article meta row; the current page is plain text, the levels above link.
+   Uses the page tokens (--mono, --ink-2, --ink-3, --clay). */
+.crumbs{ margin: 0 0 22px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.crumbs ol{ list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.crumbs li{ display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.crumbs li + li::before{ content: "/"; color: var(--ink-3); opacity: .6; }
+.crumbs a{ color: var(--ink-2); text-decoration: none; transition: color .2s ease; }
+.crumbs a:hover, .crumbs a:focus-visible{ color: var(--clay); }
+.crumbs [aria-current="page"]{ color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60ch; }
+@media (max-width: 600px){ .crumbs [aria-current="page"]{ max-width: 100%; white-space: normal; } }
+/* Touch: the links clear the 44px floor like the other controls on these pages. */
+@media (pointer: coarse){ .crumbs a{ display: inline-flex; align-items: center; min-height: 44px; } }
