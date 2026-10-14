@@ -11,7 +11,9 @@
  *    (down to 85%) to make room; only if that is not enough the strips stay outside and
  *    My Experience is framed on its own.
  * 3. Short windows. The hero card shrinks as a picture and the headline steps down
- *    until the hero copy fits; My Experience gives up padding.
+ *    until the hero copy fits; My Experience gives up padding. Tall windows do the reverse:
+ *    when the hero copy is shorter than the badge, the headline grows until the two columns
+ *    end together.
  * 4. Services: services-h.js lays the section out on desktop. This script only adds its
  *    stops (window.__svcH.group()) to the magnetic scroll.
  * 5. Magnetic scroll. Two groups of stops: hero, second screen, end of the second screen;
@@ -70,6 +72,8 @@
     eMin: 0.85,                         // short windows: smallest My Experience content scale that lets the two strips in
     cardMin: 0.6,                       // short windows: smallest hero card scale
     headMin: 40,                        // short windows: smallest headline size (px)
+    headMax: 112,                       // tall left column: largest headline size (px), as the CSS clamp
+    leftFill: 0.97,                     // the left column grows to this share of the badge height
     expPadMin: 24,                      // short windows: least My Experience padding (px, both together)
     magDur: 0.75,                       // magnetic move duration (s)
     magDurSvc: 0.55,                    // the same for moves onto a Services stop (the sideways slide)
@@ -203,6 +207,22 @@
       deck.style.transform = 'scale(' + cardK.toFixed(4) + ')';
       deck.style.marginTop = px(-(1 - cardK) * N.cardH);
     }
+    // Balance: when the left column is shorter than the badge beside it, the headline grows
+    // (up to C.headMax) until the column reaches C.leftFill of the badge height, so the hero
+    // does not sit at the top with the lower left empty.
+    root.classList.add('frame-measure');
+    var deckH = deck.getBoundingClientRect().height / K;              // page units, after any card scale
+    var targetH = Math.min(heroFrame - N.pads, deckH) * C.leftFill;
+    if (heroLeft.offsetHeight < targetH) {
+      var fs0 = parseFloat(getComputedStyle(h1).fontSize), lo2 = fs0, hi2 = Math.max(fs0, C.headMax);
+      for (var g = 0; g < 10; g++) {
+        var mid2 = (lo2 + hi2) / 2;
+        h1.style.fontSize = px(mid2);
+        if (heroLeft.offsetHeight <= targetH) lo2 = mid2; else hi2 = mid2;
+      }
+      h1.style.fontSize = lo2 > fs0 + 0.5 ? px(lo2) : '';
+    }
+    root.classList.remove('frame-measure');
     hero.style.minHeight = px(heroFrame);
 
     var expFrame = avail;
