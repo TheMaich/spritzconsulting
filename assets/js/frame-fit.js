@@ -7,7 +7,8 @@
  * 2. Frames. The hero fills the first screen (content centred). The studios strip,
  *    My Experience and the games strip share the second screen: their top and bottom
  *    padding stretches or tightens by the same proportion until the three fill it.
- *    If they cannot fit even with tight padding, the strips stay outside and
+ *    If they cannot fit even with tight padding, the My Experience content shrinks
+ *    (down to 85%) to make room; only if that is not enough the strips stay outside and
  *    My Experience is framed on its own.
  * 3. Short windows. The hero card shrinks as a picture and the headline steps down
  *    until the hero copy fits; My Experience gives up padding.
@@ -66,6 +67,7 @@
     kMin: 0.85, kMax: 1.6,              // page scale range
     padMin: 0.15, padMax: 2.5,          // second screen: padding range, as a share of the natural padding
     eMax: 1.3,                          // My Experience alone: largest growth of its content
+    eMin: 0.85,                         // short windows: smallest My Experience content scale that lets the two strips in
     cardMin: 0.6,                       // short windows: smallest hero card scale
     headMin: 40,                        // short windows: smallest headline size (px)
     expPadMin: 24,                      // short windows: least My Experience padding (px, both together)
@@ -171,7 +173,14 @@
     // Second screen: studios + My Experience + games together, when they fit with tight padding.
     var pads = N.stPadT + N.stPadB + N.expPadT + N.expPadB + N.gaPadT + N.gaPadB;
     var content = N.stH + N.expH + N.gaH - pads;
+    // Short windows: if the three miss the frame by a little, shrink the My Experience content
+    // (zoom, as a picture of itself) down to C.eMin so the strips still come in.
+    var gridH = aboutGrid.offsetHeight, eFit = 1;
     var pair = content + pads * C.padMin <= avail;
+    if (!pair && gridH > 0) {
+      var eNeed = 1 - (content + pads * C.padMin - avail) / gridH;
+      if (eNeed >= C.eMin) { pair = true; eFit = Math.floor(eNeed * 1000) / 1000; content -= gridH * (1 - eFit); }
+    }
     state.pair = pair;
     root.classList.toggle('frame-pair', pair);
 
@@ -198,6 +207,7 @@
 
     var expFrame = avail;
     if (pair) {
+      if (eFit < 1) aboutGrid.style.zoom = String(eFit);
       var f = Math.max(C.padMin, Math.min(C.padMax, (avail - content) / pads));
       studios.style.paddingTop = px(N.stPadT * f); studios.style.paddingBottom = px(N.stPadB * f);
       exp.style.paddingTop = px(N.expPadT * f); exp.style.paddingBottom = px(N.expPadB * f);
