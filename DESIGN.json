@@ -153,7 +153,7 @@
       "refersTo": "nav-link",
       "description": "Sticky bar with backdrop-filter. Numbered Sofia Sans Extra Condensed links with clay `01`–`04` prefixes; Resources link is opted out, clay with arrow.",
       "html": "<header class=\"ds-site-header\"><div class=\"ds-bar\"><a class=\"ds-wordmark\" href=\"/\"><span>spritz<span class=\"ds-dot\" aria-hidden=\"true\"></span>consulting</span></a><nav class=\"ds-nav\" aria-label=\"Primary\"><a href=\"#consultancy\"><span class=\"ds-num\">01</span><span>My Experience</span></a><a href=\"#services\"><span class=\"ds-num\">02</span><span>Services</span></a><a href=\"#faq\"><span class=\"ds-num\">03</span><span>FAQ</span></a><a href=\"#contact\" class=\"is-active\"><span class=\"ds-num\">04</span><span>Contact</span></a><a href=\"/resources/\" class=\"ds-resources-link\"><span>Resources</span> &#8599;</a></nav></div></header>",
-      "css": ".ds-site-header{position:sticky;top:0;z-index:40;background:color-mix(in srgb,#0A0B0E 82%,transparent);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid transparent}.ds-bar{display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,56px);max-width:1280px;margin:0 auto;gap:18px}.ds-wordmark{display:inline-flex;align-items:baseline;gap:10px;font-family:\"Bricolage Grotesque\",system-ui,sans-serif;font-weight:500;font-size:20px;font-variation-settings:\"opsz\" 24;letter-spacing:-0.01em;color:#ECEFF6;text-decoration:none}.ds-dot{width:10px;height:10px;display:inline-block;transform:translateY(-1px);margin:0 4px;background:#E5B415;border-radius:50%;animation:ds-dot-pulse 1.8s ease-in-out infinite}@keyframes ds-dot-pulse{0%,100%{transform:translateY(-1px) scale(1);opacity:1;box-shadow:0 0 0 0 color-mix(in srgb,#E5B415 60%,transparent)}50%{transform:translateY(-1px) scale(1.18);opacity:0.7;box-shadow:0 0 0 6px color-mix(in srgb,#E5B415 0%,transparent)}}.ds-nav{display:flex;align-items:center;gap:4px}.ds-nav a{font-family:\"Sofia Sans Extra Condensed\",\"Arial Narrow\",sans-serif;font-size:14px;letter-spacing:0.025em;text-transform:uppercase;color:#8E95A4;padding:8px 14px;border-radius:999px;text-decoration:none;display:inline-flex;align-items:center;transition:color .25s cubic-bezier(0.16,1,0.3,1),background-color .25s}.ds-nav a:hover{color:#ECEFF6}.ds-nav a.is-active{background:#E5B415;color:#0A0B0E}.ds-nav a .ds-num{color:#E5B415;margin-right:6px;font-variant-numeric:tabular-nums}.ds-nav a.is-active .ds-num{color:#0A0B0E}.ds-resources-link{color:#E5B415 !important;opacity:0.85;transition:opacity 0.2s}.ds-resources-link:hover{opacity:1}"
+      "css": ".ds-site-header{position:sticky;top:0;z-index:40;background:color-mix(in srgb,#0A0B0E 82%,transparent);backdrop-filter:saturate(140%) blur(14px);-webkit-backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid transparent}.ds-bar{display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,4vw,56px);max-width:1280px;margin:0 auto;gap:18px}.ds-wordmark{display:inline-flex;align-items:baseline;gap:10px;font-family:\"Familjen Grotesk\",system-ui,sans-serif;font-weight:500;font-size:20px;letter-spacing:-0.01em;color:#ECEFF6;text-decoration:none}.ds-dot{width:10px;height:10px;display:inline-block;transform:translateY(-1px);margin:0 4px;background:#E5B415;border-radius:50%;animation:ds-dot-pulse 1.8s ease-in-out infinite}@keyframes ds-dot-pulse{0%,100%{transform:translateY(-1px) scale(1);opacity:1;box-shadow:0 0 0 0 color-mix(in srgb,#E5B415 60%,transparent)}50%{transform:translateY(-1px) scale(1.18);opacity:0.7;box-shadow:0 0 0 6px color-mix(in srgb,#E5B415 0%,transparent)}}.ds-nav{display:flex;align-items:center;gap:4px}.ds-nav a{font-family:\"Sofia Sans Extra Condensed\",\"Arial Narrow\",sans-serif;font-size:14px;letter-spacing:0.025em;text-transform:uppercase;color:#8E95A4;padding:8px 14px;border-radius:999px;text-decoration:none;display:inline-flex;align-items:center;transition:color .25s cubic-bezier(0.16,1,0.3,1),background-color .25s}.ds-nav a:hover{color:#ECEFF6}.ds-nav a.is-active{background:#E5B415;color:#0A0B0E}.ds-nav a .ds-num{color:#E5B415;margin-right:6px;font-variant-numeric:tabular-nums}.ds-nav a.is-active .ds-num{color:#0A0B0E}.ds-resources-link{color:#E5B415 !important;opacity:0.85;transition:opacity 0.2s}.ds-resources-link:hover{opacity:1}"
     }
   ],
   "narrative": {
@@ -162,7 +162,7 @@
     "keyCharacteristics": [
       "Tinted near-black #0A0B0E paper, never #000",
       "Single saturated accent — clay mustard #E5B415",
-      "Three families: Familjen Grotesk display, Lato body, Sofia Sans Extra Condensed 600 mono/label uppercase; the wordmark alone keeps Bricolage Grotesque 500",
+      "Three families: Familjen Grotesk display, Lato body, Sofia Sans Extra Condensed 600 mono/label uppercase; the wordmark uses Familjen Grotesk 500 (the display face)",
       "Pill radius 999px for interactive; 8–18px for panels; 4px focus",
       "Theme-paired: dark mustard-on-near-black, light deep-mustard-on-cream",
       "Magenta promoted to kicker accents in light theme only"
@@ -173,7 +173,7 @@
       { "name": "The Tinted-Black Rule", "body": "Never #000, never #fff. Paper is always tilted toward the brand hue.", "section": "colors" },
       { "name": "The Italic-Means-Clay Rule", "body": "Italic text is always clay. Never an italic in default ink.", "section": "typography" },
       { "name": "The Counter-Header Rule", "body": "Article H2 carries a ::before numeral counter (decimal-leading-zero) in clay Sofia Sans Extra Condensed above the heading. The number is the marker, the heading is the content.", "section": "typography" },
-      { "name": "The Op-Size Rule", "body": "Only the wordmark still uses Bricolage, baked at opsz 24. Familjen Grotesk has no opsz axis, so display sizes need no font-variation-settings.", "section": "typography" },
+      { "name": "The Op-Size Rule", "body": "Familjen Grotesk has no opsz axis, so neither display sizes nor the wordmark need font-variation-settings.", "section": "typography" },
       { "name": "The Mono-For-Numbers Rule", "body": "Any numeric value rendered in chrome uses font-variant-numeric: tabular-nums.", "section": "typography" },
       { "name": "The Flat-At-Rest Rule", "body": "Cards, inputs, list items, filter chips are flat at rest. Shadows respond to state — never decorative.", "section": "elevation" },
       { "name": "The Clay-Tinted-Shadow Rule", "body": "Every shadow that exists is tinted with the brand mustard at low alpha. No neutral grey shadows.", "section": "elevation" },
@@ -182,7 +182,7 @@
     "dos": [
       "Do tint every neutral toward the brand hue. Paper #0A0B0E not #000; cream #F4F3ED not #fff.",
       "Do keep clay (#E5B415) as the single chromatic accent. If light theme, deepen to #8A6600 for legibility.",
-      "Do use Familjen Grotesk for display; keep Bricolage Grotesque for the wordmark only.",
+      "Do use Familjen Grotesk for display; the wordmark uses it too, at weight 500.",
       "Do use Sofia Sans Extra Condensed 600 uppercase for labels, kickers, nav, and meta — never for body.",
       "Do use the ::before counter pattern (decimal-leading-zero in clay Sofia Sans Extra Condensed) for article H2 chapter marks.",
       "Do apply font-variant-numeric: tabular-nums to every chrome number.",
@@ -202,7 +202,7 @@
       "Don't wrap the resource list in icon-tile cards. The flat divided list is intentional.",
       "Don't nest cards.",
       "Don't use neutral grey shadows. Every shadow tints toward clay.",
-      "Don't load Bricolage Grotesque or Bebas Neue anywhere but the wordmark subset.",
+      "Don't load Bricolage Grotesque or Bebas Neue anywhere.",
       "Don't use em dashes in UI copy or articles — commas, colons, parens instead.",
       "Don't let scroll-wheel change number-input values on calculators.",
       "Don't ship animations that ignore prefers-reduced-motion."

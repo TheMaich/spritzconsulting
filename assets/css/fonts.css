@@ -1,11 +1,9 @@
 /* Self-hosted brand fonts. Display (--serif): Familjen Grotesk, scaled with size-adjust so its
    x-height matches the Bricolage Grotesque it replaced. Labels (--mono): Sofia Sans Extra Condensed
    600, scaled so its cap height matches the Bebas Neue it replaced; one weight covers every
-   requested weight, so the browser never fakes a bold. The wordmark keeps Bricolage Grotesque 500,
-   loaded as a subset with only its own letters. */
+   requested weight, so the browser never fakes a bold. The wordmark uses the display face at weight 500. */
 @font-face{ font-family: "Spritz Display"; src: url("/assets/fonts/familjen-grotesk-var.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; size-adjust: 105.6%; }
 @font-face{ font-family: "Spritz Display"; src: url("/assets/fonts/familjen-grotesk-italic-var.woff2") format("woff2"); font-weight: 400 700; font-style: italic; font-display: swap; size-adjust: 105.6%; }
 @font-face{ font-family: "Spritz Label"; src: url("/assets/fonts/sofia-sans-xcond-600.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; size-adjust: 106.9%; }
 @font-face{ font-family: "Spritz Label"; src: url("/assets/fonts/sofia-sans-xcond-600-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; size-adjust: 106.9%; }
-@font-face{ font-family: "Spritz Wordmark"; src: url("/assets/fonts/bricolage-wordmark.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: block; }
-html .wordmark{ font-family: "Spritz Wordmark", ui-sans-serif, system-ui, sans-serif; font-variation-settings: normal; }
+html .wordmark{ font-family: "Spritz Display", ui-sans-serif, system-ui, sans-serif; font-weight: 500; font-variation-settings: normal; }

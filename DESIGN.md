@@ -186,7 +186,7 @@ Rejects: SaaS gradient buttons; navy-and-cyan B2B template; glassmorphism beyond
 **Key Characteristics:**
 - Tinted near-black `#0A0B0E` (paper) tilted toward warm-cool, never `#000`.
 - Single saturated accent — clay mustard `#E5B415`. Touches: dot pulse, headline `<em>`, button primary, scrollbar thumb, focus ring, aurora wash.
-- Three families: Familjen Grotesk (display, variable wght), Lato (body), Sofia Sans Extra Condensed 600 (mono/label uppercase). The wordmark alone keeps Bricolage Grotesque 500.
+- Three families: Familjen Grotesk (display, variable wght), Lato (body), Sofia Sans Extra Condensed 600 (mono/label uppercase). The wordmark uses Familjen Grotesk 500 (the display face).
 - Pill radius (999px) for interactive; 8–18px for panels; 4px focus.
 - Theme-paired: dark mustard-on-near-black; light deep-mustard-on-cream. Magenta promoted to kicker accents in light.
 
@@ -231,7 +231,7 @@ The system runs on a single saturated brand color against a tinted near-black or
 **Display Font:** Familjen Grotesk (variable, `wght` 400–700, real italic), self-hosted, `size-adjust: 105.6%` so its x-height matches the 0.528em of the Bricolage Grotesque it replaced.
 **Body Font:** Lato (self-hosted / Google Fonts; system stack as fallback chain). Static cuts 300/400/700/900 + 400/700 italic — Lato has no 500 or 600, so those weights resolve to 400 and 700.
 **Label/Mono Font:** Sofia Sans Extra Condensed 600 (condensed sans, used as monospace-role), self-hosted, one weight for every requested weight, `size-adjust: 106.9%` so its cap height matches the 0.70em of the Bebas Neue it replaced.
-**Wordmark Font:** Bricolage Grotesque 500 at opsz 24, self-hosted as a subset of only the letters of `spritz consulting`.
+**Wordmark Font:** Familjen Grotesk 500, the display face ("Spritz Display"); no separate font file.
 
 **Character:** Editorial pairing — a characterful grotesque for display does the heavy expression, Lato keeps body warm and legible, Sofia Sans Extra Condensed does meta/labels/numerals at small sizes with tight uppercase. Sofia is "mono" by role (tickers, kickers, nav, meta) even though it's a condensed sans — chosen for editorial weight, not for monospace fidelity.
 
@@ -253,7 +253,7 @@ The system runs on a single saturated brand color against a tinted near-black or
 
 **The Counter-Header Rule.** Article H2 carries an `::before` numeral counter (`01`, `02`) in clay Sofia above the heading. The number is the marker, the heading is the content.
 
-**The Op-Size Rule.** Only the wordmark still uses Bricolage, baked at opsz 24 for its 20px size. Familjen Grotesk has no `opsz` axis, so display sizes need no `font-variation-settings`.
+**The Op-Size Rule.** Familjen Grotesk has no `opsz` axis, so neither display sizes nor the wordmark need `font-variation-settings`.
 
 **The Mono-For-Numbers Rule.** Any numeric value rendered in chrome (nav `01`–`05`, article counter, breakdown rows, calc result) uses `font-variant-numeric: tabular-nums`.
 
@@ -340,7 +340,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 ### Do:
 - **Do** tint every neutral toward the brand hue. Paper `#0A0B0E` not `#000`; cream `#F4F3ED` not `#fff`.
 - **Do** keep clay (`#E5B415`) as the single chromatic accent. If light theme, deepen to `#8A6600` for legibility on cream.
-- **Do** use Familjen Grotesk (`--serif`, "Spritz Display") for any display text; keep Bricolage Grotesque for the wordmark only.
+- **Do** use Familjen Grotesk (`--serif`, "Spritz Display") for any display text; the wordmark uses it too, at weight 500.
 - **Do** use Sofia Sans Extra Condensed 600 uppercase for labels, kickers, nav, and meta — never for body.
 - **Do** use the `::before` counter pattern (`decimal-leading-zero` in clay Sofia) for article H2 chapter marks.
 - **Do** apply `font-variant-numeric: tabular-nums` to every chrome number (counters, breakdown values, calculator results, nav numerals).
@@ -360,7 +360,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Don't** wrap the resource list in icon-tile cards. The current flat divided list is intentional — keep it.
 - **Don't** nest cards. The hero-right panel is a card; the deck inside it is not a card-in-a-card, it's tilted absolute-positioned items.
 - **Don't** use neutral grey shadows. Every shadow tints toward clay.
-- **Don't** load Bricolage Grotesque or Bebas Neue anywhere but the wordmark subset; display and labels go through `--serif` and `--mono`.
+- **Don't** load Bricolage Grotesque or Bebas Neue anywhere; display and labels go through `--serif` and `--mono`.
 - **Don't** use em dashes in UI copy or articles (project convention — commas/colons/parens instead).
 - **Don't** let scroll-wheel change number-input values on the calculators. Blur on wheel.
 - **Don't** ship animations that ignore `prefers-reduced-motion`. Aurora, grain drift, dot pulse, and `.res-cta` magnetic transform all opt out correctly — keep that contract.
