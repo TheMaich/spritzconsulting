@@ -2017,7 +2017,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Launch Planning</b></div>
         <div>Published <b><time datetime="2026-10-13">13 October 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-10-13">13 October 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-16">16 October 2026</time></b></div>
       </div>
       <p class="deck">Enter your release date and tell the tool who's running what. It works <em>backwards</em> from launch and surfaces the things worth planning early, so the important ones do not slip. Use it as a starting point and adapt it to your game.</p>
       <p>Working back from certification and store dates first? Start with the <a href="/resources/tools/simship-calculator.html">Simship Work-Back Schedule Planner</a>. Launch logistics are part of my <a href="/#svc-platform-release">Platform &amp; Release Management</a> service.</p>
@@ -2159,6 +2159,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <li><strong>Press keys need more lead time than most teams give them.</strong> Three weeks before launch sounds like plenty. In practice, a journalist needs time to play the game and file the piece before the embargo. If your game runs longer than 5 to 6 hours, send keys earlier, sometimes 4 to 5 weeks out for a narrative game or an RPG. This timeline uses 21 days as a baseline. Move it to fit your game's length and genre.</li>
           <li><strong>Line up the embargo lift and the trailer.</strong> When you run a review embargo, push the trailer and your big marketing beats live the moment the embargo lifts. Drop the trailer early, then go quiet while reviews sit under embargo, and you bleed your own momentum. With no embargo, send the trailer 7 to 10 days before launch so the algorithm has time to work.</li>
           <li><strong>A day-one patch is a launch decision, so make it before launch week.</strong> If you know a real fix is coming, plan the patch window now. A patch that lands 3 days after launch still catches most of the review traffic. A patch that lands 2 weeks out misses it. Decide this in advance, not in the middle of launch day.</li>
+          <li><strong>Steam reviews your store page and your build before you can release.</strong> Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. The store page also has to be approved and public as Coming Soon for at least 2 weeks before release, so its submission date counts back from there. Submit the store page first, because Steam only accepts the build for review after it. Adult content can take longer. The dates here count weekdays and ignore public holidays.</li>
           <li><strong>Treat this as an estimate.</strong> Real dates move with your genre, team size, and platform mix. Use it as a planning scaffold, then confirm the hard dates against your own production plan.</li>
         </ul>
       </div>
@@ -2318,6 +2319,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     x.setDate(x.getDate() + n);
     return x;
   }
+  // Counts weekdays only (Monday to Friday). Public holidays are not skipped.
+  function addBusinessDays(d, n){
+    var x = new Date(d.getTime()), step = n < 0 ? -1 : 1, left = Math.abs(n);
+    while (left > 0){
+      x.setDate(x.getDate() + step);
+      var w = x.getDay();
+      if (w !== 0 && w !== 6) left--;
+    }
+    return x;
+  }
   // End-of-year freeze: 20 Dec to 10 Jan, spanning the year boundary.
   function isHolidayFreeze(d){
     var m = d.getMonth(), day = d.getDate();
@@ -2452,6 +2463,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     add('Start the social content calendar', addDays(rel, -7), ['Developer','Publisher'], 6);
     add('Send the second wave of keys to creators', addDays(rel, -5), ['PRAgency','Publisher'], 7);
     if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 8);
+    // Steam reviews the store page and the build before release. Each review takes 3 to 5
+    // business days, and Valve asks for at least 7. The page must be public as Coming Soon
+    // for 2 weeks before release, so its deadline counts back from release minus 14 days.
+    if (steam) add('Submit the Steam store page for review', addBusinessDays(addDays(rel, -14), -7), hasPub ? ['Publisher'] : ['Developer'], 19);
+    if (steam) add('Submit the Steam build for review', addBusinessDays(rel, -7), hasPub ? ['Developer','Publisher'] : ['Developer'], 20);
     if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 9);
     add('Upload and verify the launch build', addDays(rel, -2), hasPub ? ['Developer','Publisher'] : ['Developer'], 10);
     add('Schedule the day-zero social posts', addDays(rel, -1), ['Developer','Publisher'], 11);
