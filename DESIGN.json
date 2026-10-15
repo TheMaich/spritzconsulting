@@ -175,6 +175,7 @@
       { "name": "The Counter-Header Rule", "body": "Article H2 carries a ::before numeral counter (decimal-leading-zero) in clay Sofia Sans Extra Condensed above the heading. The number is the marker, the heading is the content.", "section": "typography" },
       { "name": "The Op-Size Rule", "body": "Familjen Grotesk has no opsz axis, so neither display sizes nor the wordmark need font-variation-settings.", "section": "typography" },
       { "name": "The Mono-For-Numbers Rule", "body": "Any numeric value rendered in chrome uses font-variant-numeric: tabular-nums.", "section": "typography" },
+      { "name": "The Label-Caps Rule", "body": "Everything set in --mono is uppercase. Sofia Sans has lowercase glyphs (Bebas Neue had none), so every rule that sets font-family: var(--mono) also sets text-transform: uppercase; the form fields use --mono-data and keep the case the visitor types.", "section": "typography" },
       { "name": "The Flat-At-Rest Rule", "body": "Cards, inputs, list items, filter chips are flat at rest. Shadows respond to state — never decorative.", "section": "elevation" },
       { "name": "The Clay-Tinted-Shadow Rule", "body": "Every shadow that exists is tinted with the brand mustard at low alpha. No neutral grey shadows.", "section": "elevation" },
       { "name": "The Ambient-Atmosphere Rule", "body": "Grain and aurora are always-on but barely-on. They produce a printed-and-photographed-slightly-out-of-focus feel without crossing into theme.", "section": "elevation" }

@@ -257,6 +257,8 @@ The system runs on a single saturated brand color against a tinted near-black or
 
 **The Mono-For-Numbers Rule.** Any numeric value rendered in chrome (nav `01`–`05`, article counter, breakdown rows, calc result) uses `font-variant-numeric: tabular-nums`.
 
+**The Label-Caps Rule.** Everything set in --mono is uppercase. Sofia Sans has lowercase glyphs (Bebas Neue had none), so every rule that sets font-family: var(--mono) also sets text-transform: uppercase; the form fields use --mono-data and keep the case the visitor types.
+
 ## 4. Elevation
 
 Flat by default. Surfaces are tonal — paper, paper-2, paper-3 stack three near-black tones with no separating shadows. Depth comes from value contrast and 1px rules, not blur.

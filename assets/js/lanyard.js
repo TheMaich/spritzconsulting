@@ -149,9 +149,9 @@ async function start([THREE, RAPIERmod, CARDS]) {
     x.fillText(word, W / 2 - 8 * k, H * 0.47);
     x.fillStyle = css('--clay'); x.beginPath(); x.arc(W / 2 + ww / 2 + 2 * k, H * 0.47 - 6 * k, 9 * k, 0, Math.PI * 2); x.fill();
     x.fillStyle = css('--ink-2'); x.font = `400 ${22 * k}px "Spritz Label"`;
-    x.fillText('PRODUCTION  &  PUBLISHING  CONSULTANCY', W / 2, H * 0.47 + 46 * k);
+    x.fillText(String('PRODUCTION  &  PUBLISHING  CONSULTANCY').toUpperCase(), W / 2, H * 0.47 + 46 * k);
     x.fillStyle = css('--clay'); x.font = `400 ${20 * k}px "Spritz Label"`;
-    x.fillText('SPRITZCONSULTING.COM', W / 2, H - 48 * k);
+    x.fillText(String('SPRITZCONSULTING.COM').toUpperCase(), W / 2, H - 48 * k);
     punch(x, W);
     backTex.dispose(); backTex.image = backCv; backTex.needsUpdate = true;
   }
@@ -171,7 +171,7 @@ async function start([THREE, RAPIERmod, CARDS]) {
     x.globalAlpha = 1; x.fillStyle = ink;
     x.save(); x.translate(W / 2, H / 2); x.rotate(-Math.PI / 2);
     x.font = '400 66px "Spritz Label"'; x.textAlign = 'center'; x.textBaseline = 'middle';
-    x.fillText('SPRITZ CONSULTING  ·  ', 0, 4);
+    x.fillText(String('SPRITZ CONSULTING  ·  ').toUpperCase(), 0, 4);
     x.restore();
     strapTex.needsUpdate = true;
   }
