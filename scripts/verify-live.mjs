@@ -62,7 +62,7 @@ const isNoindex = (html) => /noindex/i.test(meta(html, 'robots') || '');
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // ---------- page checks ----------
-const COLS = ['status', 'title', 'desc', 'canon', 'og', 'twitter', 'robots', 'crumbs', 'about', 'updated', 'images', 'links'];
+const COLS = ['status', 'title', 'desc', 'canon', 'og', 'twitter', 'robots', 'crumbs', 'about', 'updated', 'images', 'links', 'gfonts'];
 
 async function checkPage(path) {
   const url = BASE + path;
@@ -111,6 +111,7 @@ async function checkPage(path) {
   const targets = [...new Set([...imgs, ...ogs].map((s) => abs(s, url)).filter(Boolean))];
   const bad = (await pool(targets, 6, async (u) => [u, (await fetchOnce(u)).status])).filter(([, s]) => s !== 200);
   set('images', bad.length === 0, bad.map(([u, s]) => `${s} ${u.replace(BASE, '')}`).join('; '));
+  set('gfonts', !/fonts\.(googleapis|gstatic)\.com/.test(h), 'page still loads Google Fonts');
 
   res.links = [...new Set([...h.matchAll(/<a\b[^>]*>/gi)].map((m) => toPath(attr(m[0], 'href') || '', url)).filter(Boolean))];
   return res;

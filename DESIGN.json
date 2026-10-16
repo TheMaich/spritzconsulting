@@ -162,7 +162,7 @@
     "keyCharacteristics": [
       "Tinted near-black #0A0B0E paper, never #000",
       "Single saturated accent — clay mustard #E5B415",
-      "Three families: Familjen Grotesk display, Lato body, Sofia Sans Extra Condensed 600 mono/label uppercase; the wordmark uses Familjen Grotesk 500 (the display face)",
+      "Three families: Familjen Grotesk display, Lato body (self-hosted in assets/fonts, no request to Google), Sofia Sans Extra Condensed 600 mono/label uppercase; the wordmark uses Familjen Grotesk 500 (the display face)",
       "Pill radius 999px for interactive; 8–18px for panels; 4px focus",
       "Theme-paired: dark mustard-on-near-black, light deep-mustard-on-cream",
       "Magenta promoted to kicker accents in light theme only"

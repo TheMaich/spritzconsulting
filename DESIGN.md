@@ -186,7 +186,7 @@ Rejects: SaaS gradient buttons; navy-and-cyan B2B template; glassmorphism beyond
 **Key Characteristics:**
 - Tinted near-black `#0A0B0E` (paper) tilted toward warm-cool, never `#000`.
 - Single saturated accent — clay mustard `#E5B415`. Touches: dot pulse, headline `<em>`, button primary, scrollbar thumb, focus ring, aurora wash.
-- Three families: Familjen Grotesk (display, variable wght), Lato (body), Sofia Sans Extra Condensed 600 (mono/label uppercase). The wordmark uses Familjen Grotesk 500 (the display face).
+- Three families: Familjen Grotesk (display, variable wght), Lato (body, self-hosted in assets/fonts, no request to Google), Sofia Sans Extra Condensed 600 (mono/label uppercase). The wordmark uses Familjen Grotesk 500 (the display face).
 - Pill radius (999px) for interactive; 8–18px for panels; 4px focus.
 - Theme-paired: dark mustard-on-near-black; light deep-mustard-on-cream. Magenta promoted to kicker accents in light.
 
@@ -229,7 +229,7 @@ The system runs on a single saturated brand color against a tinted near-black or
 ## 3. Typography
 
 **Display Font:** Familjen Grotesk (variable, `wght` 400–700, real italic), self-hosted, `size-adjust: 105.6%` so its x-height matches the 0.528em of the Bricolage Grotesque it replaced.
-**Body Font:** Lato (self-hosted / Google Fonts; system stack as fallback chain). Static cuts 300/400/700/900 + 400/700 italic — Lato has no 500 or 600, so those weights resolve to 400 and 700.
+**Body Font:** Lato (self-hosted in assets/fonts, no request to Google; system stack as fallback chain). Static cuts 300/400/700/900 + 400/700 italic — Lato has no 500 or 600, so those weights resolve to 400 and 700.
 **Label/Mono Font:** Sofia Sans Extra Condensed 600 (condensed sans, used as monospace-role), self-hosted, one weight for every requested weight, `size-adjust: 106.9%` so its cap height matches the 0.70em of the Bebas Neue it replaced.
 **Wordmark Font:** Familjen Grotesk 500, the display face ("Spritz Display"); no separate font file.
 
