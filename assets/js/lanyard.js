@@ -30,8 +30,8 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const touchOnly = matchMedia('(hover: none) and (pointer: coarse)');
 const phone = matchMedia('(max-width: 900px)');     // phones keep the HTML card
 
-const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js';
-const RAPIER_URL = 'https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js';
+const THREE_URL = '/assets/vendor/three-0.170.0.module.min.js';
+const RAPIER_URL = '/assets/vendor/rapier3d-compat-0.14.0.es.js';
 const ASSETS = '/assets/img/lanyard/';
 // Bump whenever the card images or cards.json are regenerated, so browsers and the CDN fetch the new set.
 const ASSETS_V = '?v=20261008';

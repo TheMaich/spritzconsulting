@@ -64,9 +64,8 @@
 <link rel="stylesheet" href="/assets/css/bg-shader.css">
 <link rel="stylesheet" href="/assets/css/lanyard.css?v=20261009">
 <!-- Lanyard badge: fetch the 3D modules early, and keep the HTML card hidden on desktop until the badge is ready (assets/js/lanyard.js removes the class). -->
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" crossorigin>
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js" crossorigin>
+<link rel="modulepreload" href="/assets/vendor/three-0.170.0.module.min.js">
+<link rel="modulepreload" href="/assets/vendor/rapier3d-compat-0.14.0.es.js">
 <script>
   (function(){
     try {
@@ -3190,7 +3189,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 <script src="/assets/js/services-h.js?v=20261012k" defer></script>
 <script src="/assets/js/frame-fit.js?v=20261014c" defer></script>
 <script src="/assets/js/testi-cards.js?v=20261014" defer></script>
-<script type="module" src="/assets/js/lanyard.js?v=20261016"></script>
+<script type="module" src="/assets/js/lanyard.js?v=20261016b"></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).

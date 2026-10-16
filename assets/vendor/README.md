@@ -8,5 +8,7 @@ name and update the reference, never overwrite in place.
 |---|---|---|---|---|
 | `lenis-1.3.26.min.js` | Lenis | 1.3.26 | npm `lenis@1.3.26`, `dist/lenis.min.js` (via `npm pack`) | MIT license |
 | `lenis-1.3.26.css` | Lenis | 1.3.26 | npm `lenis@1.3.26`, `dist/lenis.css` (via `npm pack`) | MIT license |
+| `three-0.170.0.module.min.js` | three.js | 0.170.0 | npm `three@0.170.0`, `build/three.module.min.js` (via `npm pack`) | MIT license (header in the file) |
+| `rapier3d-compat-0.14.0.es.js` | Rapier 3D (compat build, WASM embedded) | 0.14.0 | npm `@dimforge/rapier3d-compat@0.14.0`, `rapier.es.js` (via `npm pack`) | Apache License 2.0, copy in `rapier3d-compat-0.14.0.LICENSE.txt` |
 
-Used by `index.html` only.
+Lenis: the pages listed under Scrolling in DESIGN.md. three.js and Rapier: the homepage lanyard badge only (`assets/js/lanyard.js`).
