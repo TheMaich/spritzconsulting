@@ -1334,7 +1334,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <p class="context-cta-line">Hi, I'm Michele (or Miki for short).</p>
         <p class="context-cta-line2">Got the template and want a second pair of eyes on your actual pitch? That is what I do. Tell me about your game.</p>
       </div>
-      <a href="mailto:hello@spritzconsulting.com" class="context-cta-btn" data-contact-cta>
+      <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" class="context-cta-btn" data-contact-cta>
         Get in touch
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
       </a>
@@ -1482,10 +1482,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 </script>
 
 <script>
-/* Contextual CTA: random phrase per load, mailto builder, attention wobble, cursor
+/* Contextual CTA: random phrase per load, attention wobble, cursor
    glow. Mirrors the implementation on the tool pages, with phrasing for this page. */
 (function() {
-  var CONTACT_EMAIL = 'hello@spritzconsulting.com';
 
   /* Random phrase per load. Phrase A is the default in the HTML (present on load). */
   (function () {
@@ -1501,24 +1500,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     sub.textContent = pick.sub;
   })();
 
-  /* Build the mailto with a pitch-deck specific subject and body. */
-  function buildMailto() {
-    var subject = 'Pitch deck enquiry - Spritz Consulting';
-    var body = "Hi Michele, I downloaded your pitch deck template and I'd like to talk about my game's pitch.";
-    return 'mailto:' + CONTACT_EMAIL
-      + '?subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(body);
-  }
   document.querySelectorAll('[data-contact-cta]').forEach(function(el) {
     el.addEventListener('click', function() {
       if (window.zaraz) { zaraz.track('cta_click', { page: location.pathname }); }
-    });
-  });
-
-  document.querySelectorAll('[data-contact-cta]').forEach(function(el) {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = buildMailto();
     });
   });
 
