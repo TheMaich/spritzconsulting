@@ -1,7 +1,7 @@
 // Usage: node scripts/verify-live.mjs [baseUrl] [--resolve <ip>]   (default $VERIFY_BASE_URL or https://spritzconsulting.com; --resolve pins the host to one IP, e.g. GitHub Pages 185.199.108.153, to check the origin past Cloudflare)
 //
 // Checks every sitemap URL plus /, /about/ and /resources/ on the live site: status, head tags,
-// robots, breadcrumbs, About in the nav, "Updated" dates, images, and links to the private tools
+// robots, breadcrumbs, About in the header or footer, "Updated" dates, images, and links to the private tools
 // index or to noindex pages. Then checks sitemap.xml itself. Prints a pass/fail table and exits 1
 // on any failure. No dependencies (Node 18+). Plain URLs only: Cloudflare ignores query strings.
 
@@ -88,8 +88,8 @@ async function checkPage(path) {
   else if (path === '/about/' || path === '/resources/') set('crumbs', crumbLd, 'no BreadcrumbList JSON-LD');
   else set('crumbs', crumbVisible && crumbLd, `visible=${crumbVisible} json-ld=${crumbLd}`);
 
-  const header = (h.match(/<header[\s\S]*?<\/header>/i) || [''])[0];
-  set('about', /href="(https:\/\/spritzconsulting\.com)?\/about\/"/.test(header), 'no /about/ link in the header nav');
+  const chrome = (h.match(/<header[\s\S]*?<\/header>/i) || [''])[0] + (h.match(/<footer[\s\S]*?<\/footer>/i) || [''])[0];
+  set('about', /href="(https:\/\/spritzconsulting\.com)?\/about\/"/.test(chrome), 'no /about/ link in the header or footer');
 
   // "Updated" must be a real date: <time datetime="YYYY-MM-DD">D Month YYYY</time>
   const ups = [...h.matchAll(/Updated\s*(?:<[^>]+>\s*)*([^<]{0,40})/g)];
