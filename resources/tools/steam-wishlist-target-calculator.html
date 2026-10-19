@@ -14,7 +14,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="This Steam wishlist calculator works back from your recoup target to the wishlists you need at launch, at 5% and 10% conversion. It is free and needs no signup." />
+<meta name="description" content="This Steam wishlist calculator works back from your recoup target to the wishlists you need, in Weak, Typical and Strong tiers. It is free and needs no signup." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
@@ -22,13 +22,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html">
 <meta property="og:title" content="Steam Wishlist Calculator: How Many Do You Need? | Spritz">
-<meta property="og:description" content="This Steam wishlist calculator works back from your recoup target to the wishlists you need at launch, at 5% and 10% conversion. It is free and needs no signup.">
+<meta property="og:description" content="This Steam wishlist calculator works back from your recoup target to the wishlists you need, in Weak, Typical and Strong tiers. It is free and needs no signup.">
 <meta property="og:image" content="https://spritzconsulting.com/assets/steam-wishlist-target-calculator.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Steam Wishlist Calculator: How Many Do You Need? | Spritz">
-<meta name="twitter:description" content="This Steam wishlist calculator works back from your recoup target to the wishlists you need at launch, at 5% and 10% conversion. It is free and needs no signup.">
+<meta name="twitter:description" content="This Steam wishlist calculator works back from your recoup target to the wishlists you need, in Weak, Typical and Strong tiers. It is free and needs no signup.">
 <meta name="twitter:image" content="https://spritzconsulting.com/assets/steam-wishlist-target-calculator.png">
 
 <link rel="preload" href="/assets/fonts/familjen-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -1286,7 +1286,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   padding: 0;
   gap: 4px;
 }
-#scenario-card .scenario-strong .recoup-tier-value{
+#scenario-card .scenario-strong .recoup-tier-value,
+#scenario-card .scenario-weak .recoup-tier-value{
   font-size: clamp(28px, 4vw, 48px);
   font-variation-settings: "opsz" 48;
   color: var(--ink-2);
@@ -1322,6 +1323,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     display: contents;
   }
   .calc-result-wrap.is-sticky #scenario-card .scenario-strong,
+  .calc-result-wrap.is-sticky #scenario-card .scenario-weak,
   .calc-result-wrap.is-sticky #scenario-card .recoup-tier-label,
   .calc-result-wrap.is-sticky #scenario-card .recoup-tier-sub {
     display: none;
@@ -1389,8 +1391,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .scenario-grid .recoup-tier{
   padding: 24px 26px;
 }
-/* Highlight the conservative scenario (5% Steam median), keep the optimistic
-   strong outlier as the neutral tier. Principle applies across all calcs:
+/* Highlight the Typical scenario, keep the Strong and Weak outliers as
+   neutral tiers. Principle applies across all calcs:
    visual emphasis goes to the safer baseline, never the outlier. */
 .scenario-median{
   background: color-mix(in srgb, var(--clay) 10%, var(--paper-3));
@@ -1399,8 +1401,22 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .scenario-median .recoup-tier-value{
   color: var(--clay);
 }
-.scenario-strong .recoup-tier-value{
+.scenario-strong .recoup-tier-value,
+.scenario-weak .recoup-tier-value{
   color: var(--ink);
+}
+.calc-result-notes{
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.calc-result-notes .calc-caution{ color: var(--clay); }
+.calc-notes-meta{
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink-3);
 }
 @media (max-width: 720px){
   .scenario-grid{ grid-template-columns: 1fr; }
@@ -1581,7 +1597,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "@id": "https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html#app",
       "name": "Steam Wishlist Target Calculator",
       "url": "https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html",
-      "description": "Work out how many Steam wishlists you need to launch, working back from your recoup target at 5% and 10% conversion. Free calculator, no signup.",
+      "description": "Work out how many Steam wishlists you need, working back from your recoup target with a 2023-25 conversion curve in Weak, Typical and Strong tiers. The calculator is free and needs no signup.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires JavaScript",
@@ -1612,6 +1628,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "isPartOf": {
         "@id": "https://spritzconsulting.com/resources/#webpage"
       },
+      "dateModified": "2026-10-18",
       "inLanguage": "en"
     },
     {
@@ -1727,9 +1744,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Marketing Targets</b></div>
         <div>Published <b><time datetime="2026-05-24">24 May 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-08-03">3 August 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-18">18 October 2026</time></b></div>
       </div>
-      <p class="deck">From a unit recoup target, work backwards to the wishlist count you need on Steam, week one. Both <em>5% median</em> and <em>10% strong</em> conversion shown.</p>
+      <p class="deck">Start from a unit recoup target and work back to the wishlist count you need on Steam. The calculator shows <em>Weak</em>, <em>Typical</em> and <em>Strong</em> tiers on a 2023-25 conversion curve.</p>
       <p>Then plan the launch itself with the <a href="/resources/tools/launch-week-planner-helper.html">Launch Week Planning Helper</a>. An honest read on how to reach the players is part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
     </article>
   </div>
@@ -1753,13 +1770,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="weeks">Months to Recoup</label>
-        <div class="calc-hint">How many months you're giving the launch window to clear the unit target. Default <strong>5 months</strong>: industry research suggests a Steam title earns most of its lifetime revenue inside the first month or so.</div>
+        <label class="calc-label" for="months">Months to Recoup</label>
+        <div class="calc-hint">Enter how many months you give the launch window to clear the unit target. Default <strong>5 months</strong>. Month 1 holds about 57% of five-month sales for recent releases, and only about 31% of a full year.</div>
         <div class="calc-input-wrap">
-          <input type="number" id="weeks" class="calc-input" placeholder="5" min="1" max="52" step="1" value="5">
+          <input type="number" id="months" class="calc-input" placeholder="5" min="1" max="52" step="1" value="5">
           <span class="calc-suffix">months</span>
         </div>
-        <div class="calc-presets" data-target="weeks">
+        <div class="calc-presets" data-target="months">
           <button type="button" class="preset-btn" data-value="3">3</button>
           <button type="button" class="preset-btn" data-value="5">5</button>
           <button type="button" class="preset-btn" data-value="8">8</button>
@@ -1795,10 +1812,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <div class="calc-result-label">Wishlists Required at launch</div>
           <div class="recoup-grid scenario-grid">
             <div class="recoup-tier scenario-median">
-              <div class="recoup-tier-label">5% median</div>
-              <div class="recoup-tier-value" id="wishlists-5">0</div>
-              <div class="recoup-tier-sub">average Steam launch</div>
-              <button class="calc-copy-btn" data-copy-target="wishlists-5" aria-label="Copy 5% median wishlists to clipboard">
+              <div class="recoup-tier-label">Typical</div>
+              <div class="recoup-tier-value" id="wishlists-typical">0</div>
+              <div class="recoup-tier-sub">Your wishlists convert like the median 2023-25 release.</div>
+              <button class="calc-copy-btn" data-copy-target="wishlists-typical" aria-label="Copy Typical wishlists to clipboard">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1807,10 +1824,21 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
               <div class="tier-gap" id="wishlist-gap" hidden></div>
             </div>
             <div class="recoup-tier scenario-strong">
-              <div class="recoup-tier-label">10% strong</div>
-              <div class="recoup-tier-value" id="wishlists-10">0</div>
-              <div class="recoup-tier-sub">genre fit + push</div>
-              <button class="calc-copy-btn" data-copy-target="wishlists-10" aria-label="Copy 10% strong wishlists to clipboard">
+              <div class="recoup-tier-label">Strong</div>
+              <div class="recoup-tier-value" id="wishlists-strong">0</div>
+              <div class="recoup-tier-sub">Engaged players added your game, so each wishlist converts about 1.68x better.</div>
+              <button class="calc-copy-btn" data-copy-target="wishlists-strong" aria-label="Copy Strong wishlists to clipboard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+            </div>
+            <div class="recoup-tier scenario-weak">
+              <div class="recoup-tier-label">Weak</div>
+              <div class="recoup-tier-value" id="wishlists-weak">0</div>
+              <div class="recoup-tier-sub">Paid or casual wishlists convert about 1.68x worse.</div>
+              <button class="calc-copy-btn" data-copy-target="wishlists-weak" aria-label="Copy Weak wishlists to clipboard">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1819,6 +1847,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="calc-result-notes">
+        <p id="old-cohort">Same game, 2020-22 cohort: 0 wishlists</p>
+        <p class="calc-caution" id="months-caution" hidden>The data stops at 12 months, so the calculator holds the month 12 rate past that point.</p>
+        <p>Model updated on 18 Oct 2026. Results differ from earlier versions of this page.</p>
       </div>
 
       <div class="context-cta-shell">
@@ -1848,11 +1882,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
         <ul>
-          <li><strong>Wishlist conversion: the range is what matters.</strong> GameDiscoverCo data from 2024 to 2025 puts the median Week 1 conversion at 0.17x for games launching with 10,000+ wishlists, easing to 0.15x above 25,000, but that median is almost beside the point. The actual distribution varies by 10 to 20x between the worst and best performers: some games convert at 10% of the median, others at 10x above it. For games above 25,000 wishlists priced above $10, the median drops to 0.10x. The 5% and 10% scenarios in this calculator sit at the conservative end of that distribution, which is where most games land. They are not predictions. Sources: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a> and <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
-          <li><strong>Wishlist quality matters more than wishlist count.</strong> Not all wishlists are equal. GameDiscoverCo found that games with a higher follower-to-wishlist ratio tend to convert worse, because wishlists without a follow are more likely to be casual or driven by inorganic calls-to-action. Games in the lowest follower-to-wishlist quartile converted at 0.37x median; those in the highest quartile converted at 0.22x, a 68% difference. If you are running paid acquisition or broad social campaigns to drive wishlists, be conservative with your conversion assumptions. Source: <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
-          <li><strong>Wishlists are not customers.</strong> A wishlist is a soft signal of intent. Slow, flat organic growth usually means weak interest, and recent wishlist velocity predicts a launch better than the raw total. What converts wishlists is a compelling launch moment: a discount, a demo, festival visibility, influencer coverage, or a content drop. Accumulating wishlists and waiting is not a strategy.</li>
-          <li><strong>Estimation only.</strong> This calculator gives you a planning target, not a forecast. The actual outcome will depend on your game quality, review scores, price point, genre, timing, and marketing execution, none of which this tool can model. Use it to stress-test your recoup assumptions, not to predict revenue.</li>
+          <li><strong>Conversion depends on when a game launched.</strong> Chris Zukowski collected launch data from 160 games: 34 released in 2020-22 and 126 released in 2023-25. For the recent group, each wishlist turned into about 0.22 copies after one month, 0.43 after six months and 0.70 after a year. Games from 2020-22 reached 0.45, 0.82 and 0.99 at the same points. The calculator uses the 2023-25 curve and draws a straight line between those points. Readers submitted the data themselves, so treat it as directional. GameDiscoverCo found a week 1 median of 0.17x for 2024-25 launches, and that figure lines up with the Typical tier (0.22 &times; 0.75 is about 0.165). It serves as background here, and the model does not rest on it. Sources: <a href="https://howtomarketagame.com/?p=7127" target="_blank" rel="noopener noreferrer">Chris Zukowski, How to Market a Game</a>, <a href="https://gameworldobserver.com/2026/10/15/steam-is-experiencing-wishlist-inflation-but-they-are-still-important-analysis" target="_blank" rel="noopener noreferrer">Game World Observer, 15 Oct 2026</a>, <a href="https://invenglobal.com/articles/27273/steam-wishlist-inflation-value-of-1-wishlist-cut-in-half-but-predictive-power-remains-unchanged" target="_blank" rel="noopener noreferrer">Inven Global (secondary coverage)</a> and <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a></li>
+          <li><strong>Wishlist quality matters more than wishlist count.</strong> Not all wishlists are equal. GameDiscoverCo found that games with a higher follower-to-wishlist ratio tend to convert worse, because wishlists without a follow are more likely to be casual or driven by inorganic calls-to-action. Games in the lowest follower-to-wishlist quartile converted at 0.37x median, and those in the highest quartile converted at 0.22x. That gap works out to 68%. The Strong tier divides the Typical target by 1.68 to reflect it. The Weak tier multiplies by the same factor. That symmetry is my assumption, and no study has measured it. If you run paid acquisition or broad social campaigns to drive wishlists, plan with the Weak tier. Source: <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
+          <li><strong>Recent wishlist velocity works as a flag.</strong> Velocity here means the wishlists you added in the last 30 days. In the same analysis, a model that combined velocity with the total reached an R&sup2; of 0.75, and the pooled total alone reached 0.73. Velocity therefore adds little over the total. It still helps as a warning: when your recent adds trail far behind your total, the total probably overstates real interest. A strong launch moment converts wishlists: a discount, a demo, festival visibility, influencer coverage, or a content drop.</li>
+          <li><strong>Estimation only.</strong> This calculator gives you a planning target. It does not forecast sales. The actual outcome will depend on your game quality, review scores, price point, genre, timing, and marketing execution, and this tool models none of them. Use it to stress-test your recoup assumptions.</li>
         </ul>
+        <p class="calc-notes-meta">Last reviewed against the sources above: <time datetime="2026-10-18">18 Oct 2026</time></p>
       </div>
 
     </div>
@@ -1976,10 +2011,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <script>
 (function() {
   var unitsInput = document.getElementById('units');
-  var monthsInput = document.getElementById('weeks');
+  var monthsInput = document.getElementById('months');
 
-  var wish5El = document.getElementById('wishlists-5');
-  var wish10El = document.getElementById('wishlists-10');
+  var typicalEl = document.getElementById('wishlists-typical');
+  var strongEl = document.getElementById('wishlists-strong');
+  var weakEl = document.getElementById('wishlists-weak');
+  var oldCohortEl = document.getElementById('old-cohort');
+  var cautionEl = document.getElementById('months-caution');
   var breakdownEl = document.getElementById('breakdown');
   var currentInput = document.getElementById('current-wishlists');
   var prelaunchToggle = document.getElementById('prelaunch-toggle');
@@ -1997,6 +2035,17 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     return Math.max(0, v);
   }
   function intFmt(n){ return Math.ceil(n).toLocaleString('en-US'); }
+
+  // Cumulative copies per wishlist by months since release (Zukowski, 160
+  // games). Straight lines between anchors; past 12 months hold month 12.
+  var NEW_CURVE = { 1: 0.22, 6: 0.43, 12: 0.70 };
+  var OLD_CURVE = { 1: 0.45, 6: 0.82, 12: 0.99 };
+  var QUALITY_GAP = 1.68;
+  function copiesPerWishlist(c, months) {
+    if (months >= 12) return c[12];
+    if (months <= 6) return c[1] + (c[6] - c[1]) * (months - 1) / 5;
+    return c[6] + (c[12] - c[6]) * (months - 6) / 6;
+  }
 
   var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function rollTo(el, finalNum, fmt) {
@@ -2034,26 +2083,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var totalUnits = num(unitsInput, 0);
     var months = Math.max(1, num(monthsInput, 5));
 
-    var avgMonthly = totalUnits / months;
-    var firstMonth = avgMonthly * 2;
-    var firstWeek = firstMonth * 0.75;
-    var wish5 = firstWeek / 0.05;
-    var wish10 = firstWeek / 0.10;
+    var rate = copiesPerWishlist(NEW_CURVE, months);
+    var typical = totalUnits / rate;
+    var strong = typical / QUALITY_GAP;
+    var weak = typical * QUALITY_GAP;
+    var oldCohort = totalUnits / copiesPerWishlist(OLD_CURVE, months);
 
-    rollTo(wish5El, wish5, intFmt);
-    rollTo(wish10El, wish10, intFmt);
+    rollTo(typicalEl, typical, intFmt);
+    rollTo(strongEl, strong, intFmt);
+    rollTo(weakEl, weak, intFmt);
+    oldCohortEl.textContent = 'Same game, 2020-22 cohort: ' + intFmt(oldCohort) + ' wishlists';
+    cautionEl.hidden = months <= 12;
 
-    // Gap line on the 5% median tier only. Pre-launch ignores Current Wishlists.
+    // Gap line on the Typical tier only. Pre-launch ignores Current Wishlists.
     var currentWishes = num(currentInput, 0);
     if (isPrelaunch()) {
       gapEl.hidden = false;
       gapEl.textContent = "You're starting from zero, you need all of them.";
     } else if (currentWishes > 0) {
       gapEl.hidden = false;
-      if (currentWishes >= wish5) {
+      if (currentWishes >= typical) {
         gapEl.textContent = 'Target reached';
       } else {
-        gapEl.textContent = 'You have ' + intFmt(currentWishes) + '. ' + intFmt(wish5 - currentWishes) + ' to go.';
+        gapEl.textContent = 'You have ' + intFmt(currentWishes) + '. ' + intFmt(typical - currentWishes) + ' to go.';
       }
     } else {
       gapEl.hidden = true;
@@ -2065,11 +2117,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     }
     var lines = [];
     lines.push(row('Recoup target', intFmt(totalUnits) + ' units'));
-    lines.push(row('÷ ' + months + ' months', intFmt(avgMonthly) + ' / month'));
-    lines.push(row('Month 1 (avg × 2)', intFmt(firstMonth) + ' units'));
-    lines.push(row('Week 1 (month × 0.75)', intFmt(firstWeek) + ' units'));
-    lines.push(row('week 1 ÷ 5%', intFmt(wish5) + ' wishlists'));
-    lines.push(row('week 1 ÷ 10%', intFmt(wish10) + ' wishlists'));
+    lines.push(row('Months', months + ' months'));
+    lines.push(row('Copies per wishlist (2023-25 curve)', rate.toFixed(3)));
+    lines.push(row('Typical (target ÷ ' + rate.toFixed(3) + ')', intFmt(typical) + ' wishlists'));
+    lines.push(row('Strong (Typical ÷ 1.68)', intFmt(strong) + ' wishlists'));
+    lines.push(row('Weak (Typical × 1.68)', intFmt(weak) + ' wishlists'));
     breakdownEl.innerHTML = lines.join('');
   }
 
