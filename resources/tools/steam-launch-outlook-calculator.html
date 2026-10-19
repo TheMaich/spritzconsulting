@@ -1030,8 +1030,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   bottom: auto;
   z-index: auto;
 }
-/* Followers Needed now nests inside the trajectory card under the spike summary:
-   match the nested rhythm and never stick, so it stacks in normal flow. */
+/* Legacy rule: the trajectory card no longer holds a .calc-result-wrap, so this matches nothing. */
 .trajectory-card .calc-result-wrap { margin-top: 14px; }
 
 @media (max-width: 640px) {
@@ -1323,6 +1322,28 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   font-size: 13px;
   color: var(--ink-3);
   margin-top: 12px;
+}
+.outlook-range {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-top: 12px;
+}
+/* Soft caution: hint size, ink-2 text, clay for the figure. --danger stays reserved
+   for errors and negative gaps. */
+.calc-caution {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.calc-caution-figure { color: var(--clay); }
+.calc-notes-meta {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink-3);
 }
 @media (max-width: 640px) {
   .outlook-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -1738,6 +1759,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       "isPartOf": {
         "@id": "https://spritzconsulting.com/resources/#webpage"
       },
+      "dateModified": "2026-10-18",
       "inLanguage": "en"
     },
     {
@@ -1852,14 +1874,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Steam Visibility</b></div>
         <div>Published <b><time datetime="2026-06-06">6 June 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-07-18">18 July 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-18">18 October 2026</time></b></div>
       </div>
       <div class="experimental-badge">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Experimental
       </div>
       <p class="deck">Enter your current Steam followers and launch date. See if you're on track to hit your wishlist target, and what it takes to get there.</p>
-      <p>Close to launch? Plan the week itself with the <a href="/resources/tools/launch-week-planner-helper.html">Launch Week Planning Helper</a>. An honest read on how to reach the players is part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
+      <p>An honest read on how to reach the players is part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
     </article>
   </div>
 
@@ -1886,7 +1908,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
         <div class="calc-group">
           <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier</label>
-          <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists, the 2026 median has risen to 16x. Conservative baseline: 7x. Use 12x if unsure. This multiplier applies across the whole tool, including Followers Needed.</div>
+          <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data). For games with 50,000+ wishlists at launch, the May 2026 median is 16.1x. Conservative baseline: 7x. Use 12x if unsure. This multiplier applies across the whole tool.</div>
           <div class="calc-input-wrap">
             <input type="text" id="multiplier" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="12" value="12">
             <span class="calc-suffix">X</span>
@@ -1903,7 +1925,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="calc-secondary-card" aria-live="polite">
         <div class="calc-secondary-label">Estimated Wishlists Today</div>
         <div class="calc-secondary-value" id="wishlists-today">0</div>
-        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (16x)</div>
+        <div class="calc-secondary-range" id="wishlists-today-range">range: 0 (7x) to 0 (20x)</div>
       </div>
 
       <div class="calc-divider" role="presentation"></div>
@@ -1938,7 +1960,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-group">
         <label class="calc-label" for="followers-last-30">Followers Gained in Last 30 Days</label>
-        <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average, which is a better signal of launch performance. Leave empty to use the page-open average.</div>
+        <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in, the projection uses your recent pace instead of your lifetime average. Recent pace shows momentum. GameDiscoverCo data shows it does not predict launch sales better than the total, so read it as a growth rate.</div>
         <div class="calc-input-wrap">
           <input type="text" id="followers-last-30" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">FOLLOWERS</span>
@@ -1949,6 +1971,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <button type="button" class="preset-btn" data-value="1000">1K</button>
           <button type="button" class="preset-btn" data-value="3000">3K</button>
         </div>
+        <div class="calc-caution" id="last30-event-hint" hidden>An event falls inside your last 30 days. Enter your pace without it, or the projection overstates your growth.</div>
       </div>
 
       <div class="calc-group">
@@ -2004,7 +2027,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <div class="spike-list" id="spike-list"></div>
         </div>
         <div class="spike-summary" id="spike-summary" hidden>
-          <div class="spike-summary-row"><span>Total spike boost</span><span id="spike-total-boost">0</span></div>
+          <div class="spike-summary-row"><span>Upcoming event boost</span><span id="spike-total-boost">0</span></div>
           <div class="spike-summary-row"><span>Projected followers with spikes</span><span id="spike-total-projection">0</span></div>
         </div>
       </div>
@@ -2028,6 +2051,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
               <li class="outlook-level" data-level="1">UNLIKELY to reach the objectives</li>
               <li class="outlook-level" data-level="0">HIGHLY UNLIKELY to reach the objectives</li>
             </ul>
+            <div class="outlook-range" id="outlook-range" hidden></div>
             <div class="outlook-empty" id="outlook-empty">Set a wishlist target to see your expected outcome.</div>
           </div>
         </div>
@@ -2035,7 +2059,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-nav-wrap">
         <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-nav-btn calc-nav-back">← Steam Wishlist Target Calculator</a>
-        <a href="/resources/tools/steam-sales-forecast-calculator.html" class="calc-nav-btn">Steam Sales Forecast Calculator →</a>
         <a href="/resources/" class="calc-nav-btn">All resources</a>
       </div>
 
@@ -2061,14 +2084,14 @@ html[data-theme="light"] { --cal-invert: 0.3; }
         <div class="calc-notes-label">Notes</div>
         <ul>
           <li><strong>Experimental tool.</strong> This calculator is based on publicly available industry data, but the underlying metrics are subject to significant variance, genre-specific differences, and market conditions that no dataset fully captures. Use it to explore possible scenarios and pressure-test assumptions. Do not use it as a basis for financial decisions without cross-referencing with your own data and professional advice.</li>
-          <li><strong>Where the follower multiplier comes from, and why it keeps changing.</strong> The follower-to-wishlist ratio has increased over time as marketers focus more on wishlist calls-to-action than follower growth. In 2021, the median was 9.6x (range 5x to 14x). By June 2023, it had risen to 12x (range 7x to 20x). GameDiscoverCo data from May 2026 puts the median at 16.1x for games with more than 50,000 wishlists at launch, suggesting the ratio continues to drift upward, especially for larger titles. This calculator uses 12x as the default, which is appropriate for most indie games in active pre-launch. If your game has broad social reach or has been featured in multiple Next Fest events, consider using 14x to 16x. Sources: <a href="https://newsletter.gamediscover.co/p/why-your-steam-follower-to-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Jun 2023</a> &middot; <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
-          <li><strong>Where 10x comes from.</strong> GameDiscoverCo surveys of unreleased Steam games show a median of 9.6x to 12x wishlists per follower, with a range of 7x to 20x depending on genre, festival exposure, and marketing activity. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> · <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a></li>
-          <li><strong>Recent velocity beats lifetime average.</strong> A page that gained 200 followers in the last month is a healthier signal than one sitting on 10,000 collected over three years. GameDiscoverCo found that titles which underperformed at launch had spent far longer in pre-release, an average of 411 days versus 214 for the strong converters, and the slower organic rate was the tell. That is why this calculator now lets you enter your last 30 days of follower growth and uses that pace when you provide it. Sources: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a> and <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a>.</li>
-          <li><strong>Wishlist estimates are approximations.</strong> The follower to wishlist ratio varies by genre, festival participation, and how long the page has been open. GameDiscoverCo data shows a median of 9.6x for unreleased games, with a central cluster of 10x to 12x. Games with recent Next Fest or demo exposure tend to sit higher. Source: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a></li>
+          <li><strong>Wishlist estimates are approximations.</strong> The follower to wishlist ratio varies by genre, festival participation, and how long the page has been open. It has also risen over time, because marketers now push wishlist calls-to-action harder than follows. GameDiscoverCo surveys of unreleased games put the median at 9.6x in 2021 (range 5x to 14x) and at 12x in 2023 (range 7x to 20x). For games with more than 50,000 wishlists at launch, the May 2026 median reached 16.1x. The default of 12x and the 7x to 20x range on this page come from the 2023 data. Games with recent Next Fest or demo exposure tend to sit higher. Sources: <a href="https://newsletter.gamediscover.co/p/call-for-data-your-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, 2021</a> &middot; <a href="https://newsletter.gamediscover.co/p/why-your-steam-follower-to-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Jun 2023</a> &middot; <a href="https://impress.games/blog/steam-benchmarks-and-estimates-analysis" target="_blank" rel="noopener noreferrer">Impress Games, 2023</a> &middot; <a href="https://newsletter.gamediscover.co/p/launch-success-on-steam-are-there" target="_blank" rel="noopener noreferrer">GameDiscoverCo, May 2026</a></li>
+          <li><strong>Recent pace shows momentum.</strong> A page that gained 200 followers last month shows more momentum than one that collected 10,000 over three years and has since gone quiet. GameDiscoverCo found that titles which underperformed at launch had spent far longer in pre-release, an average of 411 days against 214 for the strong converters. Recent pace still does not predict launch sales better than the total. In a 2026 analysis, a model that combined recent velocity with the total reached an R&sup2; of 0.75, and the pooled total alone reached 0.73. The calculator uses your last 30 days as a growth rate when you enter them. Sources: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025</a>, <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a> and <a href="https://gameworldobserver.com/2026/10/15/steam-is-experiencing-wishlist-inflation-but-they-are-still-important-analysis" target="_blank" rel="noopener noreferrer">Game World Observer, 15 Oct 2026</a>.</li>
+          <li><strong>Inflation changed what a wishlist is worth.</strong> Wishlists for recent releases convert to sales at about half the rate they did for 2020-22 releases, according to Chris Zukowski's Oct 2026 data on 160 reader-submitted games, so treat the figure as directional. Festival and tooltip wishlisting drive part of that drop. Sources: <a href="https://gameworldobserver.com/2026/10/15/steam-is-experiencing-wishlist-inflation-but-they-are-still-important-analysis" target="_blank" rel="noopener noreferrer">Game World Observer analysis</a> and <a href="https://howtomarketagame.com/?p=7127" target="_blank" rel="noopener noreferrer">Chris Zukowski, How to Market a Game</a>.</li>
           <li><strong>Spikes are not guaranteed.</strong> Next Fest, demos, and trailers can produce large follower boosts, but results vary enormously by genre, timing, and execution. Use spike estimates conservatively.</li>
           <li><strong>Estimation only.</strong> Directional indicator, not a forecast. Real planning needs your actual Steamworks data.</li>
           <li><strong>Next step.</strong> Once you have a wishlist target in mind, run it through the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> to size your launch.</li>
         </ul>
+        <p class="calc-notes-meta">Last reviewed against the sources above: <time datetime="2026-10-18">18 Oct 2026</time></p>
       </div>
 
     </div>
@@ -2198,10 +2221,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   // Launch Outlook breakdown rows are built once with persistent value spans, so the
   // count-up (rollTo) survives across renders instead of being wiped by innerHTML.
   // Numeric spans animate; the range and status rows stay plain text.
-  var BD_NUMERIC = { current: 1, daysOpen: 1, velocity: 1, wlToday: 1, daysLaunch: 1, projected: 1, wlLaunch: 1, target: 1, gap: 1 };
+  var BD_NUMERIC = { current: 1, daysOpen: 1, velocity: 1, wlToday: 1, daysLaunch: 1, eventBoost: 1, eventShare: 1, projected: 1, wlLaunch: 1, target: 1, gap: 1 };
   var bdRefs = {};
   var bdAnimated = [];
   var bdBuilt = false;
+  var bdShareWarnEl = null;
   function buildBreakdown() {
     var defs = [
       ['current',    'Current followers'],
@@ -2210,6 +2234,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       ['wlToday',    'Estimated wishlists today'],
       ['range',      'Wishlist range today'],
       ['daysLaunch', 'Days to launch'],
+      ['eventBoost', 'Upcoming event boost'],
+      ['eventShare', 'Growth from events'],
       ['projected',  'Projected followers at launch'],
       ['wlLaunch',   'Estimated wishlists at launch'],
       ['target',     'Wishlist target'],
@@ -2230,6 +2256,12 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       bdRefs[key] = { row: row, label: labelSpan, val: valSpan };
       if (BD_NUMERIC[key]) bdAnimated.push(valSpan);
     }
+    // Caution under Growth from events; not a .row, so Copy Projection Data skips it.
+    bdShareWarnEl = document.createElement('div');
+    bdShareWarnEl.className = 'calc-caution';
+    bdShareWarnEl.textContent = 'Event followers tend to wishlist and buy at lower rates than organic ones. Check your target at the 7x end.';
+    bdShareWarnEl.hidden = true;
+    bdRefs.eventShare.row.insertAdjacentElement('afterend', bdShareWarnEl);
     bdBuilt = true;
   }
   // Set a numeric breakdown value via the count-up, stashing the final value + formatter
@@ -2260,6 +2292,37 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   var MAX_SPIKES = 5;
   // Days over which a spike's follower boost ramps in (spikes are not instantaneous).
   var RAMP_DAYS = 5;
+  var DEFAULT_MULT = 12;
+  var LOW_MULT = 7;
+  var HIGH_MULT = 20;
+  var LEVEL_NAMES = ['HIGHLY UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'HIGHLY LIKELY'];
+  var outlookRangeEl = document.getElementById('outlook-range');
+  var last30HintEl = document.getElementById('last30-event-hint');
+  var lastOutcome = null;
+
+  // Shared by calculate() and drawChart() so the readout and the chart agree.
+  // Boost ramped in by `day`: each event ramps linearly over RAMP_DAYS from its own day.
+  // Event days and `day` must use the same origin.
+  function rampedBoost(events, day) {
+    var sum = 0;
+    for (var i = 0; i < events.length; i++) {
+      sum += events[i].boost * Math.max(0, Math.min(1, (day - events[i].day) / RAMP_DAYS));
+    }
+    return sum;
+  }
+  // Upcoming events (after today, up to launch); days counted from today.
+  function futureEvents(spikes, daysToLaunch) {
+    return spikes.filter(function(sp) { return sp.day > 0 && sp.day <= daysToLaunch; });
+  }
+  // Past events (page open to today); days re-based to count from page open.
+  function pastEvents(spikes, daysSinceOpen) {
+    return spikes
+      .map(function(sp) { return { day: daysSinceOpen + sp.day, boost: sp.boost }; })
+      .filter(function(e) { return e.day >= 0 && e.day <= daysSinceOpen; });
+  }
+  function outcomeLevel(r) {
+    return r < 0.50 ? 0 : (r < 0.75 ? 1 : (r < 1.00 ? 2 : (r < 1.25 ? 3 : 4)));
+  }
 
   var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -2569,18 +2632,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     // Spikes are not instantaneous: each boost ramps linearly over RAMP_DAYS days
     // starting on the spike date, applied as additive per-day deltas so overlapping
     // windows simply sum and the line slopes steeply instead of going vertical.
-    var activeSpikes = sortedSpikes.filter(function(sp) {
-      return sp.day > 0 && sp.day <= daysToLaunch;
-    });
-    function boostAt(day) {
-      var sum = 0;
-      for (var b = 0; b < activeSpikes.length; b++) {
-        var t = day - activeSpikes[b].day;
-        if (t <= 0) continue;
-        sum += (t >= RAMP_DAYS) ? activeSpikes[b].boost : activeSpikes[b].boost * (t / RAMP_DAYS);
-      }
-      return sum;
-    }
+    var activeSpikes = futureEvents(sortedSpikes, daysToLaunch);
+    function boostAt(day) { return rampedBoost(activeSpikes, day); }
     function followersAt(day) {
       return state.currentFollowers + state.velocity * day + boostAt(day);
     }
@@ -2645,17 +2698,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     // Past events rise as short ramps (not vertical steps): each boost ramps in linearly
     // over RAMP_DAYS days from its day, the same shape as future spikes. Independent terms
     // are summed, so overlapping ramps add once each and never double-count.
-    var pastEvents = sortedSpikes
-      .map(function(sp) { return { d: daysSinceOpen + sp.day, boost: sp.boost }; })
-      .filter(function(e) { return e.d >= 0 && e.d <= daysSinceOpen; });
-    function pastBoostAt(d) {
-      var sum = 0;
-      for (var i = 0; i < pastEvents.length; i++) {
-        var t = (d - pastEvents[i].d) / RAMP_DAYS;
-        sum += pastEvents[i].boost * Math.max(0, Math.min(1, t));
-      }
-      return sum;
-    }
+    var pastEvts = pastEvents(sortedSpikes, daysSinceOpen);
+    function pastBoostAt(d) { return rampedBoost(pastEvts, d); }
     // Base slope compensates for exactly the boost ramped in by today, so the line lands
     // on currentFollowers today even when an event's ramp spills past today.
     var baseSlope = daysSinceOpen > 0 ? (state.currentFollowers - pastBoostAt(daysSinceOpen)) / daysSinceOpen : 0;
@@ -2667,9 +2711,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       var pastMarks = {};
       pastMarks[0] = true;
       pastMarks[daysSinceOpen] = true;
-      for (var pe = 0; pe < pastEvents.length; pe++) {
+      for (var pe = 0; pe < pastEvts.length; pe++) {
         for (var k = 0; k <= RAMP_DAYS; k++) {
-          var dm = pastEvents[pe].d + k;
+          var dm = pastEvts[pe].day + k;
           if (dm >= 0 && dm <= daysSinceOpen) pastMarks[dm] = true;
         }
       }
@@ -3015,21 +3059,28 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     var current = readNum(followersInput);
     var pageOpen = parseDate(pageOpenInput);
     var launch = parseDate(launchInput);
-    var multiplier = Math.max(1, Math.min(30, readNum(multInput) || 10));
+    var multiplier = Math.max(1, Math.min(30, readNum(multInput) || DEFAULT_MULT));
     var target = readNum(targetInput);
 
     var today = new Date(); today.setHours(0,0,0,0);
     var daysSinceOpen = pageOpen ? daysBetween(pageOpen, today) : 0;
     var daysToLaunch = launch ? daysBetween(today, launch) : 0;
     var followersLast30 = readNum(followersLast30Input);
+    var spikes = getSpikes();
+    // Past events already sit inside `current`: strip their ramped boost from the lifetime
+    // pace (same baseline the chart draws) and never add them to the projection again.
     var velocity = followersLast30 > 0
       ? followersLast30 / 30
-      : (daysSinceOpen > 0 ? current / daysSinceOpen : 0);
+      : (daysSinceOpen > 0 ? (current - rampedBoost(pastEvents(spikes, daysSinceOpen), daysSinceOpen)) / daysSinceOpen : 0);
     var baseProjected = current + velocity * daysToLaunch;
 
-    var spikes = getSpikes();
-    var spikeBoost = spikes.reduce(function(acc, s){ return acc + s.boost; }, 0);
-    var projected = baseProjected + spikeBoost;
+    var upcoming = futureEvents(spikes, daysToLaunch);
+    var spikeBoostFuture = rampedBoost(upcoming, daysToLaunch);
+    var projected = baseProjected + spikeBoostFuture;
+    var organicGrowth = velocity * daysToLaunch;
+    var eventShare = (organicGrowth + spikeBoostFuture) > 0 ? spikeBoostFuture / (organicGrowth + spikeBoostFuture) : 0;
+
+    last30HintEl.hidden = !(followersLast30 > 0 && spikes.some(function(sp) { return sp.day <= 0 && sp.day >= -30; }));
     var estimatedWishlists = projected * multiplier;
     var targetEquiv = multiplier > 0 ? target / multiplier : 0;
     var followersNeeded = Math.max(0, targetEquiv - current);
@@ -3054,11 +3105,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     }
 
     var wishlistsToday = current * multiplier;
-    var wishlistsTodayLow = current * 7;
-    var wishlistsTodayHigh = current * 16;
+    var wishlistsTodayLow = current * LOW_MULT;
+    var wishlistsTodayHigh = current * HIGH_MULT;
     rollTo(wishlistsTodayEl, wishlistsToday, fmtNum);
     document.getElementById('wishlists-today-range').textContent =
-      'range: ' + fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
+      'range: ' + fmtNum(wishlistsTodayLow) + ' (' + LOW_MULT + 'x) to ' + fmtNum(wishlistsTodayHigh) + ' (' + HIGH_MULT + 'x)';
 
     if (!bdBuilt) buildBreakdown();
 
@@ -3070,8 +3121,16 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     setBdNum('daysOpen', daysSinceOpen, fmtNum);
     setBdNum('velocity', velocity, fmtDecimal);
     setBdNum('wlToday', wishlistsToday, fmtNum);
-    bdRefs.range.val.textContent = fmtNum(wishlistsTodayLow) + ' (7x) to ' + fmtNum(wishlistsTodayHigh) + ' (16x)';
+    bdRefs.range.val.textContent = fmtNum(wishlistsTodayLow) + ' (' + LOW_MULT + 'x) to ' + fmtNum(wishlistsTodayHigh) + ' (' + HIGH_MULT + 'x)';
     setBdNum('daysLaunch', daysToLaunch, fmtNum);
+    var hasUpcoming = upcoming.length > 0;
+    var shareHigh = hasUpcoming && eventShare > 0.5;
+    bdRefs.eventBoost.row.style.display = hasUpcoming ? '' : 'none';
+    bdRefs.eventShare.row.style.display = hasUpcoming ? '' : 'none';
+    bdRefs.eventShare.val.className = shareHigh ? 'calc-caution-figure' : '';
+    bdShareWarnEl.hidden = !shareHigh;
+    setBdNum('eventBoost', spikeBoostFuture, fmtNum);
+    setBdNum('eventShare', eventShare * 100, function(v){ return Math.round(v) + '%'; });
     setBdNum('projected', projected, fmtNum);
     setBdNum('wlLaunch', estimatedWishlists, fmtNum);
     setBdNum('target', target, fmtNum);
@@ -3097,17 +3156,26 @@ html[data-theme="light"] { --cal-invert: 0.3; }
     outcomeLevels.forEach(function(el) { el.classList.remove('is-active'); });
     if (target > 0) {
       outlookEmptyEl.style.display = 'none';
-      var r = estimatedWishlists / target;
-      var lvl = r < 0.50 ? 0 : (r < 0.75 ? 1 : (r < 1.00 ? 2 : (r < 1.25 ? 3 : 4)));
+      var lvl = outcomeLevel(estimatedWishlists / target);
+      var lvlLow = outcomeLevel(projected * LOW_MULT / target);
+      var lvlHigh = outcomeLevel(projected * HIGH_MULT / target);
       var activeLevel = outlookLevelsEl.querySelector('.outlook-level[data-level="' + lvl + '"]');
       if (activeLevel) activeLevel.classList.add('is-active');
+      outlookRangeEl.hidden = false;
+      outlookRangeEl.textContent = (lvlLow === lvl && lvlHigh === lvl)
+        ? 'Same level across ' + LOW_MULT + 'x to ' + HIGH_MULT + 'x.'
+        : 'At ' + LOW_MULT + 'x: ' + LEVEL_NAMES[lvlLow] + '. At ' + HIGH_MULT + 'x: ' + LEVEL_NAMES[lvlHigh] + '.';
+      lastOutcome = { mult: multiplier, lvl: lvl, lvlLow: lvlLow, lvlHigh: lvlHigh };
     } else {
       outlookEmptyEl.style.display = '';
+      outlookRangeEl.hidden = true;
+      outlookRangeEl.textContent = '';
+      lastOutcome = null;
     }
 
     if (spikes.length > 0) {
       spikeSummary.hidden = false;
-      spikeTotalBoostEl.textContent = fmtNum(spikeBoost);
+      spikeTotalBoostEl.textContent = fmtNum(spikeBoostFuture);
       spikeTotalProjEl.textContent = fmtNum(projected);
     } else {
       spikeSummary.hidden = true;
@@ -3333,6 +3401,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           lines.push(spans[0].textContent.trim() + ': ' + spans[spans.length - 1].textContent.trim());
         }
       });
+      if (lastOutcome) {
+        lines.push('Outcome at ' + LOW_MULT + 'x: ' + LEVEL_NAMES[lastOutcome.lvlLow]);
+        lines.push('Outcome at ' + lastOutcome.mult + 'x: ' + LEVEL_NAMES[lastOutcome.lvl]);
+        lines.push('Outcome at ' + HIGH_MULT + 'x: ' + LEVEL_NAMES[lastOutcome.lvlHigh]);
+      }
       var payload = lines.join('\n');
       if (!payload) return;
       navigator.clipboard.writeText(payload).then(function() {
