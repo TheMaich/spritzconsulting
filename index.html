@@ -28,7 +28,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Spritz Consulting is an independent video game consultant for production, publishing and game design. It helps indie studios and publishers ship their games." />
+<meta name="description" content="Independent game production and publishing consultant. Console certification, release planning, pitch reviews and fractional producers for studios and publishers." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <!-- TODO SPR-9: Google Search Console verification. Uncomment and paste the token from
@@ -39,7 +39,7 @@
 <meta name="color-scheme" content="dark light" />
 
 <meta property="og:title" content="Game Production & Publishing Consultant | Spritz Consulting" />
-<meta property="og:description" content="Spritz Consulting is an independent video game consultant for production, publishing and game design. It helps indie studios and publishers ship their games." />
+<meta property="og:description" content="Independent game production and publishing consultant. Console certification, release planning, pitch reviews and fractional producers for studios and publishers." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://spritzconsulting.com/" />
 <meta property="og:site_name" content="Spritz Consulting" />
@@ -50,7 +50,7 @@
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Game Production & Publishing Consultant | Spritz Consulting" />
-<meta name="twitter:description" content="Spritz Consulting is an independent video game consultant for production, publishing and game design. It helps indie studios and publishers ship their games." />
+<meta name="twitter:description" content="Independent game production and publishing consultant. Console certification, release planning, pitch reviews and fractional producers for studios and publishers." />
 <meta name="twitter:image" content="https://spritzconsulting.com/assets/og-image.png?v=4" />
 
 <link rel="preload" as="image" href="/assets/miki-portrait.webp" type="image/webp" fetchpriority="high" />
@@ -1656,6 +1656,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   margin: 0;
   font-size: 15.5px;
 }
+.faq-answer p + p{ margin-top: 0.9em; }
 .faq-answer:not([hidden]){
   animation: faq-fade-in 0.25s ease-out;
 }
@@ -2189,6 +2190,12 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 
 /* Testimonials heading. The portrait cards live in assets/css/testi-cards.css. */
 .testi-head{ max-width: 720px; }
+.testi-head p{
+  margin: 18px 0 0;
+  color: var(--ink-2);
+  font-size: 17px;
+  line-height: 1.6;
+}
 /* Heading sized like the sibling sections (mirrors .faq-head h2) */
 .testi-head h2{
   font-family: var(--serif);
@@ -2282,7 +2289,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           "name": "What's your rate?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It depends on the format. For audits and project-based work, the rate is €300/day. For retainers (minimum 3 months), the rate is €3,500/month, a better deal for both sides when the engagement is ongoing. All rates include VAT and any applicable taxes on my end. These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number."
+            "text": "It depends on the format. Audits and project work are €300 per day. A retainer is €3,500 per month for a minimum of three months, and for that I work on your project full time, like a member of your team. All rates include VAT and any applicable taxes on my end. Work is remote by default. If a project needs me on site, travel costs are agreed in advance and billed at cost. Before any paid work starts, we agree a short written scope and quote, so you know exactly what the days cover. These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number."
           }
         },
         {
@@ -2306,7 +2313,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           "name": "What’s the smallest engagement you take?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch."
+            "text": "A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. You get the two hours and a short written summary of what I would do next. Below that, the discovery call itself is free: half an hour, no pitch."
           }
         },
         {
@@ -2323,6 +2330,22 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Yes. The discovery call doesn’t care what stage you’re in. If pitch deck shaping or publisher demo prep is what you need, that’s its own service. If you genuinely can’t afford anything yet, I’ll point you at the right reading or the right people, no strings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does an engagement look like, start to finish?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It starts with a free 30-minute call about the game and the problem. If there is a fit, I send a short written scope: what I will look at, what you get at the end, how many days it takes, and what I need from you, such as builds, schedules, budgets or platform access. Once you agree it, the work starts. An audit ends with a written summary of the risks I found and what I would do about each one. Project and retainer work runs on a check-in rhythm we set at the start."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can’t you promise?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A first-time cert pass, a publishing deal, funding or a review score. Platform holders, publishers, investors and players make those calls, and anyone who promises them is guessing. What I can do is find the problems early, tell you plainly how big they are, and do the work to get them out of the way."
           }
         }
       ]
@@ -2677,7 +2700,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         </h2>
       </div>
       <p data-reveal>
-        Project by project, on retainer, or as a focused audit. The engagement format adapts. You get the same work either way. Two distinct toolkits depending on which side of the deal you&rsquo;re on.
+        Three ways to work together. An <strong>audit</strong> when you need an outside read on a schedule, a budget, a pitch or a cert plan. A <strong>project</strong> when one milestone or release needs a producer. Both are billed by the day against a written scope. A <strong>retainer</strong> when you need a producer on the team full time for three months or more. Below, two toolkits depending on which side of the deal you&rsquo;re on.
       </p>
     </div>
 
@@ -2700,6 +2723,14 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <span>We are signed and the milestones are slipping.</span>
           <span class="router-svc">Fractional Publishing Production Support</span>
         </a></li>
+        <li><a href="#svc-production-ops" data-router-link data-router-tab="tab-developers">
+          <span>The schedule keeps slipping and nobody can say exactly why.</span>
+          <span class="router-svc">Production &amp; Project Operations</span>
+        </a></li>
+        <li><a href="#svc-publisher-release" data-router-link data-router-tab="tab-publishers">
+          <span>We have three signed games launching on four platforms this year.</span>
+          <span class="router-svc">Release Management for Publishing</span>
+        </a></li>
       </ul>
     </nav>
 
@@ -2713,7 +2744,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         <div class="svc-h-view">
           <div class="svc-h-track">
     <div class="services-panel" id="tab-developers" role="tabpanel" aria-labelledby="tabbtn-developers">
-      <article class="service service--icon-lead" data-reveal>
+      <article class="service service--icon-lead" id="svc-production-ops" data-reveal>
         <div class="service-icon service-icon--lead" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M3 6h12"/><path d="M3 12h18"/><path d="M3 18h9"/><circle cx="18" cy="6" r="2"/><circle cx="7" cy="18" r="2"/></svg>
         </div>
@@ -2724,7 +2755,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro">Deciding what gets built this month and what waits. Schedules, documentation, and budgets, from pre-production all the way to gold master.</p>
+          <p class="service-intro">Deciding what gets built this month and what waits. Schedules, documentation, and budgets, from pre-production all the way to gold master. You come away with a plan, a risk list and a budget view the team can actually run from.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-2" hidden>
           <li>End-to-end project management</li>
@@ -2748,7 +2779,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro">Clean releases on every platform you ship to. Certifications, stores, launch logistics, external QA, and localisation.</p>
+          <p class="service-intro">Clean releases on every platform you ship to. Certifications, stores, launch logistics, external QA, and localisation. Approval is always the platform holder&rsquo;s call. My job is to get you there with as few surprises as possible.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-3" hidden>
           <li>Console certification (PS, Xbox, Switch)</li>
@@ -2756,7 +2787,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <li>Launch logistics: patches, brands, storefronts</li>
           <li>External QA, localisation coordination &amp; TRC/TCR compliance</li>
           <li>PC, Nintendo, PlayStation, Xbox developer platforms</li>
-          <li>Globally consistent release execution</li>
+          <li>Resubmission planning when a build comes back from cert</li>
         </ul>
         <p class="service-related"><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner"><span class="related-text">Simship Work-Back Schedule Planner</span></a> <a href="/resources/tools/launch-week-planner-helper.html" data-resource-link="launch_week_helper"><span class="related-text">Launch Week Planning Helper</span></a></p>
       </article>
@@ -2819,11 +2850,12 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro">A producer on your side of the table. Milestones, scope, risk and burn tracked across signed studios so surprises surface early, before Portfolio Review meetings.</p>
+          <p class="service-intro">A producer on your side of the table. Milestones, scope, risk and burn tracked across signed studios so surprises surface early, before Portfolio Review meetings. Usually run as a full-time retainer.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-5" hidden>
           <li>Publisher-side line producing</li>
           <li>Milestone &amp; deliverable tracking</li>
+          <li>Written status on every title, ready for leadership</li>
           <li>Scope &amp; schedule risk monitoring</li>
           <li>Vendor coordination: port, QA, audio, loc</li>
           <li>Cert &amp; launch oversight across platforms</li>
@@ -2850,7 +2882,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <li>Launch logistics: patches, brands, storefronts</li>
           <li>External QA, localisation &amp; TRC/TCR compliance</li>
           <li>Release dates aligned with marketing beats &amp; platform holders</li>
-          <li>Globally consistent release execution</li>
+          <li>One release calendar across every title and platform</li>
         </ul>
         <p class="service-related"><span class="related-label">Related:</span> <a href="/resources/tools/simship-calculator.html" data-resource-link="simship_planner"><span class="related-text">Simship Work-Back Schedule Planner</span></a></p>
       </article>
@@ -2889,15 +2921,15 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
               <span class="toggle-icon">+</span>
             </button>
           </div>
-          <p class="service-intro">I trained as a game designer, so I speak your designers&rsquo; language. A design read on signed and prospective titles, plus a press-style mock review of the current build: where the design holds, where it leaks players, and what reviewers will pick apart.</p>
+          <p class="service-intro">I trained as a game designer, so I speak your designers&rsquo; language. A design read on signed and prospective titles, plus a press-style mock review of the current build: where the design holds, where it leaks players, and what reviewers will pick apart. It is one experienced read, not user research or a score prediction.</p>
         </div>
         <ul class="service-bullets" id="service-bullets-6" hidden>
           <li>Onboarding &amp; first-session effectiveness</li>
-          <li>Core loop &amp; retention diagnostics</li>
+          <li>Core loop review, plus a retention read when you can share player data</li>
           <li>Design risk identification &amp; mitigation</li>
           <li>Playtest design, observation &amp; analysis</li>
           <li>Press-style mock review on the current build</li>
-          <li>Score range estimate &amp; how to lift it</li>
+          <li>The criticisms reviewers are most likely to raise, ranked by how fixable they are</li>
         </ul>
       </article>
     </div>
@@ -2928,7 +2960,9 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-1" hidden>
-          <p>It depends on the format. For audits and project-based work, the rate is €300/day. For retainers (minimum 3 months), the rate is €3,500/month, a better deal for both sides when the engagement is ongoing. All rates include VAT and any applicable taxes on my end.<br /><br />These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number.</p>
+          <p>It depends on the format. Audits and project work are €300 per day. A retainer is €3,500 per month for a minimum of three months, and for that I work on your project full time, like a member of your team. All rates include VAT and any applicable taxes on my end.</p>
+          <p>Work is remote by default. If a project needs me on site, travel costs are agreed in advance and billed at cost. Before any paid work starts, we agree a short written scope and quote, so you know exactly what the days cover.</p>
+          <p>These are my standard terms. If your situation is different, bring it up on the call. I'd rather find a format that works than lose a good project over a number.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -2961,7 +2995,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           </button>
         </div>
         <div class="faq-answer" id="faq-answer-4" hidden>
-          <p>A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. Below that, the discovery call itself is free: half an hour, no pitch.</p>
+          <p>A two-hour paid consultation at €120 if you just need a sanity check on a specific decision. You get the two hours and a short written summary of what I would do next. Below that, the discovery call itself is free: half an hour, no pitch.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -2986,6 +3020,28 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <p>Yes. The discovery call doesn&rsquo;t care what stage you&rsquo;re in. If pitch deck shaping or publisher demo prep is what you need, that&rsquo;s its own service. If you genuinely can&rsquo;t afford anything yet, I&rsquo;ll point you at the right reading or the right people, no strings.</p>
         </div>
       </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">What does an engagement look like, start to finish?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-7" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-7" hidden>
+          <p>It starts with a free 30-minute call about the game and the problem. If there is a fit, I send a short written scope: what I will look at, what you get at the end, how many days it takes, and what I need from you, such as builds, schedules, budgets or platform access. Once you agree it, the work starts. An audit ends with a written summary of the risks I found and what I would do about each one. Project and retainer work runs on a check-in rhythm we set at the start.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">What can&rsquo;t you promise?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-8" aria-label="Show answer">
+            <span class="toggle-icon">+</span>
+          </button>
+        </div>
+        <div class="faq-answer" id="faq-answer-8" hidden>
+          <p>A first-time cert pass, a publishing deal, funding or a review score. Platform holders, publishers, investors and players make those calls, and anyone who promises them is guessing. What I can do is find the problems early, tell you plainly how big they are, and do the work to get them out of the way.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2994,6 +3050,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     <div class="testi-head">
       <span class="kicker" data-reveal>Testimonials</span>
       <h2 class="blur-reveal" id="testimonials-h" data-reveal>What it&rsquo;s like to <em>work with me</em>.</h2>
+      <p data-reveal>A Spritz Consulting client, and people I shipped games with at Raw Fury, Rebellion and Untold Games.</p>
     </div>
 
     <!-- Portrait cards: a marquee on desktop, a deck on the phone (assets/js/testi-cards.js).
