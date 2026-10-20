@@ -89,7 +89,8 @@ async function checkPage(path) {
   else set('crumbs', crumbVisible && crumbLd, `visible=${crumbVisible} json-ld=${crumbLd}`);
 
   const chrome = (h.match(/<header[\s\S]*?<\/header>/i) || [''])[0] + (h.match(/<footer[\s\S]*?<\/footer>/i) || [''])[0];
-  set('about', /href="(https:\/\/spritzconsulting\.com)?\/about\/"/.test(chrome), 'no /about/ link in the header or footer');
+  // The About page does not link to itself
+  set('about', path === '/about/' || /href="(https:\/\/spritzconsulting\.com)?\/about\/"/.test(chrome), 'no /about/ link in the header or footer');
 
   // "Updated" must be a real date: <time datetime="YYYY-MM-DD">D Month YYYY</time>
   const ups = [...h.matchAll(/Updated\s*(?:<[^>]+>\s*)*([^<]{0,40})/g)];
