@@ -4,6 +4,9 @@
 /* Measuring pass: the hero row stops stretching, so each column reports what it needs. */
 .frame-measure .hero-grid{ align-items: start !important; }
 .frame-measure .hero, .frame-measure #consultancy{ min-height: 0 !important; }
+/* Page-scale search: everything below the hero drops out of the layout, so each try is cheap. */
+.frame-k main > :not(.hero), .frame-k .site-footer{ display: none !important; }
+html.frame-k{ overflow-y: scroll !important; }   /* the scroll bar stays, so the width does not change */
 
 .frame-fit .hero, .frame-fit #consultancy{ box-sizing: border-box; }
 .frame-fit .hero{ justify-content: center; }

@@ -66,6 +66,7 @@
 
   var C = {
     minW: 901, minH: 560,
+    fontWait: 300,                      // first paint: longest wait for the fonts (ms)
     kMin: 0.85, kMax: 1.6,              // page scale range
     padMin: 0.15, padMax: 2.5,          // second screen: padding range, as a share of the natural padding
     eMax: 1.3,                          // My Experience alone: largest growth of its content
@@ -125,19 +126,27 @@
   }
 
   // Page scale: the largest K at which header + hero (natural height) fit the window.
+  // At the top of the page the search lays out only the header and the hero (html.frame-k,
+  // frame-fit.css), so each try costs a hero layout instead of a whole-page one. Further down
+  // it lays out the whole page, since dropping the sections above would move the scroll.
   function findK(vh) {
     function fits(z) {
       setK(z);
-      root.classList.add('frame-measure');
       var need = vis(header) + vis(hero);
-      root.classList.remove('frame-measure');
       return need <= vh + 0.5;
     }
-    if (fits(C.kMax)) return C.kMax;
-    if (!fits(C.kMin)) return C.kMin;
-    var lo = C.kMin, hi = C.kMax;
-    for (var i = 0; i < 12; i++) { var mid = (lo + hi) / 2; if (fits(mid)) lo = mid; else hi = mid; }
-    return Math.floor(lo * 1000) / 1000;
+    root.classList.add('frame-measure');
+    if (scrollY < 1) root.classList.add('frame-k');
+    var k;
+    if (fits(C.kMax)) k = C.kMax;
+    else if (!fits(C.kMin)) k = C.kMin;
+    else {
+      var lo = C.kMin, hi = C.kMax;
+      for (var i = 0; i < 12; i++) { var mid = (lo + hi) / 2; if (fits(mid)) lo = mid; else hi = mid; }
+      k = Math.floor(lo * 1000) / 1000;
+    }
+    root.classList.remove('frame-k', 'frame-measure');
+    return k;
   }
 
   function natural() {
@@ -479,5 +488,12 @@
     if (!hookLenis()) { var tries = 0, t = setInterval(function () { if (hookLenis() || ++tries > 40) clearInterval(t); }, 100); }
     addEventListener('resize', onResize);
   }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else addEventListener('load', start);
+  // The first pass waits for the fonts (they change the hero's height), but at most C.fontWait ms,
+  // so a slow font never keeps the page hidden. If the fonts land later, the page is fitted again.
+  var started = false;
+  function begin() { if (!started) { started = true; start(); } }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { if (started) apply(); else begin(); });
+    setTimeout(begin, C.fontWait);
+  } else addEventListener('load', begin);
 })();
