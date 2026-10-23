@@ -4,8 +4,7 @@ Note: this overlaps issue SPR-9. Check SPR-9 before starting so the work is
 not done twice.
 
 The site is prepared: robots.txt allows everything under /resources/,
-sitemap.xml lists all resource URLs and is referenced from robots.txt, and
-index.html has a commented verification tag slot ready for a one line swap.
+sitemap.xml lists all resource URLs and is referenced from robots.txt.
 
 ## Verify ownership (HTML tag method)
 
@@ -18,9 +17,8 @@ index.html has a commented verification tag slot ready for a one line swap.
    at the DNS host and skip steps 4 to 6.
 4. In the verification panel, open "Other verification methods" and pick
    "HTML tag". Copy the `content` value from the meta tag Google shows.
-5. In `index.html`, find the commented block marked
-   `TODO SPR-9: Google Search Console verification`, uncomment the meta
-   tag, and replace `PASTE_VERIFICATION_TOKEN_HERE` with the copied value.
+5. In `index.html`, add the meta tag Google shows right after the
+   `<meta name="robots" ...>` line in the `<head>`.
 6. Commit, push, wait for the deploy to go live, then click "Verify" in
    Search Console.
 

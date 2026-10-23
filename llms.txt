@@ -1,0 +1,36 @@
+# Spritz Consulting
+
+> Spritz Consulting is the independent game production and publishing consultancy of Michele Di Nardo (Miki), a producer based in Europe (CET) with 10 years in games across Raw Fury, Rebellion, 34BigThings and Untold Games. 15+ games shipped on 8 platforms. Services cover project management, console certification (PlayStation, Xbox, Nintendo Switch), release management, publisher pitch review, physical/boxed editions and fractional publisher-side production. Rates: €300/day for audits and projects; €3,500/month retainer (3-month minimum); €120 two-hour consultation; free 30-minute discovery call.
+
+Key facts:
+- Founder: Michele Di Nardo, independent game producer; co-founder of Scuola Nash; juror at Indie Arena Booth.
+- Career: QA at 34BigThings and Rebellion; production at 34BigThings; publishing production at Raw Fury; Producer at Untold Games on City 20.
+- Selected credits: Dome Keeper, Moonstone Island, Kathy Rain 2 (Raw Fury); Sniper Elite 4 and 5, Zombie Army 4: Dead War, Strange Brigade (Rebellion); Redout, Redout 2 (34BigThings); City 20 (Untold Games).
+- Clients: indie and mid-size game studios and publishers. Spritz Consulting does not act as a publisher and does not guarantee cert passes, deals or funding.
+
+## Services
+
+- [Services overview](https://spritzconsulting.com/#services): Production and project operations, platform and release management, strategic publishing support, physical and boxed editions, fractional publishing production, scouting, design consultancy and mock reviews.
+- [Rates and engagement FAQ](https://spritzconsulting.com/#faq): Day rate, retainer terms, NDAs, IP ownership, smallest engagement, engagement process.
+- [About Michele Di Nardo](https://spritzconsulting.com/about/): Career history and the full list of games worked on.
+
+## Guides
+
+- [What a publisher actually reads in your pitch deck](https://spritzconsulting.com/resources/publisher-pitch-risks.html): The five risks publishers assess (creative, financial, commercial, technical, team) and what to prove for each.
+- [Publisher Pitch Deck Template](https://spritzconsulting.com/resources/publisher-pitch-deck-template.html): Free 14-slide game pitch deck template, from elevator pitch to budget request. No email required.
+
+## Tools
+
+- [Publisher's Game Budget Calculator](https://spritzconsulting.com/resources/tools/game-budget-calculator.html): All-in game budget from development, publisher markup, marketing and services.
+- [Publishing Break-Even Calculator](https://spritzconsulting.com/resources/tools/publishing-break-even-calculator.html): Platform cut, deductions, net per unit, and units needed to recoup an advance at 1x, 2x and 3x.
+- [Steam Wishlist Target Calculator](https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html): Wishlists needed at launch to hit a unit target, in weak, typical and strong tiers.
+- [Simship Work-Back Schedule Planner](https://spritzconsulting.com/resources/tools/simship-calculator.html): Work-back schedule from a release date for cert, QA, content lock and submissions per platform.
+- [Launch Week Planning Helper](https://spritzconsulting.com/resources/tools/launch-week-planner-helper.html): Dated launch-week plan covering press keys, embargo, store checks and the day-zero social push.
+
+## Optional
+
+- [Resources hub](https://spritzconsulting.com/resources/): All published guides and tools.
+- [Privacy policy](https://spritzconsulting.com/privacy/): Cookieless site; contact form data handling.
+- [Michele Di Nardo on LinkedIn](https://www.linkedin.com/in/michele-dinardo/)
+- [Michele Di Nardo on MobyGames](https://www.mobygames.com/person/878901/michele-di-nardo/)
+- [Spritz Consulting on LinkedIn](https://www.linkedin.com/company/115837121/)

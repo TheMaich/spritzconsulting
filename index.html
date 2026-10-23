@@ -31,10 +31,6 @@
 <meta name="description" content="Independent game production and publishing consultant. Console certification, release planning, pitch reviews and fractional producers for studios and publishers." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
-<!-- TODO SPR-9: Google Search Console verification. Uncomment and paste the token from
-     Search Console > spritzconsulting.com > Settings > Ownership verification > HTML tag.
-<meta name="google-site-verification" content="PASTE_VERIFICATION_TOKEN_HERE" />
--->
 
 <meta name="color-scheme" content="dark light" />
 
@@ -2214,9 +2210,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 }
 </style>
 
-<!-- SPR-37: the Person node carries no sameAs by design. Confirmed with Michele: no public
-     personal profile to point at. The company LinkedIn URL sits on the ProfessionalService,
-     where it belongs. Do not put a company URL on the Person. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -2259,7 +2252,77 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         "PlayStation Certification",
         "Xbox Certification",
         "Nintendo Switch Certification"
+      ],
+      "priceRange": "€120–€3,500",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "url": "https://zcal.co/micheledinardo/30min",
+        "availableLanguage": ["en", "it"]
+      },
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "name": "Audit or project work",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "300",
+            "priceCurrency": "EUR",
+            "unitText": "day",
+            "valueAddedTaxIncluded": true
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Producer retainer (3-month minimum)",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "3500",
+            "priceCurrency": "EUR",
+            "unitText": "month",
+            "valueAddedTaxIncluded": true
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Two-hour consultation",
+          "price": "120",
+          "priceCurrency": "EUR"
+        },
+        {
+          "@type": "Offer",
+          "name": "30-minute discovery call",
+          "price": "0",
+          "priceCurrency": "EUR"
+        }
       ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://spritzconsulting.com/#website",
+      "url": "https://spritzconsulting.com/",
+      "name": "Spritz Consulting",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://spritzconsulting.com/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://spritzconsulting.com/#webpage",
+      "url": "https://spritzconsulting.com/",
+      "name": "Game Production & Publishing Consultant | Spritz Consulting",
+      "isPartOf": {
+        "@id": "https://spritzconsulting.com/#website"
+      },
+      "about": {
+        "@id": "https://spritzconsulting.com/#organization"
+      },
+      "inLanguage": "en",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["#hero-h1", ".hero-intro"]
+      }
     },
     {
       "@type": "Person",
@@ -2269,6 +2332,10 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       "jobTitle": "Independent Producer",
       "url": "https://spritzconsulting.com/about/",
       "image": "https://spritzconsulting.com/assets/miki-portrait.webp",
+      "sameAs": [
+        "https://www.linkedin.com/in/michele-dinardo/",
+        "https://www.mobygames.com/person/878901/michele-di-nardo/"
+      ],
       "worksFor": {
         "@id": "https://spritzconsulting.com/#organization"
       },
@@ -2428,7 +2495,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           and <em>Publishing</em> <em>support</em> for the Game Industry
         </h1>
         <p class="hero-intro blur-reveal" style="animation-delay: 0.3s" data-reveal>
-          I work across the full game production chain: project management, release management, platform certification, publishing support and budget control. I help game studios and publishers ship on schedule and within budget, and I handle the practical work that takes a game from first build to release. There is no hiring round and no lengthy process, so we start solving problems tomorrow, not two months from now.
+          I&rsquo;m Michele Di Nardo, and Spritz Consulting is my independent game production and publishing consultancy. I work across the full game production chain: project management, release management, platform certification, publishing support and budget control. I help game studios and publishers ship on schedule and within budget, and I handle the practical work that takes a game from first build to release. There is no hiring round and no lengthy process, so we start solving problems tomorrow, not two months from now.
         </p>
         <div class="cta-row" data-reveal>
           <a class="btn btn-primary" href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="hero">
@@ -2487,65 +2554,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
             </dl>
             <p class="capsule-note">Start smaller: a <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="rate_line">free 30-minute discovery call</a>, or a €120 two-hour consultation for a sanity check on one decision.</p>
           </aside>
-          <!-- TEMP_HIDDEN: Mario card (re-enable when portrait photo is ready) -->
-          <!--
-          <aside class="hero-right hero-card hero-card--tilt-2" data-card="1" aria-label="Current status">
-            <div class="portrait-tilt">
-              <figure class="portrait">
-                <div class="speech-bubble" role="note" aria-label="A greeting from Mario">
-                  <div class="bubble-body">
-                    <span class="bubble-title"><span class="hola">Ciao! </span>I&rsquo;m Mario</span>
-                    <span class="bubble-sub">or Mario for short</span>
-                  </div>
-                  <svg class="bubble-tail" viewBox="0 0 30 22" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M 2 20 L 10 2 L 28 20" />
-                  </svg>
-                </div>
-              </figure>
-            </div>
-            <dl class="capsule-meta">
-              <div class="meta-row">
-                <dt>Now</dt>
-                <dd>Design consultant &amp; partner</dd>
-              </div>
-              <div class="meta-row">
-                <dt>Also</dt>
-                <dd>Industry mentor · Playtest lead</dd>
-              </div>
-              <div class="meta-row">
-                <dt>Recent</dt>
-                <dd>Lead Designer · <em>Untitled Project</em></dd>
-              </div>
-              <div class="meta-row">
-                <dt>Based</dt>
-                <dd>Turin, Italy · Remote first</dd>
-              </div>
-              <div class="meta-row">
-                <dt>Engage</dt>
-                <dd>Project · Retainer · Audit</dd>
-              </div>
-            </dl>
-          </aside>
-          -->
-          <!-- END TEMP_HIDDEN -->
         </div>
-        <!-- TEMP_HIDDEN: Mario card nav (re-enable when portrait photo is ready) -->
-        <!--
-        <div class="hero-deck-nav" role="group" aria-label="Switch person">
-          <button type="button" class="hero-nav-btn" data-card-prev aria-label="Previous person">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-          </button>
-          <span class="hero-nav-dots" aria-hidden="true">
-            <span class="hero-nav-dot is-active"></span>
-            <span class="hero-nav-dot"></span>
-          </span>
-          <button type="button" class="hero-nav-btn hero-nav-btn--auto" data-card-next aria-label="Next person">
-            <span class="hero-nav-ring" aria-hidden="true"></span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-          </button>
-        </div>
-        -->
-        <!-- END TEMP_HIDDEN -->
       </div>
     </div>
   </section>
@@ -2612,14 +2621,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
               <h3>Games shipped</h3>
             </div>
           </div>
-          <!-- Hidden for now, may reactivate later
-          <div class="step">
-            <div class="step-n" data-count="1">1</div>
-            <div>
-              <h3>Overwhelmingly Positive title</h3>
-            </div>
-          </div>
-          -->
           <div class="step">
             <div class="step-n" data-count="10">10</div>
             <div>
