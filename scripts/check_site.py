@@ -118,7 +118,7 @@ def main():
         rel(f)
         for f in files
         if os.path.normpath(f) not in linked_to
-        and rel(f) not in ("index.html",)
+        and rel(f) not in ("index.html", "404.html")  # 404.html: GitHub Pages serves it for missing URLs
         and not rel(f).endswith("/index.html")
     ]
 
