@@ -2014,7 +2014,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "How much does a developer earn per copy sold?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Net per unit = SRP × regional adjuster × platform share × tax retention × return retention × (1 − license fee). With common working averages (0.80 regional, 0.70 platform, 0.90 tax, 0.95 returns, no license fee) a $29.99 game returns about $14.36 per copy."
+            "text": "Net per unit = SRP × regional adjuster × platform share × tax retention × return retention × (1 − license fee). With the working averages I see in practice (0.80 regional, 0.70 platform, 0.90 tax, 0.95 returns, no license fee) a $29.99 game returns about $14.36 per copy."
           }
         },
         {
@@ -2196,7 +2196,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </svg>
           </button>
           <div class="calc-panel-body" hidden>
-            <div class="calc-hint">Accounts for regional pricing, sale discounts and currency conversion. A game listed at $29.99 in the US sells for much less in Brazil, Turkey, Argentina, and at every sale. A working average across the lifecycle is around <strong>0.80</strong>.</div>
+            <div class="calc-hint">Accounts for regional pricing, sale discounts and currency conversion. A game listed at $29.99 in the US sells for much less in Brazil, Turkey, Argentina, and at every sale. In my experience, a working average across the lifecycle is around <strong>0.80</strong>.</div>
             <div class="calc-input-wrap">
               <input type="number" id="adjuster" class="calc-input" placeholder="0.80" min="0" max="1" step="0.01" value="0.80">
               <span class="calc-suffix">×</span>
@@ -2242,7 +2242,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </svg>
           </button>
           <div class="calc-panel-body" hidden>
-            <div class="calc-hint">Withholding tax, VAT washout, and similar deductions before money lands in your account. A working average is <strong>0.90</strong>.</div>
+            <div class="calc-hint">Withholding tax, VAT washout, and similar deductions before money lands in your account. In my experience, a working average is <strong>0.90</strong>.</div>
             <div class="calc-input-wrap">
               <input type="number" id="tax" class="calc-input" placeholder="0.90" min="0" max="1" step="0.01" value="0.90">
               <span class="calc-suffix">×</span>
@@ -2265,7 +2265,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             </svg>
           </button>
           <div class="calc-panel-body" hidden>
-            <div class="calc-hint">Refunds, chargebacks, fraud reversals. Industry default is around <strong>0.95</strong>, meaning roughly 5% of sales come back.</div>
+            <div class="calc-hint">Refunds, chargebacks, fraud reversals. In my experience it averages around <strong>0.95</strong>, meaning roughly 5% of sales come back.</div>
             <div class="calc-input-wrap">
               <input type="number" id="returns" class="calc-input" placeholder="0.95" min="0" max="1" step="0.01" value="0.95">
               <span class="calc-suffix">×</span>
@@ -2340,7 +2340,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <section class="calc-faq" aria-label="Quick answers">
         <div class="calc-notes-label">Quick answers</div>
         <h2>How much does a developer earn per copy sold?</h2>
-        <p>Net per unit = SRP &times; regional adjuster &times; platform share &times; tax retention &times; return retention &times; (1 &minus; license fee). With common working averages (0.80 regional, 0.70 platform, 0.90 tax, 0.95 returns, no license fee) a $29.99 game returns about $14.36 per copy.</p>
+        <p>Net per unit = SRP &times; regional adjuster &times; platform share &times; tax retention &times; return retention &times; (1 &minus; license fee). With the working averages I see in practice (0.80 regional, 0.70 platform, 0.90 tax, 0.95 returns, no license fee) a $29.99 game returns about $14.36 per copy.</p>
         <h2>How many copies does a game need to sell to recoup?</h2>
         <p>Divide the amount to recoup by the net per unit. A $500,000 budget at $14.36 net needs about 34,800 copies to break even. Publishers usually look for deals that can clear 2&times; comfortably, about 69,600 copies here.</p>
         <div class="calc-faq-table"><table>
@@ -2356,7 +2356,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <ul>
           <li><strong>Full price is optimistic.</strong> Most copies sell at a discount, through seasonal sales, launch discounts, bundles and discounted keys, so a game rarely earns its full SRP across its lifetime. Run the tool a second time with a slightly discounted price to see a more realistic net per unit.</li>
           <li><strong>The chain matters.</strong> Net per unit = SRP × regional adjuster × platform share × tax retention × return retention × (1 − license fee). Each multiplier compounds, which is why a $29.99 game rarely returns more than $14 to the developer, and often much less.</li>
-          <li><strong>Defaults are not your deal.</strong> The values pre-filled here are working averages across genres, regions and platforms. Your actual deal will move every slider. Pull the real numbers from your contract, your distribution platform reports, and your accountant.</li>
+          <li><strong>Defaults are not your deal.</strong> The values pre-filled here are working averages from my direct experience across genres, regions and platforms. Your actual deal will move every slider. Pull the real numbers from your contract, your distribution platform reports, and your accountant.</li>
           <li><strong>Recoup tiers.</strong> 1× is the developer's break-even, 2× is roughly where the publisher breaks even at company level once their overhead and risk are accounted for, 3× is the growth bar. Publishers usually green-light deals they believe can clear 2× comfortably.</li>
           <li><strong>Estimation only.</strong> This is a directional tool, not a contract model. Real revenue planning requires real numbers, real contracts, and real lawyers.</li>
           <li><strong>Next step.</strong> Take the recoup unit target into the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> to convert it into the wishlist count you need on launch week.</li>
