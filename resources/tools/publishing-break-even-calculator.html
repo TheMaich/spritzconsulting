@@ -1908,6 +1908,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transition: color 0.2s var(--ease);
 }
 .calc-notes a:hover, .calc-hint a:hover{ color: var(--clay-deep); }
+
+/* Quick answers: short direct answers to the questions this tool is built for. */
+.calc-faq{ margin: 8px 0 44px; }
+.calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+.calc-faq-table{ overflow-x: auto; margin: 4px 0 12px; }
+.calc-faq table{ border-collapse: collapse; font-size: 14px; color: var(--ink-2); }
+.calc-faq th, .calc-faq td{ text-align: left; padding: 7px 20px 7px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.calc-faq th{ font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
 .calc-handoff-back{
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 18px;
@@ -1941,7 +1950,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "browserRequirements": "Requires JavaScript",
       "isAccessibleForFree": true,
       "datePublished": "2026-06-07",
-      "dateModified": "2026-08-03",
+      "dateModified": "2026-10-23",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -1992,6 +2001,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "position": 3,
           "name": "Publishing Break-Even Calculator",
           "item": "https://spritzconsulting.com/resources/tools/publishing-break-even-calculator.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/tools/publishing-break-even-calculator.html#faq",
+      "url": "https://spritzconsulting.com/resources/tools/publishing-break-even-calculator.html",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much does a developer earn per copy sold?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Net per unit = SRP × regional adjuster × platform share × tax retention × return retention × (1 − license fee). With common working averages (0.80 regional, 0.70 platform, 0.90 tax, 0.95 returns, no license fee) a $29.99 game returns about $14.36 per copy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many copies does a game need to sell to recoup?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide the amount to recoup by the net per unit. A $500,000 budget at $14.36 net needs about 34,800 copies to break even. Publishers usually look for deals that can clear 2× comfortably, about 69,600 copies here."
+          }
         }
       ]
     }
@@ -2083,7 +2115,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Revenue Modeling</b></div>
         <div>Published <b><time datetime="2026-06-07">7 June 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-08-03">3 August 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-23">23 October 2026</time></b></div>
       </div>
       <p class="deck">Run the deal through the chain of deductions. See what actually lands as net per unit, and how many copies you need to sell to recoup.</p>
       <p>Publishers run the same math on your pitch: see <a href="/resources/publisher-pitch-risks.html">what a publisher actually reads in your pitch deck</a>. Deal milestone and schedule sanity checks are part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
@@ -2294,6 +2326,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <a href="/resources/tools/game-budget-calculator.html" class="calc-nav-btn calc-nav-back">← Game Budget Calculator</a>
         <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-nav-btn calc-nav-next">Steam Wishlist Calculator →</a>
       </div>
+
+      <section class="calc-faq" aria-label="Quick answers">
+        <div class="calc-notes-label">Quick answers</div>
+        <h2>How much does a developer earn per copy sold?</h2>
+        <p>Net per unit = SRP &times; regional adjuster &times; platform share &times; tax retention &times; return retention &times; (1 &minus; license fee). With common working averages (0.80 regional, 0.70 platform, 0.90 tax, 0.95 returns, no license fee) a $29.99 game returns about $14.36 per copy.</p>
+        <h2>How many copies does a game need to sell to recoup?</h2>
+        <p>Divide the amount to recoup by the net per unit. A $500,000 budget at $14.36 net needs about 34,800 copies to break even. Publishers usually look for deals that can clear 2&times; comfortably, about 69,600 copies here.</p>
+        <div class="calc-faq-table"><table>
+          <tr><th>Recoup tier</th><th>What it means</th></tr>
+          <tr><td>1&times; budget</td><td>The developer breaks even</td></tr>
+          <tr><td>2&times; budget</td><td>The publisher breaks even at company level</td></tr>
+          <tr><td>3&times; budget</td><td>The publisher's growth target</td></tr>
+        </table></div>
+      </section>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>

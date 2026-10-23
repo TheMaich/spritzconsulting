@@ -1580,6 +1580,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .calc-notes a:hover, .calc-hint a:hover{ color: var(--clay-deep); }
 
+/* Quick answers: short direct answers to the questions this tool is built for. */
+.calc-faq{ margin: 8px 0 44px; }
+.calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+.calc-faq-table{ overflow-x: auto; margin: 4px 0 12px; }
+.calc-faq table{ border-collapse: collapse; font-size: 14px; color: var(--ink-2); }
+.calc-faq th, .calc-faq td{ text-align: left; padding: 7px 20px 7px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.calc-faq th{ font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
+
 @media (max-width: 640px) {
   .calculator { padding: 0; }
   .calc-result-value { font-size: clamp(48px, 14vw, 72px); }
@@ -1630,7 +1639,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "isPartOf": {
         "@id": "https://spritzconsulting.com/resources/#webpage"
       },
-      "dateModified": "2026-10-18",
+      "dateModified": "2026-10-23",
       "inLanguage": "en"
     },
     {
@@ -1654,6 +1663,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "position": 3,
           "name": "Steam Wishlist Target Calculator",
           "item": "https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html#faq",
+      "url": "https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many Steam wishlists do I need?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide the copies you need to sell by the copies each wishlist turns into over your sales window. For 2023–25 releases each wishlist turned into about 0.22 copies after one month, 0.43 after six months and 0.70 after a year (Chris Zukowski, 160 games). Selling 10,000 copies in the first month takes about 45,000 wishlists at launch."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do all wishlists convert the same?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Wishlists from engaged players convert better than ones driven by paid ads or broad calls to action. GameDiscoverCo measured a gap of about 68% between the best and worst converting quartiles, so plan with a lower rate if you bought your wishlists."
+          }
         }
       ]
     }
@@ -1746,7 +1778,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Marketing Targets</b></div>
         <div>Published <b><time datetime="2026-05-24">24 May 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-10-18">18 October 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-23">23 October 2026</time></b></div>
       </div>
       <p class="deck">Start from a unit recoup target and work back to the wishlist count you need on Steam. The calculator shows <em>Weak</em>, <em>Typical</em> and <em>Strong</em> tiers on a 2023-25 conversion curve.</p>
       <p>Then plan the launch itself with the <a href="/resources/tools/launch-week-planner-helper.html">Launch Week Planning Helper</a>. An honest read on how to reach the players is part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
@@ -1880,6 +1912,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <!-- HIDDEN-LAUNCH-OUTLOOK START (re-enable when chaining to Launch Outlook)
         HIDDEN-LAUNCH-OUTLOOK END -->
       </div>
+
+      <section class="calc-faq" aria-label="Quick answers">
+        <div class="calc-notes-label">Quick answers</div>
+        <h2>How many Steam wishlists do I need?</h2>
+        <p>Divide the copies you need to sell by the copies each wishlist turns into over your sales window. For 2023&ndash;25 releases each wishlist turned into about 0.22 copies after one month, 0.43 after six months and 0.70 after a year (Chris Zukowski, 160 games). Selling 10,000 copies in the first month takes about 45,000 wishlists at launch.</p>
+        <div class="calc-faq-table"><table>
+          <tr><th>After launch</th><th>Copies per wishlist, 2023&ndash;25</th><th>2020&ndash;22</th></tr>
+          <tr><td>1 month</td><td>0.22</td><td>0.45</td></tr>
+          <tr><td>6 months</td><td>0.43</td><td>0.82</td></tr>
+          <tr><td>12 months</td><td>0.70</td><td>0.99</td></tr>
+        </table></div>
+        <h2>Do all wishlists convert the same?</h2>
+        <p>No. Wishlists from engaged players convert better than ones driven by paid ads or broad calls to action. GameDiscoverCo measured a gap of about 68% between the best and worst converting quartiles, so plan with a lower rate if you bought your wishlists.</p>
+      </section>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>

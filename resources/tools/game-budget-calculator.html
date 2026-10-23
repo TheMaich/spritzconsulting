@@ -1513,6 +1513,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   transition: color 0.2s var(--ease);
 }
 .calc-notes a:hover, .calc-hint a:hover{ color: var(--clay-deep); }
+
+/* Quick answers: short direct answers to the questions this tool is built for. */
+.calc-faq{ margin: 8px 0 44px; }
+.calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+.calc-faq-table{ overflow-x: auto; margin: 4px 0 12px; }
+.calc-faq table{ border-collapse: collapse; font-size: 14px; color: var(--ink-2); }
+.calc-faq th, .calc-faq td{ text-align: left; padding: 7px 20px 7px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.calc-faq th{ font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
 .calc-handoff-back{
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 18px;
@@ -1610,7 +1619,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "browserRequirements": "Requires JavaScript",
       "isAccessibleForFree": true,
       "datePublished": "2026-05-24",
-      "dateModified": "2026-08-03",
+      "dateModified": "2026-10-23",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -1661,6 +1670,29 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "position": 3,
           "name": "Publisher's Game Budget Calculator",
           "item": "https://spritzconsulting.com/resources/tools/game-budget-calculator.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/tools/game-budget-calculator.html#faq",
+      "url": "https://spritzconsulting.com/resources/tools/game-budget-calculator.html",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What goes into a game's budget in a publishing deal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Development budget, publisher markup, marketing and services (porting, QA and localisation). Development is usually dev months × monthly burn rate, plus 20% for contingency. In most deals the developer sees no revenue share until net sales clear this total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much should marketing and services cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In my experience marketing lands at 20 to 50% of the development budget, most often about a third, and lower on bigger budgets. Services usually run 25 to 35%, and more on projects heavy on ports, QA passes or languages."
+          }
         }
       ]
     }
@@ -1752,7 +1784,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Budgeting</b></div>
         <div>Published <b><time datetime="2026-05-24">24 May 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-08-03">3 August 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-23">23 October 2026</time></b></div>
       </div>
       <p class="deck">Four inputs. One total. Built for the moment a publisher asks: <em>what's the all-in number</em>.</p>
       <p>The total is the number for the ask slide in the <a href="/resources/publisher-pitch-deck-template.html">Publisher Pitch Deck Template</a>. Publishers check it against what the game can realistically earn, as <a href="/resources/publisher-pitch-risks.html">what a publisher actually reads in your pitch deck</a> explains.</p>
@@ -1880,6 +1912,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
         </a>
       </div>
+
+      <section class="calc-faq" aria-label="Quick answers">
+        <div class="calc-notes-label">Quick answers</div>
+        <h2>What goes into a game's budget in a publishing deal?</h2>
+        <p>Development budget, publisher markup, marketing and services (porting, QA and localisation). Development is usually dev months &times; monthly burn rate, plus 20% for contingency. In most deals the developer sees no revenue share until net sales clear this total.</p>
+        <h2>How much should marketing and services cost?</h2>
+        <p>In my experience marketing lands at 20 to 50% of the development budget, most often about a third, and lower on bigger budgets. Services usually run 25 to 35%, and more on projects heavy on ports, QA passes or languages.</p>
+        <div class="calc-faq-table"><table>
+          <tr><th>Budget line</th><th>Share of development budget</th></tr>
+          <tr><td>Marketing</td><td>20&ndash;50%, often about a third</td></tr>
+          <tr><td>Services (porting, QA, loc)</td><td>25&ndash;35%</td></tr>
+        </table></div>
+      </section>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>

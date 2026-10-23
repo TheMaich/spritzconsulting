@@ -1472,6 +1472,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .calc-notes a:hover, .calc-hint a:hover{ color: var(--clay-deep); }
 
+/* Quick answers: short direct answers to the questions this tool is built for. */
+.calc-faq{ margin: 8px 0 44px; }
+.calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+.calc-faq-table{ overflow-x: auto; margin: 4px 0 12px; }
+.calc-faq table{ border-collapse: collapse; font-size: 14px; color: var(--ink-2); }
+.calc-faq th, .calc-faq td{ text-align: left; padding: 7px 20px 7px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+.calc-faq th{ font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
+
 @media (max-width: 640px) {
   .calculator { padding: 0; }
   .calc-result-value { font-size: clamp(48px, 14vw, 72px); }
@@ -1912,7 +1921,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "isPartOf": {
         "@id": "https://spritzconsulting.com/resources/#webpage"
       },
-      "dateModified": "2026-10-20",
+      "dateModified": "2026-10-23",
       "inLanguage": "en"
     },
     {
@@ -1936,6 +1945,37 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "position": 3,
           "name": "Launch Week Planning Helper",
           "item": "https://spritzconsulting.com/resources/tools/launch-week-planner-helper.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/tools/launch-week-planner-helper.html#faq",
+      "url": "https://spritzconsulting.com/resources/tools/launch-week-planner-helper.html",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How early should you send review keys?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About three weeks before launch for most games. For games longer than 5 to 6 hours, such as narrative games or RPGs, send keys 4 to 5 weeks out so reviewers can finish before the embargo lifts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does Steam take to review a store page and a build?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. The store page must be public as Coming Soon for at least two weeks before release, so submit it no later than 23 to 25 days before launch, and earlier if your PR starts sooner."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should the launch trailer go live?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With a review embargo, the moment the embargo lifts, together with your big marketing beats. Without an embargo, 7 to 10 days before launch."
+          }
         }
       ]
     }
@@ -2027,7 +2067,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Launch Planning</b></div>
         <div>Published <b><time datetime="2026-10-13">13 October 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-10-20">20 October 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-10-23">23 October 2026</time></b></div>
       </div>
       <p class="deck">Enter your release date and tell the tool who's running what. It works <em>backwards</em> from launch and surfaces the things worth planning early, so the important ones do not slip. Use it as a starting point and adapt it to your game.</p>
       <p>Working back from certification and store dates first? Start with the <a href="/resources/tools/simship-calculator.html">Simship Work-Back Schedule Planner</a>. Launch logistics are part of my <a href="/#svc-platform-release">Platform &amp; Release Management</a> service.</p>
@@ -2162,6 +2202,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           </a>
         </div>
       </div>
+
+      <section class="calc-faq" aria-label="Quick answers">
+        <div class="calc-notes-label">Quick answers</div>
+        <h2>How early should you send review keys?</h2>
+        <p>About three weeks before launch for most games. For games longer than 5 to 6 hours, such as narrative games or RPGs, send keys 4 to 5 weeks out so reviewers can finish before the embargo lifts.</p>
+        <h2>How long does Steam take to review a store page and a build?</h2>
+        <p>Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. The store page must be public as Coming Soon for at least two weeks before release, so submit it no later than 23 to 25 days before launch, and earlier if your PR starts sooner.</p>
+        <h2>When should the launch trailer go live?</h2>
+        <p>With a review embargo, the moment the embargo lifts, together with your big marketing beats. Without an embargo, 7 to 10 days before launch.</p>
+      </section>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
