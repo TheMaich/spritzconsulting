@@ -965,12 +965,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "name": "Michele Di Nardo",
       "alternateName": "Miki",
       "jobTitle": "Independent Producer",
-      "description": "Independent producer at Spritz Consulting. 10 years across Raw Fury, Rebellion and 34BigThings.",
+      "description": "Independent game producer and founder of Spritz Consulting. 10 years across QA, production and publishing at 34BigThings, Rebellion, Raw Fury and Untold Games.",
       "url": "https://spritzconsulting.com/about/",
       "image": "https://spritzconsulting.com/assets/miki-portrait.webp",
       "sameAs": [
         "https://www.linkedin.com/in/michele-dinardo/",
-        "https://www.mobygames.com/person/878901/michele-di-nardo/"
+        "https://www.mobygames.com/person/878901/michele-di-nardo/",
+        "https://firstplayable.it/team/michele-di-nardo/"
       ],
       "worksFor": {
         "@type": "Organization",
@@ -988,6 +989,26 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "@type": "Organization",
           "name": "Indie Arena Booth",
           "url": "https://indiearenabooth.de/"
+        },
+        {
+          "@type": "Organization",
+          "name": "First Playable",
+          "url": "https://firstplayable.it/"
+        }
+      ],
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Event Horizon School"
+      },
+      "subjectOf": [
+        {
+          "@type": "WebPage",
+          "name": "Red Bull Indie Forge: La giuria",
+          "url": "https://www.redbull.com/it-it/projects/red-bull-indie-forge/giuria-indie-forge",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Red Bull"
+          }
         }
       ],
       "knowsAbout": [
@@ -995,7 +1016,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         "Game Publishing",
         "Console Certification",
         "Project Management",
-        "Indie Games"
+        "Indie Games",
+        "Release Management",
+        "Localization",
+        "Quality Assurance",
+        "PlayStation Certification",
+        "Xbox Certification",
+        "Nintendo Switch Certification"
       ]
     },
     {
@@ -1032,7 +1059,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <script src="/assets/js/smooth-scroll.js" defer></script>
 <link rel="stylesheet" href="/assets/css/book-call.css?v=20261013">
 <style>
-/* About page: portrait, stat row and games list. */
+/* About page: portrait, stat row, timeline, games and community lists. */
 .about-portrait{ margin: 0 0 44px; }
 .about-portrait img{ display: block; width: 100%; max-width: 380px; height: auto; border-radius: 18px; border: 1px solid var(--rule); }
 .about-stats{ list-style: none; margin: 0 0 48px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
@@ -1042,6 +1069,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .about-games li{ margin-bottom: 8px; break-inside: avoid; }
 .about-games span{ color: var(--ink-3); font-size: 15px; }
 @media (max-width: 600px){ .about-games{ columns: 1; } }
+/* Career timeline and community list. */
+.about-timeline{ list-style: none; margin: 0 0 44px; padding: 0; }
+.about-timeline li{ border-top: 1px solid var(--rule); padding: 18px 0 2px; }
+.about-timeline .when{ display: block; margin-bottom: 6px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
+.about-timeline h3{ margin: 0 0 10px; font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); }
+.about-timeline h3 span{ color: var(--ink-3); font-weight: 400; }
+.about-timeline p{ margin-bottom: 16px; }
+.about-community{ margin: 0 0 44px; padding-left: 1.1em; color: var(--ink-2); }
+.about-community li{ margin-bottom: 8px; }
+.about-community span{ color: var(--ink-3); font-size: 15px; }
 </style>
 </head>
 <body>
@@ -1113,12 +1150,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Based <b>Europe · CET</b></div>
         <div>Engage <b>Project · Retainer · Audit</b></div>
       </div>
-      <p class="deck">Or Miki for short. I work across the full game production chain: project management, release management, platform certification, publishing support and budget control. I help game studios and publishers ship on schedule and within budget, and I handle the practical work that takes a game from first build to release. There is no hiring round and no lengthy process, so we start solving problems tomorrow, not two months from now.</p>
+      <p class="deck">Or Miki for short. I&rsquo;m an independent game producer, and Spritz Consulting is my production and publishing consultancy. I help studios and publishers ship on schedule and within budget, from first build to release.</p>
       <figure class="about-portrait">
         <picture><source srcset="/assets/miki-portrait.webp" type="image/webp" /><img src="/assets/miki-portrait.png" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async" /></picture>
       </figure>
       <h2>Studio side, publisher side, and everything in between.</h2>
-      <p>QA at 34BigThings and Rebellion. Production back at 34BigThings. Publishing Production at Raw Fury. Most recently Producer at Untold Games on City&nbsp;20. Now, Independent Producer at Spritz Consulting, Co-founder of Scuola Nash and juror at Indie Arena Booth.</p>
+      <p>I started as a playtester and part-time QA tester at Milestone, then spent ten years moving through every part of game production: QA at 34BigThings and Rebellion, production back at 34BigThings, publishing production at Raw Fury, and most recently Producer at Untold Games on City&nbsp;20. In June 2026 I founded Spritz Consulting.</p>
       <p>AAA down to one-person indie teams. QA, production, publishing. I have sat on every side of the table and it changes what you notice.</p>
       <ul class="about-stats">
         <li><b>15+</b>Games shipped</li>
@@ -1126,23 +1163,70 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <li><b>8</b>Platforms shipped on</li>
         <li><b>3</b>Publishers worked with</li>
       </ul>
+      <h2>Career</h2>
+      <ol class="about-timeline">
+        <li>
+          <span class="when">Jun 2026 &ndash; now</span>
+          <h3>Spritz Consulting <span>&middot; Founder</span></h3>
+          <p>Release management on PlayStation, Xbox and Nintendo platforms, from onboarding and certification to launch. Delivery planning, milestone tracking and vendor selection for independent studios. Pitch reviews and mock publisher interviews before a studio meets a real one.</p>
+        </li>
+        <li>
+          <span class="when">Feb &ndash; Apr 2026</span>
+          <h3>Untold Games <span>&middot; Producer</span></h3>
+          <p>Production on City&nbsp;20, a live game with a 15-person team. I owned the schedule, the roadmap and backlog, and the release plan for updates.</p>
+        </li>
+        <li>
+          <span class="when">2022 &ndash; 2025</span>
+          <h3>Raw Fury <span>&middot; Quality &amp; Line Producer, then Publishing Producer</span></h3>
+          <p>I owned the delivery pipeline for several titles, as the link between Raw Fury, the external developers and the platform holders: milestones, backlog, legal compliance, and the QA, localization and deployment vendors. Each title shipped in 15+ languages, with demo builds planned around international events. One title came in 10% under budget and launched to Overwhelmingly Positive user reviews. Dome Keeper, Moonstone Island, Kathy Rain&nbsp;2 and Ereban: Shadow Legacy.</p>
+        </li>
+        <li>
+          <span class="when">2021 &ndash; 2022</span>
+          <h3>34BigThings <span>&middot; Associate Producer</span></h3>
+          <p>Redout&nbsp;2: the day-to-day link with the publisher, from build deliveries to milestone reviews, and certification on 7 platforms.</p>
+        </li>
+        <li>
+          <span class="when">2018 &ndash; 2021</span>
+          <h3>Rebellion <span>&middot; Senior QA Tester, then Lead QA Tester</span></h3>
+          <p>Led QA on Sniper Elite&nbsp;5, directing internal teams and external QA vendors from triage to fix. Also Sniper Elite&nbsp;4, Strange Brigade and Zombie Army&nbsp;4: Dead War. I designed the QA process for a new platform, which became the company-wide standard.</p>
+        </li>
+        <li>
+          <span class="when">2016 &ndash; 2018</span>
+          <h3>34BigThings <span>&middot; QA Tester, then QA Manager</span></h3>
+          <p>Led a team of 5+ testers on Redout and Super Inefficient Golf, owning test plans, scheduling and reporting to production.</p>
+        </li>
+        <li>
+          <span class="when">Early career</span>
+          <h3>Milestone <span>&middot; Playtester and part-time QA tester</span></h3>
+          <p>Ride, MXGP3 and Valentino Rossi: The Game.</p>
+        </li>
+      </ol>
       <h2>Games I&rsquo;ve worked on</h2>
       <ul class="about-games">
-        <li>Dome Keeper <span>· Bippinbits / Raw Fury</span></li>
-        <li>Moonstone Island <span>· Studio Supersoft / Raw Fury</span></li>
-        <li>Redout 2 <span>· 34BigThings</span></li>
-        <li>Kathy Rain 2 <span>· Clifftop Games / Raw Fury</span></li>
-        <li>Sniper Elite 5 <span>· Rebellion</span></li>
-        <li>Zombie Army 4: Dead War <span>· Rebellion</span></li>
-        <li>Strange Brigade <span>· Rebellion</span></li>
-        <li>Sniper Elite 4 <span>· Rebellion</span></li>
-        <li>Redout <span>· 34BigThings</span></li>
-        <li>Super Inefficient Golf <span>· 34BigThings</span></li>
-        <li>Ride <span>· Milestone</span></li>
-        <li>MXGP3 <span>· Milestone</span></li>
-        <li>Valentino Rossi: The Game <span>· Milestone</span></li>
-        <li>Ereban: Shadow Legacy <span>· Baby Robot Games</span></li>
-        <li>City 20 <span>· Untold Games</span></li>
+        <li>Dome Keeper <span>&middot; Bippinbits / Raw Fury &middot; publishing</span></li>
+        <li>Moonstone Island <span>&middot; Studio Supersoft / Raw Fury &middot; publishing</span></li>
+        <li>Kathy Rain 2 <span>&middot; Clifftop Games / Raw Fury &middot; publishing</span></li>
+        <li>Ereban: Shadow Legacy <span>&middot; Baby Robot Games &middot; publishing</span></li>
+        <li>City 20 <span>&middot; Untold Games &middot; production</span></li>
+        <li>Redout 2 <span>&middot; 34BigThings &middot; production</span></li>
+        <li>Sniper Elite 5 <span>&middot; Rebellion &middot; lead QA</span></li>
+        <li>Zombie Army 4: Dead War <span>&middot; Rebellion &middot; QA</span></li>
+        <li>Strange Brigade <span>&middot; Rebellion &middot; QA</span></li>
+        <li>Sniper Elite 4 <span>&middot; Rebellion &middot; QA</span></li>
+        <li>Redout <span>&middot; 34BigThings &middot; QA lead</span></li>
+        <li>Super Inefficient Golf <span>&middot; 34BigThings &middot; QA lead</span></li>
+        <li>Ride <span>&middot; Milestone &middot; playtest &amp; QA</span></li>
+        <li>MXGP3 <span>&middot; Milestone &middot; playtest &amp; QA</span></li>
+        <li>Valentino Rossi: The Game <span>&middot; Milestone &middot; playtest &amp; QA</span></li>
+      </ul>
+      <h2>Teaching, juries and talks</h2>
+      <ul class="about-community">
+        <li>Co-founder, Scuola Nash <span>&middot; game development school</span></li>
+        <li>Juror, Indie Arena Booth at gamescom <span>&middot; since 2023</span></li>
+        <li>Juror, <a href="https://www.redbull.com/it-it/projects/red-bull-indie-forge/giuria-indie-forge" target="_blank" rel="noopener noreferrer">Red Bull Indie Forge</a></li>
+        <li>Mentor, <a href="https://firstplayable.it/team/michele-di-nardo/" target="_blank" rel="noopener noreferrer">First Playable</a> <span>&middot; IIDEA mentoring programme, 2026</span></li>
+        <li>Speaker, Canary Islands Games forum <span>&middot; June 2024</span></li>
+        <li>Master in Game Design, Event Horizon School <span>&middot; 2015&ndash;2017</span></li>
       </ul>
       <h2>Where to find me</h2>
       <p>I&rsquo;m on <a href="https://www.linkedin.com/in/michele-dinardo/" target="_blank" rel="noopener noreferrer">LinkedIn</a>, my game credits are on <a href="https://www.mobygames.com/person/878901/michele-di-nardo/" target="_blank" rel="noopener noreferrer">MobyGames</a>, and Spritz Consulting has a <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer">company page</a>. To work together, see the <a href="/#services">services</a> or <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="about_page">book a 30-minute call</a>. Guides and calculators from the production side live in <a href="/resources/">Resources</a>.</p>
