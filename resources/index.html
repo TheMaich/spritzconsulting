@@ -462,6 +462,13 @@ html{
   margin: 0;
 }
 
+/* About these resources: short intro under the cards. */
+.resources-about{ margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--rule); }
+.resources-about h2{ font-family: var(--serif); font-size: clamp(22px, 2.4vw, 28px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.2; color: var(--ink); margin: 0 0 14px; }
+.resources-about p{ font-size: clamp(15px, 1.1vw, 17px); color: var(--ink-2); max-width: 66ch; line-height: 1.65; margin: 0 0 14px; }
+.resources-about a{ color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
+.resources-about a:hover{ color: var(--clay-deep); }
+
 .res-filters {
   display: flex;
   width: fit-content;
@@ -840,7 +847,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
   <section class="resources-hero wrap">
     <span class="kicker">05 RESOURCES</span>
     <h1 class="resources-h2">Guides from the production side.</h1>
-    <p class="resources-deck">Practical writing on publishing contracts, production, and platform delivery. Written from experience, not from a template.</p>
+    <p class="resources-deck">Practical guides and calculators for publishing deals, production and platform delivery.</p>
   </section>
 
   <div class="res-filters" role="tablist" aria-label="Resource type">
@@ -943,6 +950,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.28; }
       </div>
     </a>
     <p class="res-more" data-category="articles">More guides in production.</p>
+  </section>
+
+  <section class="resources-about wrap" aria-labelledby="res-about-h">
+    <h2 id="res-about-h">What&rsquo;s here, and who it&rsquo;s for</h2>
+    <p>Free guides and calculators for indie and mid-size game studios working with a publisher, or getting ready to pitch one. The tools follow the order a deal usually takes: <a href="/resources/tools/game-budget-calculator.html">build the budget</a>, <a href="/resources/tools/publishing-break-even-calculator.html">check how many copies it takes to recoup</a>, <a href="/resources/tools/steam-wishlist-target-calculator.html">turn that into a Steam wishlist target</a>, then plan <a href="/resources/tools/simship-calculator.html">certification and store submissions</a> and <a href="/resources/tools/launch-week-planner-helper.html">launch week</a>.</p>
+    <p>Everything here comes from ten years on both sides of the table, in QA, production and publishing at 34BigThings, Rebellion, Raw Fury and Untold Games. The figures are working estimates from real projects, and each tool says where its numbers come from. No email or signup needed. If a result doesn&rsquo;t match what you see on your own project, <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="resources_about">book a call</a> and we&rsquo;ll look at it together.</p>
   </section>
 </main>
 
