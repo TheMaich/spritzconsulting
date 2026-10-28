@@ -4,6 +4,8 @@
 .lanyard-canvas{
   position: absolute; z-index: 2; display: block;
   pointer-events: none;
+  /* The canvas is transparent, so the shadow follows the strap and badge outline. */
+  filter: drop-shadow(0 10px 14px rgba(20, 15, 10, .14)) drop-shadow(0 2px 3px rgba(20, 15, 10, .10));
   opacity: 0;
   animation: lanyard-in .4s var(--ease) forwards;
 }
