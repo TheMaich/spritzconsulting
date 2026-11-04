@@ -11,7 +11,7 @@
  * Quota: MailApp allows about 100 recipients per day on a free Google account.
  */
 var SHARED_SECRET = 'REPLACE_WITH_SHARED_SECRET';
-var NOTIFY_TO = 'hello@spritzconsulting.com';
+var NOTIFY_TO = 'michele@spritzconsulting.com';
 
 function reply_(body) {
   return ContentService.createTextOutput(JSON.stringify(body))
