@@ -956,6 +956,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 .article-wrap .context-cta-shell { margin-top: 64px; }
+.article-wrap .context-cta-line { margin: 0 0 4px; color: var(--ink); }
+.article-wrap .context-cta-line2 { margin: 0; color: var(--ink-2); }
+@media (max-width: 640px) {
+  .article-wrap .context-cta-line { margin: 0; }
+}
 
 /* Bolder pass: editorial amplification */
 .article-wrap .deck + p::first-letter{
