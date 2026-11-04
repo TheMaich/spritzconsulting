@@ -770,6 +770,40 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-weight: 700;
 }
 
+.quick-answers {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 32px 34px;
+  margin: 64px 0;
+}
+.article-wrap .quick-answers h2.tldr-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-top: 0;
+  margin: 0 0 8px;
+}
+.quick-answers h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 24px 0 8px;
+}
+.quick-answers p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0;
+}
+
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
    .context-cta owns the wobble and cursor glow, so the two never fight. */
@@ -1014,6 +1048,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/publisher-pitch-risks.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What do publishers look for in a game pitch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A publisher builds a risk model of your game. Five risks come up on almost every project: creative risk, financial viability, commercial opportunity, technical risk, and team and execution. Knowing them changes how you prepare and which gaps in your deck will draw the most questions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I show a publisher that my game is financially viable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Work from the revenue ceiling back, as the publisher does. The platform cut, the service costs and the advance all have to fit inside what the game can realistically earn: 500,000 euros of lifetime revenue cannot carry a 400,000 euro development budget plus full publishing services. Bring comparable titles, their sales and a clear read on what the game positions against."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does my team need to have shipped a game before I pitch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is not a requirement, but publishers look hard at it. They want to know whether the team has shipped something of similar scope, together. Even a small shipped game means the team has already solved most of the hard coordination problems, and a first project at this scale makes publishers uneasy. A clear lead with real decision-making authority also helps."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "@id": "https://spritzconsulting.com/resources/publisher-pitch-risks.html#breadcrumb",
       "itemListElement": [
@@ -1196,6 +1260,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <li>A team that has shipped once together is a fundamentally different risk profile from one that hasn't.</li>
       </ul>
     </div>
+
+    <section class="quick-answers" aria-labelledby="qa-h">
+      <h2 id="qa-h" class="tldr-label">Quick answers</h2>
+      <h3>What do publishers look for in a game pitch?</h3>
+      <p>A publisher builds a risk model of your game. Five risks come up on almost every project: creative risk, financial viability, commercial opportunity, technical risk, and team and execution. Knowing them changes how you prepare and which gaps in your deck will draw the most questions.</p>
+      <h3>How do I show a publisher that my game is financially viable?</h3>
+      <p>Work from the revenue ceiling back, as the publisher does. The platform cut, the service costs and the advance all have to fit inside what the game can realistically earn: 500,000 euros of lifetime revenue cannot carry a 400,000 euro development budget plus full publishing services. Bring comparable titles, their sales and a clear read on what the game positions against.</p>
+      <h3>Does my team need to have shipped a game before I pitch?</h3>
+      <p>It is not a requirement, but publishers look hard at it. They want to know whether the team has shipped something of similar scope, together. Even a small shipped game means the team has already solved most of the hard coordination problems, and a first project at this scale makes publishers uneasy. A clear lead with real decision-making authority also helps.</p>
+    </section>
 
     <div class="related">
       <span class="related-label">KEEP READING</span>

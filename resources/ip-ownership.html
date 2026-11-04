@@ -771,6 +771,40 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-weight: 700;
 }
 
+.quick-answers {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 32px 34px;
+  margin: 64px 0;
+}
+.article-wrap .quick-answers h2.tldr-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-top: 0;
+  margin: 0 0 8px;
+}
+.quick-answers h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 24px 0 8px;
+}
+.quick-answers p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0;
+}
+
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
    .context-cta owns the wobble and cursor glow, so the two never fight. */
@@ -1015,6 +1049,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/ip-ownership.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "If I own my IP, can the publisher still control my game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Ownership and control are different things. A publisher can hold a perpetual exclusive licence covering every use of the game, so you may be unable to port it, make a sequel or release it elsewhere without their sign-off, even though you own it on paper."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a reversion clause in a publishing contract?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A reversion clause returns the rights to you when the publisher does not act. Typical triggers are the game not being released within 18 months of the final build, the game being off sale for twelve months straight, or the publisher going bankrupt. Without these clauses you are relying on goodwill to get the game back."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should I check in a publisher's licence?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three things: scope, duration and reversion. Scope is whether the licence covers only distribution or also porting, sequels, remasters, merchandise and adaptations (\"the Game and all derivative works\" hands over most of the commercial future). Duration is whether there is an end date, since first drafts often default to perpetual. Reversion is how and when the rights come back."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "@id": "https://spritzconsulting.com/resources/ip-ownership.html#breadcrumb",
       "itemListElement": [
@@ -1147,15 +1211,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>To see what a deal actually pays before you sign, run it through the <a href="/resources/tools/publishing-break-even-calculator.html">Publishing Break-Even Calculator</a>. Deal milestone and schedule sanity checks are part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
     </article>
 
-    <div class="tldr">
-      <div class="tldr-label">TL;DR</div>
-      <ul>
-        <li>Owning your IP and controlling it are two different things.</li>
-        <li>Three things determine whether ownership means anything: scope, duration, and reversion.</li>
-        <li>Without reversion clauses, a publisher can hold your rights indefinitely and do nothing with them.</li>
-        <li>Don't ask "do I keep my IP?" Ask: what can I do with it if this relationship stops working?</li>
-      </ul>
-    </div>
+    <section class="quick-answers" aria-labelledby="qa-h">
+      <h2 id="qa-h" class="tldr-label">Quick answers</h2>
+      <h3>If I own my IP, can the publisher still control my game?</h3>
+      <p>Yes. Ownership and control are different things. A publisher can hold a perpetual exclusive licence covering every use of the game, so you may be unable to port it, make a sequel or release it elsewhere without their sign-off, even though you own it on paper.</p>
+      <h3>What is a reversion clause in a publishing contract?</h3>
+      <p>A reversion clause returns the rights to you when the publisher does not act. Typical triggers are the game not being released within 18 months of the final build, the game being off sale for twelve months straight, or the publisher going bankrupt. Without these clauses you are relying on goodwill to get the game back.</p>
+      <h3>What should I check in a publisher's licence?</h3>
+      <p>Three things: scope, duration and reversion. Scope is whether the licence covers only distribution or also porting, sequels, remasters, merchandise and adaptations ("the Game and all derivative works" hands over most of the commercial future). Duration is whether there is an end date, since first drafts often default to perpetual. Reversion is how and when the rights come back.</p>
+    </section>
 
     <div class="related">
       <span class="related-label">KEEP READING</span>

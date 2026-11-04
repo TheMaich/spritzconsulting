@@ -771,6 +771,40 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-weight: 700;
 }
 
+.quick-answers {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 32px 34px;
+  margin: 64px 0;
+}
+.article-wrap .quick-answers h2.tldr-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-top: 0;
+  margin: 0 0 8px;
+}
+.quick-answers h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 24px 0 8px;
+}
+.quick-answers p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0;
+}
+
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
    .context-cta owns the wobble and cursor glow, so the two never fight. */
@@ -1015,6 +1049,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/marketing-invoice.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Who pays for marketing in a game publishing deal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In most full-service deals the publisher spends the money first, but the cost is recoverable from your revenue share. If the publisher spends 50,000 euros on your launch, that amount joins the recoupment pool alongside your advance and service costs, and you pay it back before any split revenue reaches you."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I cap a publisher's marketing budget?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can ask for it, and it is worth putting in the contract. Ask for a defined or capped budget stated as a number, a written approval right above a set threshold, and clarity on what share of marketing costs is actually recoverable. Some publishers absorb part of the marketing risk instead of passing all of it back through recoupment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who decides the price and the discounts of my game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The contract usually says, so read that section. It should cover who sets the sale price, who decides when and how deeply the game is discounted, who controls key distribution and what the threshold for a bundle looks like. These become commercial disagreements when a heavy discount cycle affects the game's perceived value in ways you never agreed to."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "@id": "https://spritzconsulting.com/resources/marketing-invoice.html#breadcrumb",
       "itemListElement": [
@@ -1145,15 +1209,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <p>These feel like operational questions. They become commercial ones when you disagree on strategy, or when a heavy discount cycle starts affecting the game's baseline perceived value in ways you never agreed to. The contract usually says something about this. It's worth knowing what before you're in that conversation.</p>
     <p>The goal isn't to do the publisher's job for them. It's to be a participant in decisions that affect your revenue and your game's position in the market, before those decisions are made rather than after.</p>
   </article>
-  <div class="tldr">
-    <div class="tldr-label">TL;DR</div>
-    <ul>
-      <li>In a full-service deal, marketing costs are fully recoverable from your revenue share.</li>
-      <li>The publisher decides how much to spend. You see the bill in the royalty statement.</li>
-      <li>Push for: a capped marketing budget, written approval rights above a threshold, and clarity on what percentage is actually recoverable.</li>
-      <li>Get the pricing and discount strategy in writing before you sign.</li>
-    </ul>
-  </div>
+    <section class="quick-answers" aria-labelledby="qa-h">
+      <h2 id="qa-h" class="tldr-label">Quick answers</h2>
+      <h3>Who pays for marketing in a game publishing deal?</h3>
+      <p>In most full-service deals the publisher spends the money first, but the cost is recoverable from your revenue share. If the publisher spends 50,000 euros on your launch, that amount joins the recoupment pool alongside your advance and service costs, and you pay it back before any split revenue reaches you.</p>
+      <h3>Can I cap a publisher's marketing budget?</h3>
+      <p>You can ask for it, and it is worth putting in the contract. Ask for a defined or capped budget stated as a number, a written approval right above a set threshold, and clarity on what share of marketing costs is actually recoverable. Some publishers absorb part of the marketing risk instead of passing all of it back through recoupment.</p>
+      <h3>Who decides the price and the discounts of my game?</h3>
+      <p>The contract usually says, so read that section. It should cover who sets the sale price, who decides when and how deeply the game is discounted, who controls key distribution and what the threshold for a bundle looks like. These become commercial disagreements when a heavy discount cycle affects the game's perceived value in ways you never agreed to.</p>
+    </section>
 
   <div class="related">
     <span class="related-label">KEEP READING</span>

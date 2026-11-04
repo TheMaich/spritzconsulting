@@ -771,6 +771,40 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-weight: 700;
 }
 
+.quick-answers {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 32px 34px;
+  margin: 64px 0;
+}
+.article-wrap .quick-answers h2.tldr-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-top: 0;
+  margin: 0 0 8px;
+}
+.quick-answers h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 24px 0 8px;
+}
+.quick-answers p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0;
+}
+
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
    .context-cta owns the wobble and cursor glow, so the two never fight. */
@@ -1015,6 +1049,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/publisher-goes-quiet.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I get my game back from a publisher?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only if the contract says how, so it has to be negotiated before you sign. The clauses that return rights are a fixed or renewable term, a publication deadline, a commercial inactivity clause (off all storefronts or no revenue for twelve months), and an insolvency provision. A termination right for publisher breach, with a clear list of what counts as a breach, gives you an exit that does not depend on goodwill."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if a publisher never releases my game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on whether the contract has a publication deadline. With one, the publisher must release the game within a set window after you deliver the final build, typically 12 to 18 months, and if they miss it the rights revert automatically. Without one, a perpetual contract lets the publisher hold the rights without releasing, and you cannot sign elsewhere or self-publish."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should a publishing contract be perpetual?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Avoid it if you can. A fixed term gives the contract an end date and the rights return when it expires. A renewable term means both sides have to decide to continue, which acts as a checkpoint. Either is better than perpetual."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "@id": "https://spritzconsulting.com/resources/publisher-goes-quiet.html#breadcrumb",
       "itemListElement": [
@@ -1150,15 +1214,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>Deal milestone and schedule sanity checks are part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
     </article>
 
-    <div class="tldr">
-      <div class="tldr-label">TL;DR</div>
-      <ul>
-        <li>A perpetual contract with no publication obligation lets a publisher hold your rights without actively selling the game.</li>
-        <li>Push for: a fixed or renewable term, a publication deadline (12-18 months), a commercial inactivity trigger (12 months off-sale), and an insolvency provision.</li>
-        <li>Publisher breach definitions are usually vague. Developer breach definitions are specific. Push to make them equivalent.</li>
-        <li>The time to negotiate your way out is before you're inside.</li>
-      </ul>
-    </div>
+    <section class="quick-answers" aria-labelledby="qa-h">
+      <h2 id="qa-h" class="tldr-label">Quick answers</h2>
+      <h3>How do I get my game back from a publisher?</h3>
+      <p>Only if the contract says how, so it has to be negotiated before you sign. The clauses that return rights are a fixed or renewable term, a publication deadline, a commercial inactivity clause (off all storefronts or no revenue for twelve months), and an insolvency provision. A termination right for publisher breach, with a clear list of what counts as a breach, gives you an exit that does not depend on goodwill.</p>
+      <h3>What happens if a publisher never releases my game?</h3>
+      <p>It depends on whether the contract has a publication deadline. With one, the publisher must release the game within a set window after you deliver the final build, typically 12 to 18 months, and if they miss it the rights revert automatically. Without one, a perpetual contract lets the publisher hold the rights without releasing, and you cannot sign elsewhere or self-publish.</p>
+      <h3>Should a publishing contract be perpetual?</h3>
+      <p>Avoid it if you can. A fixed term gives the contract an end date and the rights return when it expires. A renewable term means both sides have to decide to continue, which acts as a checkpoint. Either is better than perpetual.</p>
+    </section>
 
     <div class="related">
       <span class="related-label">KEEP READING</span>

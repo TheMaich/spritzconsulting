@@ -771,6 +771,40 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-weight: 700;
 }
 
+.quick-answers {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 32px 34px;
+  margin: 64px 0;
+}
+.article-wrap .quick-answers h2.tldr-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-top: 0;
+  margin: 0 0 8px;
+}
+.quick-answers h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 24px 0 8px;
+}
+.quick-answers p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0;
+}
+
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
    .context-cta owns the wobble and cursor glow, so the two never fight. */
@@ -1015,6 +1049,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/three-things-before-signing.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Which clauses should I read first in a game publishing contract?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with three: the Net Revenue definition, the licence, and the cure period. Net Revenue is the base your split applies to, the licence defines what the publisher can do with your game and for how long, and the cure period defines how long you have to fix a breach before the publisher can terminate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a cure period in a publishing contract?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is the time you have to fix a breach before the publisher can terminate the deal. Ten days is not enough, thirty is standard and sixty is better. Watch for contracts where an uncured breach lets the publisher take ownership of your IP for no compensation. That clause should come out, or be replaced with payment of fair market value."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a lawyer to review a publishing contract?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The article's advice is yes: get a games industry lawyer who has read publishing agreements before and knows where the problems hide. The cost of a review is a fraction of what a badly structured contract can cost you later, and it is much easier to fix before signing than after. This is general guidance, not legal advice."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "@id": "https://spritzconsulting.com/resources/three-things-before-signing.html#breadcrumb",
       "itemListElement": [
@@ -1151,15 +1215,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     <p>The cost of a contract review is a fraction of what you'll wish you'd spent if the contract turns out to be badly structured. I've had this conversation with developers at several stages of their deal. It's a much easier conversation before signing than after.</p>
     <p>Deal milestone and schedule sanity checks are part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
   </article>
-  <div class="tldr">
-    <div class="tldr-label">TL;DR</div>
-    <ul>
-      <li>Net Revenue: get the complete list of deductions and run the worst-case waterfall before signing.</li>
-      <li>The Licence: check whether it's time-limited, what the publisher can do with your game, and what triggers reversion.</li>
-      <li>The Cure Period: 30 days minimum, 60 is better. Some contracts attach IP forfeiture to an uncured breach.</li>
-      <li>Get a specialist games industry lawyer to review the contract.</li>
-    </ul>
-  </div>
+    <section class="quick-answers" aria-labelledby="qa-h">
+      <h2 id="qa-h" class="tldr-label">Quick answers</h2>
+      <h3>Which clauses should I read first in a game publishing contract?</h3>
+      <p>Start with three: the Net Revenue definition, the licence, and the cure period. Net Revenue is the base your split applies to, the licence defines what the publisher can do with your game and for how long, and the cure period defines how long you have to fix a breach before the publisher can terminate.</p>
+      <h3>What is a cure period in a publishing contract?</h3>
+      <p>It is the time you have to fix a breach before the publisher can terminate the deal. Ten days is not enough, thirty is standard and sixty is better. Watch for contracts where an uncured breach lets the publisher take ownership of your IP for no compensation. That clause should come out, or be replaced with payment of fair market value.</p>
+      <h3>Do I need a lawyer to review a publishing contract?</h3>
+      <p>The article's advice is yes: get a games industry lawyer who has read publishing agreements before and knows where the problems hide. The cost of a review is a fraction of what a badly structured contract can cost you later, and it is much easier to fix before signing than after. This is general guidance, not legal advice.</p>
+    </section>
 
   <div class="related">
     <span class="related-label">KEEP READING</span>

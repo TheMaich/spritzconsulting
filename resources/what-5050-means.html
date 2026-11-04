@@ -771,6 +771,40 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-weight: 700;
 }
 
+.quick-answers {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 32px 34px;
+  margin: 64px 0;
+}
+.article-wrap .quick-answers h2.tldr-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-top: 0;
+  margin: 0 0 8px;
+}
+.quick-answers h3 {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 24px 0 8px;
+}
+.quick-answers p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0;
+}
+
 /* Contextual contact CTA, placed right after the result. Clay-tinted so it reads
    as the next step. The .context-cta-shell wrapper owns the hover scale; the inner
    .context-cta owns the wobble and cursor glow, so the two never fight. */
@@ -1015,6 +1049,36 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       }
     },
     {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/what-5050-means.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does a 50/50 revenue split mean in a game publishing deal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It means that, once the publisher has recovered its costs, the revenue is shared half and half. The split only applies to Net Revenue, which is gross sales minus platform fees, taxes, refunds and any other deductions the contract lists. Before the split starts, the publisher recoups the advance, service costs and marketing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is recoupment in game publishing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Recoupment is the publisher getting back what it spent on your game before any split revenue reaches you. That includes the advance, porting, QA, localisation, marketing and sometimes a markup on the advance. In the article's example, a 50,000 euro advance plus 75,000 euros of services and a 1.15x markup means roughly 132,500 euros has to be recovered first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a 50/50 split good for a developer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The percentage alone does not tell you. A 70/30 split in your favour can still mean years without a payment if the recoupment pool is large and Net Revenue strips out a lot. Get the full list of deductions in writing, run the waterfall for your worst-case sales, and only then look at the split."
+          }
+        }
+      ]
+    },
+    {
       "@type": "BreadcrumbList",
       "@id": "https://spritzconsulting.com/resources/what-5050-means.html#breadcrumb",
       "itemListElement": [
@@ -1148,15 +1212,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>Deal milestone and schedule sanity checks are part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service. More guides and tools live in the <a href="/resources/">resources hub</a>.</p>
     </article>
 
-    <div class="tldr">
-      <div class="tldr-label">TL;DR</div>
-      <ul>
-        <li>The split percentage is the least useful number in a publishing deal.</li>
-        <li>What matters is Net Revenue: the list of deductions applied before the split kicks in.</li>
-        <li>In a full-service deal, that list includes the advance, porting, QA, localisation, marketing, and sometimes a markup on top.</li>
-        <li>Ask the publisher to model three sales scenarios before you agree to anything.</li>
-      </ul>
-    </div>
+    <section class="quick-answers" aria-labelledby="qa-h">
+      <h2 id="qa-h" class="tldr-label">Quick answers</h2>
+      <h3>What does a 50/50 revenue split mean in a game publishing deal?</h3>
+      <p>It means that, once the publisher has recovered its costs, the revenue is shared half and half. The split only applies to Net Revenue, which is gross sales minus platform fees, taxes, refunds and any other deductions the contract lists. Before the split starts, the publisher recoups the advance, service costs and marketing.</p>
+      <h3>What is recoupment in game publishing?</h3>
+      <p>Recoupment is the publisher getting back what it spent on your game before any split revenue reaches you. That includes the advance, porting, QA, localisation, marketing and sometimes a markup on the advance. In the article's example, a 50,000 euro advance plus 75,000 euros of services and a 1.15x markup means roughly 132,500 euros has to be recovered first.</p>
+      <h3>Is a 50/50 split good for a developer?</h3>
+      <p>The percentage alone does not tell you. A 70/30 split in your favour can still mean years without a payment if the recoupment pool is large and Net Revenue strips out a lot. Get the full list of deductions in writing, run the waterfall for your worst-case sales, and only then look at the split.</p>
+    </section>
 
     <div class="related">
       <span class="related-label">KEEP READING</span>
