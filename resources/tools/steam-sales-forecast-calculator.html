@@ -1220,6 +1220,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   height: 16px;
   flex-shrink: 0;
 }
+.calc-faq{ margin: 8px 0 44px; }
+.calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
 </style>
 <script type="application/ld+json">
 {
@@ -1263,6 +1266,37 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       },
       "dateModified": "2026-10-19",
       "inLanguage": "en"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html#faq",
+      "url": "https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How many Steam sales does a wishlist turn into?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At the median, about 0.15 copies per wishlist in the first week for launches with 25,000 or more wishlists, according to GameDiscoverCo's October 2025 analysis. The calculator uses 0.10 for games priced above $10 and a low case of 0.07. Individual games vary by 10 to 20 times around the median, so treat it as a reference point, not a forecast."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I estimate first-month and first-year Steam sales?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, which assumes Week 1 holds about 75% of the first month. For year one, the low end is roughly 3 times Week 1, and the high end follows the 2023 to 2025 curve of about 0.22 copies per wishlist in month 1 and 0.70 in year 1."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is a Steam sales estimator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is directional only. The best and worst performers can differ by 10 to 20 times, and the games that outperform usually did so through things you cannot model in advance, such as going viral with influencers, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision."
+          }
+        }
+      ]
     },
     {
       "@type": "BreadcrumbList",
@@ -1550,6 +1584,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           </a>
         </div>
       </div>
+
+      <section class="calc-faq" aria-label="Quick answers">
+        <div class="calc-notes-label">Quick answers</div>
+        <h2>How many Steam sales does a wishlist turn into?</h2>
+        <p>At the median, about 0.15 copies per wishlist in the first week for launches with 25,000 or more wishlists, according to GameDiscoverCo's October 2025 analysis. The calculator uses 0.10 for games priced above $10 and a low case of 0.07. Individual games vary by 10 to 20 times around the median, so treat it as a reference point, not a forecast.</p>
+        <h2>How do I estimate first-month and first-year Steam sales?</h2>
+        <p>Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, which assumes Week 1 holds about 75% of the first month. For year one, the low end is roughly 3 times Week 1, and the high end follows the 2023 to 2025 curve of about 0.22 copies per wishlist in month 1 and 0.70 in year 1.</p>
+        <h2>How accurate is a Steam sales estimator?</h2>
+        <p>It is directional only. The best and worst performers can differ by 10 to 20 times, and the games that outperform usually did so through things you cannot model in advance, such as going viral with influencers, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision.</p>
+      </section>
 
       <div class="calc-notes">
         <div class="calc-notes-label">Notes</div>
