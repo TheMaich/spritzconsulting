@@ -10,12 +10,10 @@
  *   get a fake 200 so they stop retrying, and nothing is stored.
  * - Rate limit: max SUBMISSIONS_PER_WINDOW per IP per RATE_WINDOW_SECONDS,
  *   tracked in the same KV namespace under rl: keys with a TTL.
- * - Notification email: sent through the Resend HTTP API (resend.com) using
- *   the RESEND_API_KEY secret. Cloudflare Email Routing is intentionally not
- *   used: Resend verifies the sending domain with a DNS TXT record only, so
- *   the zone MX stays on the existing Gmail inbox. If the key is missing or
- *   the send fails, the submission still lands in KV and the Worker returns a
- *   real error (502) instead of a silent 200.
+ * - Notification email: sent through a Google Apps Script web app (notify.gs)
+ *   that mails the owner from their Google account. The submission is saved to
+ *   KV first and the visitor always gets a success once it is saved; a failed
+ *   notification is logged and marked notified:false on the stored record.
  * - CORS: only the production origins may POST.
  */
 
@@ -24,12 +22,6 @@ const ALLOWED_ORIGINS = [
   'https://www.spritzconsulting.com',
 ];
 
-// Where notifications land. Overridable via the NOTIFY_TO var in wrangler.toml
-// so the destination inbox can change without a code edit. The From address
-// must sit on a domain verified in Resend (spritzconsulting.com); it is what
-// Resend authenticates, not where replies go.
-const DEFAULT_NOTIFY_TO = 'hello@spritzconsulting.com';
-const NOTIFY_FROM = 'Spritz Contact Form <contact-form@spritzconsulting.com>';
 
 const RATE_WINDOW_SECONDS = 600;
 const SUBMISSIONS_PER_WINDOW = 5;
@@ -87,36 +79,33 @@ function buildNotificationText(submission) {
   ].join('\n');
 }
 
-// Throws on any delivery failure so the caller can surface a real error.
-// KV already holds the submission before this runs, so a throw never loses
-// the lead; it only tells the visitor (and our logs) that the notification
-// did not go out, instead of the old silent 200.
+// Throws on any delivery failure so the caller can log it. KV already holds
+// the submission before this runs, so a failure never loses the lead.
 //
-// Uses Resend's HTTP API. reply_to is the visitor's address so a reply from
-// the inbox goes straight back to them. A non-2xx response carries a JSON
-// error body from Resend; we surface its status so logs show why it failed.
+// Delivery goes through a Google Apps Script web app (workers/contact-form/
+// notify.gs) that sends the mail from the owner's Google account. The Worker
+// calls it with NOTIFY_WEBHOOK_URL and proves itself with NOTIFY_SECRET. The
+// script sets reply-to to the visitor's address.
 async function sendNotification(env, submission) {
-  if (!env.RESEND_API_KEY) {
-    throw new Error('resend_api_key_missing');
+  if (!env.NOTIFY_WEBHOOK_URL || !env.NOTIFY_SECRET) {
+    throw new Error('notify_config_missing');
   }
-  const to = env.NOTIFY_TO || DEFAULT_NOTIFY_TO;
-  const response = await fetch('https://api.resend.com/emails', {
+  const response = await fetch(env.NOTIFY_WEBHOOK_URL, {
     method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + env.RESEND_API_KEY,
-      'Content-Type': 'application/json',
-    },
+    redirect: 'follow', // Apps Script answers POSTs through a 302
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({
-      from: NOTIFY_FROM,
-      to: [to],
-      reply_to: submission.email,
+      secret: env.NOTIFY_SECRET,
+      email: submission.email,
       subject: 'New contact form submission',
       text: buildNotificationText(submission),
     }),
   });
-  if (!response.ok) {
-    const detail = await response.text();
-    throw new Error('resend_http_' + response.status + ': ' + detail.slice(0, 300));
+  const detail = await response.text();
+  let result = null;
+  try { result = JSON.parse(detail); } catch (err) { /* not JSON */ }
+  if (!response.ok || !result || result.ok !== true) {
+    throw new Error('notify_failed_' + response.status + ': ' + detail.slice(0, 200));
   }
 }
 
@@ -178,15 +167,18 @@ export default {
     // KV first: the lead is durably captured regardless of email outcome.
     await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(submission));
 
-    // Notification is required, not best effort. If it fails we return a real
-    // error (not 200) so the failure is visible instead of silently losing
-    // the inquiry. The submission is still in KV and recoverable.
+    // The lead is already safe in KV, so the visitor always gets a success.
+    // If the notification fails, record that on the stored submission and log
+    // it; unsent leads are the ones with "notified": false.
     try {
       await sendNotification(env, submission);
+      submission.notified = true;
     } catch (err) {
       console.log('notification email failed: ' + (err && err.message));
-      return json(502, { ok: false, error: 'notification_failed' }, origin);
+      submission.notified = false;
+      submission.notifyError = String(err && err.message).slice(0, 200);
     }
+    await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(submission));
 
     return json(200, { ok: true }, origin);
   },

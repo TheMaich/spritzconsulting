@@ -2,7 +2,7 @@
 
 Backend for the contact form on spritzconsulting.com. Accepts a JSON POST,
 validates it, stores it in Workers KV, and emails a notification through the
-Resend HTTP API.
+Google Apps Script web app.
 
 ## Endpoint
 
@@ -76,37 +76,30 @@ npx wrangler kv key get "<key>" --binding CONTACT_SUBMISSIONS --remote
 Keys look like `submission:2026-07-18T10:00:00.000Z:<uuid>` and sort by
 timestamp. `rl:` keys are rate-limit counters and expire on their own.
 
-## Email notification (required, free, first party)
+## Email notification (Google Apps Script)
 
-The Worker sends a notification through the Resend HTTP API. Resend was chosen
-over Cloudflare Email Routing because it verifies the sending domain with a DNS
-TXT record only: the zone MX is untouched, so the existing Gmail inbox keeps
-receiving normal mail. Notification is REQUIRED: if `RESEND_API_KEY` is missing
-or Resend returns a non-2xx status, the Worker returns
-`502 {"ok":false,"error":"notification_failed"}` instead of a silent 200. The
-submission is written to KV first, so no lead is lost even on a 502; it stays
-recoverable with the read commands above.
+The Worker saves every submission to KV, then calls a Google Apps Script web
+app (`notify.gs`) that emails the owner from their Google account. No third
+party email service and no DNS changes are needed, and Gmail keeps receiving
+normal mail.
 
-One-time setup (needed before mail arrives):
+The visitor always sees success once the submission is in KV. If the email
+step fails, the stored record gets `"notified": false` and a `notifyError`, and
+the failure is logged. Check KV for records with `notified` false after any
+outage.
 
-1. Create a Resend account (free tier covers ~3,000 emails/month) and add the
-   `spritzconsulting.com` domain. Add the DNS records Resend shows (TXT/DKIM,
-   and its Return-Path CNAME). These do not touch the MX record, so Gmail is
-   unaffected. Wait for Resend to mark the domain Verified.
-2. Create an API key in Resend, then store it as a Worker secret (never commit
-   it):
+One-time setup:
+
+1. script.google.com > New project > paste `notify.gs`, set `SHARED_SECRET`.
+2. Deploy > New deployment > Web app, Execute as: Me, Who has access: Anyone.
+   Authorise the mail permission when asked. Copy the `/exec` URL.
+3. Set the two Worker secrets (never commit them):
 
    ```
-   npx wrangler secret put RESEND_API_KEY
+   npx wrangler secret put NOTIFY_WEBHOOK_URL
+   npx wrangler secret put NOTIFY_SECRET
    ```
 
-3. Set `NOTIFY_TO` in `wrangler.toml` to the inbox that should receive
-   notifications (defaults to `hello@spritzconsulting.com`). The From address
-   is `contact-form@spritzconsulting.com`; it must sit on the verified domain.
-   `reply_to` is set to the visitor's address, so replying from the inbox goes
-   straight back to them.
-4. `npx wrangler deploy`.
+4. `npx wrangler deploy`, then submit the form once and confirm the email lands.
 
-Note: before deploying, replace `REPLACE_WITH_NAMESPACE_ID` in `wrangler.toml`
-with the live `CONTACT_SUBMISSIONS` namespace id (run
-`npx wrangler kv namespace list`), or the deploy binds an empty KV namespace.
+Limit: a free Google account sends about 100 recipients per day via MailApp.

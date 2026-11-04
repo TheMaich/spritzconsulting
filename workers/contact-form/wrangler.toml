@@ -1,32 +1,21 @@
-name = "spritz-contact-form"
+name = "contact-form"
 main = "worker.js"
-compatibility_date = "2026-07-01"
+compatibility_date = "2026-07-20"
 
-# Route the Worker on the production zone so the site can POST same origin.
-# Adjust zone_name if the zone label differs in your Cloudflare account.
+# Same zone routes as the live Worker, so the site can POST same origin.
 routes = [
   { pattern = "spritzconsulting.com/api/contact", zone_name = "spritzconsulting.com" },
   { pattern = "www.spritzconsulting.com/api/contact", zone_name = "spritzconsulting.com" }
 ]
 
-# KV namespace holding submissions and rate-limit counters.
-# Replace the id after running: wrangler kv namespace create CONTACT_SUBMISSIONS
+# KV namespace holding submissions and rate-limit counters (live namespace).
 [[kv_namespaces]]
 binding = "CONTACT_SUBMISSIONS"
-id = "REPLACE_WITH_NAMESPACE_ID"
+id = "151a51cc4d7b4e0c827dce67a3b15813"
 
-# Notification email through the Resend HTTP API (resend.com). Chosen over
-# Cloudflare Email Routing because Resend verifies the sending domain with a
-# DNS TXT record only, leaving the zone MX on the existing Gmail inbox.
-#
-# REQUIRES, before mail will actually arrive:
-#   1. A Resend account with spritzconsulting.com added and verified (add the
-#      TXT/DKIM records Resend shows; MX is untouched, so Gmail keeps working).
-#   2. The API key stored as a secret, NOT in this file:
-#        npx wrangler secret put RESEND_API_KEY
-#   3. NOTIFY_TO below set to the inbox that should receive notifications.
-# The Worker treats the send as required: if the key is missing or Resend
-# returns non-2xx, the submission returns 502 notification_failed (not a
-# silent 200) and stays recoverable in KV.
-[vars]
-NOTIFY_TO = "hello@spritzconsulting.com"
+# Notification email goes through the Google Apps Script web app in notify.gs.
+# Both values below are set outside this file so neither lands in git:
+#   npx wrangler secret put NOTIFY_WEBHOOK_URL   (the web app /exec URL)
+#   npx wrangler secret put NOTIFY_SECRET        (same value as SHARED_SECRET in the script)
+# If either is missing, the submission is still saved to KV and marked
+# notified:false; the visitor still sees success.
