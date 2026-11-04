@@ -17,12 +17,19 @@ Key facts:
 ## Guides
 
 - [What a publisher actually reads in your pitch deck](https://spritzconsulting.com/resources/publisher-pitch-risks.html): The five risks publishers assess (creative, financial, commercial, technical, team) and what to prove for each.
+- [What '50/50' actually means](https://spritzconsulting.com/resources/what-5050-means.html): What a 50/50 revenue split pays out: recoupment, Net Revenue definitions and deductions.
+- [You own the IP. What for?](https://spritzconsulting.com/resources/ip-ownership.html): Owning IP versus controlling it: licence scope, duration and reversion clauses.
+- [When your publisher goes quiet](https://spritzconsulting.com/resources/publisher-goes-quiet.html): Exit rights to negotiate before signing: fixed term, publication deadline, inactivity and insolvency clauses.
+- [Marketing is part of the deal. So is the invoice.](https://spritzconsulting.com/resources/marketing-invoice.html): How publisher marketing spend is recouped from your share, and what to cap or approve.
+- [Three things to read before you sign](https://spritzconsulting.com/resources/three-things-before-signing.html): Net Revenue, the licence and the cure period: where to start reading a publishing contract.
 - [Publisher Pitch Deck Template](https://spritzconsulting.com/resources/publisher-pitch-deck-template.html): Free 14-slide game pitch deck template (PowerPoint file, opens in Google Slides), from elevator pitch to budget request. No email required.
 
 ## Tools
 
 - [Publisher's Game Budget Calculator](https://spritzconsulting.com/resources/tools/game-budget-calculator.html): All-in game budget from development, publisher markup, marketing and services.
 - [Publishing Break-Even Calculator](https://spritzconsulting.com/resources/tools/publishing-break-even-calculator.html): Platform cut, deductions, net per unit, and units needed to recoup an advance at 1x, 2x and 3x.
+- [Steam Sales Forecast Calculator](https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html): Estimate Steam launch sales from wishlists and followers: Week 1, Month 1 and year-one ranges.
+- [Steam Launch Outlook Calculator](https://spritzconsulting.com/resources/tools/steam-launch-outlook-calculator.html): Project follower and wishlist velocity from page open to launch against a wishlist target.
 - [Steam Wishlist Target Calculator](https://spritzconsulting.com/resources/tools/steam-wishlist-target-calculator.html): Wishlists needed at launch to hit a unit target, in weak, typical and strong tiers.
 - [Simship Work-Back Schedule Planner](https://spritzconsulting.com/resources/tools/simship-calculator.html): Work-back schedule from a release date for cert, QA, content lock and submissions per platform.
 - [Launch Week Planning Helper](https://spritzconsulting.com/resources/tools/launch-week-planner-helper.html): Dated launch-week plan covering press keys, embargo, store checks and the day-zero social push.
