@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <link rel="canonical" href="https://spritzconsulting.com/resources/marketing-invoice.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Who Pays for Marketing in a Game Publishing Deal? | Spritz</title>
+<title>Who Pays for Marketing in a Game Publishing Deal? | Spritz Consulting</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -16,18 +16,18 @@
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
 <meta name="description" content="In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share." />
 <meta name="author" content="Michele Di Nardo" />
-<meta name="robots" content="noindex" />
+<meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://spritzconsulting.com/resources/marketing-invoice.html">
-<meta property="og:title" content="Who Pays for Marketing in a Game Publishing Deal? | Spritz">
+<meta property="og:title" content="Who Pays for Marketing in a Game Publishing Deal? | Spritz Consulting">
 <meta property="og:description" content="In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share.">
 <meta property="og:image" content="https://spritzconsulting.com/assets/og-image.jpg?v=5">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Who Pays for Marketing in a Game Publishing Deal? | Spritz">
+<meta name="twitter:title" content="Who Pays for Marketing in a Game Publishing Deal? | Spritz Consulting">
 <meta name="twitter:description" content="In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share.">
 <meta name="twitter:image" content="https://spritzconsulting.com/assets/og-image.jpg?v=5">
 
@@ -627,10 +627,19 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink-3);
 }
 .article-wrap .meta b{ color: var(--ink); font-weight: 400; font-size: 12px; }
-.byline{ font-size: 14px; color: var(--ink-3); }
-.article-wrap .byline{ margin: -28px 0 44px; }
+.article-wrap .byline{
+  margin: -28px 0 44px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
 .byline a{ color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
 .byline a:hover{ color: var(--clay); text-decoration-color: currentColor; }
+.article-wrap article p a{
+  color: var(--clay);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.article-wrap article p a:hover{ color: var(--clay-deep); }
 .article-wrap .deck{
   font-size: clamp(20px, 2.4vw, 28px);
   line-height: 1.5;
@@ -975,7 +984,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         }
       },
       "datePublished": "2026-05-20",
-      "dateModified": "2026-07-18",
+      "dateModified": "2026-11-04",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://spritzconsulting.com/resources/marketing-invoice.html"
@@ -983,7 +992,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "isPartOf": {
         "@id": "https://spritzconsulting.com/resources/#webpage"
       },
-      "inLanguage": "en"
+      "inLanguage": "en",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [
+          "article h1",
+          "article .deck"
+        ]
+      }
     },
     {
       "@type": "BreadcrumbList",
@@ -1080,7 +1096,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   </div>
 </div>
 
-<main id="main" style="max-width:700px;margin:0 auto;padding:64px 32px 96px;">
+<main id="main">
+  <div class="article-wrap">
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol>
       <li><a href="/">Home</a></li>
@@ -1096,7 +1113,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <div>Level <b>Practical</b></div>
       <div>Read time <b>~5 min</b></div>
       <div>Published <b><time datetime="2026-05-20">20 May 2026</time></b></div>
-      <div>Updated <b><time datetime="2026-07-18">18 July 2026</time></b></div>
+      <div>Updated <b><time datetime="2026-11-04">4 November 2026</time></b></div>
     </div>
     <p class="byline">By <a href="/about/">Michele Di Nardo</a>, independent producer. 10 years across Raw Fury, Rebellion and 34BigThings.</p>
     <p class="deck">In a full-service publishing deal, the publisher handles your marketing. That bill usually comes out of your share, and you often have no say in how large it gets.</p>
@@ -1154,6 +1171,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         Book a call <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
       </a>
     </div>
+  </div>
   </div>
 </main>
 
