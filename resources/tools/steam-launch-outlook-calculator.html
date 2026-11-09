@@ -2999,6 +2999,21 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       ctx.restore();
     }
 
+    // Launch date marker: solid clay vertical line at the right edge with its label.
+    var xLaunch = xAt(totalSpan);
+    ctx.save();
+    ctx.strokeStyle = clay;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(xLaunch, padT);
+    ctx.lineTo(xLaunch, padT + H);
+    ctx.stroke();
+    ctx.fillStyle = clay;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText('LAUNCH DATE', xLaunch - 6, padT + 2);
+    ctx.restore();
+
     // Past segment (solid) and future projection (dashed) are both rendered by the SVG
     // overlay; build their screen paths.
     overlayPastColor = ink;
