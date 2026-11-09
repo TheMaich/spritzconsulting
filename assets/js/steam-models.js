@@ -133,7 +133,8 @@
     var pastBoostAll = rampedBoost(pastRebased, daysSinceOpen);
     var pastBoostInWindow = Math.max(0, pastBoostAll - rampedBoost(pastRebased, Math.max(0, daysSinceOpen - 30)));
 
-    var lifetimePace = daysSinceOpen > 0 ? Math.max(0, current - pastBoostAll) / daysSinceOpen : 0;
+    var start = Math.max(0, input.startFollowers || 0); // followers on the day the page opened (usually ~0)
+    var lifetimePace = daysSinceOpen > 0 ? Math.max(0, current - start - pastBoostAll) / daysSinceOpen : 0;
     var v0, paceSource;
     var burstsRemoved = 0;
     if (hasLast30) {
