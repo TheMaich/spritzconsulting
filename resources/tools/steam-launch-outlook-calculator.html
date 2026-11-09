@@ -1751,6 +1751,8 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .scenario-base { border-color: var(--clay); }
 .scenario-name { font-family: var(--sans); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
 .scenario-value { font-family: var(--serif); font-size: clamp(24px, 4vw, 34px); font-weight: 600; letter-spacing: -0.03em; color: var(--ink); margin: 4px 0 2px; }
+.scenario-note { font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 0 0 16px; }
+.scenario-note strong { color: var(--ink); font-weight: 600; }
 .scenario-sub { font-family: var(--sans); font-size: 12px; color: var(--ink-3); }
 .expert-panel { margin-top: 22px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper-2); }
 .expert-panel > summary { cursor: pointer; padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; list-style: none; }
@@ -2085,6 +2087,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <div class="scenario-cell scenario-base"><div class="scenario-name">Base</div><div class="scenario-value" id="sc-base">&ndash;</div><div class="scenario-sub" id="sc-base-sub">wishlists at launch</div></div>
           <div class="scenario-cell"><div class="scenario-name">High</div><div class="scenario-value" id="sc-high">&ndash;</div><div class="scenario-sub" id="sc-high-sub">wishlists at launch</div></div>
         </div>
+        <p class="scenario-note"><strong>Low</strong>: followers grow slower than today and each follower turns into fewer wishlists. <strong>Base</strong>: growth continues at a decaying version of today's pace with a typical follower-to-wishlist ratio. <strong>High</strong>: faster growth and a higher ratio. Each case stacks its assumptions in one direction, so read them as a range of plausible outcomes, not a probability. The reality could land outside it.</p>
         <div class="outlook-window">
           <div class="outlook-window-title">Gap to target</div>
           <div class="gap-headline" id="gap-headline"></div>
