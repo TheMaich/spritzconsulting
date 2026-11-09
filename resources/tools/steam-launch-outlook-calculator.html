@@ -1744,6 +1744,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
 
 /* Simple view + expert accordion. */
+.calc-opt { font-family: var(--sans); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-3); margin-left: 8px; text-transform: none; }
 .calc-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 720px) { .calc-row-2 { grid-template-columns: 1fr; } }
 .scenario-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
@@ -2007,9 +2008,19 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
       </div>
 
       <div class="calc-secondary-card" aria-live="polite">
-        <div class="calc-secondary-label">Estimated Wishlists Today</div>
+        <div class="calc-secondary-label" id="wishlists-today-label">Estimated Wishlists Today</div>
         <div class="calc-secondary-value" id="wishlists-today">0</div>
         <div class="calc-secondary-range" id="wishlists-today-range">range: 0 to 0</div>
+      </div>
+
+      <div class="calc-group">
+        <label class="calc-label" for="actual-wishlists">Know your actual wishlists? <span class="calc-opt">Optional</span></label>
+        <div class="calc-hint">Steamworks shows your real wishlist count. Enter it and the tool uses your own wishlists-per-follower ratio instead of a typical one. This is the most accurate input on the page.</div>
+        <div class="calc-input-wrap">
+          <input type="text" id="actual-wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+          <span class="calc-suffix">WISHLISTS</span>
+        </div>
+        <div class="calc-hint" id="measured-note" hidden></div>
       </div>
 
       <div class="calc-divider" role="presentation"></div>
@@ -2180,7 +2191,7 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
       <details class="model-details" id="assumptions-panel">
         <summary>Model assumptions you can change (unsourced)</summary>
         <div class="model-details-body">
-          <p>No published source gives follower decay constants or the spread of follower pace. These seven values are this tool's own assumptions, not data. They set the shape of the baseline and the width of the low and high cases. Change them to see how much the answer depends on them.</p>
+          <p>No published source gives follower decay constants or the spread of follower pace. These eight values are this tool's own assumptions, not data. They set the shape of the baseline and the width of the low and high cases. Change them to see how much the answer depends on them.</p>
           <div class="assump-grid">
             <label><span class="assump-tag">unsourced assumption</span>Half-life of the decaying pace (days)<input type="number" id="as-half" min="1" step="5" value="90"></label>
             <label><span class="assump-tag">unsourced assumption</span>Share of today's pace that persists (%)<input type="number" id="as-floor" min="0" max="100" step="5" value="30"></label>
@@ -2189,6 +2200,7 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
             <label><span class="assump-tag">unsourced assumption</span>Low case: share of each burst that lands (%)<input type="number" id="as-burstlo" min="0" step="5" value="50"></label>
             <label><span class="assump-tag">unsourced assumption</span>Burst cap (% of followers today)<input type="number" id="as-capPct" min="0" step="10" value="100"></label>
             <label><span class="assump-tag">unsourced assumption</span>Burst cap floor (followers)<input type="number" id="as-capFloor" min="0" step="100" value="1000"></label>
+            <label><span class="assump-tag">unsourced assumption</span>Spread around your real wishlist ratio (%)<input type="number" id="as-measspread" min="0" max="95" step="5" value="25"></label>
           </div>
         </div>
       </details>
@@ -2206,6 +2218,7 @@ burst(T)     = sum of capped boost x min(1, (T - burst day) / 5)         (5-day 
 followers(T) = followers today + pace scale x organic(T) + burst scale x burst(T)
 wishlists    = followers(T) x multiplier
 low  = pace x low %, bursts x low %, low multiplier
+ratio        = actual wishlists / followers today (if entered; floor and ceiling = ratio -/+ spread %)
 base = pace x 100%, bursts x 100%, base multiplier
 high = pace x high %, bursts x 100%, high multiplier
 gap          = base wishlists - target
@@ -2429,7 +2442,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
   var validationEl = document.getElementById('validation-notice');
   var bucketGroup = document.getElementById('bucket-group');
   var bucket = 'unsure';
-  var ASSUMP_IDS = { halfLifeDays: 'as-half', floorPct: 'as-floor', paceLowPct: 'as-pacelo', paceHighPct: 'as-pacehi', burstLowPct: 'as-burstlo', burstCapPct: 'as-capPct', burstCapFloor: 'as-capFloor' };
+  var ASSUMP_IDS = { halfLifeDays: 'as-half', floorPct: 'as-floor', paceLowPct: 'as-pacelo', paceHighPct: 'as-pacehi', burstLowPct: 'as-burstlo', burstCapPct: 'as-capPct', burstCapFloor: 'as-capFloor', measuredSpreadPct: 'as-measspread' };
   function readAssumptions() {
     var out = {};
     Object.keys(ASSUMP_IDS).forEach(function(k) {
@@ -2439,6 +2452,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     });
     return out;
   }
+  var actualWlInput = document.getElementById('actual-wishlists');
   var wishlistsTodayEl = document.getElementById('wishlists-today');
   var breakdownEl = document.getElementById('breakdown');
   var statusEl = document.getElementById('trajectory-status');
@@ -2581,6 +2595,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
   }
 
   function fmtNum(n) { return Math.round(n).toLocaleString('en-US'); }
+  function fx(n) { return (Math.round(n * 10) / 10).toString(); }
   function fmtDecimal(n) {
     var rounded = Math.round(n * 10) / 10;
     return rounded.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -3344,12 +3359,12 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var sc = res.scenarios;
     var html;
     if (gap.extraFollowersBase <= 0) {
-      html = '<strong>To close it:</strong> nothing extra at the middle multiplier. You need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at ' + sc.base.multiplier + 'x and the middle projects ' + fmtNum(sc.base.followers) + '.';
+      html = '<strong>To close it:</strong> nothing extra at the middle multiplier. You need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at ' + fx(sc.base.multiplier) + 'x and the middle projects ' + fmtNum(sc.base.followers) + '.';
     } else {
       var perWeek = isFinite(gap.extraPerWeekBase) ? '<strong>' + fmtNum(gap.extraPerWeekBase) + ' extra followers per week</strong> until launch (on top of the roughly ' + fmtNum(gap.currentWeeklyPace) + ' per week the model starts from), or one additional burst of <strong>' + fmtNum(gap.extraFollowersBase) + '</strong>' : 'one additional burst of <strong>' + fmtNum(gap.extraFollowersBase) + '</strong> (launch is today)';
-      html = '<strong>To close it:</strong> at ' + sc.base.multiplier + 'x you need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at launch, ' + fmtNum(gap.extraFollowersBase) + ' more than the middle. That is ' + perWeek + '.';
+      html = '<strong>To close it:</strong> at ' + fx(sc.base.multiplier) + 'x you need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at launch, ' + fmtNum(gap.extraFollowersBase) + ' more than the middle. That is ' + perWeek + '.';
       if (gap.extraFollowersLow > gap.extraFollowersBase) {
-        html += ' If the multiplier lands at the low end (' + sc.low.multiplier + 'x) you need ' + fmtNum(gap.requiredFollowersLow) + ' (' + fmtNum(gap.extraFollowersLow) + ' more).';
+        html += ' If the multiplier lands at the low end (' + fx(sc.low.multiplier) + 'x) you need ' + fmtNum(gap.requiredFollowersLow) + ' (' + fmtNum(gap.extraFollowersLow) + ' more).';
       }
     }
     gapCloseEl.innerHTML = html;
@@ -3382,7 +3397,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     items.push('Big-tier base: ' + SM.BIG_TIER.base + 'x when the target is above ' + fmtNum(SM.BIG_TIER.minWishlists) + ' wishlists and the bucket is "Not sure" (GameDiscoverCo, 12 May 2026).');
     items.push('High-multiplier warning above ' + SM.HIGH_MULT_WARN + 'x (GameDiscoverCo, 12 May 2026: 0.22x vs 0.37x month-1 conversion, top vs bottom 100 of 600+ games).');
     items.push('Burst ramp: ' + SM.RAMP_DAYS + ' days, linear (this tool\'s choice, unsourced).');
-    items.push('Decay half-life, persistent share, pace spread, burst realisation and burst cap: the seven adjustable assumptions above, all unsourced. Defaults: ' + Object.keys(SM.DEFAULT_ASSUMPTIONS).map(function(k) { return k + ' ' + SM.DEFAULT_ASSUMPTIONS[k]; }).join(', ') + '.');
+    items.push('Decay half-life, persistent share, pace spread, burst realisation and burst cap: the eight adjustable assumptions above, all unsourced. Defaults: ' + Object.keys(SM.DEFAULT_ASSUMPTIONS).map(function(k) { return k + ' ' + SM.DEFAULT_ASSUMPTIONS[k]; }).join(', ') + '.');
     ul.innerHTML = items.map(function(t) { return '<li>' + t.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</li>'; }).join('');
   }
 
@@ -3398,6 +3413,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var pageOpen = parseDate(pageOpenInput);
     var launch = parseDate(launchInput);
     var override = readNum(multInput);
+    var actualWl = readNum(actualWlInput);
     var target = readNum(targetInput);
 
     var today = new Date(); today.setHours(0,0,0,0);
@@ -3412,7 +3428,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
 
     var input = {
       current: current, daysSinceOpen: daysSinceOpen, daysToLaunch: daysToLaunch, last30: last30,
-      spikes: spikes, bucket: bucket, target: target, multiplierOverride: override, assumptions: assumptions
+      spikes: spikes, bucket: bucket, target: target, multiplierOverride: override, measuredWishlists: actualWl, assumptions: assumptions
     };
     var res = SM.projectLaunch(input);
     var profile = res.profile;
@@ -3426,7 +3442,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var gap = target > 0 ? sc.base.wishlists - target : 0;
 
     var noBurst = SM.projectLaunch({ current: current, daysSinceOpen: daysSinceOpen, daysToLaunch: daysToLaunch, last30: last30,
-      spikes: spikes.filter(function(sp) { return sp.day <= 0; }), bucket: bucket, target: target, multiplierOverride: override, assumptions: assumptions });
+      spikes: spikes.filter(function(sp) { return sp.day <= 0; }), bucket: bucket, target: target, multiplierOverride: override, measuredWishlists: actualWl, assumptions: assumptions });
 
     last30HintEl.hidden = !(last30 !== null && last30 > 0 && spikes.some(function(sp) { return sp.day <= 0 && sp.day >= -30; }));
 
@@ -3448,14 +3464,18 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
 
     var wlToday = res.wishlistsToday;
     rollTo(wishlistsTodayEl, wlToday.base, fmtNum);
-    var todayRange = fmtNum(wlToday.low) + ' (' + profile.low + 'x) to ' + fmtNum(wlToday.high) + ' (' + profile.high + 'x)';
+    var measNote = document.getElementById('measured-note');
+    document.getElementById('wishlists-today-label').textContent = profile.measured ? 'Your Wishlists Today' : 'Estimated Wishlists Today';
+    measNote.hidden = !profile.measured;
+    if (profile.measured) measNote.textContent = 'Your real ratio is ' + (Math.round(profile.base * 100) / 100) + ' wishlists per follower. The game type is not used while this is filled in. Floor and ceiling vary your ratio by ' + fmtPct(res.assumptions.measuredSpreadPct) + '.';
+    var todayRange = fmtNum(wlToday.low) + ' (' + fx(profile.low) + 'x) to ' + fmtNum(wlToday.high) + ' (' + fx(profile.high) + 'x)';
     document.getElementById('wishlists-today-range').textContent = 'range: ' + todayRange;
 
     if (!bdBuilt) buildBreakdown();
-    bdRefs.wlToday.label.textContent = 'Estimated wishlists today (x' + profile.base + ')';
-    bdRefs.wlLow.label.textContent = 'Wishlists at launch, low (x' + profile.low + ')';
-    bdRefs.wlLaunch.label.textContent = 'Wishlists at launch, base (x' + profile.base + ')';
-    bdRefs.wlHigh.label.textContent = 'Wishlists at launch, high (x' + profile.high + ')';
+    bdRefs.wlToday.label.textContent = 'Estimated wishlists today (x' + fx(profile.base) + ')';
+    bdRefs.wlLow.label.textContent = 'Wishlists at launch, low (x' + fx(profile.low) + ')';
+    bdRefs.wlLaunch.label.textContent = 'Wishlists at launch, base (x' + fx(profile.base) + ')';
+    bdRefs.wlHigh.label.textContent = 'Wishlists at launch, high (x' + fx(profile.high) + ')';
 
     setBdNum('current', current, fmtNum);
     setBdNum('daysOpen', daysSinceOpen, fmtNum);
@@ -3474,14 +3494,14 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     setBdNum('eventShare', eventShare * 100, function(v){ return Math.round(v) + '%'; });
     setBdNum('projected', projected, fmtNum);
     bdRefs.fRange.val.textContent = fmtNum(sc.low.followers) + ' to ' + fmtNum(sc.high.followers);
-    bdRefs.mult.val.textContent = profile.low + 'x / ' + profile.base + 'x / ' + profile.high + 'x';
+    bdRefs.mult.val.textContent = fx(profile.low) + 'x / ' + fx(profile.base) + 'x / ' + fx(profile.high) + 'x';
     setBdNum('wlLow', sc.low.wishlists, fmtNum);
     setBdNum('wlLaunch', sc.base.wishlists, fmtNum);
     setBdNum('wlHigh', sc.high.wishlists, fmtNum);
     var showSc = !!pageOpen && !!launch && !pastLaunch;
     [['low', sc.low], ['base', sc.base], ['high', sc.high]].forEach(function(p) {
       var vEl = document.getElementById('sc-' + p[0]);
-      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? 'wishlists at launch (' + p[1].multiplier + 'x)' : 'wishlists at launch';
+      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? 'wishlists at launch (' + fx(p[1].multiplier) + 'x)' : 'wishlists at launch';
       if (showSc) rollTo(vEl, p[1].wishlists, fmtNum); else vEl.textContent = '–';
     });
     var exN = 0;
@@ -3649,7 +3669,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     });
   });
 
-  [followersInput, pageOpenInput, followersLast30Input, launchInput, multInput, targetInput].forEach(function(el) {
+  [followersInput, pageOpenInput, followersLast30Input, launchInput, multInput, targetInput, actualWlInput].forEach(function(el) {
     ['input', 'change'].forEach(function(evt) {
       el.addEventListener(evt, calculate);
     });
@@ -3679,7 +3699,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     if (window.zaraz) { zaraz.track('tool_used', { tool: 'steam_launch_outlook_calculator' }); }
   }, true);
 
-  [followersInput, followersLast30Input, multInput, targetInput].forEach(function(el) {
+  [followersInput, followersLast30Input, multInput, targetInput, actualWlInput].forEach(function(el) {
     el.addEventListener('wheel', function(e) {
       if (document.activeElement === el) {
         e.preventDefault();
@@ -3724,7 +3744,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       el.dispatchEvent(new Event('input', { bubbles: true }));
     });
   }
-  [followersInput, followersLast30Input, targetInput].forEach(attachIntFilter);
+  [followersInput, followersLast30Input, targetInput, actualWlInput].forEach(attachIntFilter);
   attachDecFilter(multInput);
 
   var resizeTO;

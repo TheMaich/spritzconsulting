@@ -38,7 +38,7 @@
   // games converted launch wishlist balance to Month 1 sales at a median 0.22x, the 100 lowest at 0.37x.
   var HIGH_MULT_WARN = 16.1;
 
-  function multiplierProfile(bucket, targetWishlists, override) {
+  function multiplierProfile(bucket, targetWishlists, override, measuredRatio, spreadPct) {
     var b = BUCKETS[bucket] || BUCKETS.unsure;
     var key = BUCKETS[bucket] ? bucket : 'unsure';
     var low = b.low, base = b.base, high = b.high;
@@ -53,6 +53,17 @@
       }
     }
     var overridden = false;
+    var measured = false;
+    // Measured ratio (actual wishlists / followers): replaces the survey bucket, with a symmetric spread.
+    // A typed override still wins over it.
+    if (measuredRatio && measuredRatio > 0 && !(override && override > 0)) {
+      var sp = (spreadPct === undefined || spreadPct === null || !isFinite(spreadPct) ? 25 : spreadPct) / 100;
+      measured = true;
+      notes = ['measured'];
+      base = measuredRatio;
+      low = measuredRatio * (1 - Math.min(sp, 0.95));
+      high = measuredRatio * (1 + sp);
+    }
     if (override && override > 0) {
       overridden = true;
       base = override;
@@ -61,7 +72,7 @@
     }
     return {
       bucket: key, label: b.label, low: low, base: base, high: high,
-      bigTier: bigTier, overridden: overridden, notes: notes, source: b.source,
+      bigTier: bigTier && !measured, overridden: overridden, measured: measured, notes: notes, source: b.source,
       highMultWarning: base > HIGH_MULT_WARN
     };
   }
@@ -78,7 +89,8 @@
     paceHighPct: 150,   // UNSOURCED: high scenario = this share of today's pace
     burstLowPct: 50,    // UNSOURCED: low scenario realises this share of each planned burst
     burstCapPct: 100,   // UNSOURCED: one burst is capped at this % of followers today...
-    burstCapFloor: 1000 // UNSOURCED: ...but never below this many followers
+    burstCapFloor: 1000, // UNSOURCED: ...but never below this many followers
+    measuredSpreadPct: 25 // UNSOURCED: floor/ceiling vary a measured wishlist-per-follower ratio by this %
   };
   var RAMP_DAYS = 5;               // each burst ramps in linearly over 5 days (existing behaviour)
   var BURST_TYPES = ['next-fest', 'demo', 'trailer', 'press', 'page-launch', 'custom'];
@@ -108,6 +120,7 @@
    *   last30             followers gained in the last 30 days, or null/undefined when not entered (0 is a real value)
    *   spikes             [{day (days from today), boost, type}]  past ones have day <= 0
    *   bucket, target, multiplierOverride
+   *   measuredWishlists  actual wishlists today (Steamworks); with current followers gives the measured ratio
    *   assumptions        overrides for DEFAULT_ASSUMPTIONS
    * }
    */
@@ -120,7 +133,8 @@
     var last30 = hasLast30 ? Math.max(0, +input.last30) : null;
     var spikes = (input.spikes || []).filter(function (s) { return s && s.boost > 0; });
     var warnings = [];
-    var profile = multiplierProfile(input.bucket, input.target || 0, input.multiplierOverride);
+    var measuredRatio = (input.measuredWishlists > 0 && current > 0) ? input.measuredWishlists / current : 0;
+    var profile = multiplierProfile(input.bucket, input.target || 0, input.multiplierOverride, measuredRatio, A.measuredSpreadPct);
 
     if (daysToLaunch < 0) {
       return { valid: false, reason: 'launch-in-past', profile: profile, warnings: warnings };
