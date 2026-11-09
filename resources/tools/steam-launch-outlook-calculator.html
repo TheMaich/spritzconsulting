@@ -2088,7 +2088,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <div class="scenario-cell scenario-base"><div class="scenario-name">Middle <span class="scenario-tag">of the scenario</span></div><div class="scenario-value" id="sc-base">&ndash;</div><div class="scenario-sub" id="sc-base-sub">wishlists at launch</div></div>
           <div class="scenario-cell"><div class="scenario-name">Ceiling <span class="scenario-tag">of the scenario</span></div><div class="scenario-value" id="sc-high">&ndash;</div><div class="scenario-sub" id="sc-high-sub">wishlists at launch</div></div>
         </div>
-        <p class="scenario-note">Each card is your <strong>estimated wishlists at launch</strong> under a different scenario. Two things change between them: how fast followers grow, and how many wishlists each follower turns into (the "x" ratio in small print). <strong>Low</strong>: half of today's follower pace and a low ratio. <strong>Base</strong>: today's pace, fading over time, and a typical ratio. <strong>High</strong>: faster growth and a high ratio. They are a plausible range, not a probability, and reality can land outside it.</p>
+        <p class="scenario-note">Each card is your <strong>estimated wishlists at launch</strong> under a different scenario. Two things change between them: how fast followers grow, and how many wishlists each follower turns into (the "x" ratio in small print). <strong>Floor</strong>: half of today's follower pace and a low ratio. <strong>Middle</strong>: today's pace, fading over time, and a typical ratio. <strong>Ceiling</strong>: faster growth and a high ratio. They are a plausible range, not a probability, and reality can land outside it.</p>
         <div class="outlook-window">
           <div class="outlook-window-title">Gap to target</div>
           <div class="gap-headline" id="gap-headline"></div>
@@ -2448,7 +2448,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     // Caution under Growth from events; not a .row, so Copy Projection Data skips it.
     bdShareWarnEl = document.createElement('div');
     bdShareWarnEl.className = 'calc-caution';
-    bdShareWarnEl.textContent = 'Burst followers tend to wishlist and buy at lower rates than organic ones. Check your target against the low case.';
+    bdShareWarnEl.textContent = 'Burst followers tend to wishlist and buy at lower rates than organic ones. Check your target against the floor.';
     bdShareWarnEl.hidden = true;
     bdRefs.eventShare.row.insertAdjacentElement('afterend', bdShareWarnEl);
     bdBuilt = true;
@@ -3244,7 +3244,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       }
     });
     if (res.paceSource === 'lifetime') {
-      out.push('No 30-day figure entered, so your lifetime average stands in for today\'s pace. After the page-open burst the real pace is usually lower, which is why the low case runs at ' + fmtPct(res.assumptions.paceLowPct) + ' of it.');
+      out.push('No 30-day figure entered, so your lifetime average stands in for today\'s pace. After the page-open burst the real pace is usually lower, which is why the floor runs at ' + fmtPct(res.assumptions.paceLowPct) + ' of it.');
     }
     var p = res.profile;
     if (p.notes.indexOf('big-tier') !== -1) {
@@ -3277,10 +3277,10 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     }
     outlookEmptyEl.style.display = 'none';
     var POS = {
-      'below-low': 'Target ' + fmtNum(gap.target) + ' is below the low case (' + fmtNum(gap.low) + '). Reached even if pace and multiplier land at the low end.',
-      'low-to-base': 'Target ' + fmtNum(gap.target) + ' sits between the low (' + fmtNum(gap.low) + ') and base (' + fmtNum(gap.base) + ') cases.',
-      'base-to-high': 'Target ' + fmtNum(gap.target) + ' sits between the base (' + fmtNum(gap.base) + ') and high (' + fmtNum(gap.high) + ') cases. It needs better-than-base pace or a higher multiplier.',
-      'above-high': 'Target ' + fmtNum(gap.target) + ' is above the high case (' + fmtNum(gap.high) + '). The stated pace, bursts and multiplier do not get there.'
+      'below-low': 'Target ' + fmtNum(gap.target) + ' is below the floor (' + fmtNum(gap.low) + '). Reached even if pace and multiplier land at the low end.',
+      'low-to-base': 'Target ' + fmtNum(gap.target) + ' sits between the floor (' + fmtNum(gap.low) + ') and the middle (' + fmtNum(gap.base) + ').',
+      'base-to-high': 'Target ' + fmtNum(gap.target) + ' sits between the middle (' + fmtNum(gap.base) + ') and the ceiling (' + fmtNum(gap.high) + '). It needs better-than-middle pace or a higher multiplier.',
+      'above-high': 'Target ' + fmtNum(gap.target) + ' is above the ceiling (' + fmtNum(gap.high) + '). The stated pace, bursts and multiplier do not get there.'
     };
     gapHeadlineEl.textContent = POS[gap.position];
     var ratio = isFinite(gap.highToLowRatio) ? gap.highToLowRatio.toFixed(1) + 'x' : 'a very wide';
@@ -3288,10 +3288,10 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var sc = res.scenarios;
     var html;
     if (gap.extraFollowersBase <= 0) {
-      html = '<strong>To close it:</strong> nothing extra at the base multiplier. You need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at ' + sc.base.multiplier + 'x and the base case projects ' + fmtNum(sc.base.followers) + '.';
+      html = '<strong>To close it:</strong> nothing extra at the middle multiplier. You need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at ' + sc.base.multiplier + 'x and the middle projects ' + fmtNum(sc.base.followers) + '.';
     } else {
       var perWeek = isFinite(gap.extraPerWeekBase) ? '<strong>' + fmtNum(gap.extraPerWeekBase) + ' extra followers per week</strong> until launch (on top of the roughly ' + fmtNum(gap.currentWeeklyPace) + ' per week the model starts from), or one additional burst of <strong>' + fmtNum(gap.extraFollowersBase) + '</strong>' : 'one additional burst of <strong>' + fmtNum(gap.extraFollowersBase) + '</strong> (launch is today)';
-      html = '<strong>To close it:</strong> at ' + sc.base.multiplier + 'x you need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at launch, ' + fmtNum(gap.extraFollowersBase) + ' more than the base case. That is ' + perWeek + '.';
+      html = '<strong>To close it:</strong> at ' + sc.base.multiplier + 'x you need about ' + fmtNum(gap.requiredFollowersBase) + ' followers at launch, ' + fmtNum(gap.extraFollowersBase) + ' more than the middle. That is ' + perWeek + '.';
       if (gap.extraFollowersLow > gap.extraFollowersBase) {
         html += ' If the multiplier lands at the low end (' + sc.low.multiplier + 'x) you need ' + fmtNum(gap.requiredFollowersLow) + ' (' + fmtNum(gap.extraFollowersLow) + ' more).';
       }
