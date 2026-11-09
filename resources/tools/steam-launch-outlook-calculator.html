@@ -1742,6 +1742,29 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .calc-faq{ margin: 8px 0 44px; }
 .calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
 .calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+
+/* Simple view + expert accordion. */
+.calc-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 720px) { .calc-row-2 { grid-template-columns: 1fr; } }
+.scenario-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+.scenario-cell { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; text-align: center; }
+.scenario-base { border-color: var(--clay); }
+.scenario-name { font-family: var(--sans); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.scenario-value { font-family: var(--serif); font-size: clamp(24px, 4vw, 34px); font-weight: 600; letter-spacing: -0.03em; color: var(--ink); margin: 4px 0 2px; }
+.scenario-sub { font-family: var(--sans); font-size: 12px; color: var(--ink-3); }
+.expert-panel { margin-top: 22px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper-2); }
+.expert-panel > summary { cursor: pointer; padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; list-style: none; }
+.expert-panel > summary::-webkit-details-marker { display: none; }
+.expert-panel > summary::after { content: "+"; margin-left: auto; font-family: var(--sans); font-size: 22px; line-height: 1; color: var(--clay); }
+.expert-panel[open] > summary::after { content: "3"; }
+.expert-title { font-family: var(--serif); font-weight: 600; font-size: 20px; letter-spacing: -0.03em; color: var(--ink); }
+.expert-badge { font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--clay); border: 1px solid var(--clay); border-radius: 999px; padding: 1px 9px; }
+.expert-sub { flex-basis: 100%; font-family: var(--sans); font-size: 13px; color: var(--ink-3); }
+.expert-body { padding: 0 20px 20px; }
+.expert-h { font-family: var(--serif); font-weight: 600; font-size: 18px; letter-spacing: -0.03em; color: var(--ink); margin: 26px 0 12px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.expert-body > .expert-h:first-child { border-top: 0; padding-top: 0; margin-top: 8px; }
+.expert-body .model-details { background: var(--paper-3); }
+@media (max-width: 720px) { .scenario-strip { gap: 8px; } .scenario-cell { padding: 12px 8px; } .expert-panel > summary { padding: 14px 16px; } .expert-body { padding: 0 16px 16px; } }
 </style>
 <script type="application/ld+json">
 {
@@ -1946,7 +1969,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-section-title">Where the game is today</div>
 
-      <div class="calc-row">
+      <div class="calc-row calc-row-2">
         <div class="calc-group">
           <label class="calc-label" for="current-followers">Current Steam Followers</label>
           <div class="calc-hint">Find this on your Steam store page. Followers are the only pre-launch metric visible to everyone, including publishers.</div>
@@ -1961,29 +1984,13 @@ html[data-theme="light"] { --cal-invert: 0.3; }
             <button type="button" class="preset-btn" data-value="10000">10K</button>
           </div>
         </div>
-
         <div class="calc-group">
           <span class="calc-label" id="bucket-label">Game type (for the multiplier)</span>
-          <div class="calc-hint">Two coarse buckets built from six tag averages in GameDiscoverCo's 2023 survey of 125+ games (small samples): deep / systemic games (4X 7.5x, turn-based strategy 9.0x, survival 9.5x) sit around 7.5x to 9.5x, casual / narrative games (story-rich 13.2x, relaxing 15.7x, puzzle 15.9x) around 13x to 16x. If unsure, the all-game median of 12x (7x to 20x for the vast majority) is used.</div>
+          <div class="calc-hint">Pick the closest fit. Deep games (4X, strategy, survival) turn fewer followers into wishlists than casual ones (puzzle, relaxing, story-rich). Not sure? Leave it.</div>
           <div class="calc-presets" id="bucket-group" role="radiogroup" aria-labelledby="bucket-label">
             <button type="button" class="preset-btn" data-bucket="deep" role="radio" aria-checked="false">Deep / systemic</button>
             <button type="button" class="preset-btn" data-bucket="casual" role="radio" aria-checked="false">Casual / narrative</button>
             <button type="button" class="preset-btn is-active" data-bucket="unsure" role="radio" aria-checked="true">Not sure</button>
-          </div>
-        </div>
-
-        <div class="calc-group">
-          <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier (optional override)</label>
-          <div class="calc-hint" id="mult-hint">Leave blank to use the bucket above: low, base and high are all shown. The 16.1x median (games released in the last 12 months with more than 50,000 launch wishlists, May 2026) is only used when your wishlist target is above 50,000 and the bucket is "Not sure". The 12x default comes from a 2023 survey of unreleased games of all sizes. Typing a value sets the base case only.</div>
-          <div class="calc-input-wrap">
-            <input type="text" id="multiplier" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="auto">
-            <span class="calc-suffix">X</span>
-          </div>
-          <div class="calc-presets" data-target="multiplier">
-            <button type="button" class="preset-btn" data-value="7">7x</button>
-            <button type="button" class="preset-btn" data-value="10">10x</button>
-            <button type="button" class="preset-btn" data-value="12">12x</button>
-            <button type="button" class="preset-btn" data-value="16">16x</button>
           </div>
         </div>
       </div>
@@ -1996,9 +2003,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 
       <div class="calc-divider" role="presentation"></div>
 
-      <div class="calc-section-title">Project to launch</div>
+      <div class="calc-section-title">Your launch</div>
 
-      <div class="calc-row">
+      <div class="calc-row calc-row-2">
         <div class="calc-group">
           <label class="calc-label" for="page-open-date">Steam Page Open Since</label>
           <div class="calc-hint">When did you open your Steam page? This is used to calculate your current follower velocity.</div>
@@ -2010,7 +2017,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
             <div class="date-picker-dropdown" hidden></div>
           </div>
         </div>
-
         <div class="calc-group">
           <label class="calc-label" for="launch-date">Target Launch Date</label>
           <div class="calc-hint">Your current planned launch date. This determines how much time you have to grow.</div>
@@ -2022,22 +2028,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
             <div class="date-picker-dropdown" hidden></div>
           </div>
         </div>
-      </div>
-
-      <div class="calc-group">
-        <label class="calc-label" for="followers-last-30">Followers Gained in Last 30 Days</label>
-        <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in (0 counts as a real answer), the projection uses your recent pace instead of your lifetime average. Recent pace shows momentum. The one public test of recent pace (Chris Zukowski, 160 games) measured wishlist adds, not follower adds, and found it added little over the total. Follower velocity has not been tested in any cited source, so read it as a growth rate.</div>
-        <div class="calc-input-wrap">
-          <input type="text" id="followers-last-30" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-          <span class="calc-suffix">FOLLOWERS</span>
-        </div>
-        <div class="calc-presets" data-target="followers-last-30">
-          <button type="button" class="preset-btn" data-value="100">100</button>
-          <button type="button" class="preset-btn" data-value="300">300</button>
-          <button type="button" class="preset-btn" data-value="1000">1K</button>
-          <button type="button" class="preset-btn" data-value="3000">3K</button>
-        </div>
-        <div class="calc-caution" id="last30-event-hint" hidden>An event falls inside your last 30 days. The model takes its followers out of the 30-day pace so they are not extrapolated, and models the event as a burst instead.</div>
       </div>
 
       <div class="calc-group">
@@ -2085,6 +2075,69 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
           <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target follower equivalent</span>
         </div>
+        <div class="model-warnings" id="model-warnings" aria-live="polite"></div>
+      </div>
+
+      <div class="outlook-card">
+        <div class="trajectory-label">Launch Outlook</div>
+        <div class="scenario-strip" aria-live="polite">
+          <div class="scenario-cell"><div class="scenario-name">Low</div><div class="scenario-value" id="sc-low">&ndash;</div><div class="scenario-sub" id="sc-low-sub">wishlists at launch</div></div>
+          <div class="scenario-cell scenario-base"><div class="scenario-name">Base</div><div class="scenario-value" id="sc-base">&ndash;</div><div class="scenario-sub" id="sc-base-sub">wishlists at launch</div></div>
+          <div class="scenario-cell"><div class="scenario-name">High</div><div class="scenario-value" id="sc-high">&ndash;</div><div class="scenario-sub" id="sc-high-sub">wishlists at launch</div></div>
+        </div>
+        <div class="outlook-window">
+          <div class="outlook-window-title">Gap to target</div>
+          <div class="gap-headline" id="gap-headline"></div>
+          <div class="gap-line" id="gap-close"></div>
+          <div class="outlook-empty" id="outlook-empty">Set a wishlist target to see the gap.</div>
+          <div class="gap-caveat">Scenarios, not a forecast. Wishlists are not sales. Open Expert options for the sources and caveats.</div>
+        </div>
+      </div>
+
+      <details class="expert-panel" id="expert-panel">
+        <summary><span class="expert-title">Expert options</span><span class="expert-badge" id="expert-badge" hidden></span><span class="expert-sub">Recent pace, multiplier override, planned bursts, full numbers, sources and model assumptions</span></summary>
+        <div class="expert-body">
+
+          <h3 class="expert-h">Sharpen the pace and the multiplier</h3>
+          <div class="calc-row calc-row-2">
+      <div class="calc-group">
+        <label class="calc-label" for="followers-last-30">Followers Gained in Last 30 Days</label>
+        <div class="calc-hint">Optional. Pull this from your Steamworks follower report. If you fill this in (0 counts as a real answer), the projection uses your recent pace instead of your lifetime average. Recent pace shows momentum. The one public test of recent pace (Chris Zukowski, 160 games) measured wishlist adds, not follower adds, and found it added little over the total. Follower velocity has not been tested in any cited source, so read it as a growth rate.</div>
+        <div class="calc-input-wrap">
+          <input type="text" id="followers-last-30" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+          <span class="calc-suffix">FOLLOWERS</span>
+        </div>
+        <div class="calc-presets" data-target="followers-last-30">
+          <button type="button" class="preset-btn" data-value="100">100</button>
+          <button type="button" class="preset-btn" data-value="300">300</button>
+          <button type="button" class="preset-btn" data-value="1000">1K</button>
+          <button type="button" class="preset-btn" data-value="3000">3K</button>
+        </div>
+        <div class="calc-caution" id="last30-event-hint" hidden>An event falls inside your last 30 days. The model takes its followers out of the 30-day pace so they are not extrapolated, and models the event as a burst instead.</div>
+      </div>
+        <div class="calc-group">
+          <label class="calc-label" for="multiplier">Follower to Wishlist Multiplier (optional override)</label>
+          <div class="calc-hint" id="mult-hint">Leave blank to use the bucket above: low, base and high are all shown. The 16.1x median (games released in the last 12 months with more than 50,000 launch wishlists, May 2026) is only used when your wishlist target is above 50,000 and the bucket is "Not sure". The 12x default comes from a 2023 survey of unreleased games of all sizes. Typing a value sets the base case only.</div>
+          <div class="calc-input-wrap">
+            <input type="text" id="multiplier" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="auto">
+            <span class="calc-suffix">X</span>
+          </div>
+          <div class="calc-presets" data-target="multiplier">
+            <button type="button" class="preset-btn" data-value="7">7x</button>
+            <button type="button" class="preset-btn" data-value="10">10x</button>
+            <button type="button" class="preset-btn" data-value="12">12x</button>
+            <button type="button" class="preset-btn" data-value="16">16x</button>
+          </div>
+        </div>
+          </div>
+          <details class="model-details" id="bucket-sources">
+            <summary>Where the game-type multipliers come from</summary>
+            <div class="model-details-body">
+              <p>Two coarse buckets built from six tag averages in GameDiscoverCo's 2023 survey of 125+ games (small samples): deep / systemic games (4X 7.5x, turn-based strategy 9.0x, survival 9.5x) sit around 7.5x to 9.5x, casual / narrative games (story-rich 13.2x, relaxing 15.7x, puzzle 15.9x) around 13x to 16x. If unsure, the all-game median of 12x (7x to 20x for the vast majority) is used. The 16.1x median (games released in the last 12 months with more than 50,000 launch wishlists, May 2026) is only used when the wishlist target is above 50,000 and the bucket is "Not sure".</p>
+            </div>
+          </details>
+
+          <h3 class="expert-h">Planned bursts</h3>
         <div class="spike-section">
           <div class="spike-header">
             <div class="spike-title">Planned bursts (max 5). Label each one.</div>
@@ -2099,8 +2152,18 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           <div class="spike-summary-row"><span>Base wishlists with these bursts</span><span id="spike-with">0</span></div>
         </div>
         <div id="burst-list" class="gap-line" hidden></div>
-        <div class="model-warnings" id="model-warnings" aria-live="polite"></div>
-      </div>
+
+          <h3 class="expert-h">Full numbers and caveats</h3>
+          <div class="outlook-readout">
+            <div class="calc-result-breakdown" id="breakdown"></div>
+            <button type="button" class="calc-copy-btn" id="proj-copy-btn" aria-label="Copy projection data to clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="proj-copy-label">Copy Projection Data</span>
+            </button>
+          </div>
+            <div class="gap-line" id="gap-uncertainty"></div>
+          <div class="gap-caveat">Launch wishlists to end-of-Week-1 sales varies 10 to 20x between games (GameDiscoverCo, Oct 2025, partly paywalled). Recent releases may convert fewer wishlists than 2020-22 ones: Zukowski measured launch-month copies per wishlist at 0.45 (34 games, 2020-22) against 0.22 (126 games, 2023-25), while GameDiscoverCo reports no evidence of decline. Read the figures here as scenarios, not a forecast.</div>
+      <div class="validation-notice" id="validation-notice" hidden></div>
 
       <details class="model-details" id="assumptions-panel">
         <summary>Model assumptions you can change (unsourced)</summary>
@@ -2117,29 +2180,6 @@ html[data-theme="light"] { --cal-invert: 0.3; }
           </div>
         </div>
       </details>
-
-      <div class="outlook-card">
-        <div class="trajectory-label">Launch Outlook</div>
-        <div class="outlook-grid">
-          <div class="outlook-readout">
-            <div class="calc-result-breakdown" id="breakdown"></div>
-            <button type="button" class="calc-copy-btn" id="proj-copy-btn" aria-label="Copy projection data to clipboard">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              <span class="proj-copy-label">Copy Projection Data</span>
-            </button>
-          </div>
-          <div class="outlook-window">
-            <div class="outlook-window-title">Gap to target</div>
-            <div class="gap-headline" id="gap-headline"></div>
-            <div class="gap-line" id="gap-uncertainty"></div>
-            <div class="gap-line" id="gap-close"></div>
-            <div class="outlook-empty" id="outlook-empty">Set a wishlist target to see the gap.</div>
-            <div class="gap-caveat">Wishlists are not sales. Launch wishlists to end-of-Week-1 sales varies 10 to 20x between games (GameDiscoverCo, Oct 2025, partly paywalled). Recent releases may convert fewer wishlists than 2020-22 ones: Zukowski measured launch-month copies per wishlist at 0.45 (34 games, 2020-22) against 0.22 (126 games, 2023-25), while GameDiscoverCo reports no evidence of decline. Read the figures here as scenarios, not a forecast.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="validation-notice" id="validation-notice" hidden></div>
 
       <details class="model-details" id="formulas-panel">
         <summary>Formulas and constants</summary>
@@ -2160,6 +2200,8 @@ gap          = base wishlists - target
 followers needed = target / multiplier;  extra per week = (needed - projected base) / (days to launch / 7)</pre>
           <ul id="formula-constants"></ul>
           <p>Low and high stack every pessimistic or optimistic assumption together. They are a spread of scenarios, not a probability interval.</p>
+        </div>
+      </details>
         </div>
       </details>
 
@@ -3376,6 +3418,20 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     setBdNum('wlLow', sc.low.wishlists, fmtNum);
     setBdNum('wlLaunch', sc.base.wishlists, fmtNum);
     setBdNum('wlHigh', sc.high.wishlists, fmtNum);
+    var showSc = !!pageOpen && !!launch && !pastLaunch;
+    [['low', sc.low], ['base', sc.base], ['high', sc.high]].forEach(function(p) {
+      var vEl = document.getElementById('sc-' + p[0]);
+      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? 'wishlists at launch (' + p[1].multiplier + 'x)' : 'wishlists at launch';
+      if (showSc) rollTo(vEl, p[1].wishlists, fmtNum); else vEl.textContent = '–';
+    });
+    var exN = 0;
+    if (last30 !== null) exN++;
+    if (override > 0) exN++;
+    if (spikes.some(function(sp) { return sp.day > 0; })) exN++;
+    if (Array.prototype.some.call(document.querySelectorAll('#assumptions-panel input'), function(i) { return i.value !== i.defaultValue; })) exN++;
+    var exBadge = document.getElementById('expert-badge');
+    exBadge.hidden = exN === 0;
+    exBadge.textContent = exN + ' active';
     setBdNum('target', target, fmtNum);
 
     var gapSign = gap >= 0 ? '+' : '-';
