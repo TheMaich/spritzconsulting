@@ -1222,7 +1222,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .calc-faq{ margin: 8px 0 44px; }
 .calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
-.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; }
 
 .model-details { margin-top: 18px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper-2); }
 .model-details > summary { cursor: pointer; padding: 12px 16px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--ink); }
@@ -1306,7 +1306,7 @@ details.model-details { box-sizing: border-box; overflow: hidden; }
           "name": "How many Steam sales does a wishlist turn into?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It depends on size. GameDiscoverCo's median Week 1 conversion was about 0.2 copies per wishlist across all games and 0.17 for launches above 10,000 wishlists (April 2024, 100+ games), and 0.15 for launches above 25,000 wishlists, or 0.10 for games priced above $10 (October 2025, partly paywalled). The calculator uses those values by wishlist tier and eases the price effect in between $10 and $15. Its low case is about 0.025, roughly one tenth of the median. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast."
+            "text": "It falls as wishlists grow. GameDiscoverCo's median Week 1 conversion is about 0.20 copies per wishlist across all games, 0.17 above 10,000 wishlists and 0.15 above 25,000 (April 2024 and October 2025), and 0.10 for games priced above $10. The calculator's low case is about 0.025. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast."
           }
         },
         {
@@ -1314,7 +1314,7 @@ details.model-details { box-sizing: border-box; overflow: hidden; }
           "name": "How do I estimate first-month and first-year Steam sales?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, within a published range of 1.23 to 1.47. For year one it shows a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 revenue ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski's 2023 to 2025 data, 160 reader-submitted games). When they differ by more than 2x, the page flags it."
+            "text": "Start from the Week 1 estimate. Month 1 is Week 1 times 1.33 (published range 1.23 to 1.47). Year One is a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski, 160 reader-submitted games, 2023 to 2025). The page flags the result when the two differ by more than 2x."
           }
         },
         {
@@ -1322,7 +1322,7 @@ details.model-details { box-sizing: border-box; overflow: hidden; }
           "name": "What is a good wishlist to sales conversion rate on Steam?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "There is no single good rate, because it falls as the wishlist count grows. The median Week 1 conversion was about 0.20 copies per wishlist across all games, 0.17 for launches above 10,000 wishlists and 0.15 above 25,000 (GameDiscoverCo, 2024 and 2025). Chris Zukowski measured launch-month copies per wishlist at 0.22 for 2023-25 releases against 0.45 for 2020-22. Treat these as reference points, not targets: individual games vary by 10 to 20 times."
+            "text": "There is no single good rate, because it falls as wishlists grow. About 0.20 copies per wishlist in Week 1 is the all-game median, and 0.15 to 0.17 for larger launches (GameDiscoverCo). Recent releases convert about half as well as 2020 to 2022 ones: Chris Zukowski measured 0.22 copies per wishlist in the launch month for 2023 to 2025 releases against 0.45."
           }
         },
         {
@@ -1330,7 +1330,7 @@ details.model-details { box-sizing: border-box; overflow: hidden; }
           "name": "How accurate is a Steam sales estimator?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It's directional only. The best and worst performers can differ by 10 to 20 times, and the games that outperform usually did so through things you can't model in advance, such as going viral with influencers, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision."
+            "text": "Directional only. The best and worst performers differ by 10 to 20 times, and the games that outperform usually did so through things you can't model in advance, such as influencer virality, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision."
           }
         }
       ]
@@ -1686,13 +1686,13 @@ details.model-details { box-sizing: border-box; overflow: hidden; }
       <section class="calc-faq" aria-label="Quick answers">
         <div class="calc-notes-label">Quick answers</div>
         <h2>How many Steam sales does a wishlist turn into?</h2>
-        <p>It depends on size. GameDiscoverCo's median Week 1 conversion was about 0.2 copies per wishlist across all games and 0.17 for launches above 10,000 wishlists (April 2024, 100+ games), and 0.15 for launches above 25,000 wishlists, or 0.10 for games priced above $10 (October 2025, partly paywalled). The calculator uses those values by wishlist tier and eases the price effect in between $10 and $15. Its low case is about 0.025, roughly one tenth of the median. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast.</p>
+        <p>It falls as wishlists grow. GameDiscoverCo's median Week 1 conversion is about 0.20 copies per wishlist across all games, 0.17 above 10,000 wishlists and 0.15 above 25,000 (April 2024 and October 2025), and 0.10 for games priced above $10. The calculator's low case is about 0.025. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast.</p>
         <h2>How do I estimate first-month and first-year Steam sales?</h2>
-        <p>Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, within a published range of 1.23 to 1.47. For year one it shows a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 revenue ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski's 2023 to 2025 data, 160 reader-submitted games). When they differ by more than 2x, the page flags it.</p>
+        <p>Start from the Week 1 estimate. Month 1 is Week 1 times 1.33 (published range 1.23 to 1.47). Year One is a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski, 160 reader-submitted games, 2023 to 2025). The page flags the result when the two differ by more than 2x.</p>
         <h2>What is a good wishlist to sales conversion rate on Steam?</h2>
-        <p>There is no single good rate, because it falls as the wishlist count grows. The median Week 1 conversion was about 0.20 copies per wishlist across all games, 0.17 for launches above 10,000 wishlists and 0.15 above 25,000 (GameDiscoverCo, 2024 and 2025). Chris Zukowski measured launch-month copies per wishlist at 0.22 for 2023-25 releases against 0.45 for 2020-22. Treat these as reference points, not targets: individual games vary by 10 to 20 times.</p>
+        <p>There is no single good rate, because it falls as wishlists grow. About 0.20 copies per wishlist in Week 1 is the all-game median, and 0.15 to 0.17 for larger launches (GameDiscoverCo). Recent releases convert about half as well as 2020 to 2022 ones: Chris Zukowski measured 0.22 copies per wishlist in the launch month for 2023 to 2025 releases against 0.45.</p>
         <h2>How accurate is a Steam sales estimator?</h2>
-        <p>It's directional only. The best and worst performers can differ by 10 to 20 times, and the games that outperform usually did so through things you can't model in advance, such as going viral with influencers, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision.</p>
+        <p>Directional only. The best and worst performers differ by 10 to 20 times, and the games that outperform usually did so through things you can't model in advance, such as influencer virality, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision.</p>
       </section>
 
       <div class="calc-notes">

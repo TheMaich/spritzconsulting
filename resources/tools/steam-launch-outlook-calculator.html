@@ -1750,7 +1750,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 .calc-faq{ margin: 8px 0 44px; }
 .calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
-.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+.calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; }
 
 /* Simple view + expert accordion. */
 .calc-opt { font-family: var(--sans); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-3); margin-left: 8px; text-transform: none; }
@@ -1840,7 +1840,7 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
           "name": "How many wishlists will my game have at launch?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The calculator turns followers into wishlists using a ratio. GameDiscoverCo surveys put the median at 9.6 wishlists per follower in 2021 and 12 in 2023 (125+ games, unreleased titles of all sizes), with a 7 to 20 range, and 16.1 for games above 50,000 wishlists in May 2026. The calculator shows a low, base and high case from a game-type bucket: deep / systemic games (4X 7.5x, turn-based strategy 9.0x, survival 9.5x in the 2023 survey) around 7.5x to 9.5x, casual / narrative games (story-rich 13.2x, relaxing 15.7x, puzzle 15.9x) around 13x to 16x, both from six small-sample tags, and the 12x median with a 7x to 20x range if you are not sure. The 16.1x figure is used only for targets above 50,000 wishlists."
+            "text": "The calculator multiplies your followers by a ratio. GameDiscoverCo's surveys put the median at 12 wishlists per follower in 2023 (125+ unreleased games, range 7 to 20), and 16.1 for games above 50,000 wishlists in May 2026. It shows a floor, middle and ceiling case: deep / systemic games sit around 7.5x to 9.5x, casual / narrative games around 13x to 16x (small samples), and 12x with a 7x to 20x range if you are not sure. The 16.1x figure is used only for targets above 50,000 wishlists."
           }
         },
         {
@@ -1848,7 +1848,7 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
           "name": "Does recent follower growth predict launch sales better than the total?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not on its own, as far as wishlists go. In Chris Zukowski's October 2026 analysis of 160 games, total wishlists at launch reached an R-squared of 0.73, wishlist adds in the last 30 days 0.72, and the two combined 0.75. Those figures measure wishlist adds, not follower adds, and follower velocity has not been tested in any cited source. Recent pace still shows momentum: a page that gained 200 followers last month looks healthier than one that collected 10,000 over three years and then went quiet. The calculator uses your last 30 days as today's pace when you enter them, then lets that pace decay with an adjustable, unsourced half-life."
+            "text": "Not on its own. In Chris Zukowski's October 2026 analysis of 160 games, total launch wishlists reached an R-squared of 0.73, wishlist adds in the last 30 days 0.72, and the two combined 0.75. Those figures measure wishlist adds, not follower adds, and follower velocity has not been tested in any cited source. Recent pace still shows momentum, so the calculator uses your last 30 days as today's pace and lets it decay."
           }
         },
         {
@@ -1856,7 +1856,7 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
           "name": "Is a wishlist worth as much as it used to be?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. According to Chris Zukowski's October 2026 data on 160 reader-submitted games (34 from 2020 to 2022, 126 from 2023 to 2025), wishlists for recent releases convert to sales at about half the rate they did for 2020 to 2022 releases. Festival and tooltip wishlisting explain part of the drop. Treat the figure as directional, since the sample was submitted by readers."
+            "text": "No. In Chris Zukowski's October 2026 data on 160 reader-submitted games, wishlists for 2023 to 2025 releases convert to sales at about half the rate of 2020 to 2022 releases. Festival and tooltip wishlisting explain part of the drop. Treat it as directional, since readers submitted the sample."
           }
         }
       ]
@@ -2272,11 +2272,11 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       <section class="calc-faq" aria-label="Quick answers">
         <div class="calc-notes-label">Quick answers</div>
         <h2>How many wishlists will my game have at launch?</h2>
-        <p>The calculator turns followers into wishlists using a ratio. GameDiscoverCo surveys put the median at 9.6 wishlists per follower in 2021 and 12 in 2023 (125+ games, unreleased titles of all sizes), with a 7 to 20 range, and 16.1 for games above 50,000 wishlists in May 2026. The calculator shows a low, base and high case from a game-type bucket: deep / systemic games (4X 7.5x, turn-based strategy 9.0x, survival 9.5x in the 2023 survey) around 7.5x to 9.5x, casual / narrative games (story-rich 13.2x, relaxing 15.7x, puzzle 15.9x) around 13x to 16x, both from six small-sample tags, and the 12x median with a 7x to 20x range if you are not sure. The 16.1x figure is used only for targets above 50,000 wishlists.</p>
+        <p>The calculator multiplies your followers by a ratio. GameDiscoverCo's surveys put the median at 12 wishlists per follower in 2023 (125+ unreleased games, range 7 to 20), and 16.1 for games above 50,000 wishlists in May 2026. It shows a floor, middle and ceiling case: deep / systemic games sit around 7.5x to 9.5x, casual / narrative games around 13x to 16x (small samples), and 12x with a 7x to 20x range if you are not sure. The 16.1x figure is used only for targets above 50,000 wishlists.</p>
         <h2>Does recent follower growth predict launch sales better than the total?</h2>
-        <p>Not on its own, as far as wishlists go. In Chris Zukowski's October 2026 analysis of 160 games, total wishlists at launch reached an R-squared of 0.73, wishlist adds in the last 30 days 0.72, and the two combined 0.75. Those figures measure wishlist adds, not follower adds, and follower velocity has not been tested in any cited source. Recent pace still shows momentum: a page that gained 200 followers last month looks healthier than one that collected 10,000 over three years and then went quiet. The calculator uses your last 30 days as today's pace when you enter them, then lets that pace decay with an adjustable, unsourced half-life.</p>
+        <p>Not on its own. In Chris Zukowski's October 2026 analysis of 160 games, total launch wishlists reached an R-squared of 0.73, wishlist adds in the last 30 days 0.72, and the two combined 0.75. Those figures measure wishlist adds, not follower adds, and follower velocity has not been tested in any cited source. Recent pace still shows momentum, so the calculator uses your last 30 days as today's pace and lets it decay.</p>
         <h2>Is a wishlist worth as much as it used to be?</h2>
-        <p>No. According to Chris Zukowski's October 2026 data on 160 reader-submitted games (34 from 2020 to 2022, 126 from 2023 to 2025), wishlists for recent releases convert to sales at about half the rate they did for 2020 to 2022 releases. Festival and tooltip wishlisting explain part of the drop. Treat the figure as directional, since the sample was submitted by readers.</p>
+        <p>No. In Chris Zukowski's October 2026 data on 160 reader-submitted games, wishlists for 2023 to 2025 releases convert to sales at about half the rate of 2020 to 2022 releases. Festival and tooltip wishlisting explain part of the drop. Treat it as directional, since readers submitted the sample.</p>
       </section>
 
       <div class="calc-notes">
