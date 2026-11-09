@@ -1292,6 +1292,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   font-variation-settings: "opsz" 48;
   color: var(--ink-2);
 }
+#scenario-card .scenario-pair{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+#scenario-card .scenario-pair .recoup-tier-label{ padding-right: 26px; }
+@media (max-width: 480px){
+  #scenario-card .scenario-pair{ gap: 14px; }
+}
 #scenario-card .scenario-grid .calc-copy-btn{
   bottom: auto;
   top: 0;
@@ -1322,6 +1331,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   .calc-result-wrap.is-sticky #scenario-card .scenario-grid {
     display: contents;
   }
+  .calc-result-wrap.is-sticky #scenario-card .scenario-pair,
   .calc-result-wrap.is-sticky #scenario-card .scenario-strong,
   .calc-result-wrap.is-sticky #scenario-card .scenario-weak,
   .calc-result-wrap.is-sticky #scenario-card .recoup-tier-label,
@@ -1857,7 +1867,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <div class="calc-result-label">Wishlists Required at launch</div>
           <div class="recoup-grid scenario-grid">
             <div class="recoup-tier scenario-median">
-              <div class="recoup-tier-label">Typical</div>
+              <div class="recoup-tier-label">Typical wishlist conversion</div>
               <div class="recoup-tier-value" id="wishlists-typical">0</div>
               <div class="recoup-tier-sub">Your wishlists convert like the median 2023-25 release.</div>
               <button class="calc-copy-btn" data-copy-target="wishlists-typical" aria-label="Copy Typical wishlists to clipboard">
@@ -1868,8 +1878,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
               </button>
               <div class="tier-gap" id="wishlist-gap" hidden></div>
             </div>
+            <div class="scenario-pair">
+            <div class="recoup-tier scenario-weak">
+              <div class="recoup-tier-label">Weak wishlist conversion</div>
+              <div class="recoup-tier-value" id="wishlists-weak">0</div>
+              <div class="recoup-tier-sub">Paid or casual wishlists convert about 1.68x worse.</div>
+              <button class="calc-copy-btn" data-copy-target="wishlists-weak" aria-label="Copy Weak wishlists to clipboard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+            </div>
             <div class="recoup-tier scenario-strong">
-              <div class="recoup-tier-label">Strong</div>
+              <div class="recoup-tier-label">Strong wishlist conversion</div>
               <div class="recoup-tier-value" id="wishlists-strong">0</div>
               <div class="recoup-tier-sub">Engaged players added your game, so each wishlist converts about 1.68x better.</div>
               <button class="calc-copy-btn" data-copy-target="wishlists-strong" aria-label="Copy Strong wishlists to clipboard">
@@ -1879,16 +1901,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
                 </svg>
               </button>
             </div>
-            <div class="recoup-tier scenario-weak">
-              <div class="recoup-tier-label">Weak</div>
-              <div class="recoup-tier-value" id="wishlists-weak">0</div>
-              <div class="recoup-tier-sub">Paid or casual wishlists convert about 1.68x worse.</div>
-              <button class="calc-copy-btn" data-copy-target="wishlists-weak" aria-label="Copy Weak wishlists to clipboard">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                </svg>
-              </button>
             </div>
           </div>
         </div>
