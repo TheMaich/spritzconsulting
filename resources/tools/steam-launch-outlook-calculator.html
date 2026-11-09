@@ -1444,6 +1444,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   stroke-width: 3;
   stroke-dasharray: 7 5;
 }
+.trajectory-overlay .overlay-scen-line { fill: none; stroke-width: 1.25; }
 .trajectory-overlay .traj-crosshair {
   stroke: var(--clay);
   stroke-width: 1;
@@ -1486,6 +1487,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 }
 .legend-item { display: inline-flex; align-items: center; gap: 8px; }
 .legend-line { display: inline-block; width: 24px; height: 2px; background: var(--ink); }
+.legend-line-thin { height: 1.5px; }
+.legend-line-floor { background: var(--danger); }
+.legend-line-ceil { background: var(--success); }
 .legend-line-dashed {
   background-image: linear-gradient(to right, var(--clay) 50%, transparent 50%);
   background-size: 6px 2px;
@@ -2084,18 +2088,24 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
                   <rect id="traj-reveal-rect" x="0" y="0" width="10" height="10" fill="url(#traj-reveal-grad)"></rect>
                 </g>
               </mask>
+              <marker id="traj-arrow-floor" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path id="traj-arrow-floor-shape" d="M0,1 L8,4.5 L0,8 Z"></path></marker>
+              <marker id="traj-arrow-ceil" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path id="traj-arrow-ceil-shape" d="M0,1 L8,4.5 L0,8 Z"></path></marker>
               <marker id="traj-arrowhead" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto" markerUnits="strokeWidth">
                 <path id="traj-arrowhead-shape" d="M0,0 L4,2 L0,4 Z"></path>
               </marker>
             </defs>
             <path id="overlay-target-line" class="overlay-target-line" fill="none" mask="url(#traj-reveal-mask)"></path>
             <path id="overlay-traj-past" class="overlay-traj-past" fill="none" mask="url(#traj-reveal-mask)"></path>
+            <path id="overlay-floor-line" class="overlay-scen-line" fill="none" marker-end="url(#traj-arrow-floor)" mask="url(#traj-reveal-mask)"></path>
+            <path id="overlay-ceil-line" class="overlay-scen-line" fill="none" marker-end="url(#traj-arrow-ceil)" mask="url(#traj-reveal-mask)"></path>
             <path id="overlay-traj-line" class="overlay-traj-line" fill="none" marker-end="url(#traj-arrowhead)" mask="url(#traj-reveal-mask)"></path>
           </svg>
         </div>
         <div class="trajectory-legend">
           <span class="legend-item"><span class="legend-line legend-line-solid"></span>Current projection</span>
           <span class="legend-item"><span class="legend-line legend-line-dashed"></span>Target follower equivalent</span>
+          <span class="legend-item"><span class="legend-line legend-line-thin legend-line-floor"></span>Floor</span>
+          <span class="legend-item"><span class="legend-line legend-line-thin legend-line-ceil"></span>Ceiling</span>
         </div>
         <div class="model-warnings" id="model-warnings" aria-live="polite"></div>
       </div>
@@ -2889,7 +2899,8 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     });
 
     var finalProjection = followersAt(daysToLaunch);
-    var maxY = Math.max(finalProjection, state.targetEquiv, state.currentFollowers + 100) * 1.15;
+    var ceilFinal = state.followersAt(daysToLaunch, 'high');
+    var maxY = Math.max(finalProjection, ceilFinal, state.targetEquiv, state.currentFollowers + 100) * 1.15;
     if (maxY <= 0) maxY = 100;
 
     ctx.strokeStyle = rule;
@@ -3043,6 +3054,17 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       overlayTrajD += (p2 === 0 ? 'M' : ' L') + xAt(pt.day) + ' ' + yAt(pt.followers);
     }
 
+    // Floor and ceiling scenario paths (slim arrows), same sample days as the base line.
+    function scenPath(which) {
+      var d = '';
+      for (var q = 0; q < sortedDays.length; q++) {
+        d += (q === 0 ? 'M' : ' L') + xAt(daysSinceOpen + sortedDays[q]) + ' ' + yAt(state.followersAt(sortedDays[q], which));
+      }
+      return d;
+    }
+    var overlayFloorD = scenPath('low');
+    var overlayCeilD = scenPath('high');
+
     // Past spike events: markers on the past ramp at their date. Positional only; they
     // do not bend the line.
     ctx.strokeStyle = clay;
@@ -3068,7 +3090,11 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       trajColor: overlayTrajColor,
       pastD: overlayPastD,
       targetD: overlayTargetD,
-      targetColor: overlayTargetColor
+      targetColor: overlayTargetColor,
+      floorD: overlayFloorD,
+      ceilD: overlayCeilD,
+      floorColor: getCSSVar('--danger') || '#ff5b5b',
+      ceilColor: getCSSVar('--success') || '#4BC86E'
     });
 
     // Stash what the crosshair handler needs to sample after render. followersAt is the
@@ -3114,6 +3140,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       overlayTargetEl.setAttribute('d', '');
       overlayTrajEl.setAttribute('d', '');
       if (overlayTrajPastEl) overlayTrajPastEl.setAttribute('d', '');
+      ['overlay-floor-line', 'overlay-ceil-line'].forEach(function(id) { var e = document.getElementById(id); if (e) e.setAttribute('d', ''); });
       return;
     }
 
@@ -3136,6 +3163,14 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     overlayTrajEl.setAttribute('stroke', data.trajColor);
     // Arrowhead shares the trajectory line's dynamic color.
     if (overlayArrowEl) overlayArrowEl.setAttribute('fill', data.trajColor);
+
+    [['overlay-floor-line', 'traj-arrow-floor-shape', data.floorD, data.floorColor], ['overlay-ceil-line', 'traj-arrow-ceil-shape', data.ceilD, data.ceilColor]].forEach(function(a) {
+      var line = document.getElementById(a[0]), head = document.getElementById(a[1]);
+      if (!line) return;
+      line.setAttribute('d', a[2] || '');
+      line.setAttribute('stroke', a[3]);
+      if (head) head.setAttribute('fill', a[3]);
+    });
 
     // Size the reveal mask to cover the chart plus a soft trailing band.
     var soft = cssW * REVEAL_SOFT;
