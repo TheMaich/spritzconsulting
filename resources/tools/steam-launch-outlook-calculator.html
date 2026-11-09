@@ -1750,6 +1750,7 @@ html[data-theme="light"] { --cal-invert: 0.3; }
 .scenario-cell { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; text-align: center; }
 .scenario-base { border-color: var(--clay); }
 .scenario-name { font-family: var(--sans); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.scenario-tag { display: block; margin-top: 2px; font-size: 13px; letter-spacing: 0.02em; text-transform: none; color: var(--clay); font-weight: 600; }
 .scenario-value { font-family: var(--serif); font-size: clamp(24px, 4vw, 34px); font-weight: 600; letter-spacing: -0.03em; color: var(--ink); margin: 4px 0 2px; }
 .scenario-note { font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 0 0 16px; }
 .scenario-note strong { color: var(--ink); font-weight: 600; }
@@ -2083,9 +2084,9 @@ html[data-theme="light"] { --cal-invert: 0.3; }
       <div class="outlook-card">
         <div class="trajectory-label">Launch Outlook</div>
         <div class="scenario-strip" aria-live="polite">
-          <div class="scenario-cell"><div class="scenario-name">Low</div><div class="scenario-value" id="sc-low">&ndash;</div><div class="scenario-sub" id="sc-low-sub">wishlists at launch</div></div>
-          <div class="scenario-cell scenario-base"><div class="scenario-name">Base</div><div class="scenario-value" id="sc-base">&ndash;</div><div class="scenario-sub" id="sc-base-sub">wishlists at launch</div></div>
-          <div class="scenario-cell"><div class="scenario-name">High</div><div class="scenario-value" id="sc-high">&ndash;</div><div class="scenario-sub" id="sc-high-sub">wishlists at launch</div></div>
+          <div class="scenario-cell"><div class="scenario-name">Low <span class="scenario-tag">Cautious</span></div><div class="scenario-value" id="sc-low">&ndash;</div><div class="scenario-sub" id="sc-low-sub">wishlists at launch</div></div>
+          <div class="scenario-cell scenario-base"><div class="scenario-name">Base <span class="scenario-tag">Steady</span></div><div class="scenario-value" id="sc-base">&ndash;</div><div class="scenario-sub" id="sc-base-sub">wishlists at launch</div></div>
+          <div class="scenario-cell"><div class="scenario-name">High <span class="scenario-tag">Optimistic</span></div><div class="scenario-value" id="sc-high">&ndash;</div><div class="scenario-sub" id="sc-high-sub">wishlists at launch</div></div>
         </div>
         <p class="scenario-note">Each card is your <strong>estimated wishlists at launch</strong> under a different scenario. Two things change between them: how fast followers grow, and how many wishlists each follower turns into (the "x" ratio in small print). <strong>Low</strong>: half of today's follower pace and a low ratio. <strong>Base</strong>: today's pace, fading over time, and a typical ratio. <strong>High</strong>: faster growth and a high ratio. They are a plausible range, not a probability, and reality can land outside it.</p>
         <div class="outlook-window">
