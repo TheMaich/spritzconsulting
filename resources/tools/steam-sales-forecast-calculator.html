@@ -1223,6 +1223,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .calc-faq{ margin: 8px 0 44px; }
 .calc-faq h2{ font-family: var(--serif); font-size: clamp(19px, 2vw, 22px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); margin: 26px 0 8px; }
 .calc-faq p{ font-size: 15px; line-height: 1.65; color: var(--ink-2); margin: 0 0 12px; max-width: 72ch; }
+
+.model-details { margin-top: 18px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper-2); }
+.model-details > summary { cursor: pointer; padding: 12px 16px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--ink); }
+.model-details-body { padding: 0 16px 16px; font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+.model-details-body pre { margin: 10px 0; padding: 10px 12px; background: var(--paper-3); border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 12.5px; line-height: 1.55; color: var(--ink); white-space: pre; }
+.model-details-body ul { margin: 8px 0 0; padding-left: 18px; }
+.validation-notice { margin-top: 16px; padding: 12px 14px; border: 1px dashed var(--rule); border-radius: 6px; font-family: var(--sans); font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+.validation-notice[hidden] { display: none; }
+.sales-flag { margin-top: 12px; font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--clay); }
+.sales-flag[hidden] { display: none; }
 </style>
 <script type="application/ld+json">
 {
@@ -1264,7 +1274,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "isPartOf": {
         "@id": "https://spritzconsulting.com/resources/#webpage"
       },
-      "dateModified": "2026-10-19",
+      "dateModified": "2026-11-09",
       "inLanguage": "en"
     },
     {
@@ -1277,7 +1287,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "How many Steam sales does a wishlist turn into?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "At the median, about 0.15 copies per wishlist in the first week for launches with 25,000 or more wishlists, according to GameDiscoverCo's October 2025 analysis. The calculator uses 0.10 for games priced above $10 and a low case of 0.07. Individual games vary by 10 to 20 times around the median, so treat it as a reference point, not a forecast."
+            "text": "It depends on size. GameDiscoverCo's median Week 1 conversion was about 0.2 copies per wishlist across all games and 0.17 for launches above 10,000 wishlists (April 2024, 100+ games), and 0.15 for launches above 25,000 wishlists, or 0.10 for games priced above $10 (October 2025, partly paywalled). The calculator uses those values by wishlist tier and eases the price effect in between $10 and $15. Its low case is about 0.025, roughly one tenth of the median. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast."
           }
         },
         {
@@ -1285,7 +1295,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "How do I estimate first-month and first-year Steam sales?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, which assumes Week 1 holds about 75% of the first month. For year one, the low end is roughly 3 times Week 1, and the high end follows the 2023 to 2025 curve of about 0.22 copies per wishlist in month 1 and 0.70 in year 1."
+            "text": "Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, within a published range of 1.23 to 1.47. For year one it shows a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 revenue ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski's 2023 to 2025 data, 160 reader-submitted games). When they differ by more than 2x, the page flags it."
           }
         },
         {
@@ -1411,7 +1421,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Steam Sales</b></div>
         <div>Published <b><time datetime="2026-05-25">25 May 2026</time></b></div>
-        <div>Updated <b><time datetime="2026-10-19">19 October 2026</time></b></div>
+        <div>Updated <b><time datetime="2026-11-09">9 November 2026</time></b></div>
       </div>
       <div class="experimental-badge">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -1446,17 +1456,23 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="followers">Steam Followers (optional)</label>
-        <div class="calc-hint">GameDiscoverCo puts the median at 12x for unreleased games (2023 data) and at 16.1x above 50,000 wishlists (May 2026). The check uses a 7x to 20x range.</div>
+        <div class="calc-hint">A sanity check, not an input to the sales numbers. GameDiscoverCo's 2023 survey (125+ games) puts the median at 12x for unreleased games, with 7x to 20x for the vast majority, and its May 2026 data puts games above 50,000 launch wishlists at a 16.1x median. Pick a game type below to narrow the range.</div>
         <div class="calc-input-wrap">
           <input type="text" id="followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">followers</span>
+        </div>
+        <div class="calc-hint" style="margin-top:10px">Game type for the follower check. Buckets average six tags from the 2023 survey (small samples): deep / systemic 7.5x to 9.5x (4X, turn-based strategy, survival), casual / narrative 13x to 16x (story-rich, relaxing, puzzle). "Not sure" uses 7x to 20x.</div>
+        <div class="toggle-pill-group" id="bucket-type" role="radiogroup" aria-label="Game type">
+          <button type="button" class="toggle-pill" data-bucket="deep" role="radio" aria-checked="false">Deep / systemic</button>
+          <button type="button" class="toggle-pill" data-bucket="casual" role="radio" aria-checked="false">Casual / narrative</button>
+          <button type="button" class="toggle-pill is-active" data-bucket="unsure" role="radio" aria-checked="true">Not sure</button>
         </div>
       </div>
 
       <div class="calc-group">
         <label class="calc-label" for="price">Game Price at Launch</label>
         <div class="calc-hint">The price shown on your Steam store page on launch day.</div>
-        <div class="calc-hint" id="price-refine-hint" hidden>Enter a price to refine. Games above $10 convert at 0.10x at the median.</div>
+        <div class="calc-hint" id="price-refine-hint" hidden>Enter a price to refine. At 25,000+ wishlists, games priced above $10 convert at 0.10x at the median, against 0.15x overall. No source gives a figure for cheaper games.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
           <input type="text" id="price" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
@@ -1471,7 +1487,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="launch-type">Launch Type</label>
-        <div class="calc-hint">Early Access games convert roughly 8% fewer wishlists on average.</div>
+        <div class="calc-hint">Early Access Month 1 conversion was about 20% of wishlists against about 30% for full releases (Gamalytic, Apr 2024, about 700 games), roughly one third lower. The calculator applies a factor of 0.67.</div>
         <div class="toggle-pill-group" id="launch-type" role="radiogroup" aria-label="Launch type">
           <button type="button" class="toggle-pill is-active" data-launch="full" role="radio" aria-checked="true">Full Release</button>
           <button type="button" class="toggle-pill" data-launch="ea" role="radio" aria-checked="false">Early Access</button>
@@ -1490,14 +1506,15 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             <div class="recoup-tier is-highlight">
               <div class="recoup-tier-label">Month 1</div>
               <div class="recoup-tier-value" id="pre-month1">0</div>
-              <div class="recoup-tier-sub">week 1 × 1.33</div>
+              <div class="recoup-tier-sub" id="pre-month1-sub">week 1 × 1.33</div>
             </div>
             <div class="recoup-tier">
               <div class="recoup-tier-label">Year One</div>
               <div class="recoup-tier-value" id="pre-year1">0</div>
-              <div class="recoup-tier-sub" id="pre-year1-sub">up to 0 on the 2023-25 curve</div>
+              <div class="recoup-tier-sub" id="pre-year1-sub">0 to 0</div>
             </div>
           </div>
+          <div class="sales-flag" id="year-flag" hidden></div>
           <div class="confidence-row" id="confidence-row" hidden>
             <strong id="conf-headline">Follower-implied wishlists</strong>
             <span id="conf-range"></span>
@@ -1522,7 +1539,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="actual-reviews">Week 1 Reviews</label>
-        <div class="calc-hint">Public review count at end of Week 1. Used to cross-check sales via Boxleiter method (20x to 60x sales per review).</div>
+        <div class="calc-hint">Public review count at end of Week 1. Rough cross-check only: the Boxleiter method multiplies reviews by 20x to 60x, but those multipliers describe lifetime review counts, work best with 50+ reviews and are least reliable for very new games.</div>
         <div class="calc-input-wrap">
           <input type="text" id="actual-reviews" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">reviews</span>
@@ -1546,22 +1563,43 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
             <div class="recoup-tier">
               <div class="recoup-tier-label">Month 1 Projection</div>
               <div class="recoup-tier-value" id="post-month1">0</div>
-              <div class="recoup-tier-sub">week 1 × 1.33</div>
+              <div class="recoup-tier-sub" id="post-month1-sub">week 1 × 1.33</div>
             </div>
             <div class="recoup-tier">
               <div class="recoup-tier-label">Year One Projection</div>
               <div class="recoup-tier-value" id="post-year1">0</div>
-              <div class="recoup-tier-sub" id="post-year1-sub">up to 0 on the 2023-25 curve</div>
+              <div class="recoup-tier-sub" id="post-year1-sub">0 to 0</div>
             </div>
             <div class="recoup-tier" id="conv-tier">
               <div class="recoup-tier-label">Actual Conversion Rate</div>
               <div class="recoup-tier-value" id="post-conv">0%</div>
-              <div class="recoup-tier-sub" id="post-conv-sub">vs 15% median</div>
+              <div class="recoup-tier-sub" id="post-conv-sub">vs median</div>
             </div>
           </div>
         </div>
       </div>
       <div class="calc-result-breakdown" id="post-breakdown"></div>
+
+      <div class="validation-notice" id="validation-notice" hidden></div>
+
+      <details class="model-details" id="formulas-panel">
+        <summary>Formulas and constants</summary>
+        <div class="model-details-body">
+          <p>Everything below is what the code does. Constants marked "unsourced" are this tool's own assumptions.</p>
+          <pre>tier rate     = 0.20 (under 10k wishlists) | 0.17 (10k to 25k) | 0.15 (25k+)
+price factor  = 1 up to $10; falls linearly to 0.667 at $15; 0.667 above   (0.10 / 0.15)
+EA factor     = 0.67 for Early Access, 1 otherwise
+Week 1        = wishlists x tier rate x price factor x EA factor
+Low case      = wishlists x 0.025 x price factor x EA factor
+Month 1       = Week 1 x 1.33   (range x1.23 to x1.47)
+Year One, A   = Week 1 x 3.16   (published range x2 to x6)
+Year One, B   = wishlists x 0.70 x EA factor
+Year One      = range from min(A, B) to max(A, B); flagged if max / min is above 2
+Boxleiter     = reviews x 20 to reviews x 60   (rough cross-check)
+Follower check= followers x bucket low to followers x bucket high</pre>
+          <ul id="formula-constants"></ul>
+        </div>
+      </details>
 
       <div class="calc-nav-wrap">
         <a href="/resources/" class="calc-nav-btn">All resources</a>
@@ -1588,9 +1626,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <section class="calc-faq" aria-label="Quick answers">
         <div class="calc-notes-label">Quick answers</div>
         <h2>How many Steam sales does a wishlist turn into?</h2>
-        <p>At the median, about 0.15 copies per wishlist in the first week for launches with 25,000 or more wishlists, according to GameDiscoverCo's October 2025 analysis. The calculator uses 0.10 for games priced above $10 and a low case of 0.07. Individual games vary by 10 to 20 times around the median, so treat it as a reference point, not a forecast.</p>
+        <p>It depends on size. GameDiscoverCo's median Week 1 conversion was about 0.2 copies per wishlist across all games and 0.17 for launches above 10,000 wishlists (April 2024, 100+ games), and 0.15 for launches above 25,000 wishlists, or 0.10 for games priced above $10 (October 2025, partly paywalled). The calculator uses those values by wishlist tier and eases the price effect in between $10 and $15. Its low case is about 0.025, roughly one tenth of the median. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast.</p>
         <h2>How do I estimate first-month and first-year Steam sales?</h2>
-        <p>Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, which assumes Week 1 holds about 75% of the first month. For year one, the low end is roughly 3 times Week 1, and the high end follows the 2023 to 2025 curve of about 0.22 copies per wishlist in month 1 and 0.70 in year 1.</p>
+        <p>Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, within a published range of 1.23 to 1.47. For year one it shows a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 revenue ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski's 2023 to 2025 data, 160 reader-submitted games). When they differ by more than 2x, the page flags it.</p>
         <h2>How accurate is a Steam sales estimator?</h2>
         <p>It's directional only. The best and worst performers can differ by 10 to 20 times, and the games that outperform usually did so through things you can't model in advance, such as going viral with influencers, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision.</p>
       </section>
@@ -1599,16 +1637,16 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="calc-notes-label">Notes</div>
         <ul>
           <li><strong>Experimental tool.</strong> This calculator is based on publicly available industry data, but the underlying metrics are subject to significant variance, genre-specific differences, and market conditions that no dataset fully captures. Use it to explore possible scenarios and pressure-test assumptions. Don't use it as a basis for financial decisions without cross-referencing with your own data and professional advice.</li>
-          <li><strong>Where the Week 1 conversion comes from.</strong> GameDiscoverCo's Oct 2025 analysis puts the median Week 1 conversion at 0.15x for launches with 25,000+ wishlists, 0.14x without adult games, and 0.10x for games priced above $10. The calculator applies 0.10x above $10. Cheaper games convert better, but the article gives no figure for them, so the calculator keeps 0.15x as a reference. The low case uses 0.07x, where the weakest converting group starts. Results between the worst and best performers still vary by 10 to 20x, so read the median as a reference point. Source: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025 (partly paywalled; the points cited here are visible before the paywall)</a></li>
+          <li><strong>Where the Week 1 conversion comes from.</strong> The calculator picks a median by wishlist tier: 0.20 copies per wishlist for under 10,000 wishlists (the all-games median, no tier-specific value exists), 0.17 for 10,000 to 25,000 (median for launches above 10,000 wishlists), and 0.15 for 25,000 and above. Sources: <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a> (100+ games) and <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025 (partly paywalled; the points cited here are visible before the paywall)</a>. For games priced above $10 the October 2025 data gives 0.10 against 0.15 overall. No source gives a figure for cheaper games, so the sub-$10 value is unsourced, and the ease between $10 and $15 is this tool's own choice that avoids a jump at $10. Gamalytic found price effects confounded with wishlist count. The low case uses about 0.025, roughly one tenth of the median, from the 2024 poll range (about one tenth to ten times the median). Results between the worst and best performers still vary by 10 to 20x.</li>
           <li><strong>What actually drives outperformance.</strong> The games that converted best in 2024 to 2025 shared two patterns: they went viral with influencers and friend groups (co-op titles especially), or they were major franchises where casual players showed up without wishlisting first. Single-player games that blew up on social video also outperformed. None of these are things you can model in advance. Source: <a href="https://newsletter.gamediscover.co/p/the-state-of-steam-wishlist-conversions" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Oct 2025 (partly paywalled; the points cited here are visible before the paywall)</a></li>
-          <li><strong>How Month 1 is estimated.</strong> Gamalytic's 29 April 2024 analysis covers about 700 games (units, not revenue) released after September 2023, each with at least 5,000 wishlists and at least 500 first-month copies. It finds median Month 1 sales at 27% of launch wishlists and Week 1 at 22%. That filter removes weak sellers, so read the figure as an upper reference. The calculator multiplies Week 1 by 1.33. That assumes Week 1 holds about 75% of Month 1, the same assumption the <a href="/resources/tools/steam-wishlist-target-calculator.html">Wishlist Target Calculator</a> cites. Published figures give a range: Gamalytic's filtered sample implies 1.23, and pairing Chris Zukowski's Month 1 figure (0.22) with GameDiscoverCo's Week 1 median (0.15) implies 1.47. Source: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
-          <li><strong>How Year One is estimated.</strong> The low end keeps GameDiscoverCo's rule of roughly 3x Week 1 revenue for 2023 to 2024 releases. That rule describes revenue, and the calculator applies it to units, so read it as an approximation. The high end follows the 2023-25 curve from Chris Zukowski's data: 0.22 copies per wishlist in month 1 and 0.70 in year 1, about 3.18x Month 1. Readers submitted those 160 games themselves, so treat the curve as directional. Viral or multiplayer titles can exceed both ends. Sources: <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a>, <a href="https://howtomarketagame.com/?p=7127" target="_blank" rel="noopener noreferrer">Chris Zukowski, How to Market a Game</a> and <a href="https://gameworldobserver.com/2026/10/15/steam-is-experiencing-wishlist-inflation-but-they-are-still-important-analysis" target="_blank" rel="noopener noreferrer">Game World Observer, 15 Oct 2026</a></li>
-          <li><strong>Early Access adjustment.</strong> Early Access games convert roughly 8% fewer wishlists than full releases on average. The calculator applies that factor to the low case, Week 1, Month 1 and Year One. Source: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
+          <li><strong>How Month 1 is estimated.</strong> Gamalytic's 29 April 2024 analysis covers about 700 games released after September 2023, each with at least 5,000 wishlists and at least 500 first-month copies (units, not revenue). It finds median Month 1 sales at 27% of launch wishlists and Week 1 at 22%, which implies 1.23. That filter removes weak sellers. Pairing Chris Zukowski's Month 1 figure (0.22) with GameDiscoverCo's Week 1 median (0.15) implies 1.47. The calculator uses 1.33 as the base inside that range and shows both ends. GameDiscoverCo's 1.39x Month 1 to Week 1 ratio is a gross revenue ratio, not units. The same 75% Week 1 share assumption appears in the <a href="/resources/tools/steam-wishlist-target-calculator.html">Wishlist Target Calculator</a>. Sources: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a>, <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a> and <a href="https://howtomarketagame.com/?p=7127" target="_blank" rel="noopener noreferrer">Chris Zukowski, How to Market a Game</a>.</li>
+          <li><strong>How Year One is estimated.</strong> Two methods, shown as a range. Method A multiplies Week 1 by 3.16, GameDiscoverCo's median Year 1 to Week 1 gross revenue ratio (range under 2x to over 6x, 100+ games, April 2024). That is a revenue ratio applied to units. Method B takes about 0.70 copies per wishlist by the end of year one for 2023-25 releases (Chris Zukowski, October 2026; 160 reader-submitted games, 34 from 2020-22 and 126 from 2023-25). The datasets differ, so the page flags the result when the methods differ by more than 2x. Viral or multiplayer titles can exceed both. Sources: <a href="https://newsletter.gamediscover.co/p/revealed-the-state-of-steam-wishlist" target="_blank" rel="noopener noreferrer">GameDiscoverCo, Apr 2024</a>, <a href="https://howtomarketagame.com/?p=7127" target="_blank" rel="noopener noreferrer">Chris Zukowski, How to Market a Game</a> and <a href="https://gameworldobserver.com/2026/10/15/steam-is-experiencing-wishlist-inflation-but-they-are-still-important-analysis" target="_blank" rel="noopener noreferrer">Game World Observer, 15 Oct 2026</a>.</li>
+          <li><strong>Early Access adjustment.</strong> Gamalytic's April 2024 data (about 700 games) shows Early Access Month 1 conversion at about 20% of wishlists against about 30% for full releases, roughly one third lower. The calculator applies a factor of 0.67 to the low case, Week 1, Month 1 and Year One. Source: <a href="https://gamalytic.com/blog/exploring-steam-wishlist-sale-ratio" target="_blank" rel="noopener noreferrer">Gamalytic, Apr 2024</a></li>
           <li><strong>Inflation changed what a wishlist is worth.</strong> In Chris Zukowski's October 2026 data on 160 reader-submitted games (34 from 2020 to 2022, 126 from 2023 to 2025), copies per wishlist in the launch month fell from 0.45 to 0.22, and by the end of year one from 0.99 to about 0.70. Festival and tooltip wishlisting drive part of that. The sources disagree: GameDiscoverCo (Oct 2025, partly paywalled) reports no evidence that conversion is degrading over time, while Zukowski reports it halved. They use different samples and definitions, and this page does not resolve the conflict. Benchmarks built on older data may overstate sales. Sources: <a href="https://gameworldobserver.com/2026/10/15/steam-is-experiencing-wishlist-inflation-but-they-are-still-important-analysis" target="_blank" rel="noopener noreferrer">Game World Observer, 15 Oct 2026</a> and <a href="https://howtomarketagame.com/?p=7127" target="_blank" rel="noopener noreferrer">Chris Zukowski, How to Market a Game</a></li>
-          <li><strong>Boxleiter cross-check.</strong> Steam Page Analyzer describes the Boxleiter method as reviews times a multiplier in a 20x to 60x range, with genre defaults of 30x to 55x, 35x for indie, and a stated accuracy of 30 to 50%. It is least reliable for very new games and works best with 50+ reviews. The multipliers describe review counts over a game's life, so a Week 1 review count is a rough cross-check only. Source: <a href="https://www.steampageanalyzer.com/blog/steam-sales-calculator" target="_blank" rel="noopener noreferrer">Steam Page Analyzer, 2026</a></li>
-          <li><strong>Estimation only.</strong> Both sections give directional indicators for exploring scenarios. The actual outcome depends on your game quality, review scores, price point, genre, timing, and marketing execution. Use this tool to pressure-test your assumptions. Cross-check the results with your own data before any financial decision.</li>
+          <li><strong>Boxleiter cross-check.</strong> Steam Page Analyzer describes the Boxleiter method as reviews times a multiplier in a 20x to 60x range, with genre defaults of 30x to 55x, 35x for indie, and a stated accuracy of 30 to 50%. It is least reliable for very new games and works best with 50+ reviews. The multipliers describe review counts over a game's life, so a Week 1 review count is a rough cross-check only. The calculator shows the full 20x to 60x band and says whether your Week 1 figure falls inside it. Source: <a href="https://www.steampageanalyzer.com/blog/steam-sales-calculator" target="_blank" rel="noopener noreferrer">Steam Page Analyzer, 2026</a></li>
+          <li><strong>Estimation only.</strong> Both sections give directional indicators for exploring scenarios. The actual outcome depends on your game quality, review scores (higher review scores convert better in Gamalytic's data), price point, genre, timing, and marketing execution. This tool has not been validated against real launches yet. Cross-check the results with your own data before any financial decision.</li>
         </ul>
-        <p class="calc-notes-meta">Last reviewed against the sources above: <time datetime="2026-10-19">19 Oct 2026</time></p>
+        <p class="calc-notes-meta">Last reviewed against the sources above: <time datetime="2026-11-09">9 Nov 2026</time></p>
       </div>
 
     </div>
@@ -1720,21 +1758,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 })();
 </script>
 
+<script src="/assets/js/steam-models.js"></script>
 <script>
 (function() {
-  // Every benchmark the model uses, with its source. Kept in one place so it can move
-  // to a shared file later.
-  const BENCH = {
-    week1Median: 0.15,     // GameDiscoverCo, Oct 2025: median Week 1 conversion, launches with 25,000+ wishlists
-    week1Over10: 0.10,     // GameDiscoverCo, Oct 2025: same median for games priced above $10
-    week1Low: 0.07,        // GameDiscoverCo, Oct 2025: where the weakest converting group starts
-    eaFactor: 0.92,        // Gamalytic, Apr 2024: Early Access converts about 8% fewer wishlists
-    monthOverWeek: 1.33,   // Month 1 = Week 1 x 1.33: assumption, within the 1.23 to 1.47 range of published figures
-    yearLowOverWeek: 3,    // GameDiscoverCo, Apr 2024: Year 1 revenue is roughly 3x Week 1 (2023-24 releases)
-    yearOverMonth: 3.18,   // Zukowski, Oct 2026: 0.70 / 0.22 copies per wishlist, 2023-25 cohort
-    followerLow: 7,        // GameDiscoverCo, Jun 2023: low end of the follower-to-wishlist range
-    followerHigh: 20       // GameDiscoverCo, Jun 2023: high end of the follower-to-wishlist range
-  };
+  var SM = window.SteamModels;
+  var SALES = SM.SALES;
 
   var wishlistsInput = document.getElementById('wishlists');
   var followersInput = document.getElementById('followers');
@@ -1767,6 +1795,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   var postBreakdownEl = document.getElementById('post-breakdown');
 
   var launchType = 'full';
+  var bucket = 'unsure';
+  var yearFlagEl = document.getElementById('year-flag');
+  var preMonth1Sub = document.getElementById('pre-month1-sub');
+  var postMonth1Sub = document.getElementById('post-month1-sub');
+  var validationEl = document.getElementById('validation-notice');
   var launchPills = document.querySelectorAll('#launch-type .toggle-pill');
 
   var REDUCE_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1822,17 +1855,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   function pctShort(rate) {
     return (Math.round(rate * 1000) / 10) + '%';
   }
-  // Week 1 conversion for the current price and launch type (shared by both sections).
-  function conversion(price) {
-    var ea = launchType === 'ea' ? BENCH.eaFactor : 1;
-    var base = price > 10 ? BENCH.week1Over10 : BENCH.week1Median;
-    var reason = price > 10 ? 'price above $10' : (price > 0 ? 'price $10 or below' : 'no price entered');
-    if (launchType === 'ea') reason += ', Early Access';
-    return { rate: base * ea, low: BENCH.week1Low * ea, reason: reason };
-  }
-
   function row(label, value, cls) {
     return '<div class="row' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><span>' + value + '</span></div>';
+  }
+  function range(a, b) { return intFmt(a) + ' to ' + intFmt(b); }
+  function convReason(conv, price) {
+    var parts = [conv.tier.label + ' tier, ' + pctShort(conv.tier.rate) + ' median'];
+    if (price > SALES.priceRampFrom) parts.push('price factor ' + conv.priceFactor.toFixed(2));
+    else if (price > 0) parts.push('price $10 or below: sub-$10 value unsourced');
+    else parts.push('no price entered');
+    if (conv.eaFactor < 1) parts.push('Early Access x' + SALES.eaFactor);
+    return parts.join(', ');
+  }
+  function yearFlagText(y) {
+    return y.disagree ? 'The two Year One methods differ by more than 2x (' + intFmt(y.low) + ' vs ' + intFmt(y.high) + '). They come from different datasets, so treat Year One as very uncertain.' : '';
   }
 
   function calculate() {
@@ -1840,33 +1876,32 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var followers = readNum(followersInput);
     var price = readNum(priceInput);
 
-    var conv = conversion(price);
-    var lowCase = wishlists * conv.low;
-    var week1 = wishlists * conv.rate;
-    var month1 = week1 * BENCH.monthOverWeek;
-    var year1 = week1 * BENCH.yearLowOverWeek;
-    var year1High = month1 * BENCH.yearOverMonth;
+    var fs = SM.forecastSales({ wishlists: wishlists, price: price, launchType: launchType });
+    var conv = fs.conv;
 
-    rollTo(preWeek1El, week1, intFmt);
-    rollTo(preMonth1El, month1, intFmt);
-    rollTo(preYear1El, year1, intFmt);
+    rollTo(preWeek1El, fs.week1, intFmt);
+    rollTo(preMonth1El, fs.month1.base, intFmt);
+    rollTo(preYear1El, fs.year1.methodA, intFmt);
 
     priceRefineHint.hidden = price > 0;
-    preWeek1Sub.textContent = intFmt(lowCase) + ' low / ' + intFmt(week1) + ' median';
-    preYear1Sub.textContent = 'up to ' + intFmt(year1High) + ' on the 2023-25 curve';
+    preWeek1Sub.textContent = intFmt(fs.lowCase) + ' low / ' + intFmt(fs.week1) + ' median';
+    preMonth1Sub.textContent = range(fs.month1.low, fs.month1.high) + ' (x1.23 to x1.47)';
+    preYear1Sub.textContent = 'range ' + range(fs.year1.low, fs.year1.high);
+    var yf = yearFlagText(fs.year1);
+    yearFlagEl.hidden = !yf;
+    yearFlagEl.textContent = yf;
 
     if (followers > 0) {
-      var low = followers * BENCH.followerLow;
-      var high = followers * BENCH.followerHigh;
-      var outOfRange = wishlists > 0 && (wishlists < low || wishlists > high);
+      var fc = SM.followerCheck(followers, wishlists, bucket);
+      var big = wishlists > SALES.big.minWishlists;
       confRow.hidden = false;
-      confRow.classList.toggle('is-out', outOfRange);
-      confHeadline.textContent = 'Follower-implied wishlists';
-      confRangeEl.textContent = ' ' + intFmt(low) + ' to ' + intFmt(high) +
+      confRow.classList.toggle('is-out', fc.outOfRange);
+      confHeadline.textContent = 'Follower-implied wishlists (' + fc.label + ')';
+      confRangeEl.textContent = ' ' + intFmt(fc.low) + ' to ' + intFmt(fc.high) +
         (wishlists > 0 ? '. Your input: ' + intFmt(wishlists) + '.' : '');
-      confNoteEl.textContent = outOfRange
-        ? 'Your wishlist estimate falls outside the typical follower range. Check your inputs.'
-        : '';
+      confNoteEl.textContent = fc.outOfRange
+        ? 'Your wishlist estimate falls outside the typical follower range for this game type. Check your inputs.'
+        : (big ? 'Above 50,000 launch wishlists the 2026 median was 16.1x, higher than this range.' : '');
     } else {
       confRow.hidden = true;
       confRow.classList.remove('is-out');
@@ -1874,19 +1909,20 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
     var lines = [];
     lines.push(row('Wishlists at launch', intFmt(wishlists)));
-    lines.push(row('Conversion rate used', pctShort(conv.rate) + ' (' + conv.reason + ')'));
-    lines.push(row('Low case (' + pctShort(conv.low) + ')', intFmt(lowCase) + ' units'));
-    lines.push(row('Week 1 estimate', intFmt(week1) + ' units'));
-    lines.push(row('Month 1 estimate (week 1 × 1.33)', intFmt(month1) + ' units'));
-    lines.push(row('Year One estimate (week 1 × 3)', intFmt(year1) + ' units'));
-    lines.push(row('Year One, up to (2023-25 curve)', intFmt(year1High) + ' units'));
+    lines.push(row('Week 1 conversion used', pctShort(conv.rate) + ' (' + convReason(conv, price) + ')'));
+    lines.push(row('Low case (' + pctShort(conv.low) + ', about 1/10 of the median, 2024 survey)', intFmt(fs.lowCase) + ' units'));
+    lines.push(row('Week 1 estimate', intFmt(fs.week1) + ' units'));
+    lines.push(row('Month 1 (week 1 x 1.33)', intFmt(fs.month1.base) + ' units, range ' + range(fs.month1.low, fs.month1.high)));
+    lines.push(row('Year One, method A (week 1 x 3.16, a revenue ratio applied to units)', intFmt(fs.year1.methodA) + ' units'));
+    lines.push(row('Year One, method B (0.70 per wishlist, Zukowski 2023-25)', intFmt(fs.year1.methodB) + ' units'));
+    lines.push(row('Year One range', range(fs.year1.low, fs.year1.high) + ' units'));
     if (price > 0) {
-      lines.push(row('Implied gross revenue Week 1', dollarFmt(week1 * price)));
-      lines.push(row('Implied gross revenue Year One', dollarFmt(year1 * price)));
-      lines.push(row('Implied gross revenue Year One, up to', dollarFmt(year1High * price)));
+      lines.push(row('Implied gross revenue Week 1', dollarFmt(fs.week1 * price)));
+      lines.push(row('Implied gross revenue Year One', dollarFmt(fs.year1.low * price) + ' to ' + dollarFmt(fs.year1.high * price)));
     }
     preBreakdownEl.innerHTML = lines.join('');
 
+    renderStatic();
     calculatePost();
   }
 
@@ -1907,19 +1943,22 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     postEmpty.hidden = true;
     postGrid.hidden = false;
 
-    var conv = conversion(price);
-    var month1 = actualW1 * BENCH.monthOverWeek;
-    var year1 = actualW1 * BENCH.yearLowOverWeek;
-    var year1High = month1 * BENCH.yearOverMonth;
+    var conv = SM.conversion(postWl, price, launchType);
+    var month1 = { low: actualW1 * SALES.monthLow, base: actualW1 * SALES.monthBase, high: actualW1 * SALES.monthHigh };
+    var yearA = actualW1 * SALES.yearOverWeekMedian;
+    var yearB = postWl * SALES.yearPerWishlist * conv.eaFactor;
+    var yLow = Math.min(yearA, yearB), yHigh = Math.max(yearA, yearB);
+    var y = { low: yLow, high: yHigh, disagree: yLow > 0 && yHigh / yLow > SALES.yearDisagreeRatio };
     var convPct = postWl > 0 ? (actualW1 / postWl) * 100 : 0;
     // Small tolerance so an exact match (e.g. 10.0% vs 10%) counts as on track.
     var onTrack = convPct >= conv.rate * 100 - 1e-9;
     var medianLabel = 'vs ' + pctShort(conv.rate) + ' median';
 
-    rollTo(postMonth1El, month1, intFmt);
-    rollTo(postYear1El, year1, intFmt);
-    postYear1Sub.textContent = 'up to ' + intFmt(year1High) + ' on the 2023-25 curve';
-    postConvSub.textContent = medianLabel;
+    rollTo(postMonth1El, month1.base, intFmt);
+    rollTo(postYear1El, yearA, intFmt);
+    postMonth1Sub.textContent = range(month1.low, month1.high) + ' (x1.23 to x1.47)';
+    postYear1Sub.textContent = postWl > 0 ? 'range ' + range(y.low, y.high) : 'week 1 x 3.16 (range x2 to x6)';
+    postConvSub.textContent = postWl > 0 ? medianLabel + ' (' + conv.tier.label + ')' : medianLabel;
 
     if (postWl > 0) {
       postConvEl.textContent = pctFmt(convPct);
@@ -1929,7 +1968,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       convTier.classList.remove('is-highlight');
     }
 
-    var boxleiter = reviews * 30;
     var statusText, statusClass;
     if (postWl <= 0) { statusText = 'No data'; statusClass = 'is-bad'; }
     else if (onTrack) { statusText = 'On track'; statusClass = 'is-good'; }
@@ -1938,20 +1976,47 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     var lines = [];
     lines.push(row('Actual Week 1', intFmt(actualW1) + ' units'));
     if (reviews > 0) {
-      lines.push(row('Boxleiter check (reviews × 30)', intFmt(boxleiter) + ' units (rough cross-check only)'));
+      var bx = SM.boxleiter(reviews);
+      var inside = actualW1 >= bx.low && actualW1 <= bx.high;
+      lines.push(row('Boxleiter cross-check (reviews x 20 to 60)', range(bx.low, bx.high) + ' units. ' +
+        (inside ? 'Your Week 1 figure is inside the band.' : 'Your Week 1 figure is outside the band.') +
+        (bx.unreliable ? ' Under 50 reviews, so unreliable.' : '') + ' Rough cross-check only.'));
     }
     if (postWl > 0) {
-      lines.push(row('Actual conversion rate', pctFmt(convPct) + ' ' + medianLabel, onTrack ? 'is-good' : 'is-bad'));
+      lines.push(row('Actual conversion rate', pctFmt(convPct) + ' ' + medianLabel + ' (' + convReason(conv, price) + ')', onTrack ? 'is-good' : 'is-bad'));
     }
-    lines.push(row('Month 1 projection (week 1 × 1.33)', intFmt(month1) + ' units'));
-    lines.push(row('Year One projection (week 1 × 3)', intFmt(year1) + ' units'));
-    lines.push(row('Year One, up to (2023-25 curve)', intFmt(year1High) + ' units'));
+    lines.push(row('Month 1 projection (week 1 x 1.33)', intFmt(month1.base) + ' units, range ' + range(month1.low, month1.high)));
+    lines.push(row('Year One, method A (week 1 x 3.16)', intFmt(yearA) + ' units'));
+    if (postWl > 0) {
+      lines.push(row('Year One, method B (0.70 per wishlist)', intFmt(yearB) + ' units'));
+      lines.push(row('Year One range', range(y.low, y.high) + ' units' + (y.disagree ? '. The two methods differ by more than 2x.' : '')));
+    }
     if (price > 0) {
-      lines.push(row('Implied gross revenue Year One', dollarFmt(year1 * price)));
-      lines.push(row('Implied gross revenue Year One, up to', dollarFmt(year1High * price)));
+      lines.push(row('Implied gross revenue Year One', dollarFmt(yearA * price) + (postWl > 0 ? ' (range ' + dollarFmt(y.low * price) + ' to ' + dollarFmt(y.high * price) + ')' : '')));
     }
     lines.push(row('Status', statusText, statusClass));
     postBreakdownEl.innerHTML = lines.join('');
+  }
+
+  function renderStatic() {
+    var v = SM.VALIDATION;
+    if (v.blindRows >= v.required) validationEl.hidden = true;
+    else {
+      validationEl.hidden = false;
+      validationEl.textContent = 'Not yet validated. These estimates have not been compared with real launches: ' + v.blindRows + ' of the ' + v.required + ' blind, pre-launch cases needed for a first check are on file. Until then, nothing here is a tested error band.';
+    }
+    var ul = document.getElementById('formula-constants');
+    if (!ul || ul.dataset.built) return;
+    ul.dataset.built = '1';
+    var items = [];
+    SALES.tiers.forEach(function(t) { items.push('Tier ' + t.label + ': ' + t.rate + ' units per wishlist. ' + t.source); });
+    items.push('Price factor: 1 up to $10, falling to ' + SALES.priceOver10Ratio.toFixed(3) + ' at $15 (0.10 / 0.15, GameDiscoverCo Oct 2025 for games over $10). The linear ramp between $10 and $15 and the value below $10 are unsourced.');
+    items.push('Low case: 0.025 (about 1/10 of the median, GameDiscoverCo 2024 poll range).');
+    items.push('Early Access factor 0.67 (Gamalytic Apr 2024: about 20% vs about 30% of wishlists in Month 1).');
+    items.push('Month 1 / Week 1: 1.23 (Gamalytic, filtered ~700 games), 1.33 (base, this tool\'s choice inside the range), 1.47 (derived: Zukowski 0.22 / GameDiscoverCo 0.15). GameDiscoverCo\'s 1.39x is a revenue ratio.');
+    items.push('Year One / Week 1: 3.16 median, under 2 to over 6 (GameDiscoverCo Apr 2024, revenue ratios; applied here to units). Year One per wishlist: 0.70 (Zukowski Oct 2026, 160 reader-submitted games, 2023-25).');
+    items.push('Boxleiter: 20x to 60x reviews (Steam Page Analyzer; stated accuracy 30 to 50%; works best with 50+ reviews).');
+    ul.innerHTML = items.map(function(t) { return '<li>' + t.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</li>'; }).join('');
   }
 
   var allInputs = [wishlistsInput, followersInput, priceInput, actualWeek1Input, actualReviewsInput, postWishlistsInput];
@@ -2015,6 +2080,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   }
   [wishlistsInput, followersInput, actualWeek1Input, actualReviewsInput, postWishlistsInput].forEach(attachIntFilter);
   attachDecFilter(priceInput);
+
+  document.querySelectorAll('#bucket-type .toggle-pill').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      bucket = btn.dataset.bucket;
+      document.querySelectorAll('#bucket-type .toggle-pill').forEach(function(b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-checked', String(on));
+      });
+      calculate();
+    });
+  });
 
   launchPills.forEach(function(btn) {
     btn.addEventListener('click', function() {
