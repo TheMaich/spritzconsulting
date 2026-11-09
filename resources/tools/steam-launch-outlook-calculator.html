@@ -1444,6 +1444,11 @@ html[data-theme="light"] { --cal-invert: 0.3; }
   stroke-width: 3;
   stroke-dasharray: 7 5;
 }
+.outlook-merged .trajectory-label { margin-bottom: 20px; }
+.panel-sub { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 0 0 14px; }
+.panel-sub-tag { font-family: var(--serif); font-weight: 600; font-size: 20px; letter-spacing: -0.03em; color: var(--ink); }
+.panel-sub-text { font-family: var(--sans); font-size: 13px; color: var(--ink-3); }
+.panel-divider { height: 1px; background: var(--rule); margin: 28px 0 24px; }
 .trajectory-overlay .overlay-scen-line { fill: none; stroke-width: 1.25; }
 .trajectory-overlay .traj-crosshair {
   stroke: var(--clay);
@@ -2071,8 +2076,9 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
         </div>
       </div>
 
-      <div class="trajectory-card">
-        <div class="trajectory-label">Follower Trajectory</div>
+      <div class="trajectory-card outlook-merged">
+        <div class="trajectory-label">Launch Outlook</div>
+        <div class="panel-sub"><span class="panel-sub-tag">Followers</span><span class="panel-sub-text">Your follower count from page open to launch</span></div>
         <div class="trajectory-status" id="trajectory-status">Set a launch date to see your trajectory</div>
         <div class="trajectory-chart-wrap">
           <canvas id="trajectory-chart"></canvas>
@@ -2108,10 +2114,10 @@ details.expert-panel, details.model-details { box-sizing: border-box; overflow: 
           <span class="legend-item"><span class="legend-line legend-line-thin legend-line-ceil"></span>Ceiling</span>
         </div>
         <div class="model-warnings" id="model-warnings" aria-live="polite"></div>
-      </div>
 
-      <div class="outlook-card">
-        <div class="trajectory-label">Launch Outlook</div>
+        <div class="panel-divider" role="presentation"></div>
+
+        <div class="panel-sub"><span class="panel-sub-tag">Wishlists</span><span class="panel-sub-text">What those followers could turn into at launch</span></div>
         <div class="scenario-strip" aria-live="polite">
           <div class="scenario-cell scenario-floor"><div class="scenario-name">Floor <span class="scenario-tag">of the scenario</span></div><div class="scenario-value" id="sc-low">&ndash;</div><div class="scenario-sub" id="sc-low-sub">wishlists at launch</div></div>
           <div class="scenario-cell scenario-base"><div class="scenario-name">Middle <span class="scenario-tag">of the scenario</span></div><div class="scenario-value" id="sc-base">&ndash;</div><div class="scenario-sub" id="sc-base-sub">wishlists at launch</div></div>
@@ -3025,6 +3031,14 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
       ctx.restore();
     }
 
+    // Axis title: this chart counts followers, not wishlists.
+    ctx.save();
+    ctx.fillStyle = ink2;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('FOLLOWERS', 6, 2);
+    ctx.restore();
+
     // Launch date marker: solid clay vertical line at the right edge with its label.
     var xLaunch = xAt(totalSpan);
     ctx.save();
@@ -3536,7 +3550,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var showSc = !!pageOpen && !!launch && !pastLaunch;
     [['low', sc.low], ['base', sc.base], ['high', sc.high]].forEach(function(p) {
       var vEl = document.getElementById('sc-' + p[0]);
-      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? 'wishlists at launch (' + fx(p[1].multiplier) + 'x)' : 'wishlists at launch';
+      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? 'wishlists at launch, ' + fx(p[1].multiplier) + 'x per follower' : 'wishlists at launch';
       if (showSc) rollTo(vEl, p[1].wishlists, fmtNum); else vEl.textContent = '–';
     });
     var exN = 0;
