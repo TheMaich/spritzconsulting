@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <link rel="canonical" href="https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Steam Sales Forecast Calculator | Spritz Consulting</title>
+<title>Steam Sales Predictor: Wishlist to Sales Calculator | Spritz</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -14,21 +14,21 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#E5B415" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#8A6600" media="(prefers-color-scheme: light)">
-<meta name="description" content="Estimate your Steam launch sales from wishlists and followers. Then track post-launch performance against industry benchmarks." />
+<meta name="description" content="Predict your Steam sales from wishlists: Week 1, Month 1 and Year One copies, using 2023-25 conversion data. Free, no signup." />
 <meta name="author" content="Michele Di Nardo" />
 <meta name="robots" content="index, follow" />
 <meta name="color-scheme" content="dark light" />
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Steam Sales Forecast Calculator | Spritz Consulting">
-<meta property="og:description" content="Estimate your Steam launch sales from wishlists and followers. Then track post-launch performance against industry benchmarks.">
+<meta property="og:title" content="Steam Sales Predictor: Wishlist to Sales Calculator | Spritz">
+<meta property="og:description" content="Predict your Steam sales from wishlists: Week 1, Month 1 and Year One copies, using 2023-25 conversion data. Free, no signup.">
 <meta property="og:url" content="https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html">
 <meta property="og:image" content="https://spritzconsulting.com/assets/steam-sales-forecast-calculator.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Steam Sales Forecast Calculator | Spritz Consulting">
-<meta name="twitter:description" content="Estimate your Steam launch sales from wishlists and followers. Then track post-launch performance against industry benchmarks.">
+<meta name="twitter:title" content="Steam Sales Predictor: Wishlist to Sales Calculator | Spritz">
+<meta name="twitter:description" content="Predict your Steam sales from wishlists: Week 1, Month 1 and Year One copies, using 2023-25 conversion data. Free, no signup.">
 <meta name="twitter:image" content="https://spritzconsulting.com/assets/steam-sales-forecast-calculator.png">
 
 <link rel="preload" href="/assets/fonts/familjen-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -1233,6 +1233,25 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .validation-notice[hidden] { display: none; }
 .sales-flag { margin-top: 12px; font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--clay); }
 .sales-flag[hidden] { display: none; }
+
+/* Simple view + accordions. */
+.expert-panel { margin-top: 22px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper-2); box-sizing: border-box; overflow: hidden; }
+details.model-details { box-sizing: border-box; overflow: hidden; }
+.expert-panel > summary { position: relative; cursor: pointer; padding: 16px 52px 16px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; list-style: none; }
+.expert-panel > summary::-webkit-details-marker { display: none; }
+.expert-panel > summary::after { content: ""; position: absolute; right: 20px; top: 50%; margin-top: -8px; width: 16px; height: 16px; color: var(--clay);
+  background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+  transition: background-size 280ms cubic-bezier(0.23, 1, 0.32, 1); }
+.expert-panel[open] > summary::after { background-size: 100% 2px, 2px 0; }
+@media (prefers-reduced-motion: reduce) { .expert-panel > summary::after { transition: none; } }
+.expert-title { font-family: var(--serif); font-weight: 600; font-size: 20px; letter-spacing: -0.03em; color: var(--ink); }
+.expert-sub { flex-basis: 100%; font-family: var(--sans); font-size: 13px; color: var(--ink-3); }
+.expert-body { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 22px; }
+.expert-h { font-family: var(--serif); font-weight: 600; font-size: 18px; letter-spacing: -0.03em; color: var(--ink); margin: 8px 0 -6px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.expert-body > .expert-h:first-child { border-top: 0; padding-top: 0; }
+.expert-p { font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+.expert-body .model-details { background: var(--paper-3); margin-top: 0; }
+@media (max-width: 720px) { .expert-panel > summary { padding: 14px 48px 14px 16px; } .expert-panel > summary::after { right: 16px; } .expert-body { padding: 0 16px 16px; } }
 </style>
 <script type="application/ld+json">
 {
@@ -1241,9 +1260,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     {
       "@type": "WebApplication",
       "@id": "https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html#app",
-      "name": "Steam Sales Forecast Calculator",
+      "name": "Steam Sales Predictor: Wishlist to Sales Calculator",
       "url": "https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html",
-      "description": "Estimate your Steam launch sales from wishlists and followers. Then track post-launch performance against industry benchmarks.",
+      "description": "Predict your Steam sales from wishlists: Week 1, Month 1 and Year One copies, using 2023-25 conversion data. Free, no signup.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires JavaScript",
@@ -1300,6 +1319,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         },
         {
           "@type": "Question",
+          "name": "What is a good wishlist to sales conversion rate on Steam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no single good rate, because it falls as the wishlist count grows. The median Week 1 conversion was about 0.20 copies per wishlist across all games, 0.17 for launches above 10,000 wishlists and 0.15 above 25,000 (GameDiscoverCo, 2024 and 2025). Chris Zukowski measured launch-month copies per wishlist at 0.22 for 2023-25 releases against 0.45 for 2020-22. Treat these as reference points, not targets: individual games vary by 10 to 20 times."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "How accurate is a Steam sales estimator?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -1327,7 +1354,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Steam Sales Forecast Calculator",
+          "name": "Steam Sales Predictor: Wishlist to Sales Calculator",
           "item": "https://spritzconsulting.com/resources/tools/steam-sales-forecast-calculator.html"
         }
       ]
@@ -1411,12 +1438,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <ol>
         <li><a href="/">Home</a></li>
         <li><a href="/resources/">Resources</a></li>
-        <li aria-current="page">Steam Sales Forecast Calculator</li>
+        <li aria-current="page">Steam Sales Predictor: Wishlist to Sales Calculator</li>
       </ol>
     </nav>
     <article>
       <p class="category">Tools</p>
-      <h1>Steam Sales Forecast <em>Calculator</em></h1>
+      <h1>Steam Sales Predictor: <em>Wishlist to Sales Calculator</em></h1>
       <div class="meta">
         <div>Type <b>Calculator</b></div>
         <div>Topic <b>Steam Sales</b></div>
@@ -1427,7 +1454,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         Experimental
       </div>
-      <p class="deck">Two parts. Before launch: estimate Week 1, Month 1 and Year One sales from your wishlist and follower count. After launch: enter your actual Week 1 numbers and see how you track against benchmarks.</p>
+      <p class="deck">Predict Steam sales from your wishlist count. Before launch: estimate Week 1, Month 1 and Year One copies sold from your wishlists. After launch: enter your actual Week 1 numbers and see how you track against benchmarks.</p>
       <p>Planning launch week too? Use the <a href="/resources/tools/launch-week-planner-helper.html">Launch Week Planning Helper</a>. An honest read on how to reach the players is part of my <a href="/#svc-publishing-support">Strategic Publishing Support</a> service.</p>
       <a href="/resources/tools/steam-wishlist-target-calculator.html" class="calc-step-link">← Previous step: Steam Wishlist Target Calculator</a>
     </article>
@@ -1441,7 +1468,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="wishlists">Wishlists at Launch</label>
-        <div class="calc-hint">Your estimated or target wishlist count at launch. Paste it from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam wishlist calculator</a> or enter it manually.</div>
+        <div class="calc-hint">How many wishlists you expect on launch day. Paste it from the <a href="/resources/tools/steam-wishlist-target-calculator.html">Steam Wishlist Target Calculator</a> or enter your own number.</div>
         <div class="calc-input-wrap">
           <input type="text" id="wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
           <span class="calc-suffix">wishlists</span>
@@ -1455,24 +1482,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </div>
 
       <div class="calc-group">
-        <label class="calc-label" for="followers">Steam Followers (optional)</label>
-        <div class="calc-hint">A sanity check, not an input to the sales numbers. GameDiscoverCo's 2023 survey (125+ games) puts the median at 12x for unreleased games, with 7x to 20x for the vast majority, and its May 2026 data puts games above 50,000 launch wishlists at a 16.1x median. Pick a game type below to narrow the range.</div>
-        <div class="calc-input-wrap">
-          <input type="text" id="followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-          <span class="calc-suffix">followers</span>
-        </div>
-        <div class="calc-hint" style="margin-top:10px">Game type for the follower check. Buckets average six tags from the 2023 survey (small samples): deep / systemic 7.5x to 9.5x (4X, turn-based strategy, survival), casual / narrative 13x to 16x (story-rich, relaxing, puzzle). "Not sure" uses 7x to 20x.</div>
-        <div class="toggle-pill-group" id="bucket-type" role="radiogroup" aria-label="Game type">
-          <button type="button" class="toggle-pill" data-bucket="deep" role="radio" aria-checked="false">Deep / systemic</button>
-          <button type="button" class="toggle-pill" data-bucket="casual" role="radio" aria-checked="false">Casual / narrative</button>
-          <button type="button" class="toggle-pill is-active" data-bucket="unsure" role="radio" aria-checked="true">Not sure</button>
-        </div>
-      </div>
-
-      <div class="calc-group">
         <label class="calc-label" for="price">Game Price at Launch</label>
-        <div class="calc-hint">The price shown on your Steam store page on launch day.</div>
-        <div class="calc-hint" id="price-refine-hint" hidden>Enter a price to refine. At 25,000+ wishlists, games priced above $10 convert at 0.10x at the median, against 0.15x overall. No source gives a figure for cheaper games.</div>
+        <div class="calc-hint">The price on your Steam store page on launch day.</div>
+        <div class="calc-hint" id="price-refine-hint" hidden>Enter a price to refine the estimate.</div>
         <div class="calc-input-wrap">
           <span class="calc-currency">$</span>
           <input type="text" id="price" class="calc-input" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
@@ -1487,7 +1499,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-group">
         <label class="calc-label" for="launch-type">Launch Type</label>
-        <div class="calc-hint">Early Access Month 1 conversion was about 20% of wishlists against about 30% for full releases (Gamalytic, Apr 2024, about 700 games), roughly one third lower. The calculator applies a factor of 0.67.</div>
+        <div class="calc-hint">Early Access launches sell roughly a third fewer copies in Month 1.</div>
         <div class="toggle-pill-group" id="launch-type" role="radiogroup" aria-label="Launch type">
           <button type="button" class="toggle-pill is-active" data-launch="full" role="radio" aria-checked="true">Full Release</button>
           <button type="button" class="toggle-pill" data-launch="ea" role="radio" aria-checked="false">Early Access</button>
@@ -1496,108 +1508,156 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
       <div class="calc-result-wrap is-sticky-mobile">
         <div class="calc-result" aria-live="polite" id="prelaunch-card">
-          <div class="calc-result-label">Pre-Launch Sales Estimate</div>
+          <div class="calc-result-label">Estimated copies sold</div>
           <div class="recoup-grid">
             <div class="recoup-tier">
               <div class="recoup-tier-label">Week 1</div>
               <div class="recoup-tier-value" id="pre-week1">0</div>
-              <div class="recoup-tier-sub" id="pre-week1-sub">0 low / 0 median</div>
+              <div class="recoup-tier-sub">copies in the first 7 days</div>
             </div>
             <div class="recoup-tier is-highlight">
               <div class="recoup-tier-label">Month 1</div>
               <div class="recoup-tier-value" id="pre-month1">0</div>
-              <div class="recoup-tier-sub" id="pre-month1-sub">week 1 × 1.33</div>
+              <div class="recoup-tier-sub">copies in the first 30 days</div>
             </div>
             <div class="recoup-tier">
               <div class="recoup-tier-label">Year One</div>
               <div class="recoup-tier-value" id="pre-year1">0</div>
-              <div class="recoup-tier-sub" id="pre-year1-sub">0 to 0</div>
+              <div class="recoup-tier-sub">copies in the first 12 months</div>
             </div>
           </div>
           <div class="sales-flag" id="year-flag" hidden></div>
-          <div class="confidence-row" id="confidence-row" hidden>
-            <strong id="conf-headline">Follower-implied wishlists</strong>
-            <span id="conf-range"></span>
-            <span class="conf-note" id="conf-note"></span>
-          </div>
-        </div>
-      </div>
-      <div class="calc-result-breakdown" id="pre-breakdown"></div>
-
-      <h2 class="calc-part-header">Post-Launch Tracker</h2>
-      <p class="calc-part-sub">Enter your actual numbers. See how you compare to benchmarks.</p>
-      <p class="calc-part-note">This section requires real data from your Steamworks dashboard. Without actual numbers, the projections below aren't meaningful.</p>
-
-      <div class="calc-group">
-        <label class="calc-label" for="actual-week1">Actual Week 1 Sales</label>
-        <div class="calc-hint">Total copies sold in the first 7 days from your Steamworks data.</div>
-        <div class="calc-input-wrap">
-          <input type="text" id="actual-week1" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-          <span class="calc-suffix">units</span>
         </div>
       </div>
 
-      <div class="calc-group">
-        <label class="calc-label" for="actual-reviews">Week 1 Reviews</label>
-        <div class="calc-hint">Public review count at end of Week 1. Rough cross-check only: the Boxleiter method multiplies reviews by 20x to 60x, but those multipliers describe lifetime review counts, work best with 50+ reviews and are least reliable for very new games.</div>
-        <div class="calc-input-wrap">
-          <input type="text" id="actual-reviews" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-          <span class="calc-suffix">reviews</span>
-        </div>
-      </div>
-
-      <div class="calc-group">
-        <label class="calc-label" for="post-wishlists">Wishlists at Launch</label>
-        <div class="calc-hint">Used to calculate your actual conversion rate and compare it to the median for your price and launch type. Inherits the value from Part 1 if left empty.</div>
-        <div class="calc-input-wrap">
-          <input type="text" id="post-wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
-          <span class="calc-suffix">wishlists</span>
-        </div>
-      </div>
-
-      <div class="calc-result-wrap">
-        <div class="calc-result calc-result-muted" aria-live="polite" id="postlaunch-card">
-          <div class="calc-result-label">Post-Launch Projections</div>
-          <div id="post-empty" class="calc-empty">Enter your Week 1 sales to see projections.</div>
-          <div class="recoup-grid" id="post-grid" hidden>
-            <div class="recoup-tier">
-              <div class="recoup-tier-label">Month 1 Projection</div>
-              <div class="recoup-tier-value" id="post-month1">0</div>
-              <div class="recoup-tier-sub" id="post-month1-sub">week 1 × 1.33</div>
-            </div>
-            <div class="recoup-tier">
-              <div class="recoup-tier-label">Year One Projection</div>
-              <div class="recoup-tier-value" id="post-year1">0</div>
-              <div class="recoup-tier-sub" id="post-year1-sub">0 to 0</div>
-            </div>
-            <div class="recoup-tier" id="conv-tier">
-              <div class="recoup-tier-label">Actual Conversion Rate</div>
-              <div class="recoup-tier-value" id="post-conv">0%</div>
-              <div class="recoup-tier-sub" id="post-conv-sub">vs median</div>
+      <details class="expert-panel" id="after-panel">
+        <summary><span class="expert-title">After launch</span><span class="expert-sub">Enter your real Week 1 sales and see how you track against benchmarks</span></summary>
+        <div class="expert-body">
+          <p class="calc-part-note">This section requires real data from your Steamworks dashboard. Without actual numbers, the projections below aren't meaningful.</p>
+          <div class="calc-group">
+            <label class="calc-label" for="actual-week1">Actual Week 1 Sales</label>
+            <div class="calc-hint">Total copies sold in the first 7 days from your Steamworks data.</div>
+            <div class="calc-input-wrap">
+              <input type="text" id="actual-week1" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+              <span class="calc-suffix">units</span>
             </div>
           </div>
+
+          <div class="calc-group">
+            <label class="calc-label" for="post-wishlists">Wishlists at Launch</label>
+            <div class="calc-hint">Used to calculate your actual conversion rate and compare it to the median for your price and launch type. Inherits the value from Part 1 if left empty.</div>
+            <div class="calc-input-wrap">
+              <input type="text" id="post-wishlists" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+              <span class="calc-suffix">wishlists</span>
+            </div>
+          </div>
+
+          <details class="model-details" id="reviews-details">
+            <summary>Optional: cross-check with Week 1 reviews</summary>
+            <div class="model-details-body">
+          <div class="calc-group">
+            <label class="calc-label" for="actual-reviews">Week 1 Reviews</label>
+            <div class="calc-hint">Public review count at end of Week 1. Rough cross-check only: the Boxleiter method multiplies reviews by 20x to 60x, but those multipliers describe lifetime review counts, work best with 50+ reviews and are least reliable for very new games.</div>
+            <div class="calc-input-wrap">
+              <input type="text" id="actual-reviews" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+              <span class="calc-suffix">reviews</span>
+            </div>
+          </div>
+            </div>
+          </details>
+
+          <div class="calc-result-wrap">
+            <div class="calc-result calc-result-muted" aria-live="polite" id="postlaunch-card">
+              <div class="calc-result-label">Post-Launch Projections</div>
+              <div id="post-empty" class="calc-empty">Enter your Week 1 sales to see projections.</div>
+              <div class="recoup-grid" id="post-grid" hidden>
+                <div class="recoup-tier">
+                  <div class="recoup-tier-label">Month 1 Projection</div>
+                  <div class="recoup-tier-value" id="post-month1">0</div>
+                  <div class="recoup-tier-sub" id="post-month1-sub">week 1 × 1.33</div>
+                </div>
+                <div class="recoup-tier">
+                  <div class="recoup-tier-label">Year One Projection</div>
+                  <div class="recoup-tier-value" id="post-year1">0</div>
+                  <div class="recoup-tier-sub" id="post-year1-sub">0 to 0</div>
+                </div>
+                <div class="recoup-tier" id="conv-tier">
+                  <div class="recoup-tier-label">Actual Conversion Rate</div>
+                  <div class="recoup-tier-value" id="post-conv">0%</div>
+                  <div class="recoup-tier-sub" id="post-conv-sub">vs median</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-result-breakdown" id="post-breakdown"></div>
+
+
         </div>
-      </div>
-      <div class="calc-result-breakdown" id="post-breakdown"></div>
+      </details>
 
-      <div class="validation-notice" id="validation-notice" hidden></div>
+      <details class="expert-panel" id="expert-panel">
+        <summary><span class="expert-title">Advanced settings</span><span class="expert-sub">Follower sanity check, ranges and detail, full breakdown, sources and formulas</span></summary>
+        <div class="expert-body">
+          <h3 class="expert-h">Sanity-check against followers</h3>
+          <div class="calc-group">
+            <label class="calc-label" for="followers">Steam Followers (optional)</label>
+            <div class="calc-hint">A sanity check, not an input to the sales numbers. GameDiscoverCo's 2023 survey (125+ games) puts the median at 12x for unreleased games, with 7x to 20x for the vast majority, and its May 2026 data puts games above 50,000 launch wishlists at a 16.1x median. Pick a game type below to narrow the range.</div>
+            <div class="calc-input-wrap">
+              <input type="text" id="followers" class="calc-input" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="0">
+              <span class="calc-suffix">followers</span>
+            </div>
+            <div class="calc-hint" style="margin-top:10px">Game type for the follower check. Buckets average six tags from the 2023 survey (small samples): deep / systemic 7.5x to 9.5x (4X, turn-based strategy, survival), casual / narrative 13x to 16x (story-rich, relaxing, puzzle). "Not sure" uses 7x to 20x.</div>
+            <div class="toggle-pill-group" id="bucket-type" role="radiogroup" aria-label="Game type">
+              <button type="button" class="toggle-pill" data-bucket="deep" role="radio" aria-checked="false">Deep / systemic</button>
+              <button type="button" class="toggle-pill" data-bucket="casual" role="radio" aria-checked="false">Casual / narrative</button>
+              <button type="button" class="toggle-pill is-active" data-bucket="unsure" role="radio" aria-checked="true">Not sure</button>
+            </div>
+          </div>
 
-      <details class="model-details" id="formulas-panel">
-        <summary>Formulas and constants</summary>
-        <div class="model-details-body">
-          <p>Everything below is what the code does. Constants marked "unsourced" are this tool's own assumptions.</p>
-          <pre>tier rate     = 0.20 (under 10k wishlists) | 0.17 (10k to 25k) | 0.15 (25k+)
-price factor  = 1 up to $10; falls linearly to 0.667 at $15; 0.667 above   (0.10 / 0.15)
-EA factor     = 0.67 for Early Access, 1 otherwise
-Week 1        = wishlists x tier rate x price factor x EA factor
-Low case      = wishlists x 0.025 x price factor x EA factor
-Month 1       = Week 1 x 1.33   (range x1.23 to x1.47)
-Year One, A   = Week 1 x 3.16   (published range x2 to x6)
-Year One, B   = wishlists x 0.70 x EA factor
-Year One      = range from min(A, B) to max(A, B); flagged if max / min is above 2
-Boxleiter     = reviews x 20 to reviews x 60   (rough cross-check)
-Follower check= followers x bucket low to followers x bucket high</pre>
-          <ul id="formula-constants"></ul>
+
+              <div class="confidence-row" id="confidence-row" hidden>
+                <strong id="conf-headline">Follower-implied wishlists</strong>
+                <span id="conf-range"></span>
+                <span class="conf-note" id="conf-note"></span>
+              </div>
+
+          <h3 class="expert-h">Ranges and detail</h3>
+          <div class="calc-result-breakdown range-list">
+            <div class="row"><span>Week 1: low case / median</span><span id="pre-week1-sub">0 low / 0 median</span></div>
+            <div class="row"><span>Month 1 range (x1.23 to x1.47)</span><span id="pre-month1-sub">0 to 0</span></div>
+            <div class="row"><span>Year One range (two methods)</span><span id="pre-year1-sub">0 to 0</span></div>
+          </div>
+          <p class="expert-p">Enter a price to refine. At 25,000+ wishlists, games priced above $10 convert at 0.10x at the median, against 0.15x overall. No source gives a figure for cheaper games.</p>
+          <p class="expert-p">Early Access Month 1 conversion was about 20% of wishlists against about 30% for full releases (Gamalytic, Apr 2024, about 700 games), roughly one third lower. The calculator applies a factor of 0.67.</p>
+
+          <h3 class="expert-h">Full breakdown</h3>
+          <div class="calc-result-breakdown" id="pre-breakdown"></div>
+
+
+          <div class="validation-notice" id="validation-notice" hidden></div>
+
+
+          <details class="model-details" id="formulas-panel">
+            <summary>Formulas and constants</summary>
+            <div class="model-details-body">
+              <p>Everything below is what the code does. Constants marked "unsourced" are this tool's own assumptions.</p>
+              <pre>tier rate     = 0.20 (under 10k wishlists) | 0.17 (10k to 25k) | 0.15 (25k+)
+    price factor  = 1 up to $10; falls linearly to 0.667 at $15; 0.667 above   (0.10 / 0.15)
+    EA factor     = 0.67 for Early Access, 1 otherwise
+    Week 1        = wishlists x tier rate x price factor x EA factor
+    Low case      = wishlists x 0.025 x price factor x EA factor
+    Month 1       = Week 1 x 1.33   (range x1.23 to x1.47)
+    Year One, A   = Week 1 x 3.16   (published range x2 to x6)
+    Year One, B   = wishlists x 0.70 x EA factor
+    Year One      = range from min(A, B) to max(A, B); flagged if max / min is above 2
+    Boxleiter     = reviews x 20 to reviews x 60   (rough cross-check)
+    Follower check= followers x bucket low to followers x bucket high</pre>
+              <ul id="formula-constants"></ul>
+            </div>
+          </details>
+
+
         </div>
       </details>
 
@@ -1629,6 +1689,8 @@ Follower check= followers x bucket low to followers x bucket high</pre>
         <p>It depends on size. GameDiscoverCo's median Week 1 conversion was about 0.2 copies per wishlist across all games and 0.17 for launches above 10,000 wishlists (April 2024, 100+ games), and 0.15 for launches above 25,000 wishlists, or 0.10 for games priced above $10 (October 2025, partly paywalled). The calculator uses those values by wishlist tier and eases the price effect in between $10 and $15. Its low case is about 0.025, roughly one tenth of the median. Individual games vary by 10 to 20 times, so treat the median as a reference point, not a forecast.</p>
         <h2>How do I estimate first-month and first-year Steam sales?</h2>
         <p>Start from the Week 1 estimate. The calculator multiplies it by 1.33 to get Month 1, within a published range of 1.23 to 1.47. For year one it shows a range from two methods: Week 1 times 3.16 (GameDiscoverCo's median Year 1 to Week 1 revenue ratio, applied to units) and about 0.70 copies per wishlist (Chris Zukowski's 2023 to 2025 data, 160 reader-submitted games). When they differ by more than 2x, the page flags it.</p>
+        <h2>What is a good wishlist to sales conversion rate on Steam?</h2>
+        <p>There is no single good rate, because it falls as the wishlist count grows. The median Week 1 conversion was about 0.20 copies per wishlist across all games, 0.17 for launches above 10,000 wishlists and 0.15 above 25,000 (GameDiscoverCo, 2024 and 2025). Chris Zukowski measured launch-month copies per wishlist at 0.22 for 2023-25 releases against 0.45 for 2020-22. Treat these as reference points, not targets: individual games vary by 10 to 20 times.</p>
         <h2>How accurate is a Steam sales estimator?</h2>
         <p>It's directional only. The best and worst performers can differ by 10 to 20 times, and the games that outperform usually did so through things you can't model in advance, such as going viral with influencers, co-op word of mouth or being a major franchise. Check any estimate against your own Steamworks data before using it for a decision.</p>
       </section>
@@ -1652,6 +1714,33 @@ Follower check= followers x bucket low to followers x bucket high</pre>
     </div>
   </div>
 </main>
+<script>
+/* Smooth open/close for details accordions: animates height with a strong ease-out. */
+(function() {
+  var EASE = 'cubic-bezier(0.23, 1, 0.32, 1)';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('details.expert-panel, details.model-details').forEach(function(d) {
+    var sum = d.querySelector(':scope > summary');
+    if (!sum) return;
+    var anim = null;
+    sum.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (anim) anim.cancel();
+      var start = d.offsetHeight;
+      var opening = !d.open;
+      if (reduce || !d.animate) { d.open = opening; return; }
+      if (opening) d.open = true;
+      var sumH = sum.offsetHeight + 2;
+      var end = opening ? Math.max(d.scrollHeight + (d.offsetHeight - d.clientHeight), sumH) : sumH;
+      d.style.height = start + 'px';
+      anim = d.animate({ height: [start + 'px', end + 'px'] }, { duration: opening ? 420 : 300, easing: EASE });
+      anim.onfinish = function() { d.open = opening; d.style.height = ''; anim = null; };
+      anim.oncancel = function() { anim = null; };
+    });
+  });
+})();
+</script>
+
 
 <div class="wrap tool-footer-note-wrap">
   <style>
