@@ -1966,7 +1966,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "How long does Steam take to review a store page and a build?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. The store page must be public as Coming Soon for at least two weeks before release, so submit it no later than 23 to 25 days before launch, and earlier if your PR starts sooner."
+            "text": "Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7, but on 3 November 2026 it said build reviews were taking up to 12 business days. The planner uses 12 for the build, so submit it at least 12 business days (about 16 to 18 days) before launch. The store page must be public as Coming Soon for at least two weeks before release, so submit it no later than 23 to 25 days before launch, and earlier if your PR starts sooner."
           }
         },
         {
@@ -2219,7 +2219,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <h2>How early should you send review keys?</h2>
         <p>About three weeks before launch for most games. For games longer than 5 to 6 hours, such as narrative games or RPGs, send keys 4 to 5 weeks out so reviewers can finish before the embargo lifts.</p>
         <h2>How long does Steam take to review a store page and a build?</h2>
-        <p>Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. The store page must be public as Coming Soon for at least two weeks before release, so submit it no later than 23 to 25 days before launch, and earlier if your PR starts sooner.</p>
+        <p>Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7, but on 3 November 2026 it said build reviews were taking up to 12 business days. The planner uses 12 for the build, so submit it at least 12 business days (about 16 to 18 days) before launch. The store page must be public as Coming Soon for at least two weeks before release, so submit it no later than 23 to 25 days before launch, and earlier if your PR starts sooner.</p>
         <h2>When should the launch trailer go live?</h2>
         <p>With a review embargo, the moment the embargo lifts, together with your big marketing beats. Without an embargo, 7 to 10 days before launch.</p>
       </section>
@@ -2230,7 +2230,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <li><strong>Press keys need more lead time than most teams give them.</strong> Three weeks before launch sounds like plenty. In practice, a journalist needs time to play the game and file the piece before the embargo. If your game runs longer than 5 to 6 hours, send keys earlier, sometimes 4 to 5 weeks out for a narrative game or an RPG. This timeline uses 21 days as a baseline. Move it to fit your game's length and genre.</li>
           <li><strong>Line up the embargo lift and the trailer.</strong> When you run a review embargo, push the trailer and your big marketing beats live the moment the embargo lifts. Drop the trailer early, then go quiet while reviews sit under embargo, and you bleed your own momentum. With no embargo, send the trailer 7 to 10 days before launch so the algorithm has time to work.</li>
           <li><strong>A day-one patch is a launch decision, so make it before launch week.</strong> If you know a real fix is coming, plan the patch window now. A patch that lands 3 days after launch still catches most of the review traffic. A patch that lands 2 weeks out misses it.</li>
-          <li><strong>Steam reviews your store page and your build before you can release.</strong> Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. The store page also has to be approved and public as Coming Soon for at least 2 weeks before release, so its submission date counts back from there. Submit the store page first, because Steam only accepts the build for review after it. Adult content can take longer. The dates here count weekdays and ignore public holidays. Steam dates show the minimum. Steam requires the store page to be public as Coming Soon for at least two weeks before release, and each review takes 3 to 5 business days, so the planner places the store page submission 23 to 25 days before launch. That date marks the latest safe point. Press and PR outreach commonly starts one to two months before release, so most games publish the page earlier. Treat the planner date as your deadline and move it forward when your marketing plan needs the lead time.</li>
+          <li><strong>Steam reviews your store page and your build before you can release.</strong> Valve says each review typically takes 3 to 5 business days and asks you to plan for at least 7. On 3 November 2026 Valve said build reviews were running up to 12 business days (<a href="https://www.invenglobal.com/articles/28152/valve-says-steam-pre-release-reviews-now-take-up-to-12-business-days" target="_blank" rel="noopener noreferrer">Inven Global, 4 Nov 2026</a>), so the planner puts the build submission 12 business days before launch. Valve gave no separate figure for store pages, so the store page keeps the documented 7. The store page also has to be approved and public as Coming Soon for at least 2 weeks before release, so its submission date counts back from there. Submit the store page first, because Steam only accepts the build for review after it. Adult content can take longer. The dates here count weekdays and ignore public holidays. Steam dates show the minimum. Steam requires the store page to be public as Coming Soon for at least two weeks before release, and each review takes 3 to 5 business days, so the planner places the store page submission 23 to 25 days before launch. That date marks the latest safe point. Press and PR outreach commonly starts one to two months before release, so most games publish the page earlier. Treat the planner date as your deadline and move it forward when your marketing plan needs the lead time.</li>
           <li><strong>Treat this as an estimate.</strong> Real dates move with your genre, team size, and platform mix. Use it as a planning scaffold, then confirm the hard dates against your own production plan.</li>
         </ul>
       </div>
@@ -2391,6 +2391,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     x.setDate(x.getDate() + n);
     return x;
   }
+  // Business days Steam build review can take (Valve, 3 Nov 2026: up to 12).
+  var STEAM_BUILD_REVIEW_DAYS = 12;
   // Counts weekdays only (Monday to Friday). Public holidays are not skipped.
   function addBusinessDays(d, n){
     var x = new Date(d.getTime()), step = n < 0 ? -1 : 1, left = Math.abs(n);
@@ -2535,11 +2537,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
     add('Start the social content calendar', addDays(rel, -7), ['Developer','Publisher'], 6);
     add('Send the second wave of keys to creators', addDays(rel, -5), ['PRAgency','Publisher'], 7);
     if (steam) add('Turn on the Steam broadcast and widget', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 8);
-    // Steam reviews the store page and the build before release. Each review takes 3 to 5
-    // business days, and Valve asks for at least 7. The page must be public as Coming Soon
-    // for 2 weeks before release, so its deadline counts back from release minus 14 days.
+    // Steam reviews the store page and the build before release. Valve's docs say each review
+    // takes 3 to 5 business days and ask for at least 7. On 3 Nov 2026 Valve said build reviews
+    // were running up to 12 business days, so the build deadline uses STEAM_BUILD_REVIEW_DAYS.
+    // The page must be public as Coming Soon for 2 weeks before release, so its deadline counts
+    // back from release minus 14 days (store page review keeps the documented 7 business days).
     if (steam) add('Latest date to submit the Steam store page for review', addBusinessDays(addDays(rel, -14), -7), hasPub ? ['Publisher'] : ['Developer'], 19);
-    if (steam) add('Latest date to submit the Steam build for review', addBusinessDays(rel, -7), hasPub ? ['Developer','Publisher'] : ['Developer'], 20);
+    if (steam) add('Latest date to submit the Steam build for review', addBusinessDays(rel, -STEAM_BUILD_REVIEW_DAYS), hasPub ? ['Developer','Publisher'] : ['Developer'], 20);
     if (anyConsole) add('Check the console store pages are live', addDays(rel, -3), hasPub ? ['Publisher'] : ['Developer'], 9);
     add('Upload and verify the launch build', addDays(rel, -2), hasPub ? ['Developer','Publisher'] : ['Developer'], 10);
     add('Schedule the day-zero social posts', addDays(rel, -1), ['Developer','Publisher'], 11);

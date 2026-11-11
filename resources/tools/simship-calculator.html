@@ -2088,6 +2088,7 @@ html.lenis .gantt-scroll[data-lenis-prevent-horizontal]{ overscroll-behavior: au
         <ul>
           <li><strong>Cert timelines are estimates.</strong> The dates above assume a full submission cycle across three cert rounds: roughly 4 to 6 weeks total for Nintendo, 3 to 4 weeks for PlayStation, 2 to 3 weeks for Xbox, including bug-fix time between rounds. A single cert check is far shorter; these ranges account for the whole iterate-and-resubmit loop. Actual timelines vary based on queue depth, build complexity, and how many iterations your submission requires. Use these dates as a planning baseline.</li>
           <li><strong>First submissions rarely pass, so plan for three rounds.</strong> The schedule above lists three cert submissions per console: an initial submission with a full cert-check window, working days to fix bugs, a second submission, then a short final re-check before go-live. A submission that passes on the first attempt is the exception, especially on Nintendo. Don&rsquo;t build the schedule around a first-pass approval.</li>
+          <li><strong>Steam build review is slower right now.</strong> Valve&rsquo;s docs say a build review typically takes 3 to 5 business days, but on 3 November 2026 Valve said reviews were taking up to 12 business days (<a href="https://www.invenglobal.com/articles/28152/valve-says-steam-pre-release-reviews-now-take-up-to-12-business-days" target="_blank" rel="noopener noreferrer">Inven Global, 4 Nov 2026</a>). The PC / Steam build submission is placed 12 working days before launch. Valve says second reviews are a major source of delay, so a build that passes first time saves the most.</li>
           <li><strong>Always verify directly with your platform contacts.</strong> Nintendo queue times in particular fluctuate significantly. Confirm your submission window via your developer portal or account manager before committing milestone dates to a publisher or investor. The same applies to holiday periods: both Nintendo and Sony have historically paused cert review in late December, but dates change year to year.</li>
           <li><strong>Store and build are separate tracks, with one exception.</strong> On Steam, Xbox and PlayStation the coming-soon store page can go live before the build is even submitted. On Nintendo Switch it can't: the eShop page can only be submitted after the build passes lot check, and it needs at least 10 working days of review, so the Switch build approval is pulled that far ahead of launch. On every platform the store page must carry a final price and release date and time before it will be accepted for launch. Miss that and the product won't be visible or pre-orderable, even if the build passed.</li>
           <li><strong>The driving platform sets your content lock.</strong> When shipping on multiple platforms simultaneously, the platform with the longest cert pipeline (almost always Nintendo Switch) determines your content lock date for the entire project. If you add a platform late, recalculate the whole schedule from the new driving milestone.</li>
@@ -2231,6 +2232,7 @@ html.lenis .gantt-scroll[data-lenis-prevent-horizontal]{ overscroll-behavior: au
   var DAY = 86400000;
   var SAFETY_PCT = 0.20; // total buffer as a fraction of pipeline length; split 50/50 below
   var SWITCH_STORE_REVIEW = 10; // working days the Switch eShop page needs before launch (store is gated by lot check)
+  var STEAM_BUILD_REVIEW = 12; // working days Valve's Steam build review can take (Valve, 3 Nov 2026: up to 12)
   var LAUNCH_BUFFER = 2; // working days everything must be approved before the actual go-live (launch cushion)
   var LOC_LEAD = { 'efigs': 14, '7-8': 21, '10+': 35 }; // calendar days before content lock
 
@@ -2250,7 +2252,7 @@ html.lenis .gantt-scroll[data-lenis-prevent-horizontal]{ overscroll-behavior: au
   // short final check. PC/Steam has no lot check, so it keeps a single build
   // submission. `store` = calendar days before release for the store page.
   var PLATFORMS = {
-    pc:     { name: 'PC / Steam',      store: 14, build: 7 },
+    pc:     { name: 'PC / Steam',      store: 14, build: 12 },
     switch: { name: 'Nintendo Switch', store: 35, cert: { check: 10, fix: 5, last: 3 } },
     ps:     { name: 'PlayStation',     store: 28, cert: { check: 5,  fix: 5, last: 3 } },
     xbox:   { name: 'Xbox',            store: 24, cert: { check: 6,  fix: 5, last: 3 } }
@@ -2423,13 +2425,13 @@ html.lenis .gantt-scroll[data-lenis-prevent-horizontal]{ overscroll-behavior: au
       });
     });
 
-    // PC / Steam, outside the cluster, build to Valve ~1 working week before launch.
+    // PC / Steam, outside the cluster: build goes to Valve STEAM_BUILD_REVIEW working days before launch.
     pcKeys.forEach(function(key) {
       var def = PLATFORMS[key];
-      var buildDate = subWorkdays(release, 5);
+      var buildDate = subWorkdays(release, STEAM_BUILD_REVIEW);
       approvals.push(buildDate);                                       // PC approval == its submission
       allDates.push(buildDate);
-      recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check', kind: 'build' });
+      recap.push({ date: buildDate, label: 'Build submission', plat: def.name, note: 'No lot check, Valve build review up to ' + STEAM_BUILD_REVIEW + ' working days', kind: 'build' });
       buildRows.push({ plat: def.name, segments: [{ start: buildDate, end: release, cls: 'is-check', name: 'Build submission', label: 'Build' }], markers: [buildDate] });
     });
 
