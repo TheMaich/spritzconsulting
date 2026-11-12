@@ -715,7 +715,7 @@ body.is-tab-hidden .dot{
   position: relative;
   margin: 0;
   aspect-ratio: 1 / 1;
-  border-radius: 50%;
+  border-radius: 16px;
   background: var(--portrait-bg);
   box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 20px 50px -18px color-mix(in srgb, var(--clay) 40%, transparent);
   animation: portrait-float 8s ease-in-out infinite;
@@ -731,14 +731,14 @@ body.is-tab-hidden .dot{
 .portrait picture{
   display: block;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 16px;
   overflow: hidden;
 }
 .portrait img{
   width: 100%; height: 100%;
   display: block;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 16px;
 }
 
 /* Speech bubble — comic-style, pop-in then idle bob */
@@ -3313,7 +3313,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 <script src="/assets/js/services-h.js?v=20261012k" defer></script>
 <script src="/assets/js/frame-fit.js?v=20261023" defer></script>
 <script src="/assets/js/testi-cards.js?v=20261014" defer></script>
-<script type="module" src="/assets/js/lanyard.js?v=20261112"></script>
+<script type="module" src="/assets/js/lanyard.js?v=20261016b"></script>
 <script>
 (() => {
   // Haptic pulse on mobile reload (pull-to-refresh or browser refresh).
