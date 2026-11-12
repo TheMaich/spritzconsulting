@@ -34,7 +34,7 @@ const THREE_URL = '/assets/vendor/three-0.170.0.module.min.js';
 const RAPIER_URL = '/assets/vendor/rapier3d-compat-0.14.0.es.js';
 const ASSETS = '/assets/img/lanyard/';
 // Bump whenever the card images or cards.json are regenerated, so browsers and the CDN fetch the new set.
-const ASSETS_V = '?v=20261008';
+const ASSETS_V = '?v=20261112';
 
 // Values tuned in the lanyard lab.
 // size: share of the HTML card's height. topGap and bottomGap (px, desktop) keep the whole badge inside the first screen.
