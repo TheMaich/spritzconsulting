@@ -586,10 +586,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 </style>
 <style>
 .article-wrap{
-  max-width: 860px;
+  max-width: 1280px;
   margin: 0 auto;
   margin-bottom: 0;
-  padding: 64px 32px 0;
+  padding: 64px clamp(20px, 4vw, 56px) 0;
 }
 .article-wrap article{ font-size: 18px; line-height: 1.78; }
 .article-wrap .category{
@@ -1078,18 +1078,33 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <link rel="stylesheet" href="/assets/css/book-call.css?v=20261013">
 <style>
 /* About page: portrait, stat row, timeline, games and community lists. */
-.about-portrait{ margin: 0 0 44px; }
+.about-portrait{ float: left; width: 380px; max-width: 42%; margin: 4px 44px 20px 0; }
+.about-portrait + .deck{ border-bottom: 0; padding-bottom: 0; margin-bottom: 24px; font-size: clamp(19px, 2vw, 22px); line-height: 1.6; letter-spacing: 0; }
+.about-portrait ~ .deck + h2{ border-top: 0; padding-top: 0; margin-top: 0; margin-bottom: 14px; font-size: clamp(22px, 2.4vw, 28px); letter-spacing: -0.03em; }
+.about-portrait ~ .deck + h2 ~ p{ color: var(--ink-2); font-size: 18px; line-height: 1.7; }
+.about-timeline, .about-timeline + h2{ clear: both; }
+.cta-card{ max-width: none; }
+@media (max-width: 700px){
+  .about-portrait{ float: none; width: 100%; max-width: 380px; margin: 0 0 28px; }
+  .about-portrait + .deck{ margin-bottom: 36px; }
+}
 .about-portrait img{ display: block; width: 100%; max-width: 380px; height: auto; border-radius: 18px; border: 1px solid var(--rule); }
-.about-stats{ list-style: none; margin: 0 0 48px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; }
-.about-stats li{ border-top: 1px solid var(--rule); padding-top: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
-.about-stats b{ display: block; margin-bottom: 4px; font-family: var(--serif); font-size: 40px; font-weight: 500; line-height: 1.1; letter-spacing: 0; text-transform: none; color: var(--ink); }
-.about-games{ columns: 2; column-gap: 32px; margin: 0 0 44px; padding-left: 1.1em; color: var(--ink-2); }
-.about-games li{ margin-bottom: 8px; break-inside: avoid; }
-.about-games span{ color: var(--ink-3); font-size: 15px; }
-@media (max-width: 600px){ .about-games{ columns: 1; } }
 /* Career timeline and community list. */
 .about-timeline{ list-style: none; margin: 0 0 44px; padding: 0; }
 .about-timeline li{ border-top: 1px solid var(--rule); padding: 18px 0 2px; }
+.about-timeline li.has-logo{ display: grid; grid-template-columns: 56px minmax(0, 1fr); grid-template-rows: auto auto 1fr auto; column-gap: 22px; align-items: start; }
+.about-timeline li.has-logo > :not(.co-logo){ grid-column: 2; }
+.about-chips{ list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.about-chips li{ margin: 0; padding: 0; border: 0; }
+.about-chips a{ display: inline-block; padding: 5px 13px; font-family: var(--sans); font-size: 14px; line-height: 1.4; color: var(--ink-2); text-decoration: none; background: var(--paper-3); border: 1px solid var(--rule); border-radius: 999px; transition: border-color .2s ease, color .2s ease, transform .2s ease; }
+.about-chips a:hover, .about-chips a:focus-visible{ color: var(--ink); border-color: var(--clay); }
+.about-chips a:active{ transform: scale(0.97); }
+.co-logo{ grid-column: 1; grid-row: 1 / span 3; box-sizing: border-box; display: grid; place-items: center; width: 56px; height: 56px; padding: 7px; overflow: hidden; border-radius: 24%; border: 1px solid var(--rule); background: var(--paper-3); }
+.co-logo img{ display: block; width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 600px){
+  .about-timeline li.has-logo{ grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; }
+  .co-logo{ width: 44px; height: 44px; padding: 5px; }
+}
 .about-timeline .when{ display: block; margin-bottom: 6px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
 .about-timeline h3{ margin: 0 0 10px; font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); }
 .about-timeline h3 span{ color: var(--ink-3); font-weight: 400; }
@@ -1169,75 +1184,63 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div>Based <b>Europe · CET</b></div>
         <div>Engage <b>Project · Retainer · Audit</b></div>
       </div>
-      <p class="deck">Or Miki for short. I&rsquo;m a freelance game producer, and Spritz Consulting is my production and publishing consultancy. I help studios and publishers ship on schedule and within budget, from first build to release.</p>
       <figure class="about-portrait">
         <picture><source srcset="/assets/miki-portrait.webp" type="image/webp" /><img src="/assets/miki-portrait.png" alt="Michele Di Nardo, in a black cap and tee, against a mustard-yellow backdrop." width="1024" height="1024" loading="eager" fetchpriority="high" decoding="async" /></picture>
       </figure>
+      <p class="deck">Or Miki for short. I&rsquo;m a freelance game producer, and Spritz Consulting is my production and publishing consultancy. I help studios and publishers ship on schedule and within budget, from first build to release.</p>
       <h2>Studio side, publisher side, and everything in between.</h2>
-      <p>I started as a playtester for Milestone and EA DICE, with part-time QA at Milestone. Then I spent ten years moving through every part of game production: QA at 34BigThings and Rebellion, production back at 34BigThings, publishing production at Raw Fury, and most recently Producer at Untold Games on City&nbsp;20. In June 2026 I founded Spritz Consulting.</p>
-      <p>AAA down to one-person indie teams. QA, production, publishing. I have sat on every side of the table and it changes what you notice.</p>
-      <ul class="about-stats">
-        <li><b>15+</b>Games shipped</li>
-        <li><b>10</b>Years in games</li>
-        <li><b>8</b>Platforms shipped on</li>
-        <li><b>3</b>Publishers worked with</li>
-      </ul>
+      <p>I started as a playtester for Milestone and EA DICE, then moved into part-time QA at Milestone. Since then I have worked in QA at 34BigThings and Rebellion, in production at 34BigThings, in publishing production at Raw Fury, and as Producer at Untold Games on City&nbsp;20. The teams ranged from AAA studios to one-person indie developers. In June 2026 I founded Spritz Consulting.</p>
       <h2>Career</h2>
       <ol class="about-timeline">
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/android-chrome-192x192.png" width="192" height="192" alt="" loading="lazy" decoding="async"></span>
           <span class="when">Jun 2026 &ndash; now</span>
           <h3>Spritz Consulting <span>&middot; Founder</span></h3>
-          <p>Release management on PlayStation, Xbox and Nintendo platforms, from onboarding and certification to launch. Delivery planning, milestone tracking and vendor selection for independent studios. Pitch reviews and mock publisher interviews before a studio meets a real one.</p>
+          <p>I manage releases on PlayStation, Xbox and Nintendo platforms, from onboarding and certification to launch. For independent studios I also plan delivery, track milestones and select vendors. Before a studio meets a real publisher, I run pitch reviews and mock publisher interviews with them.</p>
         </li>
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/assets/logo-untoldgames.webp" width="257" height="196" alt="" loading="lazy" decoding="async"></span>
           <span class="when">Feb &ndash; Apr 2026</span>
           <h3>Untold Games <span>&middot; Producer</span></h3>
-          <p>Production on City&nbsp;20, a live game with a 15-person team. I owned the schedule, the roadmap and backlog, and the release plan for updates.</p>
+          <p>I produced City&nbsp;20, a live game with a 15-person team. The schedule, the roadmap and the backlog were mine, as was the release plan for each update.</p>
+          <ul class="about-chips" aria-label="Games"><li><a href="https://store.steampowered.com/app/1597980/City_20/" target="_blank" rel="noopener noreferrer">City 20</a></li></ul>
         </li>
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/assets/logo-rawfury.webp" width="270" height="186" alt="" loading="lazy" decoding="async"></span>
           <span class="when">2022 &ndash; 2025</span>
           <h3>Raw Fury <span>&middot; Quality &amp; Line Producer, then Publishing Producer</span></h3>
-          <p>I owned the delivery pipeline for several titles, as the link between Raw Fury, the external developers and the platform holders: milestones, backlog, legal compliance, and the QA, localization and deployment vendors. Each title shipped in 15+ languages, with demo builds planned around international events. One title came in 10% under budget and launched to Overwhelmingly Positive user reviews. Dome Keeper, Moonstone Island, Kathy Rain&nbsp;2 and Ereban: Shadow Legacy.</p>
+          <p>Between Raw Fury, the external developers and the platform holders, I owned the delivery pipeline for several titles: milestones, backlog, legal compliance, and the QA, localization and deployment vendors. Every title shipped in 15+ languages, with demo builds planned around international events. One of them finished 10% under budget and launched to Overwhelmingly Positive user reviews.</p>
+          <ul class="about-chips" aria-label="Games"><li><a href="https://store.steampowered.com/app/1637320/Dome_Keeper/" target="_blank" rel="noopener noreferrer">Dome Keeper</a></li><li><a href="https://store.steampowered.com/app/1658150/Moonstone_Island/" target="_blank" rel="noopener noreferrer">Moonstone Island</a></li><li><a href="https://store.steampowered.com/app/1466390/Kathy_Rain_2_Soothsayer/" target="_blank" rel="noopener noreferrer">Kathy Rain 2</a></li><li><a href="https://store.steampowered.com/app/1671360/Ereban_Shadow_Legacy/" target="_blank" rel="noopener noreferrer">Ereban: Shadow Legacy</a></li></ul>
         </li>
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/assets/logo-34bigthings.webp" width="200" height="200" alt="" loading="lazy" decoding="async"></span>
           <span class="when">2021 &ndash; 2022</span>
           <h3>34BigThings <span>&middot; Associate Producer</span></h3>
-          <p>Redout&nbsp;2: the day-to-day link with the publisher, from build deliveries to milestone reviews, and certification on 7 platforms.</p>
+          <p>Redout&nbsp;2 put me in the day-to-day link with the publisher, from build deliveries to milestone reviews, and in charge of certification on 7 platforms.</p>
+          <ul class="about-chips" aria-label="Games"><li><a href="https://store.steampowered.com/app/1799930/Redout_2/" target="_blank" rel="noopener noreferrer">Redout 2</a></li></ul>
         </li>
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/assets/logo-rebellion.webp" width="500" height="222" alt="" loading="lazy" decoding="async"></span>
           <span class="when">2018 &ndash; 2021</span>
           <h3>Rebellion <span>&middot; Senior QA Tester, then Lead QA Tester</span></h3>
-          <p>Led QA on Sniper Elite&nbsp;5, directing internal teams and external QA vendors from triage to fix. Also Sniper Elite&nbsp;4, Strange Brigade and Zombie Army&nbsp;4: Dead War. I designed the QA process for a new platform, which became the company-wide standard.</p>
+          <p>On three QA projects launched on Google Stadia I was the QA lead, directing internal teams and external QA vendors from triage to fix. I also designed the QA process for a new platform, and it became the company-wide standard. I worked in QA on the four Rebellion games below as well.</p>
+          <ul class="about-chips" aria-label="Games"><li><a href="https://store.steampowered.com/app/1029690/Sniper_Elite_5/" target="_blank" rel="noopener noreferrer">Sniper Elite 5</a></li><li><a href="https://store.steampowered.com/app/312660/Sniper_Elite_4/" target="_blank" rel="noopener noreferrer">Sniper Elite 4</a></li><li><a href="https://store.steampowered.com/app/312670/Strange_Brigade/" target="_blank" rel="noopener noreferrer">Strange Brigade</a></li><li><a href="https://store.steampowered.com/app/694280/Zombie_Army_4_Dead_War/" target="_blank" rel="noopener noreferrer">Zombie Army 4: Dead War</a></li></ul>
         </li>
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/assets/logo-34bigthings.webp" width="200" height="200" alt="" loading="lazy" decoding="async"></span>
           <span class="when">2016 &ndash; 2018</span>
           <h3>34BigThings <span>&middot; QA Tester, then QA Manager</span></h3>
-          <p>Led a team of 5+ testers on Redout and Super Inefficient Golf, owning test plans, scheduling and reporting to production.</p>
+          <p>I led a team of 5+ testers on Redout and Super Inefficient Golf, owning the test plans and the scheduling and reporting to production.</p>
+          <ul class="about-chips" aria-label="Games"><li><a href="https://store.steampowered.com/app/517710/Redout_Enhanced_Edition/" target="_blank" rel="noopener noreferrer">Redout</a></li><li><a href="https://store.steampowered.com/app/772480/Super_Inefficient_Golf/" target="_blank" rel="noopener noreferrer">Super Inefficient Golf</a></li></ul>
         </li>
-        <li>
+        <li class="has-logo">
+          <span class="co-logo" aria-hidden="true"><img src="/assets/logo-milestone.webp" width="225" height="225" alt="" loading="lazy" decoding="async"></span>
           <span class="when">Early career</span>
           <h3>Milestone and EA DICE <span>&middot; Playtester, then part-time QA tester</span></h3>
-          <p>Playtesting for Milestone and for EA DICE in Stockholm in 2016, then part-time QA at Milestone on Ride, MXGP3 and Valentino Rossi: The Game.</p>
+          <p>I started out playtesting for Milestone and for EA DICE in Stockholm in 2016, then moved to part-time QA at Milestone on Ride, MXGP3 and Valentino Rossi: The Game.</p>
+          <ul class="about-chips" aria-label="Games"><li><a href="https://store.steampowered.com/app/345660/RIDE/" target="_blank" rel="noopener noreferrer">Ride</a></li><li><a href="https://store.steampowered.com/app/561600/MXGP3__The_Official_Motocross_Videogame/" target="_blank" rel="noopener noreferrer">MXGP3</a></li><li><a href="https://store.steampowered.com/app/438430/Valentino_Rossi_The_Game/" target="_blank" rel="noopener noreferrer">Valentino Rossi: The Game</a></li></ul>
         </li>
       </ol>
-      <h2>Games I&rsquo;ve worked on</h2>
-      <ul class="about-games">
-        <li>Dome Keeper <span>&middot; Bippinbits / Raw Fury &middot; publishing</span></li>
-        <li>Moonstone Island <span>&middot; Studio Supersoft / Raw Fury &middot; publishing</span></li>
-        <li>Kathy Rain 2 <span>&middot; Clifftop Games / Raw Fury &middot; publishing</span></li>
-        <li>Ereban: Shadow Legacy <span>&middot; Baby Robot Games &middot; publishing</span></li>
-        <li>City 20 <span>&middot; Untold Games &middot; production</span></li>
-        <li>Redout 2 <span>&middot; 34BigThings &middot; production</span></li>
-        <li>Sniper Elite 5 <span>&middot; Rebellion &middot; lead QA</span></li>
-        <li>Zombie Army 4: Dead War <span>&middot; Rebellion &middot; QA</span></li>
-        <li>Strange Brigade <span>&middot; Rebellion &middot; QA</span></li>
-        <li>Sniper Elite 4 <span>&middot; Rebellion &middot; QA</span></li>
-        <li>Redout <span>&middot; 34BigThings &middot; QA lead</span></li>
-        <li>Super Inefficient Golf <span>&middot; 34BigThings &middot; QA lead</span></li>
-        <li>Ride <span>&middot; Milestone &middot; playtest &amp; QA</span></li>
-        <li>MXGP3 <span>&middot; Milestone &middot; playtest &amp; QA</span></li>
-        <li>Valentino Rossi: The Game <span>&middot; Milestone &middot; playtest &amp; QA</span></li>
-      </ul>
       <h2>Teaching, juries and talks</h2>
       <ul class="about-community">
         <li>Co-founder, <a href="https://scuolanash.it/michele-di-nardo/" target="_blank" rel="noopener noreferrer">Scuola Nash</a> <span>&middot; game development school</span></li>
