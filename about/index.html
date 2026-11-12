@@ -1096,6 +1096,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .about-timeline li.has-logo > :not(.co-logo){ grid-column: 2; }
 .about-chips{ list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .about-chips li{ margin: 0; padding: 0; border: 0; }
+.about-chip-group{ display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 12px; }
+.about-chip-group .about-chips{ margin: 0; }
+.about-chip-label{ font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3); }
 .about-chips a{ display: inline-block; padding: 5px 13px; font-family: var(--sans); font-size: 14px; line-height: 1.4; color: var(--ink-2); text-decoration: none; background: var(--paper-3); border: 1px solid var(--rule); border-radius: 999px; transition: border-color .2s ease, color .2s ease, transform .2s ease; }
 .about-chips a:hover, .about-chips a:focus-visible{ color: var(--ink); border-color: var(--clay); }
 .about-chips a:active{ transform: scale(0.97); }
@@ -1177,7 +1180,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       </ol>
     </nav>
     <article>
-      <p class="category">About</p>
       <h1>Ciao! I&rsquo;m <em>Michele</em></h1>
       <div class="meta">
         <div>Now <b>Freelance game producer · Spritz Consulting</b></div>
@@ -1197,6 +1199,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <span class="when">Jun 2026 &ndash; now</span>
           <h3>Spritz Consulting <span>&middot; Founder</span></h3>
           <p>I manage releases on PlayStation, Xbox and Nintendo platforms, from onboarding and certification to launch. For independent studios I also plan delivery, track milestones and select vendors. Before a studio meets a real publisher, I run pitch reviews and mock publisher interviews with them.</p>
+          <div class="about-chip-group"><span class="about-chip-label">Worked with</span><ul class="about-chips" aria-label="Worked with"><li><a href="https://goldpact.gg/" target="_blank" rel="noopener noreferrer">Goldpact Goblins</a></li></ul></div>
+          <div class="about-chip-group"><span class="about-chip-label">Currently working with</span><ul class="about-chips" aria-label="Currently working with"><li><a href="https://thesecretsauce.uk/" target="_blank" rel="noopener noreferrer">Secret Sauce</a></li></ul></div>
         </li>
         <li class="has-logo">
           <span class="co-logo" aria-hidden="true"><img src="/assets/logo-untoldgames.webp" width="257" height="196" alt="" loading="lazy" decoding="async"></span>
