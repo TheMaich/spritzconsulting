@@ -1761,7 +1761,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   background: var(--paper-3);
   outline: 0;
 }
-.field textarea{ resize: vertical; min-height: 130px; }
+.field textarea{ resize: vertical; min-height: 72px; }
 .field[data-error="true"] input,
 .field[data-error="true"] textarea{
   border-color: var(--danger);
@@ -1775,17 +1775,19 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   color: var(--danger);
   min-height: 14px;
 }
+.field .err:empty{ display: none; }
 .topic-pick{
-  border: 0; margin: 0 0 20px; padding: 0; min-width: 0;
+  grid-column: 1 / -1;
+  border: 0; margin: 0; padding: 0; min-width: 0;
 }
 .topic-pick legend{
-  padding: 0; margin-bottom: 10px;
+  padding: 0; margin-bottom: 8px;
   font-family: var(--mono);
   font-size: 13.5px; letter-spacing: 0.045em; text-transform: uppercase;
   color: var(--ink-2);
 }
 .topic-pick legend .opt{ color: var(--ink-3); margin-left: 6px; }
-.topic-chips{ display: flex; flex-wrap: wrap; gap: 8px; }
+.topic-chips{ display: flex; flex-wrap: wrap; gap: 6px; }
 .chip{ position: relative; display: inline-flex; }
 .chip input{
   position: absolute; inset: 0; width: 100%; height: 100%;
@@ -1793,8 +1795,8 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 }
 .chip span{
   display: inline-flex; align-items: center;
-  min-height: 40px; padding: 8px 14px;
-  font: 400 14.5px/1.2 var(--sans);
+  min-height: 32px; padding: 5px 12px;
+  font: 400 14px/1.2 var(--sans);
   color: var(--ink-2);
   background: var(--paper);
   border: 1px solid var(--rule);
@@ -1812,8 +1814,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   border-color: var(--clay);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--clay) 35%, transparent);
 }
-.topic-hint{ margin: 10px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); display: none; }
-.topic-hint[data-visible="true"]{ display: block; }
 @media (prefers-reduced-motion: reduce){ .chip span{ transition: none; } }
 .form-foot{
   display: flex; align-items: center; justify-content: space-between;
@@ -3223,18 +3223,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <p class="noscript-contact">JavaScript is off in your browser. Email me directly at hello@spritzconsulting.com and I will take it from there.</p>
         </noscript>
         <form class="form" id="contact-form" aria-describedby="form-gdpr">
-          <fieldset class="topic-pick">
-            <legend>What is this about? <span class="opt">Pick one, or skip</span></legend>
-            <div class="topic-chips">
-              <label class="chip"><input type="radio" name="topic" value="I would like a 30-minute call about a publishing deal for my game. "><span>Publishing deal</span></label>
-              <label class="chip"><input type="radio" name="topic" value="Could you review my pitch or deck before I send it to publishers? "><span>Pitch or deck review</span></label>
-              <label class="chip"><input type="radio" name="topic" value="I would like you to pressure-test my launch plan. "><span>Launch plan check</span></label>
-              <label class="chip"><input type="radio" name="topic" value="I need help with my Steam launch and wishlist target. "><span>Steam launch or wishlists</span></label>
-              <label class="chip"><input type="radio" name="topic" value="Could you review a publisher contract or my budget? "><span>Contract or budget review</span></label>
-              <label class="chip"><input type="radio" name="topic" value=""><span>Something else</span></label>
-            </div>
-            <p class="topic-hint" id="topic-hint">The message below is filled in for you. Edit it or add details, such as the game and its stage.</p>
-          </fieldset>
           <div class="form-grid">
             <div class="field">
               <label for="f-name">Your name</label>
@@ -3251,9 +3239,20 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
               <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com" />
               <span class="err" data-err-for="f-email" aria-live="polite"></span>
             </div>
+            <fieldset class="topic-pick">
+              <legend>What is this about? <span class="opt">Optional, fills the message</span></legend>
+              <div class="topic-chips">
+                <label class="chip"><input type="radio" name="topic" value="I would like a 30-minute call about a publishing deal for my game. "><span>Publishing deal</span></label>
+                <label class="chip"><input type="radio" name="topic" value="Could you review my pitch or deck before I send it to publishers? "><span>Pitch or deck review</span></label>
+                <label class="chip"><input type="radio" name="topic" value="I would like you to pressure-test my launch plan. "><span>Launch plan check</span></label>
+                <label class="chip"><input type="radio" name="topic" value="I need help with my Steam launch and wishlist target. "><span>Steam launch or wishlists</span></label>
+                <label class="chip"><input type="radio" name="topic" value="Could you review a publisher contract or my budget? "><span>Contract or budget review</span></label>
+                <label class="chip"><input type="radio" name="topic" value=""><span>Something else</span></label>
+              </div>
+            </fieldset>
             <div class="field wide">
               <label for="f-msg">Message <span class="req" aria-hidden="true">*</span></label>
-              <textarea id="f-msg" name="message" required rows="5" data-lenis-prevent placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
+              <textarea id="f-msg" name="message" required rows="2" data-lenis-prevent placeholder="What you're working on, where you're stuck, when you need it shipped."></textarea>
               <span class="err" data-err-for="f-msg" aria-live="polite"></span>
             </div>
             <div class="hp-field" aria-hidden="true">
@@ -3734,7 +3733,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   // Topic chips: prefill the message. Never overwrite text the visitor wrote themselves.
   if (form) {
     const msgEl = form.querySelector('#f-msg');
-    const hint = document.getElementById('topic-hint');
     let lastPreset = '';
     form.querySelectorAll('input[name="topic"]').forEach((r) => {
       r.addEventListener('change', () => {
@@ -3745,7 +3743,6 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           lastPreset = r.value;
           if (submitAttempted) validate(true);
         }
-        if (hint) hint.dataset.visible = 'true';
         if (!r.value) msgEl.focus();
       });
     });
