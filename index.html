@@ -1775,6 +1775,46 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   color: var(--danger);
   min-height: 14px;
 }
+.topic-pick{
+  border: 0; margin: 0 0 20px; padding: 0; min-width: 0;
+}
+.topic-pick legend{
+  padding: 0; margin-bottom: 10px;
+  font-family: var(--mono);
+  font-size: 13.5px; letter-spacing: 0.045em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+.topic-pick legend .opt{ color: var(--ink-3); margin-left: 6px; }
+.topic-chips{ display: flex; flex-wrap: wrap; gap: 8px; }
+.chip{ position: relative; display: inline-flex; }
+.chip input{
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; margin: 0; cursor: pointer;
+}
+.chip span{
+  display: inline-flex; align-items: center;
+  min-height: 40px; padding: 8px 14px;
+  font: 400 14.5px/1.2 var(--sans);
+  color: var(--ink-2);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  transition: border-color .2s var(--ease), background .2s var(--ease), color .2s var(--ease);
+}
+.chip:hover span{ border-color: var(--clay); color: var(--ink); }
+.chip input:checked + span{
+  border-color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 14%, var(--paper));
+  color: var(--ink);
+}
+.chip input:focus-visible + span{
+  outline: 0;
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--clay) 35%, transparent);
+}
+.topic-hint{ margin: 10px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); display: none; }
+.topic-hint[data-visible="true"]{ display: block; }
+@media (prefers-reduced-motion: reduce){ .chip span{ transition: none; } }
 .form-foot{
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
@@ -3183,6 +3223,18 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
           <p class="noscript-contact">JavaScript is off in your browser. Email me directly at hello@spritzconsulting.com and I will take it from there.</p>
         </noscript>
         <form class="form" id="contact-form" aria-describedby="form-gdpr">
+          <fieldset class="topic-pick">
+            <legend>What is this about? <span class="opt">Pick one, or skip</span></legend>
+            <div class="topic-chips">
+              <label class="chip"><input type="radio" name="topic" value="I would like a 30-minute call about a publishing deal for my game. "><span>Publishing deal</span></label>
+              <label class="chip"><input type="radio" name="topic" value="Could you review my pitch or deck before I send it to publishers? "><span>Pitch or deck review</span></label>
+              <label class="chip"><input type="radio" name="topic" value="I would like you to pressure-test my launch plan. "><span>Launch plan check</span></label>
+              <label class="chip"><input type="radio" name="topic" value="I need help with my Steam launch and wishlist target. "><span>Steam launch or wishlists</span></label>
+              <label class="chip"><input type="radio" name="topic" value="Could you review a publisher contract or my budget? "><span>Contract or budget review</span></label>
+              <label class="chip"><input type="radio" name="topic" value=""><span>Something else</span></label>
+            </div>
+            <p class="topic-hint" id="topic-hint">The message below is filled in for you. Edit it or add details, such as the game and its stage.</p>
+          </fieldset>
           <div class="form-grid">
             <div class="field">
               <label for="f-name">Your name</label>
@@ -3679,6 +3731,25 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       setBusy(false);
     }
   });
+  // Topic chips: prefill the message. Never overwrite text the visitor wrote themselves.
+  if (form) {
+    const msgEl = form.querySelector('#f-msg');
+    const hint = document.getElementById('topic-hint');
+    let lastPreset = '';
+    form.querySelectorAll('input[name="topic"]').forEach((r) => {
+      r.addEventListener('change', () => {
+        if (!r.checked) return;
+        const cur = msgEl.value;
+        if (cur.trim() === '' || cur === lastPreset) {
+          msgEl.value = r.value;
+          lastPreset = r.value;
+          if (submitAttempted) validate(true);
+        }
+        if (hint) hint.dataset.visible = 'true';
+        if (!r.value) msgEl.focus();
+      });
+    });
+  }
   if (form) form.addEventListener('blur', (e) => {
     if (!submitAttempted) return;
     if (e.target.matches('input, textarea')) validate(true);
