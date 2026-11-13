@@ -201,10 +201,16 @@
       var s = scen[which || 'base'];
       return current + s.pace * cumBase(day, v0) + s.burst * rampedBoost(bursts, day);
     }
+    // With a measured wishlist count, today's wishlists are a fact: the floor/ceiling ratio
+    // spread applies only to followers gained from now on, never to the wishlists already earned.
+    var measuredWl = profile.measured ? input.measuredWishlists : 0;
+    function wishlistsFor(f, mult) {
+      return measuredWl ? measuredWl + Math.max(0, f - current) * mult : f * mult;
+    }
     var out = {};
     ['low', 'base', 'high'].forEach(function (k) {
       var f = followersAt(daysToLaunch, k);
-      out[k] = { followers: f, multiplier: scen[k].mult, wishlists: f * scen[k].mult };
+      out[k] = { followers: f, multiplier: scen[k].mult, wishlists: wishlistsFor(f, scen[k].mult) };
     });
     var organicBase = cumBase(daysToLaunch, v0);
     var burstBase = rampedBoost(bursts, daysToLaunch);
@@ -218,7 +224,10 @@
       bursts: bursts, burstCap: cap, organicGrowth: organicBase, burstGrowth: burstBase,
       burstShare: growth > 0 ? burstBase / growth : 0,
       scenarios: out, followersAt: followersAt, warnings: warnings,
-      wishlistsToday: { low: current * profile.low, base: current * profile.base, high: current * profile.high }
+      measuredWishlists: measuredWl,
+      wishlistsToday: measuredWl
+        ? { low: measuredWl, base: measuredWl, high: measuredWl }
+        : { low: current * profile.low, base: current * profile.base, high: current * profile.high }
     };
   }
 
@@ -235,8 +244,11 @@
     else if (target <= sc.high.wishlists) position = 'base-to-high';
     else position = 'above-high';
 
-    var reqBase = target / sc.base.multiplier;          // followers needed at the base multiplier
-    var reqLow = target / sc.low.multiplier;            // ...at the low multiplier
+    // Followers needed to reach the target. With measured wishlists, only the part of the target
+    // above today's count has to come from new followers.
+    var mw = res.measuredWishlists || 0;
+    var reqBase = mw ? res.current + Math.max(0, target - mw) / sc.base.multiplier : target / sc.base.multiplier;
+    var reqLow = mw ? res.current + Math.max(0, target - mw) / sc.low.multiplier : target / sc.low.multiplier;
     var extraBase = Math.max(0, reqBase - sc.base.followers);
     var extraLow = Math.max(0, reqLow - sc.base.followers);
     var weeks = res.daysToLaunch / 7;

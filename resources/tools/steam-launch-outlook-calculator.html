@@ -3486,7 +3486,8 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var projected = sc.base.followers;
     var spikeBoostFuture = res.burstGrowth;
     var eventShare = res.burstShare;
-    var targetEquiv = target > 0 ? target / profile.base : 0;
+    // Follower equivalent of the target. With measured wishlists, only the part above today's count needs new followers.
+    var targetEquiv = target > 0 ? (res.measuredWishlists ? current + Math.max(0, target - res.measuredWishlists) / profile.base : target / profile.base) : 0;
     var gapObj = pastLaunch ? null : SM.gapToTarget(res, target);
     var gap = target > 0 ? sc.base.wishlists - target : 0;
 
@@ -3516,12 +3517,14 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var measNote = document.getElementById('measured-note');
     document.getElementById('wishlists-today-label').textContent = profile.measured ? 'Your Wishlists Today' : 'Estimated Wishlists Today';
     measNote.hidden = !profile.measured;
-    if (profile.measured) measNote.textContent = 'Your real ratio is ' + (Math.round(profile.base * 100) / 100) + ' wishlists per follower. The game type is not used while this is filled in. Floor and ceiling vary your ratio by ' + fmtPct(res.assumptions.measuredSpreadPct) + '.';
+    if (profile.measured) measNote.textContent = 'Your real ratio is ' + (Math.round(profile.base * 100) / 100) + ' wishlists per follower. The game type is not used while this is filled in. Today’s wishlists stay as they are: floor and ceiling vary the ratio only for new followers, by ' + fmtPct(res.assumptions.measuredSpreadPct) + '.';
     var todayRange = fmtNum(wlToday.low) + ' (' + fx(profile.low) + 'x) to ' + fmtNum(wlToday.high) + ' (' + fx(profile.high) + 'x)';
-    document.getElementById('wishlists-today-range').textContent = 'range: ' + todayRange;
+    document.getElementById('wishlists-today-range').textContent = profile.measured
+      ? 'your real count · new followers at ' + fx(profile.low) + 'x to ' + fx(profile.high) + 'x'
+      : 'range: ' + todayRange;
 
     if (!bdBuilt) buildBreakdown();
-    bdRefs.wlToday.label.textContent = 'Estimated wishlists today (x' + fx(profile.base) + ')';
+    bdRefs.wlToday.label.textContent = profile.measured ? 'Your wishlists today (measured, x' + fx(profile.base) + ')' : 'Estimated wishlists today (x' + fx(profile.base) + ')';
     bdRefs.wlLow.label.textContent = 'Wishlists at launch, low (x' + fx(profile.low) + ')';
     bdRefs.wlLaunch.label.textContent = 'Wishlists at launch, base (x' + fx(profile.base) + ')';
     bdRefs.wlHigh.label.textContent = 'Wishlists at launch, high (x' + fx(profile.high) + ')';
@@ -3550,7 +3553,7 @@ followers needed = target / multiplier;  extra per week = (needed - projected ba
     var showSc = !!pageOpen && !!launch && !pastLaunch;
     [['low', sc.low], ['base', sc.base], ['high', sc.high]].forEach(function(p) {
       var vEl = document.getElementById('sc-' + p[0]);
-      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? 'wishlists at launch, ' + fx(p[1].multiplier) + 'x per follower' : 'wishlists at launch';
+      document.getElementById('sc-' + p[0] + '-sub').textContent = showSc ? (res.measuredWishlists ? 'wishlists at launch, new followers at ' + fx(p[1].multiplier) + 'x' : 'wishlists at launch, ' + fx(p[1].multiplier) + 'x per follower') : 'wishlists at launch';
       if (showSc) rollTo(vEl, p[1].wishlists, fmtNum); else vEl.textContent = '–';
     });
     var exN = 0;
