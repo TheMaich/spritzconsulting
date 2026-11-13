@@ -1020,10 +1020,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-tbl th{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; background: var(--paper-2); }
 .sa-tbl tr:last-child td{ border-bottom: 0; }
 .sa-tbl td:first-child{ color: var(--ink-2); width: 22%; }
-.sa-steps{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; counter-reset: s; }
-.sa-steps li{ counter-increment: s; border-top: 3px solid var(--clay); padding-top: 14px; }
-.sa-steps li::before{ content: "Step " counter(s); font-family: var(--mono); font-size: 13px; letter-spacing: 0.125em; text-transform: uppercase; color: var(--clay); display: block; margin-bottom: 4px; }
-.sa-steps p{ font-size: 16px; margin: 6px 0 0; }
+.sa-recap{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 28px; counter-reset: r; }
+.sa-recap li{ counter-increment: r; border-top: 3px solid var(--clay); padding-top: 10px; font-size: 16px; color: var(--ink); }
+.sa-recap li::before{ content: counter(r) ". "; font-family: var(--mono); color: var(--clay); }
 .sa-inside{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px 40px; }
 .sa-inside div{ border-top: 1px solid var(--rule); padding-top: 12px; }
 .sa-inside h3{ font-size: 20px; margin-bottom: 4px; }
@@ -1211,14 +1210,13 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     <p class="sa-fine">Prices include VAT. Paid versions are paid when you order, through Stripe. The free preview needs no payment.</p>
   </section>
 
-  <section class="sa-sec" id="how">
-    <div class="sa-head"><span class="lbl">How it works</span><h2>From Steam link to PDF in four steps</h2></div>
-    <ol class="sa-steps">
-      <li><h3>Send your Steam page</h3><p>Paste the store link and your email. Tell me anything I should know about the team.</p></li>
-      <li><h3>Pay (paid versions)</h3><p>You pay at the start with a secure Stripe link. The free preview needs no payment.</p></li>
-      <li><h3>I build and check it</h3><p>I collect the public data, run the scenarios and review the result. Every Premium deck is reviewed by me.</p></li>
-      <li><h3>You receive a PDF</h3><p>It arrives by email within 2 business days (Standard) or 3 (Premium).</p></li>
+  <section class="sa-sec" id="how" style="padding-block:32px">
+    <ol class="sa-recap">
+      <li><b>Send</b> your Steam link</li>
+      <li><b>Pay</b> at the start (paid versions)</li>
+      <li><b>Receive</b> your PDF in 2 business days (Standard) or 3 (Premium)</li>
     </ol>
+    <p class="sa-fine">Full details arrive by email once you order.</p>
   </section>
 
   <section class="sa-sec" id="inside">
