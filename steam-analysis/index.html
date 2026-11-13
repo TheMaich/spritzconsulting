@@ -1122,12 +1122,12 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   sitemap.xml and llms.txt, and link it from the four Steam calculators:
   1. Order form is NOT wired: no endpoint, no Stripe links. The submit handler only shows a notice.
   2. Free preview delivery time ("within 2 business days"): confirm.
-  3. Refund wording and the withdrawal waiver at checkout (FAQ + form checkbox): accountant or lawyer; link full terms.
+  3. Refund wording and the withdrawal waiver at checkout (refund FAQ + form checkbox): accountant or lawyer; link full terms.
   4. VAT-inclusive prices (EUR 89 and EUR 249): confirm with the accountant.
-  5. Released games are excluded for now (FAQ + "Not for"): confirm.
+  5. Released games are excluded for now (the "Not for" block): confirm.
   6. No accuracy claim until the back-test on released games is done.
   7. No Raw Fury game titles on this page: check the confidentiality terms before naming any.
-  8. Upsell to the EUR 120 consultation: mentioned only in the FAQ.
+  8. The EUR 120 consultation and the booking link are no longer on the page (the call FAQ was removed): decide where they go.
 -->
 <main id="main">
 <div class="wrap sa">
@@ -1261,15 +1261,10 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   <section class="sa-sec" id="faq">
     <div class="sa-head"><span class="lbl">Questions</span><h2>FAQ</h2></div>
     <div class="sa-narrow">
+      <details><summary>Do you use AI in this analysis?</summary><p>Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks.</p></details>
       <details><summary>Do you need access to my Steamworks account?</summary><p>No. The analysis uses only public data. If you want to share your real wishlist count, tell me in the form and I use it.</p></details>
-      <details><summary>How do you estimate wishlists?</summary><p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. I state the assumptions on the slide.</p></details>
-      <details><summary>How accurate is it?</summary><p>It is an estimate built from public information. The notes in the deck show every assumption, so you can see what would change the result.</p></details>
-      <details><summary>What does gross revenue mean?</summary><p>Copies times the price, before Steam&rsquo;s 30% cut, refunds, taxes and sales discounts.</p></details>
-      <details><summary>What if my game is already released?</summary><p>For now I only analyse games that have not launched yet. Write to me if yours is out and I&rsquo;ll tell you what is possible.</p></details>
-      <details><summary>How long does it take?</summary><p>The free preview and the Standard deck: within 2 business days. Premium: within 3. If Steam limits my data collection, I tell you and it can take up to a day longer.</p></details>
+      <details><summary>How do you estimate wishlists, and how accurate is it?</summary><p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result.</p></details>
       <details><summary>Can I get a refund?</summary><p>If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away.</p></details>
-      <details><summary>Is there a call included?</summary><p>No. If you want to talk it through, you can <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" data-booking="steam_analysis_faq" style="color:var(--clay)">book a free 30-minute discovery call</a> or a two-hour consultation (&euro;120).</p></details>
-      <details><summary>What do you do with my data?</summary><p>I use your email and Steam link only to make and send your analysis. Decks are deleted after 30 days. See the <a href="/privacy/" style="color:var(--clay)">privacy policy</a>.</p></details>
     </div>
   </section>
 
