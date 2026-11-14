@@ -1829,6 +1829,9 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
     document.getElementById('om-status').hidden = false;
   });
+  /* Deep link from the free deck's last slide: /steam-analysis/?tier=standard or ?tier=premium opens that order form. */
+  var want = new URLSearchParams(location.search).get('tier');
+  if (want === 'standard' || want === 'premium') open(want, null);
 })();
 </script>
 
