@@ -1270,7 +1270,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 .sa-modal input[type=url][aria-invalid="true"]:focus-visible, .sa-modal input[type=email][aria-invalid="true"]:focus-visible, .sa-modal textarea[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
 
 /* Premium extras: release quarter, wishlists, price */
-.om-hint{ margin: -4px 0 2px; padding-left: 14px; border-left: 2px solid var(--clay); font-size: 15px; line-height: 1.5; color: var(--ink); }
+.om-hint{ margin: 0; padding-left: 14px; border-left: 2px solid var(--clay); font-size: 15px; line-height: 1.5; color: var(--ink); }
 .om-hint[hidden], .om-extra[hidden]{ display: none; }
 .om-extra{ display: grid; gap: 16px; }
 .om-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1483,19 +1483,19 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     <span class="kicker">Order</span>
     <h2 class="om-title" id="om-title">Free preview</h2>
     <p class="om-price" id="om-price"></p>
-    <p class="om-hint" id="om-hint" hidden>Every detail you share makes the forecasts a little more accurate. The release quarter, your wishlist count and the planned price are optional, but each one tightens the numbers.</p>
 
     <input type="hidden" name="version" value="free">
 
     <div class="om-field"><label class="om-label" for="om-steam">Steam store link</label><input id="om-steam" name="steam" type="url" required inputmode="url" autocomplete="off" placeholder="https://store.steampowered.com/app/&hellip;"></div>
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
     <div class="om-extra" id="om-extra" hidden>
-      <div class="om-field"><label class="om-label" for="om-quarter">Planned release</label>
+      <p class="om-hint" id="om-hint">Every detail you share makes the forecasts a little more accurate. Each of these three is optional, but every one you add tightens the numbers.</p>
+      <div class="om-field"><label class="om-label" for="om-quarter">Planned release (optional)</label>
         <select id="om-quarter" name="quarter"><option value="">Choose a quarter</option></select></div>
       <div class="om-row">
-        <div class="om-field"><label class="om-label" for="om-wl">Wishlists today</label>
+        <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
           <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="From Steamworks"></div>
-        <div class="om-field"><label class="om-label" for="om-pr">Planned price (USD)</label>
+        <div class="om-field"><label class="om-label" for="om-pr">Planned price, USD (optional)</label>
           <input id="om-pr" name="price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="19.99"></div>
       </div>
     </div>
@@ -1599,7 +1599,6 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     document.getElementById('om-notes-wrap').hidden = !std;
     document.getElementById('om-news').hidden = !paid;
     document.getElementById('om-extra').hidden = !prem;
-    document.getElementById('om-hint').hidden = !prem;
     form.elements.notes.disabled = !std;
     form.elements.news.disabled = !paid;
     form.elements.quarter.disabled = !prem;
