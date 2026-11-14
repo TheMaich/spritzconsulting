@@ -82,6 +82,7 @@
 <link rel="stylesheet" href="/assets/css/frame-fit.css?v=20261023">
 <link rel="stylesheet" href="/assets/css/services-h.css?v=20261013b">
 <link rel="stylesheet" href="/assets/css/testi-cards.css?v=20261014">
+<link rel="stylesheet" href="/assets/css/case-studies.css?v=20261114">
 <!-- Desktop: keep the page hidden until frame-fit.js has set the page scale, so the first frame
      shown is already at the right size (frame-fit.js removes the class and fades the page in). -->
 <script>
@@ -2508,6 +2509,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
       <nav class="nav" aria-label="Primary">
         <a href="#consultancy"><span>My Experience</span></a>
         <a href="#services"><span>Services</span></a>
+        <a href="#case-studies"><span>Case studies</span></a>
         <a href="#faq"><span>FAQ</span></a>
         <a href="#testimonials"><span>Testimonials</span></a>
         <a href="https://zcal.co/micheledinardo/30min" target="_blank" rel="noopener" class="book-call-cta" data-booking="nav_header"><span>Book a call</span></a>
@@ -2530,6 +2532,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   <nav aria-label="Mobile">
     <a href="#consultancy" data-menu-link><span>My Experience</span></a>
     <a href="#services" data-menu-link><span>Services</span></a>
+    <a href="#case-studies" data-menu-link><span>Case studies</span></a>
     <a href="#faq" data-menu-link><span>FAQ</span></a>
     <a href="#testimonials" data-menu-link><span>Testimonials</span></a>
     <a href="/about/" data-menu-link><span>About</span></a>
@@ -2991,6 +2994,80 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
     </div>
   </section>
 
+  <!-- Case studies: the free game snapshot, four parts. Gallery behaviour in assets/js/case-studies.js. -->
+  <section class="section wrap case-studies" id="case-studies" aria-labelledby="case-studies-h">
+    <div class="cs-head">
+      <span class="kicker" data-reveal>Case studies</span>
+      <h2 class="cs-title blur-reveal" id="case-studies-h" data-reveal>
+        What a free <em>game snapshot</em> looks like.
+      </h2>
+      <p class="cs-intro" data-reveal>When a developer asks me about their game, I send a short PDF snapshot of where it stands today. Four parts, nothing padded.</p>
+    </div>
+
+    <ol class="cs-gallery" data-reveal>
+      <li class="cs-item" data-id="01">
+        <button type="button" class="cs-trigger" aria-pressed="false">
+          <span class="cs-media"><img src="/assets/steam-wishlist-target-calculator.png" alt="" width="1200" height="630" loading="lazy" decoding="async"></span>
+          <span class="cs-shade" aria-hidden="true"></span>
+          <span class="cs-content">
+            <span class="cs-tag">Followers &amp; wishlists</span>
+            <span class="cs-name">Audience</span>
+            <span class="cs-desc">Followers, page age and estimated wishlists.</span>
+            <span class="cs-cta">Part of the snapshot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </span>
+          <span class="cs-rail" aria-hidden="true"><span class="cs-rail-id">01</span><span class="cs-rail-name">Audience</span></span>
+        </button>
+      </li>
+
+      <li class="cs-item" data-id="02">
+        <button type="button" class="cs-trigger" aria-pressed="false">
+          <span class="cs-media"><img src="/assets/steam-launch-outlook-calculator.png" alt="" width="1200" height="630" loading="lazy" decoding="async"></span>
+          <span class="cs-shade" aria-hidden="true"></span>
+          <span class="cs-content">
+            <span class="cs-tag">Competitors</span>
+            <span class="cs-name">Competitors</span>
+            <span class="cs-desc">The competing titles, headline only.</span>
+            <span class="cs-cta">Part of the snapshot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </span>
+          <span class="cs-rail" aria-hidden="true"><span class="cs-rail-id">02</span><span class="cs-rail-name">Competitors</span></span>
+        </button>
+      </li>
+
+      <li class="cs-item is-active" data-id="03">
+        <button type="button" class="cs-trigger" aria-pressed="true">
+          <span class="cs-media"><img src="/assets/steam-sales-forecast-calculator.png" alt="" width="1200" height="630" loading="lazy" decoding="async"></span>
+          <span class="cs-shade" aria-hidden="true"></span>
+          <span class="cs-content">
+            <span class="cs-tag">Launch scenario</span>
+            <span class="cs-name">Launch outlook</span>
+            <span class="cs-desc">One launch scenario, or your sales so far, in summary.</span>
+            <span class="cs-cta">Part of the snapshot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </span>
+          <span class="cs-rail" aria-hidden="true"><span class="cs-rail-id">03</span><span class="cs-rail-name">Launch outlook</span></span>
+        </button>
+      </li>
+
+      <li class="cs-item" data-id="04">
+        <button type="button" class="cs-trigger" aria-pressed="false">
+          <span class="cs-media"><img src="/assets/launch-week-planning-helper.png" alt="" width="1200" height="630" loading="lazy" decoding="async"></span>
+          <span class="cs-shade" aria-hidden="true"></span>
+          <span class="cs-content">
+            <span class="cs-tag">Next steps</span>
+            <span class="cs-name">Next steps</span>
+            <span class="cs-desc">What to do next, in order.</span>
+            <span class="cs-cta">Part of the snapshot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </span>
+          <span class="cs-rail" aria-hidden="true"><span class="cs-rail-id">04</span><span class="cs-rail-name">Next steps</span></span>
+        </button>
+      </li>
+    </ol>
+
+    <div class="cs-foot" data-reveal>
+      <p>All four parts come in one short PDF, on request.</p>
+      <a class="cs-btn" href="#contact">Request a snapshot</a>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section class="section wrap" id="faq" aria-labelledby="faq-h">
     <div class="faq-head">
@@ -3316,6 +3393,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 <script src="/assets/js/services-h.js?v=20261012k" defer></script>
 <script src="/assets/js/frame-fit.js?v=20261023" defer></script>
 <script src="/assets/js/testi-cards.js?v=20261014" defer></script>
+<script src="/assets/js/case-studies.js?v=20261114" defer></script>
 <script type="module" src="/assets/js/lanyard.js?v=20261016b"></script>
 <script>
 (() => {
