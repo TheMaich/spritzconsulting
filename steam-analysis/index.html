@@ -1002,15 +1002,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "Do you use AI in this analysis?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. AI does the data collection and the pure math checks, and that is why you get the analysis in roughly 2 days instead of 2 weeks, as it would require from a professional without AI. The methods are publicly available (e.g. the Boxleiter method) and the final checks are mine."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you need access to my Steamworks account?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. The analysis uses only public data. If you want to share your real wishlist count, tell me when you order and I use it."
+            "text": "Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in roughly 2 days. Done by hand, it takes about 2 weeks, even for a professional. And it would be naive to assume publishers aren’t using AI too. The method and the final checks are mine."
           }
         },
         {
@@ -1019,6 +1011,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "From your page's own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today's wishlists are never reduced. It is an estimate built from public information, and the notes in the analysis show every assumption, so you can see what would change the result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the sources of the projections? How reliable are they?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The sources are public: your Steam page, its follower count and history, the review counts of comparable games, and estimation methods that are widely used across the industry. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate. It is a grounded estimate, not a prediction. It tells you reliably where your game stands and how it compares with similar games, and it is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most."
           }
         },
         {
@@ -1439,26 +1439,27 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-1" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-1" hidden>
-          <p>Yes. AI does the data collection and the pure math checks, and that is why you get the analysis in roughly 2 days instead of 2 weeks, as it would require from a professional without AI.</p>
-          <p>The methods are publicly available (e.g. the Boxleiter method) and the final checks are mine.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-header">
-          <h3 class="faq-question">Do you need access to my Steamworks account?</h3>
-          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer"><span class="toggle-icon">+</span></button>
-        </div>
-        <div class="faq-answer" id="faq-answer-2" hidden>
-          <p>No. The analysis uses only public data. If you want to share your real wishlist count, tell me when you order and I use it.</p>
+          <p>Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in roughly 2 days. Done by hand, it takes about 2 weeks, even for a professional. And it would be naive to assume publishers aren&rsquo;t using AI too.</p>
+          <p>The method and the final checks are mine.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
           <h3 class="faq-question">How do you estimate wishlists, and how accurate is it?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer"><span class="toggle-icon">+</span></button>
+        </div>
+        <div class="faq-answer" id="faq-answer-2" hidden>
+          <p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the analysis show every assumption, so you can see what would change the result.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">What are the sources of the projections? How reliable are they?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-3" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-3" hidden>
-          <p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the analysis show every assumption, so you can see what would change the result.</p>
+          <p>The sources are public: your Steam page, its follower count and history, the review counts of comparable games, and estimation methods that are widely used across the industry. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate.</p>
+          <p>It is a grounded estimate, not a prediction. It tells you reliably where your game stands and how it compares with similar games, and it is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most.</p>
         </div>
       </div>
       <div class="faq-item">
