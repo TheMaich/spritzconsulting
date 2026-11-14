@@ -1340,7 +1340,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 </div>
 
 <!--
-  DRAFT, NOT LAUNCHED. Closed: free case study in 2 hours, VAT-inclusive prices, released games now accepted (Michele, 14 Nov),
+  DRAFT, NOT LAUNCHED. Closed: free case study within 1 day (changed from 2 hours, 14 Nov), VAT-inclusive prices, released games now accepted (Michele, 14 Nov),
   no accuracy claim until the back-test, no Raw Fury titles. Case studies live on the homepage, not here.
   Still open before launch. Then set robots to "index, follow", add the page to sitemap.xml and llms.txt,
   and link it from the four Steam calculators:
@@ -1348,7 +1348,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   2. Refund wording and the withdrawal waiver at checkout: accountant or lawyer; link full terms. (The refund FAQ was removed from the page; terms must say it.)
   3. The EUR 120 consultation and the booking link are no longer on the page: decide where they go.
   5. Order form removed with the Start section: the version buttons point to /#contact until the real order flow exists.
-  4. Free case study in 2 hours needs an automatic delivery: the ordering flow must be able to do it in that time.
+  4. Free case study within 1 day: delivery can be semi-automatic (a person or a scheduled agent), no longer needs to be instant.
 -->
 <main id="main">
 
@@ -1382,7 +1382,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
           <li><span class="ic" aria-hidden="true">🧭</span><span>Next steps</span></li>
           <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
           <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No market visibility section</span></li>
-          <li><span class="ic" aria-hidden="true">⚡</span><span>Delivered within 2 hours</span></li>
+          <li><span class="ic" aria-hidden="true">⚡</span><span>Delivered within 1 day</span></li>
         </ul>
         <a class="btn sa-buy" href="/#contact" data-order="free"><span>Get the free case study</span></a>
       </div>
@@ -1569,7 +1569,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   if (!dlg || typeof dlg.showModal !== 'function') return;     /* old browsers keep the /#contact link */
   var form = document.getElementById('order-form');
   var T = {
-    free:     { title: 'Free Case Study',   price: 'No payment needed. Delivered within 2 hours.',                                  go: 'Get the free case study' },
+    free:     { title: 'Free Case Study',   price: 'No payment needed. Delivered within 1 day.',                                  go: 'Get the free case study' },
     standard: { title: 'Standard Analysis', price: '€89 / $99 / £79, VAT included. Pay at the start with Stripe.',   go: 'Pay €89 with Stripe' },
     premium:  { title: 'Extended Analysis',  price: '€249 / $279 / £209, VAT included. Pay at the start with Stripe.', go: 'Pay €249 with Stripe' }
   };
