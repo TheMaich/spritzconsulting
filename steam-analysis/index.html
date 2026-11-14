@@ -1216,6 +1216,8 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
 html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .sa-modal{ border: 1px solid var(--rule); border-radius: 22px; padding: 0; width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper-3); color: var(--ink); box-shadow: var(--shadow-md), 0 40px 90px -30px rgba(0,0,0,.6); }
 .sa-modal::backdrop{ transition: opacity .42s var(--ease);  background: color-mix(in srgb, var(--paper) 70%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.sa-modal.om-flip::backdrop{ backdrop-filter: none; -webkit-backdrop-filter: none; transition: opacity .42s var(--ease), backdrop-filter .4s var(--ease), -webkit-backdrop-filter .4s var(--ease); }
+.sa-modal.om-flip.om-landed::backdrop{ backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .sa-modal[open]{ animation: om-in .28s var(--ease); }
 .sa-modal[open]::backdrop{ animation: om-fade .28s var(--ease); }
 @keyframes om-in{ from{ opacity: 0; transform: translateY(12px) scale(.98); } to{ opacity: 1; transform: none; } }
@@ -1254,7 +1256,10 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .sa-buy.is-hot{ background: var(--clay); color: var(--paper); border-color: var(--clay); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay) 22%, transparent), 0 12px 28px -10px color-mix(in srgb, var(--clay) 60%, transparent); }
 .om-ghost .om-close{ visibility: hidden; }
 .om-ghost{ position: relative; display: block; max-height: none; overflow: hidden; margin: 0; }
-.om-glow{ position: absolute; inset: -30px; border-radius: 36px; background: radial-gradient(closest-side, color-mix(in srgb, var(--clay) 55%, transparent), transparent 100%); filter: blur(22px); opacity: 0; z-index: -1; }
+.om-glow{ position: absolute; inset: -30px; border-radius: 36px; background: radial-gradient(closest-side, color-mix(in srgb, var(--clay) 50%, transparent), color-mix(in srgb, var(--clay) 12%, transparent) 62%, transparent 100%); opacity: 0; z-index: -1; }
+
+/* Behind the modal: stop the page's ambient animations, so the flip is the only thing moving */
+html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-flipper *){ animation-play-state: paused !important; }
 
 </style>
 </head>
@@ -1677,7 +1682,7 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
     card.style.visibility = 'hidden';
     var p = pose(to, from), f = flipper(card, from, false);
     f.inner.style.transform = 'rotateY(180deg)';
-    dlg.classList.add('om-flip', 'om-leaving'); dlg.style.opacity = '0';
+    dlg.classList.remove('om-landed'); dlg.classList.add('om-flip', 'om-leaving'); dlg.style.opacity = '0';   /* blur off first: cheap flight */
     var T1 = 'translate(' + p.dx + 'px,' + p.dy + 'px)';
     var kf = {
       geo: [
