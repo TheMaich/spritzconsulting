@@ -1269,6 +1269,19 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 .om-err{ color: var(--danger); }
 .sa-modal input[type=url][aria-invalid="true"]:focus-visible, .sa-modal input[type=email][aria-invalid="true"]:focus-visible, .sa-modal textarea[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
 
+/* Premium extras: release quarter, wishlists, price */
+.om-hint{ margin: -4px 0 2px; padding-left: 14px; border-left: 2px solid var(--clay); font-size: 15px; line-height: 1.5; color: var(--ink); }
+.om-hint[hidden], .om-extra[hidden]{ display: none; }
+.om-extra{ display: grid; gap: 16px; }
+.om-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px){ .om-row{ grid-template-columns: 1fr; } }
+.sa-modal input[type=number], .sa-modal select{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.sa-modal select{ appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none' stroke='%23e5b415' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+.sa-modal select option{ background: var(--paper-3); color: var(--ink); }
+.sa-modal input[type=number]:focus-visible, .sa-modal select:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.sa-modal input[type=number][aria-invalid="true"], .sa-modal select[aria-invalid="true"]{ border-color: var(--danger); }
+.sa-modal input[type=number][aria-invalid="true"]:focus-visible, .sa-modal select[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
+
 </style>
 </head>
 <body>
@@ -1470,11 +1483,22 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     <span class="kicker">Order</span>
     <h2 class="om-title" id="om-title">Free preview</h2>
     <p class="om-price" id="om-price"></p>
+    <p class="om-hint" id="om-hint" hidden>Every detail you share makes the forecasts a little more accurate. The release quarter, your wishlist count and the planned price are optional, but each one tightens the numbers.</p>
 
     <input type="hidden" name="version" value="free">
 
     <div class="om-field"><label class="om-label" for="om-steam">Steam store link</label><input id="om-steam" name="steam" type="url" required inputmode="url" autocomplete="off" placeholder="https://store.steampowered.com/app/&hellip;"></div>
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
+    <div class="om-extra" id="om-extra" hidden>
+      <div class="om-field"><label class="om-label" for="om-quarter">Planned release</label>
+        <select id="om-quarter" name="quarter"><option value="">Choose a quarter</option></select></div>
+      <div class="om-row">
+        <div class="om-field"><label class="om-label" for="om-wl">Wishlists today</label>
+          <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="From Steamworks"></div>
+        <div class="om-field"><label class="om-label" for="om-pr">Planned price (USD)</label>
+          <input id="om-pr" name="price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="19.99"></div>
+      </div>
+    </div>
     <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
 
     <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
@@ -1548,6 +1572,18 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     premium:  { title: 'Premium Analysis',  price: '€249 / $279 / £209, VAT included. Pay at the start with Stripe.', go: 'Pay €249 with Stripe' }
   };
   var last = null;
+  (function quarters() {                                  /* release quarters, from now up to two years ahead */
+    var sel = document.getElementById('om-quarter'), now = new Date(), y = now.getFullYear(), q = Math.floor(now.getMonth() / 3);
+    var span = ['Jan to Mar', 'Apr to Jun', 'Jul to Sep', 'Oct to Dec'];
+    for (var i = 0; i <= 8; i++) {
+      var o = document.createElement('option');
+      o.value = y + '-Q' + (q + 1); o.textContent = 'Q' + (q + 1) + ' ' + y + ' (' + span[q] + ')';
+      sel.appendChild(o);
+      if (++q === 4) { q = 0; y++; }
+    }
+    var nd = document.createElement('option'); nd.value = 'undecided'; nd.textContent = 'Not decided yet';
+    sel.appendChild(nd);
+  })();
   function pick(v) {
     if (!T[v]) v = 'free';
     form.elements.version.value = v;
@@ -1557,11 +1593,18 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     document.querySelector('#om-go span').textContent = T[v].go;
     document.getElementById('om-waiver').hidden = !paid;
     form.elements.waiver.required = paid;
-    /* The free preview asks only for the Steam link and the email: no notes, no newsletter opt-in. */
-    document.getElementById('om-notes-wrap').hidden = !paid;
+    /* Free: Steam link and email only. Standard: plus a free-text note. Premium: no note, but the release
+       quarter, wishlist count and planned price, which make the forecasts more accurate. */
+    var prem = (v === 'premium'), std = (v === 'standard');
+    document.getElementById('om-notes-wrap').hidden = !std;
     document.getElementById('om-news').hidden = !paid;
-    form.elements.notes.disabled = !paid;
+    document.getElementById('om-extra').hidden = !prem;
+    document.getElementById('om-hint').hidden = !prem;
+    form.elements.notes.disabled = !std;
     form.elements.news.disabled = !paid;
+    form.elements.quarter.disabled = !prem;
+    form.elements.wishlists.disabled = !prem;
+    form.elements.price.disabled = !prem;
   }
   /* ---- Open / close: the tier card flips and warps into the modal (and back) ----
      Timing and curves follow the site: --ease (0.16, 1, 0.3, 1) for settling, an ease-in-out for the turn.
@@ -1582,12 +1625,12 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     root.querySelectorAll('[for],[aria-describedby],[aria-labelledby],[data-order],[data-om-close]').forEach(function (n) {
       ['for', 'aria-describedby', 'aria-labelledby', 'data-order', 'data-om-close'].forEach(function (a) { n.removeAttribute(a); });
     });
-    root.querySelectorAll('a,button,input,textarea').forEach(function (n) { n.tabIndex = -1; });
+    root.querySelectorAll('a,button,input,textarea,select').forEach(function (n) { n.tabIndex = -1; });
     return root;
   }
   function formCopy() {                                   /* the form as it is now, typed text included */
     var cp = plain(form.cloneNode(true));
-    var a = form.querySelectorAll('input,textarea'), b = cp.querySelectorAll('input,textarea');
+    var a = form.querySelectorAll('input,textarea,select'), b = cp.querySelectorAll('input,textarea,select');
     for (var i = 0; i < a.length; i++) { b[i].value = a[i].value; b[i].checked = a[i].checked; }
     return cp;
   }
@@ -1770,6 +1813,14 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     }
     if (!form.elements.email.value || !form.elements.email.validity.valid) {
       return fail('Enter a valid email address so I can send you the analysis.', form.elements.email);
+    }
+    var wl = form.elements.wishlists;
+    if (!wl.disabled && wl.value !== '' && !(Number(wl.value) >= 0 && Number.isInteger(Number(wl.value)))) {
+      return fail('Enter your wishlist count as a whole number, or leave it empty.', wl);
+    }
+    var pr = form.elements.price;
+    if (!pr.disabled && pr.value !== '' && !(Number(pr.value) > 0 && Number(pr.value) < 1000)) {
+      return fail('Enter the planned price like 19.99, or leave it empty.', pr);
     }
     if (form.elements.waiver.required && !form.elements.waiver.checked) {
       return fail('Please confirm that I can start the work right away.', form.elements.waiver);
