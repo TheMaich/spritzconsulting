@@ -959,17 +959,31 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "Steam Launch Analysis & Sales Forecast for Indie Games",
-  "serviceType": "Game launch analysis",
-  "provider": { "@type": "Person", "name": "Michele Di Nardo", "url": "https://spritzconsulting.com/about/" },
-  "areaServed": "Worldwide",
-  "description": "A Steam launch analysis built from public data: followers, wishlist scenarios, estimated sales and revenue, four competitors and recommendations, delivered as a PDF.",
-  "url": "https://spritzconsulting.com/steam-analysis/",
-  "offers": [
-    { "@type": "Offer", "name": "Free preview", "price": "0", "priceCurrency": "EUR" },
-    { "@type": "Offer", "name": "Standard deck", "price": "89", "priceCurrency": "EUR" },
-    { "@type": "Offer", "name": "Premium deck", "price": "249", "priceCurrency": "EUR" }
+  "@graph": [
+    {
+      "@type": "Service",
+      "name": "Steam Launch Analysis & Sales Forecast for Indie Games",
+      "serviceType": "Game launch analysis",
+      "provider": { "@type": "Person", "name": "Michele Di Nardo", "url": "https://spritzconsulting.com/about/" },
+      "areaServed": "Worldwide",
+      "description": "A Steam launch analysis built from public data: followers, wishlist scenarios, estimated sales and revenue, four competitors and recommendations, delivered as a PDF.",
+      "url": "https://spritzconsulting.com/steam-analysis/",
+      "offers": [
+        { "@type": "Offer", "name": "Free preview", "price": "0", "priceCurrency": "EUR" },
+        { "@type": "Offer", "name": "Standard deck", "price": "89", "priceCurrency": "EUR" },
+        { "@type": "Offer", "name": "Premium deck", "price": "249", "priceCurrency": "EUR" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://spritzconsulting.com/steam-analysis/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Do you use AI in this analysis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks." } },
+        { "@type": "Question", "name": "Do you need access to my Steamworks account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The analysis uses only public data. If you want to share your real wishlist count, tell me in the form and I use it." } },
+        { "@type": "Question", "name": "How do you estimate wishlists, and how accurate is it?", "acceptedAnswer": { "@type": "Answer", "text": "From your page's own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today's wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result." } },
+        { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away." } }
+      ]
+    }
   ]
 }
 </script>
@@ -986,80 +1000,160 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <script src="/assets/js/smooth-scroll.js" defer></script>
 <link rel="stylesheet" href="/assets/css/book-call.css?v=20261013">
 <style>
-/* Steam analysis page: hero, three tiers, comparison table, steps, method, FAQ, order form. Uses the site tokens. */
-.sa{ padding-block: 24px 0; }
-.sa .lbl{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.125em; text-transform: uppercase; color: var(--clay); }
-.sa h1, .sa h2, .sa h3{ font-family: var(--serif); color: var(--ink); text-wrap: balance; margin: 0; }
-.sa h1{ font-size: clamp(40px, 6.6vw, 88px); font-weight: 600; line-height: 1.0; letter-spacing: -0.045em; font-variation-settings: "opsz" 96; }
-.sa h1 em{ color: var(--clay); font-style: italic; }
-.sa h2{ font-size: clamp(28px, 3.6vw, 44px); font-weight: 600; line-height: 1.08; letter-spacing: -0.05em; font-variation-settings: "opsz" 40; }
-.sa h3{ font-size: 22px; font-weight: 600; line-height: 1.2; letter-spacing: -0.03em; }
-.sa p{ margin: 0 0 14px; max-width: 68ch; color: var(--ink-2); }
-.sa p b, .sa p strong{ color: var(--ink); font-weight: 700; }
-.sa-hero{ padding-block: clamp(28px, 6vw, 72px) clamp(44px, 7vw, 88px); }
-.sa-hero .lede{ font-size: clamp(18px, 2vw, 22px); line-height: 1.5; margin: 26px 0 28px; max-width: 62ch; }
-.sa-cta{ display: flex; flex-wrap: wrap; gap: 12px; }
-.sa-btn{ display: inline-block; font-family: var(--mono); font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 999px; padding: 14px 24px; border: 1px solid var(--rule); color: var(--ink); line-height: 1.1; text-align: center; transition: border-color .2s var(--ease), background-color .2s var(--ease); }
-.sa-btn:hover{ border-color: var(--ink-2); }
-.sa-btn.primary{ background: var(--clay); border-color: var(--clay); color: var(--paper); }
-.sa-btn.primary:hover{ background: var(--clay-deep); border-color: var(--clay-deep); }
-.sa-sec{ padding-block: clamp(44px, 7vw, 88px); border-top: 1px solid var(--rule); }
-.sa-head{ display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+/* Steam analysis page. Section heads, kicker, buttons, FAQ and reveal animations copied from the homepage
+   (index.html) so the page reads as the same site; the tiers, table, method and form are page-specific. */
+
+/* Homepage section rhythm */
+.section{ padding-top: clamp(56px, 8vw, 112px); padding-bottom: clamp(56px, 8vw, 112px); position: relative; }
+.kicker{ display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); }
+.kicker .bar{ width: 28px; height: 1px; background: var(--clay); }
+
+/* Hero (homepage .hero-h1 / .hero-intro) */
+.sa-hero{ padding-top: clamp(16px, 2.4vw, 32px); padding-bottom: clamp(40px, 6vw, 80px); }
+.sa-hero .crumbs{ margin-bottom: clamp(20px, 3vw, 36px); }
+.hero-h1{ font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.6vw, 100px); font-variation-settings: "opsz" 96; line-height: 0.96; letter-spacing: -0.06em; color: var(--ink); text-wrap: balance; margin: 16px 0 0; max-width: 15ch; }
+.hero-h1 em{ font-style: italic; font-variation-settings: "opsz" 96; color: var(--clay); }
+.hero-intro{ max-width: 60ch; font-size: clamp(16px, 1.35vw, 20px); color: var(--ink-2); line-height: 1.6; margin: 28px 0 0; }
+.hero-intro b{ color: var(--ink); font-weight: 700; }
+
+/* Buttons (homepage .btn) */
+.cta-row{ display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.btn{ display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 22px; font-family: var(--sans); font-weight: 500; font-size: 14.5px; letter-spacing: 0.01em; border-radius: 999px; border: 1px solid transparent; transition: transform .2s var(--ease), background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease); }
+.btn .arrow{ transition: transform .3s var(--ease); }
+.btn:hover .arrow{ transform: translateX(3px); }
+.btn:active{ transform: translateY(1px); }
+.btn-primary{ background: var(--clay); color: var(--paper); box-shadow: var(--shadow-sm); }
+.btn-primary:hover{ background: var(--clay-deep); color: var(--paper); }
+.btn-ghost{ border-color: var(--rule); color: var(--ink); background: transparent; }
+.btn-ghost:hover{ border-color: var(--clay); color: var(--clay); }
+
+/* Section heads (homepage .services-intro / .faq-head) */
+.sa-intro{ display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(24px, 4vw, 72px); align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
+.sa-title, .faq-head h2{ font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 4.6vw, 64px); font-variation-settings: "opsz" 96; line-height: 1; letter-spacing: -0.055em; margin: 18px 0 0; text-wrap: balance; color: var(--ink); }
+.sa-title em, .faq-head h2 em{ font-style: italic; color: var(--clay); font-variation-settings: "opsz" 96; }
+.sa-intro p, .faq-head p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0; }
+.sa-intro p b{ color: var(--ink); }
+
+/* Tiers */
 .sa-tiers{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.sa-tier{ background: var(--paper-2); border: 1px solid var(--rule); border-radius: 16px; padding: 26px 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-.sa-tier.pro{ border-color: var(--clay); background: var(--clay-soft); }
-.sa-price{ font-family: var(--serif); font-size: 48px; font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: var(--ink); }
-.sa-price small{ font-family: var(--sans); font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink-2); margin-left: 6px; }
-.sa-tier ul{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 16px; flex: 1; color: var(--ink); }
+.sa-tier{ background: color-mix(in srgb, var(--paper-2) 82%, transparent); border: 1px solid var(--rule); border-radius: 20px; padding: 28px 26px; display: flex; flex-direction: column; gap: 16px; min-width: 0; transition: border-color .3s var(--ease); }
+.sa-tier:hover{ border-color: color-mix(in srgb, var(--clay) 55%, var(--rule)); }
+.sa-tier.pro{ border-color: var(--clay); background: color-mix(in srgb, var(--clay-soft) 85%, transparent); }
+.sa-tier h3{ font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 1.9vw, 28px); font-variation-settings: "opsz" 48; letter-spacing: -0.043em; line-height: 1.15; margin: 0; color: var(--ink); }
+.sa-price{ font-family: var(--serif); font-size: clamp(48px, 4.4vw, 64px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.06em; line-height: 1; color: var(--ink); }
+.sa-price small{ font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); margin-left: 10px; vertical-align: middle; }
+.sa-tier ul{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; font-size: 16px; line-height: 1.5; flex: 1; color: var(--ink); }
 .sa-tier li{ padding-left: 24px; position: relative; }
 .sa-tier li::before{ content: ""; position: absolute; left: 2px; top: 7px; width: 10px; height: 6px; border-left: 2px solid var(--clay); border-bottom: 2px solid var(--clay); transform: rotate(-45deg); }
-.sa-fine{ font-size: 14px; margin-top: 14px; }
-.sa-tbl{ overflow-x: auto; margin-top: 36px; border: 1px solid var(--rule); border-radius: 12px; }
-.sa-tbl table{ border-collapse: collapse; width: 100%; min-width: 720px; font-size: 15px; }
-.sa-tbl th, .sa-tbl td{ text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink); }
-.sa-tbl th{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; background: var(--paper-2); }
+.sa-tier .btn{ align-self: stretch; }
+.sa-fine{ font-size: 14px; color: var(--ink-2); margin: 16px 0 0; max-width: 70ch; }
+
+/* Comparison table */
+.sa-tbl{ overflow-x: auto; margin-top: 40px; border: 1px solid var(--rule); border-radius: 16px; background: color-mix(in srgb, var(--paper) 60%, transparent); }
+.sa-tbl table{ border-collapse: collapse; width: 100%; min-width: 720px; font-size: 15px; line-height: 1.5; }
+.sa-tbl th, .sa-tbl td{ text-align: left; padding: 13px 18px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink); }
+.sa-tbl th{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; background: color-mix(in srgb, var(--paper-2) 80%, transparent); }
 .sa-tbl tr:last-child td{ border-bottom: 0; }
 .sa-tbl td:first-child{ color: var(--ink-2); width: 22%; }
-.sa-recap{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 28px; counter-reset: r; }
-.sa-recap li{ counter-increment: r; border-top: 3px solid var(--clay); padding-top: 10px; font-size: 16px; color: var(--ink); }
-.sa-recap li::before{ content: counter(r) ". "; font-family: var(--mono); color: var(--clay); }
-.sa-inside{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px 40px; }
-.sa-inside div{ border-top: 1px solid var(--rule); padding-top: 12px; }
-.sa-inside h3{ font-size: 20px; margin-bottom: 4px; }
-.sa-inside p{ font-size: 16px; margin: 0; }
-.sa-method{ display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 22px; }
-.sa-method > div{ background: var(--paper-2); border: 1px solid var(--rule); border-radius: 12px; padding: 18px 20px; }
-.sa-method .lbl{ display: block; margin-bottom: 6px; }
+
+/* Three-step recap */
+.sa-recap{ list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 32px; counter-reset: r; }
+.sa-recap li{ counter-increment: r; border-top: 1px solid var(--rule); padding-top: 16px; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+.sa-recap li::before{ content: "0" counter(r); display: block; font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; color: var(--clay); margin-bottom: 8px; }
+.sa-recap b{ color: var(--ink); font-weight: 700; }
+
+/* What you get */
+.sa-inside{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 48px; border-top: 1px solid var(--rule); }
+.sa-inside > div{ border-bottom: 1px solid var(--rule); padding: 22px 0; }
+.sa-inside h3{ font-family: var(--serif); font-weight: 500; font-size: clamp(20px, 1.8vw, 24px); font-variation-settings: "opsz" 48; letter-spacing: -0.043em; line-height: 1.2; margin: 0 0 6px; color: var(--ink); }
+.sa-inside p{ font-size: 16px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+
+/* Method */
+.sa-method{ display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.sa-method > div{ background: color-mix(in srgb, var(--paper-2) 82%, transparent); border: 1px solid var(--rule); border-radius: 16px; padding: 22px 24px; }
+.sa-method .kicker{ font-size: 13px; margin-bottom: 10px; }
 .sa-method .obs{ color: #62c28a; }
 html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
-.sa-method p{ font-size: 16px; margin: 0; }
-.sa-two{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px 48px; }
-.sa-two h3{ margin: 8px 0 10px; }
-.sa-narrow{ max-width: 760px; }
-.sa details{ border-bottom: 1px solid var(--rule); }
-.sa summary{ cursor: pointer; padding: 16px 32px 16px 0; font-family: var(--serif); font-size: 21px; font-weight: 500; letter-spacing: -0.025em; color: var(--ink); list-style: none; position: relative; }
-.sa summary::-webkit-details-marker{ display: none; }
-.sa summary::after{ content: "+"; position: absolute; right: 4px; top: 12px; font-size: 26px; color: var(--clay); }
-.sa details[open] summary::after{ content: "\2013"; }
-.sa details p{ padding-bottom: 8px; }
-.sa-form{ background: var(--paper-2); border: 1px solid var(--rule); border-radius: 16px; padding: 24px; display: grid; gap: 16px; max-width: 760px; margin-top: 18px; }
+.sa-method .mod{ color: var(--clay); }
+.sa-method p{ font-size: 16px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+
+/* For / not for */
+.sa-two{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px 64px; }
+.sa-two h3{ font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3vw, 44px); font-variation-settings: "opsz" 96; letter-spacing: -0.055em; line-height: 1.05; margin: 14px 0 14px; color: var(--ink); }
+.sa-two h3 em{ font-style: italic; color: var(--clay); }
+.sa-two p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0; }
+
+/* About */
+.sa-about p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 60ch; margin: 0 0 14px; }
+.sa-link{ color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
+
+/* FAQ (homepage accordion) */
+.faq-head{ display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(24px, 4vw, 72px); align-items: end; }
+.faq-list{ margin: clamp(40px, 5vw, 72px) auto 0; max-width: 720px; width: 100%; border-top: 1px solid var(--rule); }
+.faq-item{ border-bottom: 1px solid var(--rule); position: relative; transition: background-color .35s var(--ease); }
+.faq-item:hover{ background: color-mix(in srgb, var(--clay) 5%, transparent); }
+.faq-header{ display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: clamp(20px, 2.4vw, 28px) 0; cursor: pointer; }
+.faq-question{ margin: 0; flex: 1; font-family: var(--serif); font-weight: 500; font-size: clamp(20px, 1.8vw, 26px); font-variation-settings: "opsz" 48; line-height: 1.18; letter-spacing: -0.043em; color: var(--ink); text-wrap: balance; transition: color .25s var(--ease); }
+.faq-item:hover .faq-question{ color: var(--clay); }
+.faq-toggle{ flex-shrink: 0; width: 44px; height: 44px; border: none; border-radius: 50%; background: var(--clay); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px color-mix(in srgb, var(--clay) 25%, transparent); }
+.faq-toggle:hover, .faq-toggle:focus-visible{ background: var(--clay-deep); transform: scale(1.05); outline: none; box-shadow: 0 4px 12px color-mix(in srgb, var(--clay) 40%, transparent); }
+.faq-toggle:active{ transform: scale(0.95); }
+.faq-toggle .toggle-icon{ color: var(--paper); font-size: 1.4rem; font-weight: 600; line-height: 1; display: block; transform: translateY(-1px); }
+.faq-answer{ padding: 0 0 clamp(20px, 2.4vw, 28px) 0; color: var(--ink-2); line-height: 1.62; max-width: 64ch; }
+.faq-answer p{ margin: 0; font-size: 15.5px; }
+.faq-answer p + p{ margin-top: 0.9em; }
+.faq-answer:not([hidden]){ animation: faq-fade-in 0.25s ease-out; }
+@keyframes faq-fade-in{ from{ opacity: 0; transform: translateY(-4px); } to{ opacity: 1; transform: translateY(0); } }
+
+/* Order form */
+.sa-form{ background: color-mix(in srgb, var(--paper-2) 85%, transparent); border: 1px solid var(--rule); border-radius: 20px; padding: clamp(22px, 3vw, 32px); display: grid; gap: 18px; max-width: 760px; }
 .sa-form fieldset{ border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
-.sa-form legend, .sa-form .fl{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; padding: 0; display: block; }
+.sa-form legend, .sa-form .fl{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 8px; padding: 0; display: block; }
 .sa-pick{ position: relative; }
 .sa-pick input{ position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-.sa-pick span{ display: block; border: 1px solid var(--rule); border-radius: 999px; padding: 9px 16px; font-size: 15px; color: var(--ink); }
+.sa-pick span{ display: block; border: 1px solid var(--rule); border-radius: 999px; padding: 10px 18px; font-size: 15px; color: var(--ink); transition: border-color .2s var(--ease), background-color .2s var(--ease); }
 .sa-pick input:checked + span{ border-color: var(--clay); background: var(--clay-soft); }
 .sa-pick input:focus-visible + span{ outline: 2px solid var(--clay); outline-offset: 2px; }
-.sa-form input[type=email], .sa-form input[type=url], .sa-form textarea{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; padding: 11px 13px; }
-.sa-form textarea{ min-height: 84px; resize: vertical; }
+.sa-form input[type=email], .sa-form input[type=url], .sa-form textarea{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.sa-form textarea{ min-height: 96px; resize: vertical; }
 .sa-form input:focus-visible, .sa-form textarea:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
 .sa-chk{ display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--ink-2); }
-.sa-chk input{ margin-top: 5px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
+.sa-chk input{ margin-top: 4px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
 .sa-chk[hidden]{ display: none; }
-.sa-status{ display: none; border: 1px solid var(--clay); color: var(--ink); border-radius: 10px; padding: 10px 14px; font-size: 15px; }
+.sa-form .sa-note{ font-size: 14px; color: var(--ink-2); margin: 0; }
+.sa-status{ display: none; border: 1px solid var(--clay); color: var(--ink); border-radius: 12px; padding: 10px 14px; font-size: 15px; }
 .sa-status.on{ display: block; }
-.sa-about{ display: grid; gap: 12px; max-width: 760px; }
-.sa-about a{ color: var(--clay); }
+.sa-order{ display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
+.sa-order .sa-title{ margin-top: 18px; }
+.sa-order p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 44ch; margin: 24px 0 0; }
+
+/* Reveal on scroll (homepage) */
+[data-reveal]{ opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+[data-reveal].is-in{ opacity: 1; transform: none; }
+.blur-reveal{ opacity: 0; }
+.blur-reveal.is-visible{ opacity: 1; animation: blur-reveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+@keyframes blur-reveal{ from{ opacity: 0; filter: blur(12px); transform: translateY(8px); } to{ opacity: 1; filter: blur(0); transform: translateY(0); } }
+@keyframes blur-reveal-soft{ from{ opacity: 0; filter: blur(3px); transform: translateY(4px); } to{ opacity: 1; filter: blur(0); transform: translateY(0); } }
+
+/* Heading hover, as on the homepage */
+.hero-h1, .sa-title, .faq-head h2{ transition: font-variation-settings .4s var(--ease); }
+.hero-h1 em, .sa-title em{ display: inline-block; transform-origin: center; transition: transform .45s var(--ease), text-shadow .4s var(--ease); }
+.hero-h1:hover em, .sa-title:hover em{ transform: scale(1.06); text-shadow: 0 0 30px color-mix(in srgb, var(--clay) 50%, transparent); }
+
+@media (max-width: 900px){
+  .sa-intro, .faq-head, .sa-order{ grid-template-columns: 1fr; align-items: start; }
+}
+@media (max-width: 768px){
+  .blur-reveal.is-visible{ animation: blur-reveal-soft 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .faq-header{ padding: 16px 0; }
+  .faq-answer{ padding: 0 0 16px 0; }
+}
+@media (prefers-reduced-motion: reduce){
+  [data-reveal]{ opacity: 1; transform: none; transition: none; }
+  .blur-reveal, .blur-reveal.is-visible{ opacity: 1; animation: none; }
+  .hero-h1 em, .sa-title em{ transition: none; }
+  .hero-h1:hover em, .sa-title:hover em{ transform: none; text-shadow: none; }
+}
 
 </style>
 </head>
@@ -1119,7 +1213,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
 
 <!--
   DRAFT, NOT LAUNCHED. Closed: free preview in 2 hours, VAT-inclusive prices, released games excluded,
-  no accuracy claim until the back-test, no Raw Fury titles.
+  no accuracy claim until the back-test, no Raw Fury titles. Case studies live on the homepage, not here.
   Still open before launch. Then set robots to "index, follow", add the page to sitemap.xml and llms.txt,
   and link it from the four Steam calculators:
   1. Order form is NOT wired: no endpoint, no Stripe links. The submit handler only shows a notice.
@@ -1128,27 +1222,38 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   4. Free preview in 2 hours needs an automatic delivery: the ordering flow must be able to do it in that time.
 -->
 <main id="main">
-<div class="wrap sa">
-  <nav class="crumbs" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="/">Home</a></li>
-      <li aria-current="page">Steam analysis</li>
-    </ol>
-  </nav>
 
-  <div class="sa-hero">
-    <p class="lbl">Production &amp; publishing consultancy</p>
-    <h1 style="margin-top:14px">Steam Launch Analysis &amp; <em>Sales Forecast</em> for Indie Games</h1>
-    <p class="lede">Send me your Steam page and I build a launch analysis from public data: <b>where your followers and wishlists stand</b>, how comparable games sell, what your launch could look like under two release dates, and what to do next. You get it as a PDF, made by a producer who has worked on 15+ shipped games at Raw Fury, Rebellion and 34BigThings.</p>
-    <div class="sa-cta">
-      <a class="sa-btn primary" href="#order" data-v="free">Get the free preview</a>
-      <a class="sa-btn" href="#versions">See what&rsquo;s in each version</a>
+  <section class="wrap sa-hero" id="top" aria-labelledby="hero-h1">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li aria-current="page">Steam analysis</li>
+      </ol>
+    </nav>
+    <span class="kicker blur-reveal" style="animation-delay: 0s"><span>Steam launch analysis</span></span>
+    <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1">Steam Launch Analysis &amp; <em>Sales Forecast</em> for Indie Games</h1>
+    <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me your Steam page and I build a launch analysis from public data: <b>where your followers and wishlists stand</b>, how comparable games sell, what your launch could look like under two release dates, and what to do next. You get it as a PDF, made by a producer who has worked on 15+ shipped games at Raw Fury, Rebellion and 34BigThings.</p>
+    <div class="cta-row" data-reveal>
+      <a class="btn btn-primary" href="#order" data-v="free">
+        <span>Get the free preview</span>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#versions">
+        <span>See what&rsquo;s in each version</span>
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
+      </a>
     </div>
-  </div>
+  </section>
 
-  <section class="sa-sec" id="versions">
-    <div class="sa-head"><span class="lbl">Versions</span><h2>Pick your version</h2></div>
-    <div class="sa-tiers">
+  <section class="section wrap" id="versions" aria-labelledby="versions-h">
+    <div class="sa-intro">
+      <div>
+        <span class="kicker" data-reveal>Versions</span>
+        <h2 class="sa-title blur-reveal" id="versions-h">Pick your <em>version</em>.</h2>
+      </div>
+      <p data-reveal>Start free to see where your page stands. The Standard deck adds comparable games, two launch scenarios and six recommendations. The Premium deck adds a page review, a visibility plan and my review before it is sent.</p>
+    </div>
+    <div class="sa-tiers" data-reveal>
       <div class="sa-tier">
         <h3>Free preview</h3>
         <div class="sa-price">&euro;0</div>
@@ -1159,7 +1264,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li>One launch scenario in summary</li>
           <li>Delivered within 2 hours</li>
         </ul>
-        <a class="sa-btn" href="#order" data-v="free">Get the free preview</a>
+        <a class="btn btn-ghost" href="#order" data-v="free"><span>Get the free preview</span></a>
       </div>
       <div class="sa-tier">
         <h3>Standard deck</h3>
@@ -1171,7 +1276,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li>Six prioritised recommendations</li>
           <li>Delivered within 2 business days of payment</li>
         </ul>
-        <a class="sa-btn primary" href="#order" data-v="standard">Buy the Standard deck</a>
+        <a class="btn btn-primary" href="#order" data-v="standard"><span>Buy the Standard deck</span></a>
       </div>
       <div class="sa-tier pro">
         <h3>Premium deck</h3>
@@ -1185,11 +1290,11 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li>Action table with priority and timing</li>
           <li>Every deck reviewed by me before it is sent. Delivered within 3 business days of payment</li>
         </ul>
-        <a class="sa-btn primary" href="#order" data-v="premium">Buy the Premium deck</a>
+        <a class="btn btn-primary" href="#order" data-v="premium"><span>Buy the Premium deck</span></a>
       </div>
     </div>
 
-    <div class="sa-tbl">
+    <div class="sa-tbl" data-reveal>
       <table>
         <thead><tr><th scope="col">Compare</th><th scope="col">Free preview</th><th scope="col">Standard deck</th><th scope="col">Premium deck</th></tr></thead>
         <tbody>
@@ -1205,21 +1310,25 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
         </tbody>
       </table>
     </div>
-    <p class="sa-fine">Prices include VAT. Paid versions are paid when you order, through Stripe. The free preview needs no payment.</p>
-  </section>
+    <p class="sa-fine" data-reveal>Prices include VAT. Paid versions are paid when you order, through Stripe. The free preview needs no payment.</p>
 
-  <section class="sa-sec" id="how" style="padding-block:32px">
-    <ol class="sa-recap">
-      <li><b>Send</b> your Steam link</li>
-      <li><b>Pay</b> at the start (paid versions)</li>
-      <li><b>Receive</b> your PDF in 2 business days (Standard) or 3 (Premium)</li>
+    <ol class="sa-recap" data-reveal style="margin-top: clamp(40px, 5vw, 64px)">
+      <li><b>Send</b> your Steam link.</li>
+      <li><b>Pay</b> at the start (paid versions).</li>
+      <li><b>Receive</b> your PDF in 2 business days (Standard) or 3 (Premium).</li>
     </ol>
-    <p class="sa-fine">Full details arrive by email once you order.</p>
+    <p class="sa-fine" data-reveal>Full details arrive by email once you order.</p>
   </section>
 
-  <section class="sa-sec" id="inside">
-    <div class="sa-head"><span class="lbl">Inside the Standard deck</span><h2>What you get</h2></div>
-    <div class="sa-inside">
+  <section class="section wrap" id="inside" aria-labelledby="inside-h">
+    <div class="sa-intro">
+      <div>
+        <span class="kicker" data-reveal>Inside the Standard deck</span>
+        <h2 class="sa-title blur-reveal" id="inside-h">What you <em>get</em>.</h2>
+      </div>
+      <p data-reveal>Seven slides that answer the questions every launch runs into: how many wishlists is enough, when to release, and what to do in the months before.</p>
+    </div>
+    <div class="sa-inside" data-reveal>
       <div><h3>Where you stand today</h3><p>Followers, how long the page has been up, average followers a day and an estimated wishlist count.</p></div>
       <div><h3>Four comparable games</h3><p>Chosen by Steam tags and format, with reviews, price, estimated copies and gross revenue.</p></div>
       <div><h3>Two launch scenarios</h3><p>Wishlists at launch for two release dates, then expected copies in week 1, month 1 and year 1, with gross revenue.</p></div>
@@ -1228,91 +1337,193 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     </div>
   </section>
 
-  <section class="sa-sec" id="method">
-    <div class="sa-head"><span class="lbl">Method and limits</span><h2>How the numbers are built</h2></div>
-    <div class="sa-narrow"><p>Everything comes from public data: your Steam page, the community hub, review histories and SteamDB. I do not see your Steamworks data.</p></div>
-    <div class="sa-method">
-      <div><span class="lbl obs">Observed</span><p>Followers, page age, reviews, prices and release dates.</p></div>
-      <div><span class="lbl">Modelled</span><p>Wishlists, copies sold and revenue. Wishlists follow your page&rsquo;s own growth, not a fixed multiplier on followers. Copies for other games come from their review counts (about 30 copies per review).</p></div>
-      <div><span class="lbl" style="color:var(--ink-2)">Gross</span><p>Revenue is gross: at list price, before Steam&rsquo;s cut, refunds, taxes and discounts.</p></div>
+  <section class="section wrap" id="method" aria-labelledby="method-h">
+    <div class="sa-intro">
+      <div>
+        <span class="kicker" data-reveal>Method and limits</span>
+        <h2 class="sa-title blur-reveal" id="method-h">How the numbers are <em>built</em>.</h2>
+      </div>
+      <p data-reveal>Everything comes from public data: your Steam page, the community hub, review histories and SteamDB. I do not see your Steamworks data.</p>
     </div>
-    <div class="sa-narrow"><p>These are estimates, not forecasts you can bank. With your real wishlist numbers and plans, the picture gets sharper.</p></div>
+    <div class="sa-method" data-reveal>
+      <div><span class="kicker obs">Observed</span><p>Followers, page age, reviews, prices and release dates.</p></div>
+      <div><span class="kicker mod">Modelled</span><p>Wishlists, copies sold and revenue. Wishlists follow your page&rsquo;s own growth, not a fixed multiplier on followers. Copies for other games come from their review counts (about 30 copies per review).</p></div>
+      <div><span class="kicker">Gross</span><p>Revenue is gross: at list price, before Steam&rsquo;s cut, refunds, taxes and discounts.</p></div>
+    </div>
+    <p class="sa-fine" data-reveal style="font-size:16px">These are estimates, not forecasts you can bank. With your real wishlist numbers and plans, the picture gets sharper.</p>
   </section>
 
-  <section class="sa-sec" id="who">
-    <div class="sa-two">
-      <div><span class="lbl">For</span><h3>Teams about to launch</h3><p>Indie developers and small studios with a Steam page up or about to go up, who want a clear read on their launch before spending on marketing or choosing a date.</p></div>
-      <div><span class="lbl">Not for</span><h3>Released games, for now</h3><p>Games that are already out, or anyone who needs Steamworks-level analytics or a guaranteed sales figure.</p></div>
-    </div>
-  </section>
-
-  <section class="sa-sec" id="about">
-    <div class="sa-about">
-      <span class="lbl">About</span>
-      <h2>Made by a producer, not a template</h2>
-      <p>I&rsquo;m Michele Di Nardo (Miki), an independent game producer based in Europe. Ten years in games across Raw Fury, Rebellion, 34BigThings and Untold Games, 15+ shipped titles on 8 platforms.</p>
-      <p>I made this service because the same questions come up on every launch: how many wishlists is enough, when to release, and what to do in the months before.</p>
-      <p><a href="/about/">About Michele &rarr;</a></p>
+  <section class="section wrap" id="who" aria-label="Who it is for">
+    <div class="sa-two" data-reveal>
+      <div><span class="kicker">For</span><h3>Teams about to <em>launch</em></h3><p>Indie developers and small studios with a Steam page up or about to go up, who want a clear read on their launch before spending on marketing or choosing a date.</p></div>
+      <div><span class="kicker">Not for</span><h3>Released games, <em>for now</em></h3><p>Games that are already out, or anyone who needs Steamworks-level analytics or a guaranteed sales figure.</p></div>
     </div>
   </section>
 
-  <section class="sa-sec" id="faq">
-    <div class="sa-head"><span class="lbl">Questions</span><h2>FAQ</h2></div>
-    <div class="sa-narrow">
-      <details><summary>Do you use AI in this analysis?</summary><p>Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks.</p></details>
-      <details><summary>Do you need access to my Steamworks account?</summary><p>No. The analysis uses only public data. If you want to share your real wishlist count, tell me in the form and I use it.</p></details>
-      <details><summary>How do you estimate wishlists, and how accurate is it?</summary><p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result.</p></details>
-      <details><summary>Can I get a refund?</summary><p>If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away.</p></details>
+  <section class="section wrap" id="about" aria-labelledby="about-h">
+    <div class="sa-intro" style="align-items:start">
+      <div>
+        <span class="kicker" data-reveal>About</span>
+        <h2 class="sa-title blur-reveal" id="about-h">Made by a producer, <em>not a template</em>.</h2>
+      </div>
+      <div class="sa-about" data-reveal>
+        <p>I&rsquo;m Michele Di Nardo (Miki), an independent game producer based in Europe. Ten years in games across Raw Fury, Rebellion, 34BigThings and Untold Games, 15+ shipped titles on 8 platforms.</p>
+        <p>I made this service because the same questions come up on every launch: how many wishlists is enough, when to release, and what to do in the months before.</p>
+        <p><a class="sa-link" href="/about/">More about Michele</a></p>
+      </div>
     </div>
   </section>
 
-  <section class="sa-sec" id="order">
-    <div class="sa-head"><span class="lbl">Start</span><h2>Start with the free preview</h2></div>
-    <div class="sa-narrow"><p>Paste your Steam link and see where your page stands. Want the full picture? Pick the Standard or Premium deck.</p></div>
-    <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
-    <form class="sa-form" id="sa-form" data-wired="false" novalidate>
-      <fieldset>
-        <legend>Version</legend>
-        <label class="sa-pick"><input type="radio" name="version" value="free" checked><span>Free preview</span></label>
-        <label class="sa-pick"><input type="radio" name="version" value="standard"><span>Standard deck &middot; &euro;89</span></label>
-        <label class="sa-pick"><input type="radio" name="version" value="premium"><span>Premium deck &middot; &euro;249</span></label>
-      </fieldset>
-      <div><label class="fl" for="sa-steam">Steam store link</label><input id="sa-steam" name="steam" type="url" placeholder="https://store.steampowered.com/app/&hellip;"></div>
-      <div><label class="fl" for="sa-email">Your email</label><input id="sa-email" name="email" type="email" autocomplete="email" placeholder="you@studio.com"></div>
-      <div><label class="fl" for="sa-notes">Anything I should know (optional)</label><textarea id="sa-notes" name="notes" placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
-      <label class="sa-chk" id="sa-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the deck is delivered.</span></label>
-      <label class="sa-chk"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
-      <p style="font-size:14px;margin:0">I use your email and Steam link only to make and send your analysis. Decks are deleted after 30 days. <a href="/privacy/" style="color:var(--clay)">Privacy policy</a>.</p>
-      <div><button class="sa-btn primary" type="submit" id="sa-go">Get the free preview</button></div>
-      <div class="sa-status" id="sa-status" role="status">Ordering is not open yet. Nothing was sent.</div>
-    </form>
+  <section class="section wrap" id="faq" aria-labelledby="faq-h">
+    <div class="faq-head">
+      <div>
+        <span class="kicker" data-reveal>Common questions</span>
+        <h2 class="blur-reveal" id="faq-h">Questions, <em>before</em> you order.</h2>
+      </div>
+      <p data-reveal>The four things developers ask most about the analysis. If yours isn&rsquo;t here, write it in the order form and I answer before starting.</p>
+    </div>
+
+    <div class="faq-list" data-reveal>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">Do you use AI in this analysis?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-1" aria-label="Show answer"><span class="toggle-icon">+</span></button>
+        </div>
+        <div class="faq-answer" id="faq-answer-1" hidden>
+          <p>Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">Do you need access to my Steamworks account?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer"><span class="toggle-icon">+</span></button>
+        </div>
+        <div class="faq-answer" id="faq-answer-2" hidden>
+          <p>No. The analysis uses only public data. If you want to share your real wishlist count, tell me in the form and I use it.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">How do you estimate wishlists, and how accurate is it?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-3" aria-label="Show answer"><span class="toggle-icon">+</span></button>
+        </div>
+        <div class="faq-answer" id="faq-answer-3" hidden>
+          <p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-header">
+          <h3 class="faq-question">Can I get a refund?</h3>
+          <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-4" aria-label="Show answer"><span class="toggle-icon">+</span></button>
+        </div>
+        <div class="faq-answer" id="faq-answer-4" hidden>
+          <p>If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away.</p>
+        </div>
+      </div>
+    </div>
   </section>
-</div>
+
+  <section class="section wrap" id="order" aria-labelledby="order-h">
+    <div class="sa-order">
+      <div>
+        <span class="kicker" data-reveal>Start</span>
+        <h2 class="sa-title blur-reveal" id="order-h">Start with the <em>free preview</em>.</h2>
+        <p data-reveal>Paste your Steam link and see where your page stands. Want the full picture? Pick the Standard or Premium deck.</p>
+      </div>
+      <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
+      <form class="sa-form" id="sa-form" data-wired="false" novalidate data-reveal>
+        <fieldset>
+          <legend>Version</legend>
+          <label class="sa-pick"><input type="radio" name="version" value="free" checked><span>Free preview</span></label>
+          <label class="sa-pick"><input type="radio" name="version" value="standard"><span>Standard deck &middot; &euro;89</span></label>
+          <label class="sa-pick"><input type="radio" name="version" value="premium"><span>Premium deck &middot; &euro;249</span></label>
+        </fieldset>
+        <div><label class="fl" for="sa-steam">Steam store link</label><input id="sa-steam" name="steam" type="url" placeholder="https://store.steampowered.com/app/&hellip;"></div>
+        <div><label class="fl" for="sa-email">Your email</label><input id="sa-email" name="email" type="email" autocomplete="email" placeholder="you@studio.com"></div>
+        <div><label class="fl" for="sa-notes">Anything I should know (optional)</label><textarea id="sa-notes" name="notes" placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
+        <label class="sa-chk" id="sa-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the deck is delivered.</span></label>
+        <label class="sa-chk"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
+        <p class="sa-note">I use your email and Steam link only to make and send your analysis. Decks are deleted after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
+        <div><button class="btn btn-primary" type="submit" id="sa-go"><span>Get the free preview</span></button></div>
+        <div class="sa-status" id="sa-status" role="status">Ordering is not open yet. Nothing was sent.</div>
+      </form>
+    </div>
+  </section>
+
 </main>
 
 <script>
 (function () {
+  /* Order form: version picker, button label, withdrawal checkbox for paid versions. */
   var labels = { free: 'Get the free preview', standard: 'Pay €89 with Stripe', premium: 'Pay €249 with Stripe' };
   var form = document.getElementById('sa-form');
-  if (!form) return;
-  function sync() {
-    var v = form.querySelector('input[name=version]:checked').value;
-    document.getElementById('sa-go').textContent = labels[v];
-    document.getElementById('sa-waiver').hidden = (v === 'free');
+  if (form) {
+    var sync = function () {
+      var v = form.querySelector('input[name=version]:checked').value;
+      document.querySelector('#sa-go span').textContent = labels[v];
+      document.getElementById('sa-waiver').hidden = (v === 'free');
+    };
+    form.querySelectorAll('input[name=version]').forEach(function (r) { r.addEventListener('change', sync); });
+    document.querySelectorAll('a[data-v]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var r = form.querySelector('input[name=version][value=' + a.dataset.v + ']');
+        if (r) { r.checked = true; sync(); }
+      });
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
+      document.getElementById('sa-status').classList.add('on');
+    });
+    sync();
   }
-  form.querySelectorAll('input[name=version]').forEach(function (r) { r.addEventListener('change', sync); });
-  document.querySelectorAll('a[data-v]').forEach(function (a) {
-    a.addEventListener('click', function () {
-      var r = form.querySelector('input[name=version][value=' + a.dataset.v + ']');
-      if (r) { r.checked = true; sync(); }
+
+  /* FAQ accordion, same behaviour as the homepage. */
+  function setState(btn, expanded) {
+    var target = document.getElementById(btn.getAttribute('aria-controls'));
+    var icon = btn.querySelector('.toggle-icon');
+    btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    btn.setAttribute('aria-label', expanded ? 'Hide answer' : 'Show answer');
+    if (target) target.hidden = !expanded;
+    if (icon) icon.textContent = expanded ? '−' : '+';
+  }
+  document.querySelectorAll('.faq-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () { setState(btn, btn.getAttribute('aria-expanded') !== 'true'); });
+  });
+  document.querySelectorAll('.faq-header').forEach(function (header) {
+    header.addEventListener('click', function (e) {
+      if (e.target.closest('.faq-toggle')) return;
+      var btn = header.querySelector('.faq-toggle');
+      if (btn) btn.click();
     });
   });
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
-    document.getElementById('sa-status').classList.add('on');
-  });
-  sync();
+
+  /* Reveal on scroll and blurred headings, as on the homepage. */
+  var reveals = document.querySelectorAll('[data-reveal]');
+  var blurs = document.querySelectorAll('.blur-reveal');
+  if (!('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('is-in'); });
+    blurs.forEach(function (el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var revealIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e, i) {
+      if (!e.isIntersecting) return;
+      e.target.style.transitionDelay = (i * 60) + 'ms';
+      e.target.classList.add('is-in');
+      revealIO.unobserve(e.target);
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(function (el) { revealIO.observe(el); });
+  document.querySelectorAll('.sa-hero .blur-reveal').forEach(function (el) { el.classList.add('is-visible'); });
+  var blurIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-visible');
+      blurIO.unobserve(e.target);
+    });
+  }, { threshold: 0.35 });
+  blurs.forEach(function (el) { if (!el.closest('.sa-hero')) blurIO.observe(el); });
 })();
 </script>
 
@@ -1322,6 +1533,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   </div>
   <div class="wrap footer-meta">
     <div class="links">
+      <a href="/about/"><span>About</span></a>
       <a href="/privacy/"><span>Privacy</span></a>
       <a href="https://www.linkedin.com/company/115837121/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
         <span>LinkedIn</span>
