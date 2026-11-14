@@ -1013,9 +1013,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Hero (homepage .hero-h1 / .hero-intro) */
 .sa-hero{ padding-top: clamp(16px, 2.4vw, 32px); padding-bottom: clamp(40px, 6vw, 80px); }
 .sa-hero .crumbs{ margin-bottom: clamp(20px, 3vw, 36px); }
-.hero-h1{ font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.6vw, 100px); font-variation-settings: "opsz" 96; line-height: 0.96; letter-spacing: -0.06em; color: var(--ink); text-wrap: balance; margin: 16px 0 0; max-width: 15ch; }
+.hero-h1{ font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.6vw, 100px); font-variation-settings: "opsz" 96; line-height: 0.96; letter-spacing: -0.06em; color: var(--ink); text-wrap: balance; margin: 16px 0 0; }
 .hero-h1 em{ font-style: italic; font-variation-settings: "opsz" 96; color: var(--clay); }
-.hero-intro{ max-width: 60ch; font-size: clamp(16px, 1.35vw, 20px); color: var(--ink-2); line-height: 1.6; margin: 28px 0 0; }
+.hero-intro{ max-width: none; font-size: clamp(16px, 1.35vw, 20px); color: var(--ink-2); line-height: 1.6; margin: 28px 0 0; }
 .hero-intro b{ color: var(--ink); font-weight: 700; }
 
 /* Buttons (homepage .btn) */
@@ -1046,9 +1046,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (prefers-reduced-motion: reduce){ .sa-tier{ transition: none; } .sa-tier:hover{ scale: 1; } }
 
 .sa-tier h3{ font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 1.9vw, 28px); font-variation-settings: "opsz" 48; letter-spacing: -0.043em; line-height: 1.15; margin: 0; color: var(--ink); }
-.sa-price{ display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; font-family: var(--serif); font-size: clamp(48px, 4.4vw, 64px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.06em; line-height: 1; color: var(--ink); padding: 6px 0 4px; }
+.sa-price{ display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 6px 0 4px; }
+.sa-amts{ display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: 4px 18px; font-family: var(--serif); font-size: clamp(30px, 2.6vw, 38px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.05em; line-height: 1; color: var(--ink); }
 .sa-price small{ display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; line-height: 1.2; text-transform: uppercase; color: var(--ink-2); }
-.sa-fx{ display: block; font-family: var(--sans); font-size: 15px; font-weight: 400; letter-spacing: 0; line-height: 1.3; color: var(--ink-2); }
+
 /* One button style for all three tiers; on hover it fills with clay, lifts and glows */
 .sa-buy{ align-self: stretch; border: 1px solid var(--clay); color: var(--clay); background: transparent; font-weight: 600; }
 .sa-buy:hover, .sa-buy:focus-visible{ background: var(--clay); color: var(--paper); border-color: var(--clay); transform: translateY(-2px); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay) 22%, transparent), 0 12px 28px -10px color-mix(in srgb, var(--clay) 60%, transparent); outline: none; }
@@ -1266,7 +1267,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     <div class="sa-tiers" data-reveal>
       <div class="sa-tier">
         <h3>Free preview</h3>
-        <div class="sa-price">&euro;0<small>No payment needed</small><span class="sa-fx">Free in any currency</span></div>
+        <div class="sa-price"><span class="sa-amts"><span>&euro;0</span><span>$0</span><span>&pound;0</span></span><small>No payment needed</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>Up to 5 slides, as a PDF</span></li>
           <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
@@ -1282,7 +1283,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
       </div>
       <div class="sa-tier">
         <h3>Standard deck</h3>
-        <div class="sa-price">&euro;89<small>VAT included</small><span class="sa-fx">&asymp; $99 &middot; &pound;79</span></div>
+        <div class="sa-price"><span class="sa-amts"><span>&euro;89</span><span>$99</span><span>&pound;79</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>7 slides, as a PDF</span></li>
           <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
@@ -1298,7 +1299,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
       </div>
       <div class="sa-tier pro">
         <h3>Premium deck</h3>
-        <div class="sa-price">&euro;249<small>VAT included</small><span class="sa-fx">&asymp; $279 &middot; &pound;209</span></div>
+        <div class="sa-price"><span class="sa-amts"><span>&euro;249</span><span>$279</span><span>&pound;209</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>12 slides, as a PDF</span></li>
           <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists, with recent momentum and the method explained</span></li>
