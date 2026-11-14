@@ -1045,18 +1045,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-price{ font-family: var(--serif); font-size: clamp(48px, 4.4vw, 64px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.06em; line-height: 1; color: var(--ink); }
 .sa-price small{ font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); margin-left: 10px; vertical-align: middle; }
 .sa-tier ul{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; font-size: 16px; line-height: 1.5; flex: 1; color: var(--ink); }
-.sa-tier li{ padding-left: 24px; position: relative; }
-.sa-tier li::before{ content: ""; position: absolute; left: 2px; top: 7px; width: 10px; height: 6px; border-left: 2px solid var(--clay); border-bottom: 2px solid var(--clay); transform: rotate(-45deg); }
+.sa-tier li{ display: flex; gap: 10px; align-items: baseline; }
+.sa-tier li .ic{ flex: none; width: 1.3em; text-align: center; font-size: 15px; }
+.sa-tier li.no{ color: var(--ink-2); opacity: .75; }
 .sa-tier .btn{ align-self: stretch; }
 .sa-fine{ font-size: 14px; color: var(--ink-2); margin: 16px 0 0; max-width: 70ch; }
 
-/* Comparison table: same grid as before, but no visible borders or fills */
-.sa-tbl{ overflow-x: auto; margin-top: clamp(40px, 5vw, 64px); }
-.sa-tbl table{ border-collapse: collapse; width: 100%; min-width: 720px; font-size: 15px; line-height: 1.5; }
-.sa-tbl th, .sa-tbl td{ text-align: left; padding: 11px 18px 11px 0; border: 0; background: none; vertical-align: top; color: var(--ink); }
-.sa-tbl thead th{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; padding-bottom: 16px; }
-.sa-tbl thead th:last-child{ color: var(--clay); }
-.sa-tbl tbody th{ font-weight: 400; color: var(--ink-2); width: 22%; }
 .sa-yes{ color: #62c28a; }
 html[data-theme="light"] .sa-yes{ color: #1d7a49; }
 .sa-no{ color: var(--ink-3, var(--ink-2)); opacity: .7; }
@@ -1257,18 +1251,22 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
         <span class="kicker" data-reveal>Versions</span>
         <h2 class="sa-title blur-reveal" id="versions-h">Pick your <em>version</em>.</h2>
       </div>
-      <p data-reveal>Start free to see where your page stands. The Standard deck adds comparable games, two launch scenarios and six recommendations. The Premium deck adds a page review, a visibility plan and my review before it is sent.</p>
+      <p data-reveal>Start free to see where your page stands. The Standard deck adds comparable games, two launch scenarios and six recommendations. The Premium deck adds a Steam page review, a visibility plan and my check before it is sent.</p>
     </div>
     <div class="sa-tiers" data-reveal>
       <div class="sa-tier">
         <h3>Free preview</h3>
         <div class="sa-price">&euro;0</div>
         <ul>
-          <li>Up to 5 slides, as a PDF</li>
-          <li>Followers, page age and estimated wishlists</li>
-          <li>Competitors in brief</li>
-          <li>One launch scenario in summary</li>
-          <li>Delivered within 2 hours</li>
+          <li><span class="ic" aria-hidden="true">📄</span><span>Up to 5 slides, as a PDF</span></li>
+          <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
+          <li><span class="ic" aria-hidden="true">🎮</span><span>Competitors: headline only</span></li>
+          <li><span class="ic" aria-hidden="true">📈</span><span>One launch scenario, in summary</span></li>
+          <li><span class="ic" aria-hidden="true">🧭</span><span>Next steps</span></li>
+          <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
+          <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No market visibility section</span></li>
+          <li><span class="ic" aria-hidden="true">🤖</span><span>Automatic, not checked by me</span></li>
+          <li><span class="ic" aria-hidden="true">⚡</span><span>Delivered within 2 hours</span></li>
         </ul>
         <a class="btn btn-ghost" href="/#contact" data-v="free"><span>Get the free preview</span></a>
       </div>
@@ -1276,11 +1274,15 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
         <h3>Standard deck</h3>
         <div class="sa-price">&euro;89<small>VAT included</small></div>
         <ul>
-          <li>7 slides, as a PDF</li>
-          <li>Four comparable games with estimated sales</li>
-          <li>Two release dates: wishlists, week 1, month 1, year 1, gross revenue</li>
-          <li>Six prioritised recommendations</li>
-          <li>Delivered within 2 business days of payment</li>
+          <li><span class="ic" aria-hidden="true">📄</span><span>7 slides, as a PDF</span></li>
+          <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
+          <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games with estimated sales</span></li>
+          <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates: wishlists, week 1, month 1, year 1, gross revenue</span></li>
+          <li><span class="ic" aria-hidden="true">🧭</span><span>Six recommendations, in priority order</span></li>
+          <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
+          <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility within the recommendations</span></li>
+          <li><span class="ic" aria-hidden="true">🔎</span><span>A sample of decks checked by me</span></li>
+          <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 2 business days of payment</span></li>
         </ul>
         <a class="btn btn-primary" href="/#contact" data-v="standard"><span>Buy the Standard deck</span></a>
       </div>
@@ -1288,34 +1290,20 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
         <h3>Premium deck</h3>
         <div class="sa-price">&euro;249<small>VAT included</small></div>
         <ul>
-          <li>12 slides, as a PDF</li>
-          <li>Everything in Standard, with recent follower momentum and the method explained</li>
-          <li>A written reason for every competitor</li>
-          <li>The gap between the two release dates explained</li>
-          <li>Steam page review and a market visibility plan</li>
-          <li>Action table with priority and timing</li>
-          <li>Every deck reviewed by me before it is sent. Delivered within 3 business days of payment</li>
+          <li><span class="ic" aria-hidden="true">📄</span><span>12 slides, as a PDF</span></li>
+          <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists, with recent momentum and the method explained</span></li>
+          <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games, with a written reason for each</span></li>
+          <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates, plus the gap between them explained</span></li>
+          <li><span class="ic" aria-hidden="true">🧭</span><span>Action table with priority and timing</span></li>
+          <li><span class="ic" aria-hidden="true">✅</span><span>Steam page review: capsule, trailer, screenshots, tags, demo</span></li>
+          <li><span class="ic" aria-hidden="true">✅</span><span>Market visibility in its own section: festivals, creators, press</span></li>
+          <li><span class="ic" aria-hidden="true">✅</span><span>Every deck checked by me before it is sent</span></li>
+          <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 3 business days of payment</span></li>
         </ul>
         <a class="btn btn-primary" href="/#contact" data-v="premium"><span>Buy the Premium deck</span></a>
       </div>
     </div>
 
-    <div class="sa-tbl" data-reveal>
-      <table>
-        <thead><tr><th scope="col">Compare</th><th scope="col">Free preview</th><th scope="col">Standard deck</th><th scope="col">Premium deck</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Length</th><td>Up to 5 slides</td><td>7 slides</td><td>12 slides</td></tr>
-          <tr><th scope="row">Current situation</th><td>Followers, page age, estimated wishlists</td><td>Same</td><td>Same, with recent momentum</td></tr>
-          <tr><th scope="row">Competitors</th><td>Headline only</td><td>Four games with estimated sales</td><td>Four games, with a written reason for each</td></tr>
-          <tr><th scope="row">Launch scenarios</th><td>One, in summary</td><td>Two release dates: wishlists, week 1, month 1, year 1, gross revenue</td><td>Two release dates, plus the gap between them explained</td></tr>
-          <tr><th scope="row">Recommendations</th><td>Next steps</td><td>Six, in priority order</td><td>Action table with priority and timing</td></tr>
-          <tr><th scope="row">Steam page review</th><td><span aria-hidden="true">❌</span> No</td><td><span aria-hidden="true">❌</span> No</td><td><span aria-hidden="true">✅</span> Capsule, trailer, screenshots, tags, demo</td></tr>
-          <tr><th scope="row">Market visibility</th><td><span aria-hidden="true">❌</span> No</td><td>Within the recommendations</td><td><span aria-hidden="true">✅</span> Festivals, creators, press: its own section</td></tr>
-          <tr><th scope="row">Checked by me before sending</th><td><span aria-hidden="true">🤖</span> No, automatic</td><td><span aria-hidden="true">🔎</span> Sampled</td><td><span aria-hidden="true">✅</span> Always</td></tr>
-          <tr><th scope="row">Delivery</th><td><span aria-hidden="true">⚡</span> PDF, within 2 hours</td><td>PDF, within 2 business days of payment</td><td>PDF, within 3 business days of payment</td></tr>
-        </tbody>
-      </table>
-    </div>
   </section>
 
 
