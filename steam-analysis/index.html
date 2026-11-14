@@ -1183,9 +1183,6 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
 .sa-form .sa-note{ font-size: 14px; color: var(--ink-2); margin: 0; }
 .sa-status{ display: none; border: 1px solid var(--clay); color: var(--ink); border-radius: 12px; padding: 10px 14px; font-size: 15px; }
 .sa-status.on{ display: block; }
-.sa-order{ display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 96px); align-items: start; }
-.sa-order .sa-title{ margin-top: 18px; }
-.sa-order p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 44ch; margin: 24px 0 0; }
 
 /* Reveal on scroll (homepage) */
 [data-reveal]{ opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
@@ -1214,6 +1211,39 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   .hero-h1 em, .sa-title em{ transition: none; }
   .hero-h1:hover em, .sa-title:hover em{ transform: none; text-shadow: none; }
 }
+
+/* Order modal */
+html.om-open{ overflow: hidden; }
+.sa-modal{ border: 1px solid var(--rule); border-radius: 22px; padding: 0; width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper-3); color: var(--ink); box-shadow: var(--shadow-md), 0 40px 90px -30px rgba(0,0,0,.6); }
+.sa-modal::backdrop{ background: color-mix(in srgb, var(--paper) 70%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.sa-modal[open]{ animation: om-in .28s var(--ease); }
+.sa-modal[open]::backdrop{ animation: om-fade .28s var(--ease); }
+@keyframes om-in{ from{ opacity: 0; transform: translateY(12px) scale(.98); } to{ opacity: 1; transform: none; } }
+@keyframes om-fade{ from{ opacity: 0; } to{ opacity: 1; } }
+.sa-modal .om-form{ position: relative; display: grid; gap: 16px; padding: clamp(24px, 4vw, 36px); background-image: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%); }
+.om-close{ position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--rule); color: var(--ink); transition: border-color .2s var(--ease), color .2s var(--ease); }
+.om-close:hover, .om-close:focus-visible{ border-color: var(--clay); color: var(--clay); outline: none; }
+.om-title{ font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 4.4vw, 44px); font-variation-settings: "opsz" 96; line-height: 1; letter-spacing: -0.055em; margin: 0; padding-right: 48px; color: var(--ink); }
+.om-price{ margin: -6px 0 2px; color: var(--ink-2); font-size: 16px; line-height: 1.5; }
+.om-versions{ border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.om-label{ display: block; font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; padding: 0; }
+.om-versions .om-label{ width: 100%; }
+.om-pick{ position: relative; }
+.om-pick input{ position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.om-pick span{ display: block; border: 1px solid var(--rule); border-radius: 999px; padding: 9px 16px; font-size: 14.5px; color: var(--ink); transition: border-color .2s var(--ease), background-color .2s var(--ease); }
+.om-pick input:checked + span{ border-color: var(--clay); background: var(--clay-soft); }
+.om-pick input:focus-visible + span{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.sa-modal input[type=url], .sa-modal input[type=email], .sa-modal textarea{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.sa-modal textarea{ resize: vertical; min-height: 84px; }
+.sa-modal input:focus-visible, .sa-modal textarea:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.om-chk{ display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
+.om-chk[hidden]{ display: none; }
+.om-chk input{ margin-top: 3px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
+.om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.om-err{ margin: 0; font-size: 14.5px; color: #ff9a3c; }
+.om-submit{ width: 100%; }
+.om-status{ margin: 0; border: 1px solid var(--clay); border-radius: 12px; padding: 10px 14px; font-size: 14.5px; color: var(--ink); }
+@media (prefers-reduced-motion: reduce){ .sa-modal[open], .sa-modal[open]::backdrop{ animation: none; } }
 
 </style>
 </head>
@@ -1317,7 +1347,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No market visibility section</span></li>
           <li><span class="ic" aria-hidden="true">⚡</span><span>Delivered within 2 hours</span></li>
         </ul>
-        <a class="btn sa-buy" href="/#contact" data-v="free"><span>Get the free preview</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="free"><span>Get the free preview</span></a>
       </div>
       <div class="sa-tier">
         <h3>Standard Analysis</h3>
@@ -1332,7 +1362,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility within the recommendations</span></li>
           <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 2 business days of payment</span></li>
         </ul>
-        <a class="btn sa-buy" href="/#contact" data-v="standard"><span>Buy the Standard Analysis</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="standard"><span>Buy the Standard Analysis</span></a>
       </div>
       <div class="sa-tier pro">
         <h3>Premium Analysis</h3>
@@ -1347,7 +1377,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li><span class="ic" aria-hidden="true">✅</span><span>Market visibility in its own section: festivals, creators, press</span></li>
           <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 3 business days of payment</span></li>
         </ul>
-        <a class="btn sa-buy" href="/#contact" data-v="premium"><span>Buy the Premium Analysis</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Buy the Premium Analysis</span></a>
       </div>
     </div>
   </section>
@@ -1408,6 +1438,37 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
 
 </main>
 
+<dialog class="sa-modal" id="order-modal" aria-labelledby="om-title" data-lenis-prevent>
+  <form class="om-form" id="order-form" method="dialog" novalidate>
+    <button class="om-close" type="button" aria-label="Close" data-om-close>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <span class="kicker">Order</span>
+    <h2 class="om-title" id="om-title">Free preview</h2>
+    <p class="om-price" id="om-price"></p>
+
+    <fieldset class="om-versions">
+      <legend class="om-label">Version</legend>
+      <label class="om-pick"><input type="radio" name="version" value="free"><span>Free preview</span></label>
+      <label class="om-pick"><input type="radio" name="version" value="standard"><span>Standard Analysis</span></label>
+      <label class="om-pick"><input type="radio" name="version" value="premium"><span>Premium Analysis</span></label>
+    </fieldset>
+
+    <div class="om-field"><label class="om-label" for="om-steam">Steam store link</label><input id="om-steam" name="steam" type="url" required inputmode="url" autocomplete="off" placeholder="https://store.steampowered.com/app/&hellip;"></div>
+    <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
+    <div class="om-field"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
+
+    <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
+    <label class="om-chk"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
+
+    <p class="om-fine">I use your email and Steam link only to make and send your analysis, and delete them after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
+    <p class="om-err" id="om-err" role="alert" hidden></p>
+    <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
+    <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get the free preview</span></button>
+    <p class="om-status" id="om-status" role="status" hidden>Ordering is not open yet. Nothing was sent.</p>
+  </form>
+</dialog>
+
 <script>
 (function () {
   /* FAQ accordion, same behaviour as the homepage. */
@@ -1456,6 +1517,68 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     });
   }, { threshold: 0.35 });
   blurs.forEach(function (el) { if (!el.closest('.sa-hero')) blurIO.observe(el); });
+})();
+
+(function () {
+  var dlg = document.getElementById('order-modal');
+  if (!dlg || typeof dlg.showModal !== 'function') return;     /* old browsers keep the /#contact link */
+  var form = document.getElementById('order-form');
+  var T = {
+    free:     { title: 'Free preview',      price: 'No payment needed. Delivered within 2 hours.',                                  go: 'Get the free preview' },
+    standard: { title: 'Standard Analysis', price: '€89 / $99 / £79, VAT included. Pay at the start with Stripe.',   go: 'Pay €89 with Stripe' },
+    premium:  { title: 'Premium Analysis',  price: '€249 / $279 / £209, VAT included. Pay at the start with Stripe.', go: 'Pay €249 with Stripe' }
+  };
+  var last = null;
+  function pick(v) {
+    if (!T[v]) v = 'free';
+    form.querySelector('input[name=version][value=' + v + ']').checked = true;
+    document.getElementById('om-title').textContent = T[v].title;
+    document.getElementById('om-price').textContent = T[v].price;
+    document.querySelector('#om-go span').textContent = T[v].go;
+    document.getElementById('om-waiver').hidden = (v === 'free');
+    form.elements.waiver.required = (v !== 'free');
+  }
+  function open(v, trigger) {
+    last = trigger || null;
+    pick(v);
+    document.getElementById('om-status').hidden = true;
+    document.getElementById('om-err').hidden = true;
+    document.documentElement.classList.add('om-open');
+    dlg.showModal();
+  }
+  function close() { dlg.close(); }
+  function unlock() { document.documentElement.classList.remove('om-open'); }
+  dlg.addEventListener('cancel', unlock);                       /* Escape */
+  dlg.addEventListener('close', function () {
+    unlock();
+    if (last && last.focus) last.focus();
+  });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });     /* click on the backdrop */
+  dlg.querySelector('[data-om-close]').addEventListener('click', close);
+  document.querySelectorAll('[data-order]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); open(a.getAttribute('data-order'), a); });
+  });
+  form.querySelectorAll('input[name=version]').forEach(function (r) { r.addEventListener('change', function () { pick(r.value); }); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = document.getElementById('om-err');
+    var steam = form.elements.steam.value.trim();
+    if (!/^https?:\/\/(store\.steampowered\.com|steamcommunity\.com)\//i.test(steam)) {
+      err.textContent = 'Paste the link to your Steam store page, for example https://store.steampowered.com/app/1234567/';
+      err.hidden = false; form.elements.steam.focus(); return;
+    }
+    if (!form.elements.email.value || !form.elements.email.validity.valid) {
+      err.textContent = 'Enter a valid email address so I can send you the analysis.';
+      err.hidden = false; form.elements.email.focus(); return;
+    }
+    if (form.elements.waiver.required && !form.elements.waiver.checked) {
+      err.textContent = 'Please confirm that I can start the work right away.';
+      err.hidden = false; return;
+    }
+    err.hidden = true;
+    /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
+    document.getElementById('om-status').hidden = false;
+  });
 })();
 </script>
 
