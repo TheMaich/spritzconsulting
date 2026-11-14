@@ -964,24 +964,71 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "@type": "Service",
       "name": "Steam Launch Analysis & Sales Forecast for Indie Games",
       "serviceType": "Game launch analysis",
-      "provider": { "@type": "Person", "name": "Michele Di Nardo", "url": "https://spritzconsulting.com/about/" },
+      "provider": {
+        "@type": "Person",
+        "name": "Michele Di Nardo",
+        "url": "https://spritzconsulting.com/about/"
+      },
       "areaServed": "Worldwide",
       "description": "A Steam launch analysis built from public data: followers, wishlist scenarios, estimated sales and revenue, four competitors and recommendations, delivered as a PDF.",
       "url": "https://spritzconsulting.com/steam-analysis/",
       "offers": [
-        { "@type": "Offer", "name": "Free preview", "price": "0", "priceCurrency": "EUR" },
-        { "@type": "Offer", "name": "Standard deck", "price": "89", "priceCurrency": "EUR" },
-        { "@type": "Offer", "name": "Premium deck", "price": "249", "priceCurrency": "EUR" }
+        {
+          "@type": "Offer",
+          "name": "Free preview",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        {
+          "@type": "Offer",
+          "name": "Standard Analysis",
+          "price": "89",
+          "priceCurrency": "EUR"
+        },
+        {
+          "@type": "Offer",
+          "name": "Premium Analysis",
+          "price": "249",
+          "priceCurrency": "EUR"
+        }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://spritzconsulting.com/steam-analysis/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Do you use AI in this analysis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks." } },
-        { "@type": "Question", "name": "Do you need access to my Steamworks account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The analysis uses only public data. If you want to share your real wishlist count, tell me when you order and I use it." } },
-        { "@type": "Question", "name": "How do you estimate wishlists, and how accurate is it?", "acceptedAnswer": { "@type": "Answer", "text": "From your page's own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today's wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result." } },
-        { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away." } }
+        {
+          "@type": "Question",
+          "name": "Do you use AI in this analysis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the final checks are mine."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you need access to my Steamworks account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The analysis uses only public data. If you want to share your real wishlist count, tell me when you order and I use it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you estimate wishlists, and how accurate is it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "From your page's own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today's wishlists are never reduced. It is an estimate built from public information, and the notes in the analysis show every assumption, so you can see what would change the result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I order the analysis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ideally 6 to 12 months before launch, once your Steam page has been live for a few weeks. By then there is enough history to read the trend, and still time to act on it: enter a festival, release a demo or move the date. Closer to launch it still tells you whether your wishlists are enough for the date you picked."
+          }
+        }
       ]
     }
   ]
@@ -1041,6 +1088,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Tier cards: look and hover of the homepage service cards (assets/css/services-h.css) */
 .sa-tier{ position: relative; background-color: var(--paper-3); background-image: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%); border: 1px solid var(--rule); border-radius: 18px; box-shadow: var(--shadow-md); padding: 28px 26px; display: flex; flex-direction: column; gap: 16px; min-width: 0; scale: 1; transform-origin: 50% 50%; transition: scale .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease); }
 .sa-tier:hover{ z-index: 2; scale: 1.03; border-color: color-mix(in srgb, var(--clay) 35%, var(--rule)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--clay) 15%, transparent), 0 0 28px -10px color-mix(in srgb, var(--clay) 22%, transparent), 0 22px 50px -28px color-mix(in srgb, var(--clay) 32%, transparent); }
+/* Free tier: a constant soft glow so the free entry point stands out */
+.sa-tier.free{ border-color: color-mix(in srgb, var(--clay) 40%, var(--rule)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--clay) 14%, transparent), 0 0 36px -8px color-mix(in srgb, var(--clay) 30%, transparent), var(--shadow-md); }
 .sa-tier h3{ transition: color .35s var(--ease); }
 .sa-tier:hover h3{ color: var(--clay); }
 @media (prefers-reduced-motion: reduce){ .sa-tier{ transition: none; } .sa-tier:hover{ scale: 1; } }
@@ -1228,7 +1277,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   Still open before launch. Then set robots to "index, follow", add the page to sitemap.xml and llms.txt,
   and link it from the four Steam calculators:
   1. Order form is NOT wired: no endpoint, no Stripe links. The submit handler only shows a notice.
-  2. Refund wording and the withdrawal waiver at checkout (refund FAQ + form checkbox): accountant or lawyer; link full terms.
+  2. Refund wording and the withdrawal waiver at checkout: accountant or lawyer; link full terms. (The refund FAQ was removed from the page; terms must say it.)
   3. The EUR 120 consultation and the booking link are no longer on the page: decide where they go.
   5. Order form removed with the Start section: the version buttons point to /#contact until the real order flow exists.
   4. Free preview in 2 hours needs an automatic delivery: the ordering flow must be able to do it in that time.
@@ -1244,7 +1293,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     </nav>
     <span class="kicker blur-reveal" style="animation-delay: 0s"><span>Steam launch analysis</span></span>
     <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1">Steam Launch Analysis &amp; <em>Sales Forecast</em> for Indie Games</h1>
-    <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me your Steam page and I build a launch analysis from public data: <b>where your followers and wishlists stand</b>, how comparable games sell, what your launch could look like under two release dates, and what to do next. You get it as a PDF, made by a producer who has worked on 15+ shipped games at Raw Fury, Rebellion and 34BigThings.</p>
+    <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me your Steam page and I turn its public data into a launch analysis, delivered as a PDF. It shows <b>how many followers and wishlists your page has today</b> and how fast they are growing, <b>how four comparable games have sold</b> on Steam, and <b>the wishlists, copies and gross revenue you could reach</b> at launch under two release dates. With it you know whether your page is on track, which release date gives you the better start, how your game measures up against its genre, and what to do next to grow your wishlists. Made by a producer who has worked on 15+ shipped games at Raw Fury, Rebellion and 34BigThings.</p>
   </section>
 
   <section class="section wrap" id="versions" aria-labelledby="versions-h">
@@ -1255,7 +1304,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
       </div>
     </div>
     <div class="sa-tiers" data-reveal>
-      <div class="sa-tier">
+      <div class="sa-tier free">
         <h3>Free preview</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;0</span><span class="sep" aria-hidden="true">/</span><span>$0</span><span class="sep" aria-hidden="true">/</span><span>&pound;0</span></span><small>No payment needed</small></div>
         <ul>
@@ -1266,13 +1315,12 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li><span class="ic" aria-hidden="true">🧭</span><span>Next steps</span></li>
           <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
           <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No market visibility section</span></li>
-          <li><span class="ic" aria-hidden="true">🤖</span><span>Automatic, not checked by me</span></li>
           <li><span class="ic" aria-hidden="true">⚡</span><span>Delivered within 2 hours</span></li>
         </ul>
         <a class="btn sa-buy" href="/#contact" data-v="free"><span>Get the free preview</span></a>
       </div>
       <div class="sa-tier">
-        <h3>Standard deck</h3>
+        <h3>Standard Analysis</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;89</span><span class="sep" aria-hidden="true">/</span><span>$99</span><span class="sep" aria-hidden="true">/</span><span>&pound;79</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>7 slides, as a PDF</span></li>
@@ -1282,13 +1330,12 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li><span class="ic" aria-hidden="true">🧭</span><span>Six recommendations, in priority order</span></li>
           <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
           <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility within the recommendations</span></li>
-          <li><span class="ic" aria-hidden="true">🔎</span><span>A sample of decks checked by me</span></li>
           <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 2 business days of payment</span></li>
         </ul>
-        <a class="btn sa-buy" href="/#contact" data-v="standard"><span>Buy the Standard deck</span></a>
+        <a class="btn sa-buy" href="/#contact" data-v="standard"><span>Buy the Standard Analysis</span></a>
       </div>
       <div class="sa-tier pro">
-        <h3>Premium deck</h3>
+        <h3>Premium Analysis</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;249</span><span class="sep" aria-hidden="true">/</span><span>$279</span><span class="sep" aria-hidden="true">/</span><span>&pound;209</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>12 slides, as a PDF</span></li>
@@ -1298,10 +1345,9 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li><span class="ic" aria-hidden="true">🧭</span><span>Action table with priority and timing</span></li>
           <li><span class="ic" aria-hidden="true">✅</span><span>Steam page review: capsule, trailer, screenshots, tags, demo</span></li>
           <li><span class="ic" aria-hidden="true">✅</span><span>Market visibility in its own section: festivals, creators, press</span></li>
-          <li><span class="ic" aria-hidden="true">✅</span><span>Every deck checked by me before it is sent</span></li>
           <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 3 business days of payment</span></li>
         </ul>
-        <a class="btn sa-buy" href="/#contact" data-v="premium"><span>Buy the Premium deck</span></a>
+        <a class="btn sa-buy" href="/#contact" data-v="premium"><span>Buy the Premium Analysis</span></a>
       </div>
     </div>
   </section>
@@ -1326,7 +1372,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-1" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-1" hidden>
-          <p>Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks.</p>
+          <p>Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the final checks are mine.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1344,16 +1390,16 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-3" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-3" hidden>
-          <p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result.</p>
+          <p>From your page&rsquo;s own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today&rsquo;s wishlists are never reduced. It is an estimate built from public information, and the notes in the analysis show every assumption, so you can see what would change the result.</p>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-header">
-          <h3 class="faq-question">Can I get a refund?</h3>
+          <h3 class="faq-question">When should I order the analysis?</h3>
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-4" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-4" hidden>
-          <p>If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away.</p>
+          <p>Ideally 6 to 12 months before launch, once your Steam page has been live for a few weeks. By then there is enough history to read the trend, and still time to act on it: enter a festival, release a demo or move the date. Closer to launch it still tells you whether your wishlists are enough for the date you picked.</p>
         </div>
       </div>
     </div>
