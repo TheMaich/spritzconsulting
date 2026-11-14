@@ -1234,6 +1234,7 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-chk{ display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
 .om-chk[hidden], .om-field[hidden]{ display: none; }
 .om-chk input{ margin-top: 3px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
+.om-follow[hidden]{ display: none; }
 .om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
 .om-err{ margin: 0; font-size: 14.5px; }
 .om-submit{ width: 100%; }
@@ -1488,6 +1489,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 
     <div class="om-field"><label class="om-label" for="om-steam">Steam store link</label><input id="om-steam" name="steam" type="url" required inputmode="url" autocomplete="off" placeholder="https://store.steampowered.com/app/&hellip;"></div>
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
+    <p class="om-fine om-follow" id="om-follow" hidden>We’ll send your preview, then one follow-up email with an offer. Unsubscribe anytime.</p>
     <div class="om-extra" id="om-extra" hidden>
       <p class="om-hint" id="om-hint">Every detail you share makes the forecasts a little more accurate. Each of these three is optional, but every one you add tightens the numbers.</p>
       <div class="om-field"><label class="om-label" for="om-quarter">Release (optional)</label>
@@ -1504,7 +1506,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
     <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
 
-    <p class="om-fine">I use your email and Steam link only to make and send your analysis, and delete them after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
+    <p class="om-fine">I use your email and Steam link to make and send your analysis, and delete them after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
     <p class="om-err" id="om-err" role="alert" hidden></p>
     <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
     <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get the free preview</span></button>
@@ -1599,6 +1601,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     var prem = (v === 'premium'), std = (v === 'standard');
     document.getElementById('om-notes-wrap').hidden = !std;
     document.getElementById('om-news').hidden = !paid;
+    document.getElementById('om-follow').hidden = paid;
     document.getElementById('om-extra').hidden = !prem;
     form.elements.notes.disabled = !std;
     form.elements.news.disabled = !paid;
