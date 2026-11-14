@@ -979,7 +979,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       "@id": "https://spritzconsulting.com/steam-analysis/#faq",
       "mainEntity": [
         { "@type": "Question", "name": "Do you use AI in this analysis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AI does the data collection and the first pass of the numbers, and that is why you get the analysis in 2 days. Done by hand, it would take about 2 weeks. The method and the checks are mine: I review every Premium deck and a sample of Standard decks." } },
-        { "@type": "Question", "name": "Do you need access to my Steamworks account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The analysis uses only public data. If you want to share your real wishlist count, tell me in the form and I use it." } },
+        { "@type": "Question", "name": "Do you need access to my Steamworks account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The analysis uses only public data. If you want to share your real wishlist count, tell me when you order and I use it." } },
         { "@type": "Question", "name": "How do you estimate wishlists, and how accurate is it?", "acceptedAnswer": { "@type": "Answer", "text": "From your page's own history: how fast followers have grown since it went live, and what that pace implies up to the launch date. Today's wishlists are never reduced. It is an estimate built from public information, and the notes in the deck show every assumption, so you can see what would change the result." } },
         { "@type": "Question", "name": "Can I get a refund?", "acceptedAnswer": { "@type": "Answer", "text": "If the deck contains a data error, I correct it. Because each deck is made to order, there are no refunds otherwise. At checkout you confirm that I start the work right away." } }
       ]
@@ -1219,6 +1219,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
   1. Order form is NOT wired: no endpoint, no Stripe links. The submit handler only shows a notice.
   2. Refund wording and the withdrawal waiver at checkout (refund FAQ + form checkbox): accountant or lawyer; link full terms.
   3. The EUR 120 consultation and the booking link are no longer on the page: decide where they go.
+  5. Order form removed with the Start section: the version buttons point to /#contact until the real order flow exists.
   4. Free preview in 2 hours needs an automatic delivery: the ordering flow must be able to do it in that time.
 -->
 <main id="main">
@@ -1234,7 +1235,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1">Steam Launch Analysis &amp; <em>Sales Forecast</em> for Indie Games</h1>
     <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me your Steam page and I build a launch analysis from public data: <b>where your followers and wishlists stand</b>, how comparable games sell, what your launch could look like under two release dates, and what to do next. You get it as a PDF, made by a producer who has worked on 15+ shipped games at Raw Fury, Rebellion and 34BigThings.</p>
     <div class="cta-row" data-reveal>
-      <a class="btn btn-primary" href="#order" data-v="free">
+      <a class="btn btn-primary" href="/#contact" data-v="free">
         <span>Get the free preview</span>
         <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
       </a>
@@ -1264,7 +1265,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li>One launch scenario in summary</li>
           <li>Delivered within 2 hours</li>
         </ul>
-        <a class="btn btn-ghost" href="#order" data-v="free"><span>Get the free preview</span></a>
+        <a class="btn btn-ghost" href="/#contact" data-v="free"><span>Get the free preview</span></a>
       </div>
       <div class="sa-tier">
         <h3>Standard deck</h3>
@@ -1276,7 +1277,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li>Six prioritised recommendations</li>
           <li>Delivered within 2 business days of payment</li>
         </ul>
-        <a class="btn btn-primary" href="#order" data-v="standard"><span>Buy the Standard deck</span></a>
+        <a class="btn btn-primary" href="/#contact" data-v="standard"><span>Buy the Standard deck</span></a>
       </div>
       <div class="sa-tier pro">
         <h3>Premium deck</h3>
@@ -1290,7 +1291,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <li>Action table with priority and timing</li>
           <li>Every deck reviewed by me before it is sent. Delivered within 3 business days of payment</li>
         </ul>
-        <a class="btn btn-primary" href="#order" data-v="premium"><span>Buy the Premium deck</span></a>
+        <a class="btn btn-primary" href="/#contact" data-v="premium"><span>Buy the Premium deck</span></a>
       </div>
     </div>
 
@@ -1320,59 +1321,9 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     <p class="sa-fine" data-reveal>Full details arrive by email once you order.</p>
   </section>
 
-  <section class="section wrap" id="inside" aria-labelledby="inside-h">
-    <div class="sa-intro">
-      <div>
-        <span class="kicker" data-reveal>Inside the Standard deck</span>
-        <h2 class="sa-title blur-reveal" id="inside-h">What you <em>get</em>.</h2>
-      </div>
-      <p data-reveal>Seven slides that answer the questions every launch runs into: how many wishlists is enough, when to release, and what to do in the months before.</p>
-    </div>
-    <div class="sa-inside" data-reveal>
-      <div><h3>Where you stand today</h3><p>Followers, how long the page has been up, average followers a day and an estimated wishlist count.</p></div>
-      <div><h3>Four comparable games</h3><p>Chosen by Steam tags and format, with reviews, price, estimated copies and gross revenue.</p></div>
-      <div><h3>Two launch scenarios</h3><p>Wishlists at launch for two release dates, then expected copies in week 1, month 1 and year 1, with gross revenue.</p></div>
-      <div><h3>Six recommendations</h3><p>What to do next, in order, including the biggest risk I see in the data.</p></div>
-      <div><h3>A closing slide</h3><p>How to talk to me if you want to go further.</p></div>
-    </div>
-  </section>
 
-  <section class="section wrap" id="method" aria-labelledby="method-h">
-    <div class="sa-intro">
-      <div>
-        <span class="kicker" data-reveal>Method and limits</span>
-        <h2 class="sa-title blur-reveal" id="method-h">How the numbers are <em>built</em>.</h2>
-      </div>
-      <p data-reveal>Everything comes from public data: your Steam page, the community hub, review histories and SteamDB. I do not see your Steamworks data.</p>
-    </div>
-    <div class="sa-method" data-reveal>
-      <div><span class="kicker obs">Observed</span><p>Followers, page age, reviews, prices and release dates.</p></div>
-      <div><span class="kicker mod">Modelled</span><p>Wishlists, copies sold and revenue. Wishlists follow your page&rsquo;s own growth, not a fixed multiplier on followers. Copies for other games come from their review counts (about 30 copies per review).</p></div>
-      <div><span class="kicker">Gross</span><p>Revenue is gross: at list price, before Steam&rsquo;s cut, refunds, taxes and discounts.</p></div>
-    </div>
-    <p class="sa-fine" data-reveal style="font-size:16px">These are estimates, not forecasts you can bank. With your real wishlist numbers and plans, the picture gets sharper.</p>
-  </section>
 
-  <section class="section wrap" id="who" aria-label="Who it is for">
-    <div class="sa-two" data-reveal>
-      <div><span class="kicker">For</span><h3>Teams about to <em>launch</em></h3><p>Indie developers and small studios with a Steam page up or about to go up, who want a clear read on their launch before spending on marketing or choosing a date.</p></div>
-      <div><span class="kicker">Not for</span><h3>Released games, <em>for now</em></h3><p>Games that are already out, or anyone who needs Steamworks-level analytics or a guaranteed sales figure.</p></div>
-    </div>
-  </section>
 
-  <section class="section wrap" id="about" aria-labelledby="about-h">
-    <div class="sa-intro" style="align-items:start">
-      <div>
-        <span class="kicker" data-reveal>About</span>
-        <h2 class="sa-title blur-reveal" id="about-h">Made by a producer, <em>not a template</em>.</h2>
-      </div>
-      <div class="sa-about" data-reveal>
-        <p>I&rsquo;m Michele Di Nardo (Miki), an independent game producer based in Europe. Ten years in games across Raw Fury, Rebellion, 34BigThings and Untold Games, 15+ shipped titles on 8 platforms.</p>
-        <p>I made this service because the same questions come up on every launch: how many wishlists is enough, when to release, and what to do in the months before.</p>
-        <p><a class="sa-link" href="/about/">More about Michele</a></p>
-      </div>
-    </div>
-  </section>
 
   <section class="section wrap" id="faq" aria-labelledby="faq-h">
     <div class="faq-head">
@@ -1380,7 +1331,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
         <span class="kicker" data-reveal>Common questions</span>
         <h2 class="blur-reveal" id="faq-h">Questions, <em>before</em> you order.</h2>
       </div>
-      <p data-reveal>The four things developers ask most about the analysis. If yours isn&rsquo;t here, write it in the order form and I answer before starting.</p>
+      <p data-reveal>The four things developers ask most about the analysis. If yours isn&rsquo;t here, send it through the contact form and I answer before you order.</p>
     </div>
 
     <div class="faq-list" data-reveal>
@@ -1399,7 +1350,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-2" hidden>
-          <p>No. The analysis uses only public data. If you want to share your real wishlist count, tell me in the form and I use it.</p>
+          <p>No. The analysis uses only public data. If you want to share your real wishlist count, tell me when you order and I use it.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1423,61 +1374,11 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     </div>
   </section>
 
-  <section class="section wrap" id="order" aria-labelledby="order-h">
-    <div class="sa-order">
-      <div>
-        <span class="kicker" data-reveal>Start</span>
-        <h2 class="sa-title blur-reveal" id="order-h">Start with the <em>free preview</em>.</h2>
-        <p data-reveal>Paste your Steam link and see where your page stands. Want the full picture? Pick the Standard or Premium deck.</p>
-      </div>
-      <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
-      <form class="sa-form" id="sa-form" data-wired="false" novalidate data-reveal>
-        <fieldset>
-          <legend>Version</legend>
-          <label class="sa-pick"><input type="radio" name="version" value="free" checked><span>Free preview</span></label>
-          <label class="sa-pick"><input type="radio" name="version" value="standard"><span>Standard deck &middot; &euro;89</span></label>
-          <label class="sa-pick"><input type="radio" name="version" value="premium"><span>Premium deck &middot; &euro;249</span></label>
-        </fieldset>
-        <div><label class="fl" for="sa-steam">Steam store link</label><input id="sa-steam" name="steam" type="url" placeholder="https://store.steampowered.com/app/&hellip;"></div>
-        <div><label class="fl" for="sa-email">Your email</label><input id="sa-email" name="email" type="email" autocomplete="email" placeholder="you@studio.com"></div>
-        <div><label class="fl" for="sa-notes">Anything I should know (optional)</label><textarea id="sa-notes" name="notes" placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
-        <label class="sa-chk" id="sa-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the deck is delivered.</span></label>
-        <label class="sa-chk"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
-        <p class="sa-note">I use your email and Steam link only to make and send your analysis. Decks are deleted after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
-        <div><button class="btn btn-primary" type="submit" id="sa-go"><span>Get the free preview</span></button></div>
-        <div class="sa-status" id="sa-status" role="status">Ordering is not open yet. Nothing was sent.</div>
-      </form>
-    </div>
-  </section>
 
 </main>
 
 <script>
 (function () {
-  /* Order form: version picker, button label, withdrawal checkbox for paid versions. */
-  var labels = { free: 'Get the free preview', standard: 'Pay €89 with Stripe', premium: 'Pay €249 with Stripe' };
-  var form = document.getElementById('sa-form');
-  if (form) {
-    var sync = function () {
-      var v = form.querySelector('input[name=version]:checked').value;
-      document.querySelector('#sa-go span').textContent = labels[v];
-      document.getElementById('sa-waiver').hidden = (v === 'free');
-    };
-    form.querySelectorAll('input[name=version]').forEach(function (r) { r.addEventListener('change', sync); });
-    document.querySelectorAll('a[data-v]').forEach(function (a) {
-      a.addEventListener('click', function () {
-        var r = form.querySelector('input[name=version][value=' + a.dataset.v + ']');
-        if (r) { r.checked = true; sync(); }
-      });
-    });
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
-      document.getElementById('sa-status').classList.add('on');
-    });
-    sync();
-  }
-
   /* FAQ accordion, same behaviour as the homepage. */
   function setState(btn, expanded) {
     var target = document.getElementById(btn.getAttribute('aria-controls'));
