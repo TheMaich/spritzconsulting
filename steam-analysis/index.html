@@ -1048,21 +1048,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-tier .btn{ align-self: stretch; }
 .sa-fine{ font-size: 14px; color: var(--ink-2); margin: 16px 0 0; max-width: 70ch; }
 
-/* Compare the versions: one card per feature, the three versions as tagged lines */
-.sa-cmp{ margin-top: clamp(40px, 5vw, 64px); }
-.sa-cmp-h{ font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 2vw, 30px); font-variation-settings: "opsz" 48; letter-spacing: -0.043em; margin: 0 0 20px; color: var(--ink); }
-.sa-cmp-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-.sa-feat{ background: color-mix(in srgb, var(--paper-2) 82%, transparent); border: 1px solid var(--rule); border-radius: 16px; padding: 20px 22px; transition: border-color .3s var(--ease); }
-.sa-feat:hover{ border-color: color-mix(in srgb, var(--clay) 55%, var(--rule)); }
-.sa-feat-h{ display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-family: var(--serif); font-weight: 500; font-size: 19px; font-variation-settings: "opsz" 48; letter-spacing: -0.035em; color: var(--ink); }
-.sa-ico{ font-size: 22px; line-height: 1; flex: none; }
-.sa-feat ul{ list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
-.sa-feat li{ display: flex; align-items: baseline; gap: 10px; font-size: 15px; line-height: 1.45; color: var(--ink-2); }
-.sa-tag{ flex: none; width: 76px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-3, var(--ink-2)); }
-.sa-tag.std{ color: var(--ink); }
-.sa-tag.pro{ color: var(--clay); }
-.sa-feat li:last-child span:last-child{ color: var(--ink); }
-.sa-yes, .sa-no{ flex: none; font-weight: 700; }
+/* Comparison table: same grid as before, but no visible borders or fills */
+.sa-tbl{ overflow-x: auto; margin-top: clamp(40px, 5vw, 64px); }
+.sa-tbl table{ border-collapse: collapse; width: 100%; min-width: 720px; font-size: 15px; line-height: 1.5; }
+.sa-tbl th, .sa-tbl td{ text-align: left; padding: 11px 18px 11px 0; border: 0; background: none; vertical-align: top; color: var(--ink); }
+.sa-tbl thead th{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); font-weight: 400; padding-bottom: 16px; }
+.sa-tbl thead th:last-child{ color: var(--clay); }
+.sa-tbl tbody th{ font-weight: 400; color: var(--ink-2); width: 22%; }
 .sa-yes{ color: #62c28a; }
 html[data-theme="light"] .sa-yes{ color: #1d7a49; }
 .sa-no{ color: var(--ink-3, var(--ink-2)); opacity: .7; }
@@ -1306,82 +1298,21 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
       </div>
     </div>
 
-    <div class="sa-cmp" data-reveal>
-      <h3 class="sa-cmp-h">Compare the versions</h3>
-      <div class="sa-cmp-grid">
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">📄</span>Length</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>Up to 5 slides</span></li>
-            <li><span class="sa-tag std">Standard</span><span>7 slides</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>12 slides</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">📍</span>Current situation</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>Followers, page age, estimated wishlists</span></li>
-            <li><span class="sa-tag std">Standard</span><span>Same</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>Same, with recent momentum</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">🎮</span>Competitors</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>Headline only</span></li>
-            <li><span class="sa-tag std">Standard</span><span>Four games with estimated sales</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>Four games, with a written reason for each</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">📈</span>Launch scenarios</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>One, in summary</span></li>
-            <li><span class="sa-tag std">Standard</span><span>Two release dates: wishlists, week 1, month 1, year 1, gross revenue</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>Two release dates, plus the gap between them explained</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">🧭</span>Recommendations</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>Next steps</span></li>
-            <li><span class="sa-tag std">Standard</span><span>Six, in priority order</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>Action table with priority and timing</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">🔍</span>Steam page review</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span class="sa-no" aria-hidden="true">✕</span><span>Not included</span></li>
-            <li><span class="sa-tag std">Standard</span><span class="sa-no" aria-hidden="true">✕</span><span>Not included</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>Capsule, trailer, screenshots, tags, demo</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">📣</span>Market visibility</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span class="sa-no" aria-hidden="true">✕</span><span>Not included</span></li>
-            <li><span class="sa-tag std">Standard</span><span>Within the recommendations</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>Festivals, creators, press: its own section</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">👀</span>Checked by me before sending</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>No, automatic</span></li>
-            <li><span class="sa-tag std">Standard</span><span>Sampled</span></li>
-            <li><span class="sa-tag pro">Premium</span><span class="sa-yes" aria-hidden="true">✓</span><span>Always</span></li>
-          </ul>
-        </div>
-        <div class="sa-feat">
-          <p class="sa-feat-h"><span class="sa-ico" aria-hidden="true">📬</span>Delivery</p>
-          <ul>
-            <li><span class="sa-tag free">Free</span><span>PDF, within 2 hours</span></li>
-            <li><span class="sa-tag std">Standard</span><span>PDF, within 2 business days of payment</span></li>
-            <li><span class="sa-tag pro">Premium</span><span>PDF, within 3 business days of payment</span></li>
-          </ul>
-        </div>
-      </div>
+    <div class="sa-tbl" data-reveal>
+      <table>
+        <thead><tr><th scope="col">Compare</th><th scope="col">Free preview</th><th scope="col">Standard deck</th><th scope="col">Premium deck</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Length</th><td>Up to 5 slides</td><td>7 slides</td><td>12 slides</td></tr>
+          <tr><th scope="row">Current situation</th><td>Followers, page age, estimated wishlists</td><td>Same</td><td>Same, with recent momentum</td></tr>
+          <tr><th scope="row">Competitors</th><td>Headline only</td><td>Four games with estimated sales</td><td>Four games, with a written reason for each</td></tr>
+          <tr><th scope="row">Launch scenarios</th><td>One, in summary</td><td>Two release dates: wishlists, week 1, month 1, year 1, gross revenue</td><td>Two release dates, plus the gap between them explained</td></tr>
+          <tr><th scope="row">Recommendations</th><td>Next steps</td><td>Six, in priority order</td><td>Action table with priority and timing</td></tr>
+          <tr><th scope="row">Steam page review</th><td><span aria-hidden="true">❌</span> No</td><td><span aria-hidden="true">❌</span> No</td><td><span aria-hidden="true">✅</span> Capsule, trailer, screenshots, tags, demo</td></tr>
+          <tr><th scope="row">Market visibility</th><td><span aria-hidden="true">❌</span> No</td><td>Within the recommendations</td><td><span aria-hidden="true">✅</span> Festivals, creators, press: its own section</td></tr>
+          <tr><th scope="row">Checked by me before sending</th><td><span aria-hidden="true">🤖</span> No, automatic</td><td><span aria-hidden="true">🔎</span> Sampled</td><td><span aria-hidden="true">✅</span> Always</td></tr>
+          <tr><th scope="row">Delivery</th><td><span aria-hidden="true">⚡</span> PDF, within 2 hours</td><td>PDF, within 2 business days of payment</td><td>PDF, within 3 business days of payment</td></tr>
+        </tbody>
+      </table>
     </div>
     <p class="sa-fine" data-reveal>Prices include VAT. Paid versions are paid when you order, through Stripe. The free preview needs no payment.</p>
 
