@@ -987,7 +987,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         },
         {
           "@type": "Offer",
-          "name": "Premium Analysis",
+          "name": "Extended Analysis",
           "price": "249",
           "priceCurrency": "EUR"
         }
@@ -1401,7 +1401,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
         <a class="btn sa-buy" href="/#contact" data-order="standard"><span>Get the Standard Analysis</span></a>
       </div>
       <div class="sa-tier pro">
-        <h3>Premium Analysis</h3>
+        <h3>Extended Analysis</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;249</span><span class="sep" aria-hidden="true">/</span><span>$279</span><span class="sep" aria-hidden="true">/</span><span>&pound;209</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>An in-depth PDF analysis of your game&rsquo;s current situation</span></li>
@@ -1413,7 +1413,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
           <li><span class="ic" aria-hidden="true">✅</span><span>Market visibility in its own section: festivals, creators, press</span></li>
           <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 3 business days of payment</span></li>
         </ul>
-        <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Get the Premium Analysis</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Get the Extended Analysis</span></a>
       </div>
     </div>
   </section>
@@ -1569,7 +1569,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   var T = {
     free:     { title: 'Free preview',      price: 'No payment needed. Delivered within 2 hours.',                                  go: 'Get the free preview' },
     standard: { title: 'Standard Analysis', price: '€89 / $99 / £79, VAT included. Pay at the start with Stripe.',   go: 'Pay €89 with Stripe' },
-    premium:  { title: 'Premium Analysis',  price: '€249 / $279 / £209, VAT included. Pay at the start with Stripe.', go: 'Pay €249 with Stripe' }
+    premium:  { title: 'Extended Analysis',  price: '€249 / $279 / £209, VAT included. Pay at the start with Stripe.', go: 'Pay €249 with Stripe' }
   };
   var last = null;
   (function quarters() {                                  /* release quarters, from now up to two years ahead */
@@ -1829,8 +1829,9 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
     document.getElementById('om-status').hidden = false;
   });
-  /* Deep link from the free deck's last slide: /steam-analysis/?tier=standard or ?tier=premium opens that order form. */
+  /* Deep link from the free deck's last slide: /steam-analysis/?tier=standard or ?tier=premium (?tier=extended works too) opens that order form. */
   var want = new URLSearchParams(location.search).get('tier');
+  if (want === 'extended') want = 'premium';
   if (want === 'standard' || want === 'premium') open(want, null);
 })();
 </script>
