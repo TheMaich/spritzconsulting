@@ -1235,7 +1235,7 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-chk[hidden], .om-field[hidden]{ display: none; }
 .om-chk input{ margin-top: 3px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
 .om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
-.om-err{ margin: 0; font-size: 14.5px; color: #ff9a3c; }
+.om-err{ margin: 0; font-size: 14.5px; }
 .om-submit{ width: 100%; }
 .om-status{ margin: 0; border: 1px solid var(--clay); border-radius: 12px; padding: 10px 14px; font-size: 14.5px; color: var(--ink); }
 @media (prefers-reduced-motion: reduce){ .sa-modal[open], .sa-modal[open]::backdrop{ animation: none; } }
@@ -1260,6 +1260,13 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 
 /* Behind the modal: stop the page's ambient animations, so the flip is the only thing moving */
 html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-flipper *){ animation-play-state: paused !important; }
+
+/* The homepage defines --danger (signal magenta); this page only had --accent-2, which is the same colour per theme */
+:root{ --danger: var(--accent-2); }
+/* Invalid field: the danger colour (signal magenta) until the visitor edits it */
+.sa-modal input[type=url][aria-invalid="true"], .sa-modal input[type=email][aria-invalid="true"], .sa-modal textarea[aria-invalid="true"]{ border-color: var(--danger); }
+.sa-modal input[type=checkbox][aria-invalid="true"]{ outline: 2px solid var(--danger); outline-offset: 2px; }
+.om-err{ color: var(--danger); }
 
 </style>
 </head>
@@ -1719,23 +1726,49 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   document.querySelectorAll('[data-order]').forEach(function (a) {
     a.addEventListener('click', function (e) { e.preventDefault(); open(a.getAttribute('data-order'), a); });
   });
+  /* Error feedback: a damped side-to-side shake (like the Mac login box on a wrong password) and two
+     pulses of the design system's danger colour (--danger, the signal magenta) around the modal border. */
+  var shake = null;
+  function fail(msg, field) {
+    var err = document.getElementById('om-err');
+    err.textContent = msg; err.hidden = false;
+    form.querySelectorAll('[aria-invalid]').forEach(function (n) { n.removeAttribute('aria-invalid'); });
+    if (field) { field.setAttribute('aria-invalid', 'true'); field.focus(); }
+    if (typeof dlg.animate !== 'function') return;
+    if (shake) shake.forEach(function (a) { a.cancel(); });
+    var base = 'var(--shadow-md), 0 40px 90px -30px rgba(0,0,0,.6)';
+    var ring = function (px, pct) { return base + ', 0 0 0 ' + px + 'px color-mix(in srgb, var(--danger) ' + pct + '%, transparent), 0 0 38px ' + (px * 2) + 'px color-mix(in srgb, var(--danger) ' + Math.round(pct * 0.6) + '%, transparent)'; };
+    var pulse = dlg.animate([
+      { borderColor: 'var(--rule)', boxShadow: ring(0, 0) },
+      { offset: 0.22, borderColor: 'var(--danger)', boxShadow: ring(5, 55), easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+      { offset: 0.5, borderColor: 'color-mix(in srgb, var(--danger) 45%, var(--rule))', boxShadow: ring(1, 12), easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+      { offset: 0.72, borderColor: 'var(--danger)', boxShadow: ring(4, 40), easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+      { borderColor: 'var(--rule)', boxShadow: ring(0, 0) }
+    ], { duration: 1000, easing: 'ease-out' });
+    shake = [pulse];
+    if (!reduce.matches) {
+      /* 3.5 swings, each smaller than the last, quick and tight: x offsets in px */
+      var x = [0, -14, 12, -10, 7, -4, 2, 0];
+      shake.push(dlg.animate(x.map(function (v, i) { return { offset: i / (x.length - 1), translate: v + 'px 0' }; }),
+        { duration: 520, easing: 'cubic-bezier(0.36, 0.07, 0.19, 0.97)' }));
+    }
+  }
+  form.querySelectorAll('input,textarea').forEach(function (n) {
+    n.addEventListener('input', function () { n.removeAttribute('aria-invalid'); });
+  });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var err = document.getElementById('om-err');
     var steam = form.elements.steam.value.trim();
     if (!/^https?:\/\/(store\.steampowered\.com|steamcommunity\.com)\//i.test(steam)) {
-      err.textContent = 'Paste the link to your Steam store page, for example https://store.steampowered.com/app/1234567/';
-      err.hidden = false; form.elements.steam.focus(); return;
+      return fail('Paste the link to your Steam store page, for example https://store.steampowered.com/app/1234567/', form.elements.steam);
     }
     if (!form.elements.email.value || !form.elements.email.validity.valid) {
-      err.textContent = 'Enter a valid email address so I can send you the analysis.';
-      err.hidden = false; form.elements.email.focus(); return;
+      return fail('Enter a valid email address so I can send you the analysis.', form.elements.email);
     }
     if (form.elements.waiver.required && !form.elements.waiver.checked) {
-      err.textContent = 'Please confirm that I can start the work right away.';
-      err.hidden = false; return;
+      return fail('Please confirm that I can start the work right away.', form.elements.waiver);
     }
-    err.hidden = true;
+    document.getElementById('om-err').hidden = true;
     /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
     document.getElementById('om-status').hidden = false;
   });
