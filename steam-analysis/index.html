@@ -1267,6 +1267,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 .sa-modal input[type=url][aria-invalid="true"], .sa-modal input[type=email][aria-invalid="true"], .sa-modal textarea[aria-invalid="true"]{ border-color: var(--danger); }
 .sa-modal input[type=checkbox][aria-invalid="true"]{ outline: 2px solid var(--danger); outline-offset: 2px; }
 .om-err{ color: var(--danger); }
+.sa-modal input[type=url][aria-invalid="true"]:focus-visible, .sa-modal input[type=email][aria-invalid="true"]:focus-visible, .sa-modal textarea[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
 
 </style>
 </head>
@@ -1747,10 +1748,15 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     ], { duration: 1000, easing: 'ease-out' });
     shake = [pulse];
     if (!reduce.matches) {
-      /* 3.5 swings, each smaller than the last, quick and tight: x offsets in px */
-      var x = [0, -14, 12, -10, 7, -4, 2, 0];
-      shake.push(dlg.animate(x.map(function (v, i) { return { offset: i / (x.length - 1), translate: v + 'px 0' }; }),
-        { duration: 520, easing: 'cubic-bezier(0.36, 0.07, 0.19, 0.97)' }));
+      /* A damped spring, sampled finely and played back linearly so it never stops and starts:
+         x(t) = -A * e^(-k t) * sin(2 pi f t). About 3.5 swings in 640 ms, the first one wide. */
+      var N = 48, A = 15, K = 4.2, F = 3.6, pts = [];
+      for (var i = 0; i <= N; i++) {
+        var t = i / N;
+        var x = (i === N) ? 0 : -A * Math.exp(-K * t) * Math.sin(2 * Math.PI * F * t);
+        pts.push({ offset: t, translate: x.toFixed(2) + 'px 0', rotate: (x * 0.045).toFixed(3) + 'deg' });
+      }
+      shake.push(dlg.animate(pts, { duration: 640, easing: 'linear' }));
     }
   }
   form.querySelectorAll('input,textarea').forEach(function (n) {
