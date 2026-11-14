@@ -1004,14 +1004,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
    (index.html) so the page reads as the same site; the tiers, table, method and form are page-specific. */
 
 /* Homepage section rhythm */
-#versions{ padding-bottom: clamp(24px, 3vw, 40px); }
-#faq{ padding-top: clamp(24px, 3vw, 40px); }
+#versions{ padding-top: clamp(24px, 3vw, 40px); padding-bottom: clamp(24px, 3vw, 40px); }
+#faq{ padding-top: clamp(24px, 3vw, 40px); padding-bottom: clamp(32px, 4vw, 56px); }
 .section{ padding-top: clamp(56px, 8vw, 112px); padding-bottom: clamp(56px, 8vw, 112px); position: relative; }
 .kicker{ display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); }
 .kicker .bar{ width: 28px; height: 1px; background: var(--clay); }
 
 /* Hero (homepage .hero-h1 / .hero-intro) */
-.sa-hero{ padding-top: clamp(16px, 2.4vw, 32px); padding-bottom: clamp(40px, 6vw, 80px); }
+.sa-hero{ padding-top: clamp(16px, 2.4vw, 32px); padding-bottom: clamp(8px, 1.5vw, 16px); }
 .sa-hero .crumbs{ margin-bottom: clamp(20px, 3vw, 36px); }
 .hero-h1{ font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.6vw, 100px); font-variation-settings: "opsz" 96; line-height: 0.96; letter-spacing: -0.06em; color: var(--ink); text-wrap: balance; margin: 16px 0 0; }
 .hero-h1 em{ font-style: italic; font-variation-settings: "opsz" 96; color: var(--clay); }
@@ -1047,7 +1047,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 .sa-tier h3{ font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 1.9vw, 28px); font-variation-settings: "opsz" 48; letter-spacing: -0.043em; line-height: 1.15; margin: 0; color: var(--ink); }
 .sa-price{ display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 6px 0 4px; }
-.sa-amts{ display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: 4px 18px; font-family: var(--serif); font-size: clamp(30px, 2.6vw, 38px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.05em; line-height: 1; color: var(--ink); }
+.sa-amts{ display: flex; justify-content: center; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; font-family: var(--serif); font-size: clamp(30px, 2.6vw, 38px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.05em; line-height: 1; color: var(--ink); }
 .sa-price small{ display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; line-height: 1.2; text-transform: uppercase; color: var(--ink-2); }
 
 /* One button style for all three tiers; on hover it fills with clay, lifts and glows */
@@ -1056,6 +1056,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-buy:active{ transform: translateY(0); }
 @media (prefers-reduced-motion: reduce){ .sa-buy:hover, .sa-buy:focus-visible{ transform: none; } }
 .sa-tier ul{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; font-size: 16px; line-height: 1.5; flex: 1; color: var(--ink); }
+.sa-amts .sep{ color: var(--ink-2); opacity: .5; font-style: normal; }
 .sa-tier li{ display: flex; gap: 10px; align-items: baseline; }
 .sa-tier li .ic{ flex: none; width: 1.3em; text-align: center; font-size: 15px; }
 .sa-tier li.no{ color: var(--ink-2); opacity: .75; }
@@ -1244,16 +1245,6 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     <span class="kicker blur-reveal" style="animation-delay: 0s"><span>Steam launch analysis</span></span>
     <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1">Steam Launch Analysis &amp; <em>Sales Forecast</em> for Indie Games</h1>
     <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me your Steam page and I build a launch analysis from public data: <b>where your followers and wishlists stand</b>, how comparable games sell, what your launch could look like under two release dates, and what to do next. You get it as a PDF, made by a producer who has worked on 15+ shipped games at Raw Fury, Rebellion and 34BigThings.</p>
-    <div class="cta-row" data-reveal>
-      <a class="btn btn-primary" href="/#contact" data-v="free">
-        <span>Get the free preview</span>
-        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="#versions">
-        <span>See what&rsquo;s in each version</span>
-        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg>
-      </a>
-    </div>
   </section>
 
   <section class="section wrap" id="versions" aria-labelledby="versions-h">
@@ -1267,7 +1258,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
     <div class="sa-tiers" data-reveal>
       <div class="sa-tier">
         <h3>Free preview</h3>
-        <div class="sa-price"><span class="sa-amts"><span>&euro;0</span><span>$0</span><span>&pound;0</span></span><small>No payment needed</small></div>
+        <div class="sa-price"><span class="sa-amts"><span>&euro;0</span><span class="sep" aria-hidden="true">/</span><span>$0</span><span class="sep" aria-hidden="true">/</span><span>&pound;0</span></span><small>No payment needed</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>Up to 5 slides, as a PDF</span></li>
           <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
@@ -1283,7 +1274,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
       </div>
       <div class="sa-tier">
         <h3>Standard deck</h3>
-        <div class="sa-price"><span class="sa-amts"><span>&euro;89</span><span>$99</span><span>&pound;79</span></span><small>VAT included</small></div>
+        <div class="sa-price"><span class="sa-amts"><span>&euro;89</span><span class="sep" aria-hidden="true">/</span><span>$99</span><span class="sep" aria-hidden="true">/</span><span>&pound;79</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>7 slides, as a PDF</span></li>
           <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
@@ -1299,7 +1290,7 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
       </div>
       <div class="sa-tier pro">
         <h3>Premium deck</h3>
-        <div class="sa-price"><span class="sa-amts"><span>&euro;249</span><span>$279</span><span>&pound;209</span></span><small>VAT included</small></div>
+        <div class="sa-price"><span class="sa-amts"><span>&euro;249</span><span class="sep" aria-hidden="true">/</span><span>$279</span><span class="sep" aria-hidden="true">/</span><span>&pound;209</span></span><small>VAT included</small></div>
         <ul>
           <li><span class="ic" aria-hidden="true">📄</span><span>12 slides, as a PDF</span></li>
           <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists, with recent momentum and the method explained</span></li>
@@ -1314,7 +1305,6 @@ html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
         <a class="btn sa-buy" href="/#contact" data-v="premium"><span>Buy the Premium deck</span></a>
       </div>
     </div>
-    <p class="sa-fine" data-reveal>Prices are charged in euro. Dollar and pound amounts are approximate: the European Central Bank rate of 12 November 2026, rounded to the nearest price ending in 9; your bank may convert at a slightly different rate.</p>
   </section>
 
 
