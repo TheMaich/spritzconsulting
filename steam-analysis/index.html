@@ -1225,19 +1225,12 @@ html.om-open{ overflow: hidden; }
 .om-close:hover, .om-close:focus-visible{ border-color: var(--clay); color: var(--clay); outline: none; }
 .om-title{ font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 4.4vw, 44px); font-variation-settings: "opsz" 96; line-height: 1; letter-spacing: -0.055em; margin: 0; padding-right: 48px; color: var(--ink); }
 .om-price{ margin: -6px 0 2px; color: var(--ink-2); font-size: 16px; line-height: 1.5; }
-.om-versions{ border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }
 .om-label{ display: block; font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; padding: 0; }
-.om-versions .om-label{ width: 100%; }
-.om-pick{ position: relative; }
-.om-pick input{ position: absolute; opacity: 0; inset: 0; cursor: pointer; }
-.om-pick span{ display: block; border: 1px solid var(--rule); border-radius: 999px; padding: 9px 16px; font-size: 14.5px; color: var(--ink); transition: border-color .2s var(--ease), background-color .2s var(--ease); }
-.om-pick input:checked + span{ border-color: var(--clay); background: var(--clay-soft); }
-.om-pick input:focus-visible + span{ outline: 2px solid var(--clay); outline-offset: 2px; }
 .sa-modal input[type=url], .sa-modal input[type=email], .sa-modal textarea{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
 .sa-modal textarea{ resize: vertical; min-height: 84px; }
 .sa-modal input:focus-visible, .sa-modal textarea:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
 .om-chk{ display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
-.om-chk[hidden]{ display: none; }
+.om-chk[hidden], .om-field[hidden]{ display: none; }
 .om-chk input{ margin-top: 3px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
 .om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
 .om-err{ margin: 0; font-size: 14.5px; color: #ff9a3c; }
@@ -1447,19 +1440,14 @@ html.om-open{ overflow: hidden; }
     <h2 class="om-title" id="om-title">Free preview</h2>
     <p class="om-price" id="om-price"></p>
 
-    <fieldset class="om-versions">
-      <legend class="om-label">Version</legend>
-      <label class="om-pick"><input type="radio" name="version" value="free"><span>Free preview</span></label>
-      <label class="om-pick"><input type="radio" name="version" value="standard"><span>Standard Analysis</span></label>
-      <label class="om-pick"><input type="radio" name="version" value="premium"><span>Premium Analysis</span></label>
-    </fieldset>
+    <input type="hidden" name="version" value="free">
 
     <div class="om-field"><label class="om-label" for="om-steam">Steam store link</label><input id="om-steam" name="steam" type="url" required inputmode="url" autocomplete="off" placeholder="https://store.steampowered.com/app/&hellip;"></div>
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
-    <div class="om-field"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
+    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
 
     <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
-    <label class="om-chk"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
+    <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
 
     <p class="om-fine">I use your email and Steam link only to make and send your analysis, and delete them after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
     <p class="om-err" id="om-err" role="alert" hidden></p>
@@ -1531,12 +1519,18 @@ html.om-open{ overflow: hidden; }
   var last = null;
   function pick(v) {
     if (!T[v]) v = 'free';
-    form.querySelector('input[name=version][value=' + v + ']').checked = true;
+    form.elements.version.value = v;
+    var paid = (v !== 'free');
     document.getElementById('om-title').textContent = T[v].title;
     document.getElementById('om-price').textContent = T[v].price;
     document.querySelector('#om-go span').textContent = T[v].go;
-    document.getElementById('om-waiver').hidden = (v === 'free');
-    form.elements.waiver.required = (v !== 'free');
+    document.getElementById('om-waiver').hidden = !paid;
+    form.elements.waiver.required = paid;
+    /* The free preview asks only for the Steam link and the email: no notes, no newsletter opt-in. */
+    document.getElementById('om-notes-wrap').hidden = !paid;
+    document.getElementById('om-news').hidden = !paid;
+    form.elements.notes.disabled = !paid;
+    form.elements.news.disabled = !paid;
   }
   function open(v, trigger) {
     last = trigger || null;
@@ -1558,7 +1552,6 @@ html.om-open{ overflow: hidden; }
   document.querySelectorAll('[data-order]').forEach(function (a) {
     a.addEventListener('click', function (e) { e.preventDefault(); open(a.getAttribute('data-order'), a); });
   });
-  form.querySelectorAll('input[name=version]').forEach(function (r) { r.addEventListener('change', function () { pick(r.value); }); });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var err = document.getElementById('om-err');
