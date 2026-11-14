@@ -1252,6 +1252,7 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-card-copy.sa-tier{ border-color: color-mix(in srgb, var(--clay) 35%, var(--rule)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--clay) 15%, transparent), 0 0 28px -10px color-mix(in srgb, var(--clay) 22%, transparent), 0 22px 50px -28px color-mix(in srgb, var(--clay) 32%, transparent); }
 .om-card-copy h3{ color: var(--clay); }
 .sa-buy.is-hot{ background: var(--clay); color: var(--paper); border-color: var(--clay); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay) 22%, transparent), 0 12px 28px -10px color-mix(in srgb, var(--clay) 60%, transparent); }
+.om-ghost .om-close{ visibility: hidden; }
 .om-ghost{ position: relative; display: block; max-height: none; overflow: hidden; margin: 0; }
 .om-glow{ position: absolute; inset: -30px; border-radius: 36px; background: radial-gradient(closest-side, color-mix(in srgb, var(--clay) 55%, transparent), transparent 100%); filter: blur(22px); opacity: 0; z-index: -1; }
 
@@ -1583,7 +1584,7 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
     var front = document.createElement('div'); front.className = 'om-face om-front';
     var cc = plain(cardEl.cloneNode(true)); cc.classList.add('om-card-copy');
     cc.style.width = cardEl.offsetWidth + 'px'; cc.style.height = cardEl.offsetHeight + 'px';
-    cc.style.transformOrigin = '0 0';
+    cc.style.visibility = 'visible'; cc.style.transformOrigin = '0 0';
     cc.style.transform = 'scale(' + (rect.width / cardEl.offsetWidth) + ',' + (rect.height / cardEl.offsetHeight) + ')';
     var btn = cc.querySelector('.sa-buy'); if (btn && hot) btn.classList.add('is-hot');
     front.appendChild(cc);
@@ -1657,13 +1658,14 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
     run(f, kf, 820).then(function () {
       dlg.classList.add('om-landed');
       dlg.style.opacity = '';                              /* the real modal takes over, identical to the back face */
-      f.el.remove(); dlg.classList.remove('om-flip'); busy = false;      /* same frame: no flash */
-    }, function () { f.el.remove(); dlg.style.opacity = ''; dlg.classList.remove('om-flip'); busy = false; });
+      f.el.remove(); busy = false;      /* same frame; om-flip stays until the modal closes, or its own open animation would restart */
+    }, function () { f.el.remove(); dlg.style.opacity = ''; busy = false; });
   }
 
   function finishClose() {
-    dlg.classList.remove('om-leaving', 'om-landed', 'om-flip'); dlg.style.opacity = '';
+    dlg.style.opacity = '';
     dlg.close(); unlock();
+    dlg.classList.remove('om-leaving', 'om-landed', 'om-flip');
   }
   function close() {
     if (busy || !dlg.open) return;
