@@ -1140,6 +1140,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-tier h3{ font-family: var(--serif); font-weight: 500; font-size: clamp(27px, 2.5vw, 36px); font-variation-settings: "opsz" 72; letter-spacing: -0.045em; line-height: 1.1; margin: 0; color: var(--clay); text-align: center; }
 .sa-price{ container-type: inline-size; align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 6px 0 4px; }
 .sa-amts{ display: flex; justify-content: center; align-items: baseline; flex-wrap: nowrap; white-space: nowrap; gap: 0 0.3em; font-family: var(--serif); font-size: clamp(22px, 10.5cqi, 38px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.05em; line-height: 1; color: var(--ink); }
+.sa-price{ padding: 6px 0 20px; border-bottom: 1px solid var(--rule); }
 .sa-price small{ display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; line-height: 1.2; text-transform: uppercase; color: var(--ink-2); }
 
 /* One button style for all three tiers; on hover it fills with clay, lifts and glows */
@@ -1415,8 +1416,8 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     </div>
     <div class="sa-tiers" data-reveal>
       <div class="sa-tier free">
-        <h3>Solo Dev Tier</h3>
-        <div class="sa-price"><span class="sa-amts"><span>&euro;0</span><span class="sep" aria-hidden="true">/</span><span>$0</span><span class="sep" aria-hidden="true">/</span><span>&pound;0</span></span><small>No payment needed</small></div>
+        <h3>&ldquo;Solo Dev&rdquo; Analysis</h3>
+        <div class="sa-price"><span class="sa-amts"><span>Free</span></span><small>No strings attached</small></div>
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>A short PDF snapshot of a game&rsquo;s current situation</span></li>
@@ -1433,11 +1434,11 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
             <p><span class="hl">Students, Hobbyists and Solo Developers</span> taking their first steps, who just want to understand what all the numbers mean.</p>
           </div>
         </div>
-        <a class="btn sa-buy" href="/#contact" data-order="free"><span>Get Solo Dev Tier</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="free"><span>Get &ldquo;Solo Dev&rdquo; Analysis</span></a>
         <p class="sa-limit">Each email gets a maximum of 3 analyses.</p>
       </div>
       <div class="sa-tier">
-        <h3>Indie Tier</h3>
+        <h3>&ldquo;Indie&rdquo; Analysis</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;99</span><span class="sep" aria-hidden="true">/</span><span>$109</span><span class="sep" aria-hidden="true">/</span><span>&pound;89</span></span><small>VAT included</small></div>
         <div class="sa-body">
           <ul>
@@ -1455,10 +1456,10 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
             <p><span class="hl">Indie studios and experienced solo developers</span> with a game in development or already out, who want a complete analysis to plan the launch and decide what to do next. It also fits <span class="hl">anyone, developer or not</span>, who wants to analyse a competitor&rsquo;s game.</p>
           </div>
         </div>
-        <a class="btn sa-buy" href="/#contact" data-order="standard"><span>Get Indie Tier</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="standard"><span>Get &ldquo;Indie&rdquo; Analysis</span></a>
       </div>
       <div class="sa-tier pro">
-        <h3>Publisher Tier</h3>
+        <h3>&ldquo;Publisher&rdquo; Analysis</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;299</span><span class="sep" aria-hidden="true">/</span><span>$329</span><span class="sep" aria-hidden="true">/</span><span>&pound;249</span></span><small>VAT included</small></div>
         <div class="sa-body">
           <ul>
@@ -1476,7 +1477,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
             <p><span class="hl">Indie studios</span> that want to understand what publishing really involves, <span class="hl">publishing executives and staff</span> who have to make scouting decisions, and <span class="hl">publishing teams</span> who need to judge how real a threat a potential competitor is.</p>
           </div>
         </div>
-        <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Get Publisher Tier</span></a>
+        <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Get &ldquo;Publisher&rdquo; Analysis</span></a>
       </div>
     </div>
   </section>
@@ -1573,7 +1574,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </button>
     <span class="kicker">Order</span>
-    <h2 class="om-title" id="om-title">Solo Dev Tier</h2>
+    <h2 class="om-title" id="om-title">“Solo Dev” Analysis</h2>
     <p class="om-price" id="om-price"></p>
 
     <input type="hidden" name="version" value="free">
@@ -1600,7 +1601,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     <p class="om-fine">I use your email and Steam link to make and send your analysis, and delete them after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
     <p class="om-err" id="om-err" role="alert" hidden></p>
     <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
-    <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get Solo Dev Tier</span></button>
+    <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get “Solo Dev” Analysis</span></button>
     <p class="om-status" id="om-status" role="status" hidden>Ordering is not open yet. Nothing was sent.</p>
   </form>
 </dialog>
@@ -1660,9 +1661,9 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   if (!dlg || typeof dlg.showModal !== 'function') return;     /* old browsers keep the /#contact link */
   var form = document.getElementById('order-form');
   var T = {
-    free:     { title: 'Solo Dev Tier',          price: 'No payment needed. Delivered within 1 day.',                                  go: 'Get Solo Dev Tier' },
-    standard: { title: 'Indie Tier',            price: '€99 / $109 / £89, VAT included. Pay at the start with Stripe.',   go: 'Pay €99 with Stripe' },
-    premium:  { title: 'Publisher Tier',    price: '€299 / $329 / £249, VAT included. Pay at the start with Stripe.', go: 'Pay €299 with Stripe' }
+    free:     { title: '“Solo Dev” Analysis',          price: 'No payment needed. Delivered within 1 day.',                                  go: 'Get “Solo Dev” Analysis' },
+    standard: { title: '“Indie” Analysis',            price: '€99 / $109 / £89, VAT included. Pay at the start with Stripe.',   go: 'Pay €99 with Stripe' },
+    premium:  { title: '“Publisher” Analysis',    price: '€299 / $329 / £249, VAT included. Pay at the start with Stripe.', go: 'Pay €299 with Stripe' }
   };
   var last = null;
   function track(ev, extra) {                             /* Zaraz is injected by Cloudflare; guard every call */
