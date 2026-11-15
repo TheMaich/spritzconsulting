@@ -54,6 +54,7 @@
 
 <style>
 :root{
+  --ok: #62c28a;
   --sans: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
   --mono: "Spritz Label", "Arial Narrow", sans-serif;
   --serif: "Spritz Display", ui-sans-serif, system-ui, sans-serif;
@@ -78,6 +79,7 @@
 }
 
 html[data-theme="light"]{
+  --ok: #1d7a49;
   --paper:#F4F3ED;
   --paper-2:#E9E7DE;
   --paper-3:#FBFAF4;
@@ -1034,7 +1036,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "What are the sources of the projections? How reliable are they?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page’s own growth trend. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate. It is a grounded estimate, not a prediction. It tells you reliably where your game stands and how it compares with similar games, and it is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most."
+            "text": "The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page’s own growth trend. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate. It is a grounded estimate that tells you reliably where the game stands and how it compares with similar games. It is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most."
           }
         },
         {
@@ -1153,8 +1155,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-tier .btn{ align-self: stretch; }
 .sa-fine{ font-size: 14px; color: var(--ink-2); margin: 16px 0 0; max-width: 70ch; }
 
-.sa-yes{ color: #62c28a; }
-html[data-theme="light"] .sa-yes{ color: #1d7a49; }
+.sa-yes{ color: var(--ok); }
 .sa-no{ color: var(--ink-3, var(--ink-2)); opacity: .7; }
 
 /* Three-step recap */
@@ -1173,8 +1174,7 @@ html[data-theme="light"] .sa-yes{ color: #1d7a49; }
 .sa-method{ display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
 .sa-method > div{ background: color-mix(in srgb, var(--paper-2) 82%, transparent); border: 1px solid var(--rule); border-radius: 16px; padding: 22px 24px; }
 .sa-method .kicker{ font-size: 13px; margin-bottom: 10px; }
-.sa-method .obs{ color: #62c28a; }
-html[data-theme="light"] .sa-method .obs{ color: #1d7a49; }
+.sa-method .obs{ color: var(--ok); }
 .sa-method .mod{ color: var(--clay); }
 .sa-method p{ font-size: 16px; line-height: 1.6; color: var(--ink-2); margin: 0; }
 
@@ -1540,7 +1540,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
         </div>
         <div class="faq-answer" id="faq-answer-5" hidden>
           <p>The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page&rsquo;s own growth trend. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate.</p>
-          <p>It is a grounded estimate, not a prediction. It tells you reliably where your game stands and how it compares with similar games, and it is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most.</p>
+          <p>It is a grounded estimate that tells you reliably where the game stands and how it compares with similar games. It is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1587,12 +1587,12 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
         <select id="om-quarter" name="quarter"><option value="">Choose a quarter</option></select></div>
       <div class="om-row">
         <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
-          <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="From Steamworks"></div>
+          <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Enter your real count if you have it"></div>
         <div class="om-field"><label class="om-label" for="om-pr">Planned price, USD (optional)</label>
           <input id="om-pr" name="price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="19.99"></div>
       </div>
     </div>
-    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Team, release plans, your real wishlist count if you want to share it"></textarea></div>
+    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Tell me about your team, release plans or anything else that helps"></textarea></div>
 
     <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
     <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
@@ -1665,6 +1665,15 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     premium:  { title: 'Publisher Tier',    price: '€299 / $329 / £249, VAT included. Pay at the start with Stripe.', go: 'Pay €299 with Stripe' }
   };
   var last = null;
+  function track(ev, extra) {                             /* Zaraz is injected by Cloudflare; guard every call */
+    try {
+      if (!window.zaraz) return;
+      var q = new URLSearchParams(location.search), d = { page: location.pathname }, k;
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function (n) { if (q.get(n)) d[n] = q.get(n); });
+      for (k in extra) d[k] = extra[k];
+      window.zaraz.track(ev, d);
+    } catch (err) { /* analytics must never break the order form */ }
+  }
   (function quarters() {                                  /* release quarters, from now up to two years ahead */
     var sel = document.getElementById('om-quarter'), now = new Date(), y = now.getFullYear(), q = Math.floor(now.getMonth() / 3);
     var out = document.createElement('option'); out.value = 'released'; out.textContent = 'Already released'; sel.appendChild(out);
@@ -1687,18 +1696,18 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     document.querySelector('#om-go span').textContent = T[v].go;
     document.getElementById('om-waiver').hidden = !paid;
     form.elements.waiver.required = paid;
-    /* Free: Steam link and email only. Standard: plus a free-text note. Premium: no note, but the release
-       quarter, wishlist count and planned price, which make the forecasts more accurate. */
+    /* Free: Steam link and email only. Standard: plus the optional release quarter, wishlist count and planned price,
+       and a free-text note. Premium: the same three optional fields, no note. */
     var prem = (v === 'premium'), std = (v === 'standard');
     document.getElementById('om-notes-wrap').hidden = !std;
     document.getElementById('om-news').hidden = !paid;
     document.getElementById('om-follow').hidden = paid;
-    document.getElementById('om-extra').hidden = !prem;
+    document.getElementById('om-extra').hidden = !(prem || std);
     form.elements.notes.disabled = !std;
     form.elements.news.disabled = !paid;
-    form.elements.quarter.disabled = !prem;
-    form.elements.wishlists.disabled = !prem;
-    form.elements.price.disabled = !prem;
+    form.elements.quarter.disabled = !(prem || std);
+    form.elements.wishlists.disabled = !(prem || std);
+    form.elements.price.disabled = !(prem || std);
   }
   /* ---- Open / close: the tier card flips and warps into the modal (and back) ----
      Timing and curves follow the site: --ease (0.16, 1, 0.3, 1) for settling, an ease-in-out for the turn.
@@ -1765,6 +1774,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     if (busy) return;
     last = trigger || null;
     pick(v);
+    track('order_form_open', { tier: form.elements.version.value, source: trigger ? 'card' : 'url' });
     document.getElementById('om-status').hidden = true;
     document.getElementById('om-err').hidden = true;
     card = trigger && trigger.closest ? trigger.closest('.sa-tier') : null;
@@ -1862,7 +1872,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });             /* click on the backdrop */
   dlg.querySelector('[data-om-close]').addEventListener('click', close);
   document.querySelectorAll('[data-order]').forEach(function (a) {
-    a.addEventListener('click', function (e) { e.preventDefault(); open(a.getAttribute('data-order'), a); });
+    a.addEventListener('click', function (e) { e.preventDefault(); track('cta_click', { placement: 'steam_tier_card', tier: a.getAttribute('data-order') }); open(a.getAttribute('data-order'), a); });
   });
   /* Error feedback: a damped side-to-side shake (like the Mac login box on a wrong password) and two
      pulses of the design system's danger colour (--danger, the signal magenta) around the modal border. */
@@ -1920,6 +1930,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       return fail('Please confirm that I can start the work right away.', form.elements.waiver);
     }
     document.getElementById('om-err').hidden = true;
+    track('order_form_submit', { tier: form.elements.version.value });
     /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
     document.getElementById('om-status').hidden = false;
   });
@@ -1927,7 +1938,8 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   var want = new URLSearchParams(location.search).get('tier');
   if (want === 'extended' || want === 'publisher') want = 'premium';
   if (want === 'indie') want = 'standard';
-  if (want === 'standard' || want === 'premium') open(want, null);
+  if (want === 'solo' || want === 'solo-dev') want = 'free';
+  if (want === 'free' || want === 'standard' || want === 'premium') { track('tier_deeplink', { tier: want }); open(want, null); }
 })();
 </script>
 
