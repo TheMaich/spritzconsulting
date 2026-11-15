@@ -1096,11 +1096,9 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Solo Dev: on hover (or keyboard focus) the feature list dims and a panel says who the tier is for. On touch screens there is no hover, so the panel is always shown above the list. */
 .sa-body{ position: relative; display: flex; flex-direction: column; flex: 1; }
 .sa-body > ul{ transition: opacity .35s var(--ease), filter .35s var(--ease); }
-.sa-for{ position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .35s var(--ease), transform .35s var(--ease); }
+.sa-for{ position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding-top: 4px; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .35s var(--ease), transform .35s var(--ease); }
 .sa-for .lbl{ font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--clay); }
 .sa-for p{ margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(21px, 1.8vw, 26px); font-variation-settings: "opsz" 48; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); }
-.sa-for .chips{ display: flex; flex-wrap: wrap; gap: 8px; }
-.sa-for .chips span{ border: 1px solid color-mix(in srgb, var(--clay) 45%, var(--rule)); border-radius: 999px; padding: 5px 13px; font-size: 14px; line-height: 1.3; color: var(--ink); }
 .sa-tier:hover .sa-for, .sa-tier:focus-within .sa-for{ opacity: 1; transform: none; }
 .sa-tier:hover .sa-body > ul, .sa-tier:focus-within .sa-body > ul{ opacity: .06; filter: blur(2px); }
 @media (hover: none){
@@ -1405,7 +1403,6 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
           <div class="sa-for">
             <span class="lbl">Made for</span>
             <p>Students, hobbyists and developers on their first game, who just want to understand what all the numbers mean.</p>
-            <div class="chips"><span>Students</span><span>Hobbyists</span><span>First-time developers</span></div>
           </div>
         </div>
         <a class="btn sa-buy" href="/#contact" data-order="free"><span>Get Solo Dev</span></a>
@@ -1413,16 +1410,22 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       <div class="sa-tier">
         <h3>Indie</h3>
         <div class="sa-price"><span class="sa-amts"><span>&euro;99</span><span class="sep" aria-hidden="true">/</span><span>$109</span><span class="sep" aria-hidden="true">/</span><span>&pound;85</span></span><small>VAT included</small></div>
-        <ul>
-          <li><span class="ic" aria-hidden="true">📄</span><span>A complete PDF analysis of the game&rsquo;s current situation</span></li>
-          <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
-          <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games with estimated sales</span></li>
-          <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates with wishlists, sales and gross revenue, or your sales so far if the game is out</span></li>
-          <li><span class="ic" aria-hidden="true">🧭</span><span>Six recommendations, in priority order</span></li>
-          <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
-          <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility within the recommendations</span></li>
-          <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 2 business days of payment</span></li>
-        </ul>
+        <div class="sa-body">
+          <ul>
+            <li><span class="ic" aria-hidden="true">📄</span><span>A complete PDF analysis of the game&rsquo;s current situation</span></li>
+            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
+            <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games with estimated sales</span></li>
+            <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates with wishlists, sales and gross revenue, or your sales so far if the game is out</span></li>
+            <li><span class="ic" aria-hidden="true">🧭</span><span>Six recommendations, in priority order</span></li>
+            <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
+            <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility within the recommendations</span></li>
+            <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 2 business days of payment</span></li>
+          </ul>
+          <div class="sa-for">
+            <span class="lbl">Made for</span>
+            <p>Indie studios and solo developers with a game in development or already out, who want a complete analysis to plan the launch and decide what to do next.</p>
+          </div>
+        </div>
         <a class="btn sa-buy" href="/#contact" data-order="standard"><span>Get Indie</span></a>
       </div>
       <div class="sa-tier pro">
