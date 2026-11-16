@@ -7,10 +7,12 @@
  *
  * - One Checkout session with two line items: the tier price and, when asked for, the Express
  *   price (quantity 1 each). Express never replaces the base price.
- * - The visitor picks the currency on the page (EUR, USD or GBP). The Worker checks it against an
- *   allowed list and answers 422 for anything else. A Checkout session has one currency, so an
- *   Express order in a currency that has no Express price and amount is refused; it never falls
- *   back to another currency.
+ * - Stripe chooses the currency. Every price carries EUR, USD and GBP, and the Worker sends no
+ *   currency to Checkout, so Stripe shows the buyer's local one. The amounts on the page are only
+ *   information. The currency Stripe used and the paid total are recorded when the payment arrives,
+ *   and the total is checked against the configured amounts (amountMatches).
+ * - Express needs a price and an amount in all three currencies. If one is missing, Express is off
+ *   for that tier, because Stripe could pick the missing one for a buyer.
  * - Orders live in the CONTACT_SUBMISSIONS KV namespace under the "order:" prefix and are
  *   deleted after 30 days, as the order form promises.
  * - Solo Dev (free) does not go through this Worker.
@@ -26,7 +28,6 @@ const ALLOWED_ORIGINS = [
 ];
 
 const CURRENCIES = ['eur', 'usd', 'gbp'];
-const DEFAULT_CURRENCY = 'eur';
 
 // Business days of work per tier, normal and with Express.
 const TIERS = {
@@ -99,41 +100,48 @@ function amountFor(value, tier, currency) {
   return n > 0 ? n : null;
 }
 
-// Express for a tier in a currency, or null when it is off or has no price id or no amount there.
-function expressFor(env, tier, currency) {
-  if (!expressEnabled(env)) return null;
-  const priceId = pricesFor(env.EXPRESS_PRICES, currency)[tier];
-  const amount = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
-  if (!priceId || !amount) return null;
-  return { priceId, amount };
+// Amounts of one tier in every currency, { eur, usd, gbp }, or null when one of them is missing.
+function amountsOfTier(value, tier) {
+  const out = {};
+  for (const currency of CURRENCIES) {
+    const n = amountFor(value, tier, currency);
+    if (!n) return null;
+    out[currency] = n;
+  }
+  return out;
 }
 
-// What the order modal may offer: the tier amounts and, where Express is on and priced, the Express amounts.
+// Express for a tier, or null. Stripe picks the buyer's currency, so Express must be priced in all three:
+// the same price id and an amount for each currency. Otherwise Express is off for that tier.
+function expressFor(env, tier) {
+  if (!expressEnabled(env)) return null;
+  const amounts = amountsOfTier(env.EXPRESS_AMOUNTS, tier);
+  if (!amounts) return null;
+  const ids = CURRENCIES.map((currency) => pricesFor(env.EXPRESS_PRICES, currency)[tier]);
+  if (!ids[0] || ids.some((id) => id !== ids[0])) return null;
+  return { priceId: ids[0], amounts };
+}
+
+// What the order modal may show: the tier amounts and, where Express is ready, the Express amounts.
 function publicConfig(env) {
   const amounts = {};
   const express = {};
-  for (const currency of CURRENCIES) {
-    for (const tier of Object.keys(TIERS)) {
-      const base = amountFor(env.PRICE_AMOUNTS, tier, currency);
-      if (base) {
-        amounts[currency] = amounts[currency] || {};
-        amounts[currency][tier] = base;
-      }
-      const e = expressFor(env, tier, currency);
-      if (e) {
-        express[currency] = express[currency] || {};
-        express[currency][tier] = e.amount;
-      }
-    }
+  for (const tier of Object.keys(TIERS)) {
+    const base = amountsOfTier(env.PRICE_AMOUNTS, tier);
+    if (base) amounts[tier] = base;
+    const e = expressFor(env, tier);
+    if (e) express[tier] = e.amounts;
   }
   return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
 }
 
-// Total the customer should pay, in the smallest currency unit, or null when the tier amount is not configured.
-function expectedTotal(env, tier, currency, express) {
+// Total the customer should pay in the currency Stripe used, in the smallest unit, or null when it is not configured.
+function expectedTotal(env, tier, express, currency) {
   const base = amountFor(env.PRICE_AMOUNTS, tier, currency);
   if (!base) return null;
-  return Math.round((base + (express ? express.amount : 0)) * 100);
+  if (!express) return Math.round(base * 100);
+  const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
+  return extra ? Math.round((base + extra) * 100) : null;
 }
 
 // ---- Rate limit (same shape as contact-form, own key prefix) ---------------------------
@@ -148,21 +156,19 @@ async function checkRateLimit(env, ip) {
 
 // ---- Stripe ------------------------------------------------------------------------------
 
-async function createCheckoutSession(env, order, lines, currency, origin) {
+async function createCheckoutSession(env, order, lines, origin) {
   const params = new URLSearchParams();
   params.set('mode', 'payment');
   lines.forEach((priceId, i) => {
     params.set('line_items[' + i + '][price]', priceId);
     params.set('line_items[' + i + '][quantity]', '1');
   });
-  params.set('currency', currency);
   params.set('customer_email', order.email);
   params.set('client_reference_id', order.id);
   params.set('metadata[order_id]', order.id);
   params.set('metadata[game_url]', clip(order.steam, 500));
   params.set('metadata[tier]', order.tier);
   params.set('metadata[express]', order.express ? 'true' : 'false');
-  params.set('metadata[currency]', currency);
   params.set('payment_intent_data[metadata][order_id]', order.id);
   // The page reads plan and express to say how soon the analysis arrives. It uses "plan", not "tier", because ?tier= opens the order form.
   params.set('success_url', origin + '/steam-analysis/?paid=1&plan=' + order.tier + (order.express ? '&express=1' : ''));
@@ -247,19 +253,10 @@ async function handleOrder(request, env) {
     if (!(price > 0 && price < 1000)) return json(422, { ok: false, error: 'invalid_price' }, origin);
   }
 
-  // The visitor picks the currency on the page; only values from the allowed list pass.
-  const asked = body.currency == null || body.currency === '' ? DEFAULT_CURRENCY : body.currency;
-  const currency = typeof asked === 'string' ? asked.trim().toLowerCase() : '';
-  if (!CURRENCIES.includes(currency)) return json(422, { ok: false, error: 'invalid_currency', allowed: CURRENCIES }, origin);
-
-  // Express is for Indie and Publisher only. It needs to be switched on and to have a price and an amount in
-  // the chosen currency. A session cannot mix currencies, so there is no fallback to another one.
-  const wantsExpress = body.express === true;
-  let express = null;
-  if (wantsExpress) {
-    express = expressFor(env, tier, currency);
-    if (!express) return json(422, { ok: false, error: 'express_unavailable', currency }, origin);
-  }
+  // Express is for Indie and Publisher only, and only where it is switched on and priced in every currency.
+  // A currency in the payload is ignored: Stripe chooses it at checkout.
+  const express = body.express === true ? expressFor(env, tier) : null;
+  if (body.express === true && !express) return json(422, { ok: false, error: 'express_unavailable' }, origin);
 
   const basePrice = asObject(env.PRICES)[tier];
   if (!basePrice || !env.STRIPE_SECRET_KEY) {
@@ -278,8 +275,6 @@ async function handleOrder(request, env) {
     status: 'pending',
     tier,
     express: !!express,
-    currency,
-    expectedTotal: expectedTotal(env, tier, currency, express),
     steam,
     email,
     quarter,
@@ -299,7 +294,7 @@ async function handleOrder(request, env) {
   if (express) lines.push(express.priceId);
   const successOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   try {
-    const session = await createCheckoutSession(env, order, lines, currency, successOrigin);
+    const session = await createCheckoutSession(env, order, lines, successOrigin);
     order.stripeSessionId = session.id;
     await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
     return json(200, { ok: true, url: session.url }, origin);
@@ -346,7 +341,6 @@ async function handleWebhook(request, env) {
       id: orderId,
       tier: meta.tier || '',
       express: meta.express === 'true',
-      currency: meta.currency || session.currency || '',
       steam: meta.game_url || '',
       email: (session.customer_details && session.customer_details.email) || session.customer_email || '',
       rebuilt: true,
@@ -363,6 +357,8 @@ async function handleWebhook(request, env) {
   order.stripeSessionId = session.id;
   order.amountTotal = session.amount_total;
   order.paidCurrency = session.currency;
+  // Stripe chose the currency, so the expected total is worked out now, from the currency it used.
+  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency);
   order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
   if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
   order.businessDays = days;

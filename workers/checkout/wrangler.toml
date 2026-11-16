@@ -32,12 +32,13 @@ PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJ
 # Express add-on price ids, one entry per currency. Each Express price carries EUR, USD and GBP, so the same
 # id repeats under "eur", "usd" and "gbp". These are the SANDBOX ids of "Express Delivery, Indie/Publisher Tier
 # Steam Analysis"; the dashboard holds the live copy of this variable, so keep the two in step.
-# A currency with an empty entry has no Express: the page hides the row and the Worker refuses the order
-# (there is no fallback to another currency, because a Checkout session has one currency).
+# Stripe chooses the buyer's currency, so Express must be priced in all three: the same id and an amount for each.
+# If one is empty or different, Express is off for that tier (the page hides the row, the Worker refuses the order).
 EXPRESS_PRICES = { eur = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" }, usd = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" }, gbp = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" } }
 
 # Tier amounts the page shows, in whole currency units. They must equal the amounts of the Stripe tier prices.
-# The Worker reads them for /api/order/config and to check each paid total (amountMatches in the KV record).
+# The Worker reads them for /api/order/config and, once a payment arrives, to check the paid total in the
+# currency Stripe used (amountMatches in the KV record).
 PRICE_AMOUNTS = { eur = { standard = 99, premium = 299 }, usd = { standard = 109, premium = 329 }, gbp = { standard = 89, premium = 249 } }
 
 # Express amounts the page shows, same units. They must equal the Express prices above.

@@ -4,7 +4,7 @@ Order backend for the Steam Analysis page, Indie and Publisher tiers. Solo Dev (
 
 | Route | What it does |
 | --- | --- |
-| `GET /api/order/config` | Tells the order modal which currencies exist, the tier amounts, and whether Express is on and what it costs per currency. |
+| `GET /api/order/config` | Tells the order modal the tier amounts and, where Express is on and priced in every currency, the Express amounts. Both are per tier and per currency, for display only. |
 | `POST /api/order` | Validates the order, stores it in KV, creates a Stripe Checkout session, returns `{ url }`. |
 | `POST /api/order/webhook` | Stripe calls it when the session is paid. Marks the order paid and stores `due_date`. |
 
@@ -33,13 +33,16 @@ From this folder:
 - `PRICES`: the Stripe price ids of the two tiers. They are the **sandbox** ids today. Swap for the live ids.
 - `EXPRESS_PRICES`: the Express add-on price ids per currency (`eur`, `usd`, `gbp`). A Stripe price can carry all
   three currencies, so the same id repeats under each key. A flat `{standard, premium}` object also works and applies
-  to every currency. A currency with an empty entry has no Express.
+  to every currency. A tier with an empty or different entry in any currency has no Express.
 - `PRICE_AMOUNTS`: the tier amounts the page shows, per currency, in whole units. Keep them equal to the Stripe prices.
-  The Worker reads them for `/api/order/config` and to check every paid total (`amountMatches` in the KV record).
+  The Worker reads them for `/api/order/config` and, when a payment arrives, to check the paid total in the currency
+  Stripe used (`expectedTotal` and `amountMatches` in the KV record).
 - `EXPRESS_AMOUNTS`: the Express amounts the page shows, per currency, in whole units. Keep them equal to the Stripe prices.
-- Currency: the visitor picks EUR, USD or GBP on the page and the order carries it. Anything else gets a 422
-  (`invalid_currency`). Express in a currency without an Express price and amount gets a 422 (`express_unavailable`);
-  a Checkout session has one currency, so the Worker never falls back to another one.
+- Currency: **Stripe chooses it.** Every price carries EUR, USD and GBP and the Worker sends no `currency` to Checkout,
+  so Stripe shows the buyer's local currency. A currency in the order payload is ignored. The page shows the three
+  amounts for information only.
+- Express needs the same price id and an amount in **all three** currencies. If one is missing, Express is off for that
+  tier (the page hides the row and the Worker answers 422 `express_unavailable`), because Stripe could pick the missing one.
 - `EXPRESS_ENABLED`: `"false"` by default. With it off the page hides the Express row and the Worker refuses Express.
 
 To open Express: create the two Express products in Stripe, paste their price ids into `EXPRESS_PRICES.eur`,
@@ -49,8 +52,8 @@ set `EXPRESS_ENABLED = "true"`, deploy.
 
 Keys in the `CONTACT_SUBMISSIONS` namespace, all with a 30 day expiry (the order form promises deletion after 30 days):
 
-- `order:<uuid>`: the order (tier, express, currency, Steam link, email, optional fields, status, and after payment
-  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency`, and `amountMatches` when the paid total equals the expected one).
+- `order:<uuid>`: the order (tier, express, Steam link, email, optional fields, status, and after payment
+  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`).
 - `order:paid:<checkout session id>`: marks a session as processed, so a repeated Stripe delivery changes nothing.
 - `order:rl:<ip>`: rate limit, 5 orders per IP per 10 minutes.
 
