@@ -31,10 +31,12 @@ PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJ
 
 # Express add-on price ids, one entry per currency. Each Express price carries EUR, USD and GBP, so the same
 # id repeats under "eur", "usd" and "gbp". These are the SANDBOX ids of "Express Delivery, Indie/Publisher Tier
-# Steam Analysis"; the dashboard holds the live copy of this variable, so keep the two in step.
+# Steam Analysis". The first two prices created for them (EUR only) are archived: Stripe refuses an archived price in
+# Checkout. The ids below are the current prices with EUR, USD and GBP. The dashboard holds the live copy of this
+# variable, so keep the two in step.
 # Stripe chooses the buyer's currency, so Express must be priced in all three: the same id and an amount for each.
 # If one is empty or different, Express is off for that tier (the page hides the row, the Worker refuses the order).
-EXPRESS_PRICES = { eur = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" }, usd = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" }, gbp = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" } }
+EXPRESS_PRICES = { eur = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium = "price_1UcSlMJFkRG2ZYUJSnGVxA4l" }, usd = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium = "price_1UcSlMJFkRG2ZYUJSnGVxA4l" }, gbp = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium = "price_1UcSlMJFkRG2ZYUJSnGVxA4l" } }
 
 # Tier amounts the page shows, in whole currency units. They must equal the amounts of the Stripe tier prices.
 # The Worker reads them for /api/order/config and, once a payment arrives, to check the paid total in the
