@@ -1295,6 +1295,24 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-chk input:active{ transform: scale(0.94); }
 @media (prefers-reduced-motion: reduce){ .om-chk, .om-chk input{ transition: none; } .om-chk input:active{ transform: none; } }
 
+/* Currency selector: three radios styled as a segmented pill (toggle-pill tokens), 180ms hover, a small press on :active */
+.sa-cur{ display: inline-flex; gap: 2px; padding: 4px; background: var(--paper-3); border: 1px solid var(--rule); border-radius: 999px; }
+.sa-cur[hidden]{ display: none; }
+.sa-cur label{ position: relative; display: block; cursor: pointer; }
+.sa-cur input{ position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.sa-cur span{ display: block; padding: 8px 16px; border-radius: 999px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; line-height: 1.2; text-transform: uppercase; color: var(--ink-2); transition: color .18s var(--ease), background-color .18s var(--ease), transform .18s var(--ease); }
+.sa-cur label:hover input:not(:checked) + span{ color: var(--ink); }
+.sa-cur input:checked + span{ background: var(--ink); color: var(--paper); }
+.sa-cur input:focus-visible + span{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.sa-cur label:active span{ transform: scale(0.94); }
+@media (prefers-reduced-motion: reduce){ .sa-cur span{ transition: none; } .sa-cur label:active span{ transform: none; } }
+.sa-cur-row{ margin: 0 0 clamp(16px, 2.4vw, 28px); }
+.om-cur{ justify-self: start; margin: 2px 0 4px; }
+/* The tier cards show one amount, the chosen currency. Without JavaScript all three stay visible. */
+.sa-tiers[data-currency="eur"] .sa-amts.is-multi > :not([data-cur="eur"]),
+.sa-tiers[data-currency="usd"] .sa-amts.is-multi > :not([data-cur="usd"]),
+.sa-tiers[data-currency="gbp"] .sa-amts.is-multi > :not([data-cur="gbp"]){ display: none; }
+
 /* Express delivery row and total */
 .om-express{ align-items: center; justify-content: space-between; gap: 14px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; transition: border-color .18s var(--ease), color .18s var(--ease); }
 .om-express:hover{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
@@ -1446,6 +1464,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
         <h2 class="sa-title blur-reveal" id="versions-h">Pick your <em>tier</em>.</h2>
       </div>
     </div>
+    <div class="sa-cur-row" data-reveal><div class="sa-cur" role="radiogroup" aria-label="Currency"><label><input type="radio" name="cur-page" value="eur" checked><span>&euro; EUR</span></label><label><input type="radio" name="cur-page" value="usd"><span>$ USD</span></label><label><input type="radio" name="cur-page" value="gbp"><span>&pound; GBP</span></label></div></div>
     <div class="sa-tiers" data-reveal>
       <div class="sa-tier free">
         <h3><em>Solo Dev</em> <span class="an">Analysis</span></h3>
@@ -1471,7 +1490,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       </div>
       <div class="sa-tier">
         <h3><em>Indie</em> <span class="an">Analysis</span></h3>
-        <div class="sa-price is-plain"><span class="sa-amts"><span>&euro;99</span><span class="sep" aria-hidden="true">/</span><span>$109</span><span class="sep" aria-hidden="true">/</span><span>&pound;89</span></span></div>
+        <div class="sa-price is-plain"><span class="sa-amts is-multi"><span data-cur="eur">&euro;99</span><span class="sep" aria-hidden="true">/</span><span data-cur="usd">$109</span><span class="sep" aria-hidden="true">/</span><span data-cur="gbp">&pound;89</span></span></div>
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>A complete PDF analysis of the game&rsquo;s current situation</span></li>
@@ -1492,7 +1511,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       </div>
       <div class="sa-tier pro">
         <h3><em>Publisher</em> <span class="an">Analysis</span></h3>
-        <div class="sa-price is-plain"><span class="sa-amts"><span>&euro;299</span><span class="sep" aria-hidden="true">/</span><span>$329</span><span class="sep" aria-hidden="true">/</span><span>&pound;249</span></span></div>
+        <div class="sa-price is-plain"><span class="sa-amts is-multi"><span data-cur="eur">&euro;299</span><span class="sep" aria-hidden="true">/</span><span data-cur="usd">$329</span><span class="sep" aria-hidden="true">/</span><span data-cur="gbp">&pound;249</span></span></div>
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>An in-depth analysis of the game&rsquo;s current situation</span></li>
@@ -1608,6 +1627,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     <span class="kicker">Order</span>
     <h2 class="om-title" id="om-title">Solo Dev Analysis</h2>
     <p class="om-price" id="om-price"></p>
+    <div class="sa-cur om-cur" role="radiogroup" aria-label="Currency" id="om-cur" hidden><label><input type="radio" name="cur-modal" value="eur" checked><span>&euro; EUR</span></label><label><input type="radio" name="cur-modal" value="usd"><span>$ USD</span></label><label><input type="radio" name="cur-modal" value="gbp"><span>&pound; GBP</span></label></div>
 
     <input type="hidden" name="version" value="free">
 
@@ -1709,14 +1729,37 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 })();
 
 (function () {
+  /* Currency choice: the visitor picks EUR, USD or GBP. No geolocation. Default EUR. The choice is remembered. */
+  var LIST = ['eur', 'usd', 'gbp'];
+  var tiers = document.querySelector('.sa-tiers');
+  var groups = document.querySelectorAll('.sa-cur');
+  function stored() { try { var v = localStorage.getItem('sa-currency'); return LIST.indexOf(v) >= 0 ? v : null; } catch (err) { return null; } }
+  function save(v) { try { localStorage.setItem('sa-currency', v); } catch (err) { /* private mode or blocked storage: the page still works */ } }
+  function apply(v, persist) {
+    if (LIST.indexOf(v) < 0) v = 'eur';
+    document.documentElement.setAttribute('data-currency', v);
+    if (tiers) tiers.setAttribute('data-currency', v);
+    groups.forEach(function (g) { g.querySelectorAll('input').forEach(function (i) { i.checked = (i.value === v); }); });
+    if (persist) save(v);
+    document.dispatchEvent(new CustomEvent('sa:currency', { detail: v }));
+  }
+  groups.forEach(function (g) {
+    g.addEventListener('change', function (e) { if (e.target && e.target.type === 'radio') apply(e.target.value, true); });
+  });
+  apply(stored() || 'eur', false);
+})();
+
+(function () {
   var dlg = document.getElementById('order-modal');
   if (!dlg || typeof dlg.showModal !== 'function') return;     /* old browsers keep the /#contact link */
   var form = document.getElementById('order-form');
   var T = {
     free:     { title: 'Solo Dev Analysis',          price: 'No payment needed. Delivered within 1 day.',                                  go: 'Get Solo Dev Analysis' },
-    standard: { title: 'Indie Analysis',            price: '€99 / $109 / £89. Pay at the start with Stripe.',   go: 'Pay €99 with Stripe', base: 99, faster: 'Delivered in 1 business day instead of 2' },
-    premium:  { title: 'Publisher Analysis',    price: '€299 / $329 / £249. Pay at the start with Stripe.', go: 'Pay €299 with Stripe', base: 299, faster: 'Delivered in 2 business days instead of 3' }
+    standard: { title: 'Indie Analysis',     faster: 'Delivered in 1 business day instead of 2' },
+    premium:  { title: 'Publisher Analysis', faster: 'Delivered in 2 business days instead of 3' }
   };
+  /* Tier amounts per currency. The cards and the modal show these; /api/order/config overrides them when it answers. */
+  var BASE = { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 } };
   var last = null;
   function track(ev, extra) {                             /* Zaraz is injected by Cloudflare; guard every call */
     try {
@@ -1740,19 +1783,29 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     var nd = document.createElement('option'); nd.value = 'undecided'; nd.textContent = 'Not decided yet';
     sel.appendChild(nd);
   })();
-  /* ---- Express delivery: shown only when the order Worker says it is on and has a price in this currency ----
-     The page shows euros, so it sends currency 'eur'. The amounts come from /api/order/config, never from this file. */
-  var PAGE_CURRENCY = 'eur', SYMBOL = { eur: '€', usd: '$', gbp: '£' };
+  /* ---- Prices and Express: the currency is the visitor's choice (the selector sets data-currency on <html>).
+     Express shows only when the order Worker says it is on and has an amount in that currency. The Express amounts
+     come from /api/order/config, never from this file. A currency without an Express amount shows no Express row. ---- */
+  var SYMBOL = { eur: '€', usd: '$', gbp: '£' };
   var cfg = null, cfgState = 'idle';                      /* idle | loading | ok | failed */
-  function money(n) { return SYMBOL[PAGE_CURRENCY] + (Number.isInteger(n) ? n : n.toFixed(2)); }
+  function curNow() { var c = document.documentElement.getAttribute('data-currency'); return SYMBOL[c] ? c : 'eur'; }
+  function money(n) { return SYMBOL[curNow()] + (Number.isInteger(n) ? n : n.toFixed(2)); }
+  function baseAmount(v) {
+    var a = cfg && cfg.amounts && cfg.amounts[curNow()];
+    var n = a ? Number(a[v]) : 0;
+    return n > 0 ? n : BASE[v][curNow()];
+  }
   function expressAmount(v) {
-    var c = cfg && cfg.enabled && cfg.express && cfg.express[PAGE_CURRENCY];
+    var c = cfg && cfg.enabled && cfg.express && cfg.express[curNow()];
     var n = c ? Number(c[v]) : 0;
     return n > 0 ? n : 0;
   }
-  function renderExpress() {
+  function renderOrder() {
     var v = form.elements.version.value, box = form.elements.express;
-    var amt = (v === 'free' || !T[v]) ? 0 : expressAmount(v);
+    if (!T[v]) return;
+    var paid = (v !== 'free');
+    document.getElementById('om-price').textContent = paid ? money(baseAmount(v)) + '. Pay at the start with Stripe.' : T[v].price;
+    var amt = paid ? expressAmount(v) : 0;
     var row = document.getElementById('om-express'), total = document.getElementById('om-total');
     row.hidden = !amt;
     box.disabled = !amt;
@@ -1763,9 +1816,10 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     }
     var on = !!amt && box.checked;
     total.hidden = !on;
-    if (on) total.textContent = 'Total with Express: ' + money(T[v].base + amt);
-    if (T[v]) document.querySelector('#om-go span').textContent = on ? 'Pay ' + money(T[v].base + amt) + ' with Stripe' : T[v].go;
+    if (on) total.textContent = 'Total with Express: ' + money(baseAmount(v) + amt);
+    document.querySelector('#om-go span').textContent = paid ? 'Pay ' + money(baseAmount(v) + (on ? amt : 0)) + ' with Stripe' : T[v].go;
   }
+  document.addEventListener('sa:currency', renderOrder);
   function loadConfig() {
     if (cfgState === 'loading' || cfgState === 'ok') return;
     cfgState = 'loading';
@@ -1773,15 +1827,14 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       .then(function (r) { if (!r.ok) throw new Error('http_' + r.status); return r.json(); })
       .then(function (j) { cfg = j; cfgState = 'ok'; })
       .catch(function () { cfg = null; cfgState = 'failed'; })
-      .then(renderExpress);
+      .then(renderOrder);
   }
   function pick(v) {
     if (!T[v]) v = 'free';
     form.elements.version.value = v;
     var paid = (v !== 'free');
     document.getElementById('om-title').textContent = T[v].title;
-    document.getElementById('om-price').textContent = T[v].price;
-    document.querySelector('#om-go span').textContent = T[v].go;
+    document.getElementById('om-cur').hidden = !paid;
     document.getElementById('om-waiver').hidden = !paid;
     form.elements.waiver.required = paid;
     /* Free: Steam link and email only. Standard: plus the optional release quarter, wishlist count and planned price,
@@ -1797,11 +1850,11 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     form.elements.wishlists.disabled = !(prem || std);
     form.elements.price.disabled = !(prem || std);
     form.elements.express.checked = false;
-    renderExpress();
+    renderOrder();
     if (paid) loadConfig();
   }
   form.elements.express.addEventListener('change', function () {
-    renderExpress();
+    renderOrder();
     /* The total and the pay button sit below the row: on a short screen, scroll just enough to keep them in view. */
     if (form.elements.express.checked) document.getElementById('om-go').scrollIntoView({ block: 'nearest', behavior: reduce.matches ? 'auto' : 'smooth' });
   });
@@ -2034,7 +2087,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     document.getElementById('om-status').hidden = true;
     var go = document.getElementById('om-go'), label = go.querySelector('span');
     go.disabled = true; label.textContent = 'Opening Stripe…';
-    function unbusy() { go.disabled = false; renderExpress(); }
+    function unbusy() { go.disabled = false; renderOrder(); }
     fetch('/api/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2049,7 +2102,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
         waiver: el.waiver.checked,
         news: !el.news.disabled && el.news.checked,
         express: express,
-        currency: PAGE_CURRENCY,
+        currency: curNow(),
         page: location.pathname,
         referrer: document.referrer || ''
       })
@@ -2069,7 +2122,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   });
   /* Back from Stripe with the browser's back button: the page may come from the cache with the button still busy. */
   window.addEventListener('pageshow', function (e) {
-    if (e.persisted) { document.getElementById('om-go').disabled = false; renderExpress(); }
+    if (e.persisted) { document.getElementById('om-go').disabled = false; renderOrder(); }
   });
   /* Deep link from the free deck's last slide: /steam-analysis/?tier=standard or ?tier=premium (?tier=extended works too) opens that order form. */
   var want = new URLSearchParams(location.search).get('tier');

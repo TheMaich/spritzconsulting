@@ -78,8 +78,24 @@ async function workerSuite(label, worker) {
     STRIPE_WEBHOOK_SECRET: 'whsec_test',
     EXPRESS_ENABLED: 'true',
     PRICES: { standard: 'price_std', premium: 'price_prem' },
-    EXPRESS_PRICES: { eur: { standard: 'price_x_std', premium: 'price_x_prem' }, usd: {}, gbp: {} },
-    EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: {}, gbp: {} },
+    // The same Express price id repeats under every currency, because one Stripe price carries all three.
+    EXPRESS_PRICES: {
+      eur: { standard: 'price_x_std', premium: 'price_x_prem' },
+      usd: { standard: 'price_x_std', premium: 'price_x_prem' },
+      gbp: { standard: 'price_x_std', premium: 'price_x_prem' },
+    },
+    PRICE_AMOUNTS: {
+      eur: { standard: 99, premium: 299 }, usd: { standard: 109, premium: 329 }, gbp: { standard: 89, premium: 249 },
+    },
+    EXPRESS_AMOUNTS: {
+      eur: { standard: 49, premium: 99 }, usd: { standard: 54, premium: 109 }, gbp: { standard: 44, premium: 82 },
+    },
+  };
+  const FULL_CONFIG = {
+    enabled: true,
+    currencies: ['eur', 'usd', 'gbp'],
+    amounts: { eur: { standard: 99, premium: 299 }, usd: { standard: 109, premium: 329 }, gbp: { standard: 89, premium: 249 } },
+    express: { eur: { standard: 49, premium: 99 }, usd: { standard: 54, premium: 109 }, gbp: { standard: 44, premium: 82 } },
   };
   let stripeCalls = [];
   globalThis.fetch = async (url, init) => {
@@ -96,13 +112,18 @@ async function workerSuite(label, worker) {
     version: 'standard', steam: 'https://store.steampowered.com/app/1/', email: 'a@b.co', waiver: true, currency: 'eur', ...extra,
   });
 
-  await test(label + ' ' + 'config: Express on, EUR only', async () => {
+  await test(label + ' ' + 'config: tier and Express amounts for all three currencies', async () => {
     const j = await (await call('/api/order/config', { method: 'GET' })).json();
-    assert.deepEqual(j, { enabled: true, express: { eur: { standard: 49, premium: 99 } } });
+    assert.deepEqual(j, FULL_CONFIG);
   });
-  await test(label + ' ' + 'config: EXPRESS_ENABLED false hides everything', async () => {
+  await test(label + ' ' + 'config: EXPRESS_ENABLED false hides Express but keeps the tier amounts', async () => {
     const j = await (await call('/api/order/config', { method: 'GET' }, { ...baseEnv, EXPRESS_ENABLED: 'false' })).json();
-    assert.deepEqual(j, { enabled: false, express: {} });
+    assert.deepEqual(j, { enabled: false, currencies: ['eur', 'usd', 'gbp'], amounts: FULL_CONFIG.amounts, express: {} });
+  });
+  await test(label + ' ' + 'config: a currency without an Express amount is left out of express', async () => {
+    const env = { ...baseEnv, EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: { standard: 54, premium: 109 }, gbp: {} } };
+    const j = await (await call('/api/order/config', { method: 'GET' }, env)).json();
+    assert.deepEqual(j.express, { eur: { standard: 49, premium: 99 }, usd: { standard: 54, premium: 109 } });
   });
   await test(label + ' ' + 'order without Express: one line item', async () => {
     stripeCalls = [];
@@ -130,18 +151,79 @@ async function workerSuite(label, worker) {
     assert.equal(p.get('metadata[express]'), 'true');
   assert.equal(p.get('success_url'), 'https://spritzconsulting.com/steam-analysis/?paid=1&plan=premium&express=1');
   });
-  await test(label + ' ' + 'Express in USD (no Express price) falls back to EUR', async () => {
-    stripeCalls = [];
-    await post(order({ express: true, currency: 'usd' }));
-    assert.equal(stripeCalls[0].params.get('currency'), 'eur');
+  for (const currency of ['eur', 'usd', 'gbp']) {
+    for (const tier of ['standard', 'premium']) {
+      for (const withExpress of [false, true]) {
+        await test(label + ' ' + currency + ' ' + tier + (withExpress ? ' with Express' : ' without Express') + ': session currency, line items, expected total', async () => {
+          stripeCalls = [];
+          const r = await post(order({ version: tier, currency, express: withExpress }));
+          assert.equal(r.status, 200);
+          const p = stripeCalls[0].params;
+          assert.equal(p.get('currency'), currency);
+          assert.equal(p.get('metadata[currency]'), currency);
+          assert.equal(p.get('line_items[0][price]'), tier === 'standard' ? 'price_std' : 'price_prem');
+          assert.equal(p.get('line_items[0][quantity]'), '1');
+          assert.equal(p.get('line_items[1][price]'), withExpress ? (tier === 'standard' ? 'price_x_std' : 'price_x_prem') : null);
+          const key = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).pop();
+          const rec = JSON.parse(kv.get(key));
+          const base = baseEnv.PRICE_AMOUNTS[currency][tier], extra = withExpress ? baseEnv.EXPRESS_AMOUNTS[currency][tier] : 0;
+          assert.equal(rec.currency, currency);
+          assert.equal(rec.express, withExpress);
+          assert.equal(rec.expectedTotal, (base + extra) * 100);
+        });
+      }
+    }
+  }
+  await test(label + ' ' + 'totals match the agreed price table (Indie 148/163/133, Publisher 398/438/331)', async () => {
+    const t = (tier, cur) => baseEnv.PRICE_AMOUNTS[cur][tier] + baseEnv.EXPRESS_AMOUNTS[cur][tier];
+    assert.deepEqual(['eur', 'usd', 'gbp'].map((c) => t('standard', c)), [148, 163, 133]);
+    assert.deepEqual(['eur', 'usd', 'gbp'].map((c) => t('premium', c)), [398, 438, 331]);
   });
-  await test(label + ' ' + 'base order in USD keeps USD', async () => {
+  await test(label + ' ' + 'Express in a currency without an Express amount is refused, with no fallback and no Stripe call', async () => {
+    const env = { ...baseEnv, EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: {}, gbp: { standard: 44, premium: 82 } } };
     stripeCalls = [];
-    await post(order({ currency: 'usd' }));
+    const recordsBefore = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).length;
+    const r = await post(order({ express: true, currency: 'usd' }), env);
+    const j = await r.json();
+    assert.equal(r.status, 422);
+    assert.deepEqual([j.error, j.currency], ['express_unavailable', 'usd']);
+    assert.equal(stripeCalls.length, 0);
+    assert.equal([...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).length, recordsBefore);
+  });
+  await test(label + ' ' + 'Express in a currency without an Express price id is refused too', async () => {
+    const env = { ...baseEnv, EXPRESS_PRICES: { eur: { standard: 'price_x_std', premium: 'price_x_prem' }, usd: {}, gbp: {} } };
+    assert.equal((await post(order({ express: true, currency: 'gbp' }), env)).status, 422);
+  });
+  await test(label + ' ' + 'a base order in that currency still works', async () => {
+    const env = { ...baseEnv, EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: {}, gbp: {} } };
+    stripeCalls = [];
+    assert.equal((await post(order({ currency: 'usd' }), env)).status, 200);
     assert.equal(stripeCalls[0].params.get('currency'), 'usd');
   });
-  await test(label + ' ' + 'unknown currency is rejected', async () => {
-    assert.equal((await post(order({ currency: 'jpy' }))).status, 422);
+  await test(label + ' ' + 'flat Express prices {standard, premium} apply to every currency', async () => {
+    const env = { ...baseEnv, EXPRESS_PRICES: { standard: 'price_x_std', premium: 'price_x_prem' } };
+    stripeCalls = [];
+    assert.equal((await post(order({ express: true, currency: 'gbp' }), env)).status, 200);
+    assert.equal(stripeCalls[0].params.get('line_items[1][price]'), 'price_x_std');
+  });
+  await test(label + ' ' + 'no currency in the payload defaults to EUR', async () => {
+    stripeCalls = [];
+    await post({ ...order(), currency: undefined });
+    assert.equal(stripeCalls[0].params.get('currency'), 'eur');
+  });
+  await test(label + ' ' + 'unknown currency is rejected with a clear 422 and the allowed list', async () => {
+    for (const bad of ['jpy', 'EURO', 'xx', 5, {}]) {
+      const r = await post(order({ currency: bad }));
+      const j = await r.json();
+      assert.equal(r.status, 422, 'currency ' + JSON.stringify(bad));
+      assert.equal(j.error, 'invalid_currency');
+      assert.deepEqual(j.allowed, ['eur', 'usd', 'gbp']);
+    }
+  });
+  await test(label + ' ' + 'currency is accepted in any letter case', async () => {
+    stripeCalls = [];
+    assert.equal((await post(order({ currency: 'GBP' }))).status, 200);
+    assert.equal(stripeCalls[0].params.get('currency'), 'gbp');
   });
   await test(label + ' ' + 'Express refused when EXPRESS_ENABLED is false', async () => {
     const r = await post(order({ express: true }), { ...baseEnv, EXPRESS_ENABLED: 'false' });
@@ -192,6 +274,28 @@ async function workerSuite(label, worker) {
     assert.equal(rec.amountTotal, 14800);
     assert.ok(kv.has('order:paid:cs_test_1'));
   });
+  await test(label + ' ' + 'webhook: the KV record follows the chosen currency (Publisher with Express in GBP, 331)', async () => {
+    stripeCalls = [];
+    await post(order({ version: 'premium', express: true, currency: 'gbp' }));
+    const key = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).pop();
+    const id = key.slice(6);
+    const created = Math.floor(new Date('2026-11-17T10:00:00+01:00').getTime() / 1000);
+    const mk = (sid, total) => JSON.stringify({ type: 'checkout.session.completed', created, data: { object: {
+      id: sid, payment_status: 'paid', metadata: { order_id: id, tier: 'premium', express: 'true', currency: 'gbp' }, amount_total: total, currency: 'gbp' } } });
+    const good = mk('cs_gbp_1', 33100);
+    assert.equal((await call('/api/order/webhook', { method: 'POST', headers: signed(good), body: good })).status, 200);
+    let rec = JSON.parse(kv.get(key));
+    assert.deepEqual([rec.currency, rec.paidCurrency, rec.amountTotal, rec.expectedTotal, rec.amountMatches], ['gbp', 'gbp', 33100, 33100, true]);
+    assert.equal(rec.businessDays, 2);
+    // A paid total that differs from the expected one is flagged, never rejected.
+    await post(order({ version: 'standard', currency: 'usd' }));
+    const key2 = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).pop();
+    const odd = JSON.stringify({ type: 'checkout.session.completed', created, data: { object: {
+      id: 'cs_usd_1', payment_status: 'paid', metadata: { order_id: key2.slice(6), tier: 'standard', express: 'false', currency: 'usd' }, amount_total: 12345, currency: 'usd' } } });
+    assert.equal((await call('/api/order/webhook', { method: 'POST', headers: signed(odd), body: odd })).status, 200);
+    rec = JSON.parse(kv.get(key2));
+    assert.deepEqual([rec.status, rec.amountMatches], ['paid', false]);
+  });
   await test(label + ' ' + 'webhook: the same session twice is a duplicate and changes nothing', async () => {
     const before = kv.get('order:' + paidOrderId);
     const created = Math.floor(new Date('2026-11-20T10:00:00+01:00').getTime() / 1000);
@@ -225,9 +329,9 @@ async function workerSuite(label, worker) {
 
 
   await test(label + ' ' + 'dashboard variables given as JSON text work like objects', async () => {
-    const textEnv = { ...baseEnv, PRICES: JSON.stringify(baseEnv.PRICES), EXPRESS_PRICES: JSON.stringify(baseEnv.EXPRESS_PRICES), EXPRESS_AMOUNTS: JSON.stringify(baseEnv.EXPRESS_AMOUNTS) };
+    const textEnv = { ...baseEnv, PRICES: JSON.stringify(baseEnv.PRICES), EXPRESS_PRICES: JSON.stringify(baseEnv.EXPRESS_PRICES), PRICE_AMOUNTS: JSON.stringify(baseEnv.PRICE_AMOUNTS), EXPRESS_AMOUNTS: JSON.stringify(baseEnv.EXPRESS_AMOUNTS) };
     const cfg = await (await call('/api/order/config', { method: 'GET' }, textEnv)).json();
-    assert.deepEqual(cfg, { enabled: true, express: { eur: { standard: 49, premium: 99 } } });
+    assert.deepEqual(cfg, FULL_CONFIG);
     stripeCalls = [];
     const r = await post(order({ express: true }), textEnv);
     assert.equal(r.status, 200);

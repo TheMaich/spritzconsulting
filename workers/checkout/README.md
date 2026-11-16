@@ -4,7 +4,7 @@ Order backend for the Steam Analysis page, Indie and Publisher tiers. Solo Dev (
 
 | Route | What it does |
 | --- | --- |
-| `GET /api/order/config` | Tells the order modal whether Express is on and what it costs per currency. |
+| `GET /api/order/config` | Tells the order modal which currencies exist, the tier amounts, and whether Express is on and what it costs per currency. |
 | `POST /api/order` | Validates the order, stores it in KV, creates a Stripe Checkout session, returns `{ url }`. |
 | `POST /api/order/webhook` | Stripe calls it when the session is paid. Marks the order paid and stores `due_date`. |
 
@@ -31,9 +31,15 @@ From this folder:
 ## Configuration (`wrangler.toml`, `[vars]`)
 
 - `PRICES`: the Stripe price ids of the two tiers. They are the **sandbox** ids today. Swap for the live ids.
-- `EXPRESS_PRICES`: the Express add-on price ids per currency. Only EUR is planned; `usd` and `gbp` are empty.
-  A currency with no Express price never shows Express, and an Express order in it falls back to EUR.
-- `EXPRESS_AMOUNTS`: the Express amounts the page shows, in whole units. Keep them equal to the Stripe prices.
+- `EXPRESS_PRICES`: the Express add-on price ids per currency (`eur`, `usd`, `gbp`). A Stripe price can carry all
+  three currencies, so the same id repeats under each key. A flat `{standard, premium}` object also works and applies
+  to every currency. A currency with an empty entry has no Express.
+- `PRICE_AMOUNTS`: the tier amounts the page shows, per currency, in whole units. Keep them equal to the Stripe prices.
+  The Worker reads them for `/api/order/config` and to check every paid total (`amountMatches` in the KV record).
+- `EXPRESS_AMOUNTS`: the Express amounts the page shows, per currency, in whole units. Keep them equal to the Stripe prices.
+- Currency: the visitor picks EUR, USD or GBP on the page and the order carries it. Anything else gets a 422
+  (`invalid_currency`). Express in a currency without an Express price and amount gets a 422 (`express_unavailable`);
+  a Checkout session has one currency, so the Worker never falls back to another one.
 - `EXPRESS_ENABLED`: `"false"` by default. With it off the page hides the Express row and the Worker refuses Express.
 
 To open Express: create the two Express products in Stripe, paste their price ids into `EXPRESS_PRICES.eur`,
@@ -44,7 +50,7 @@ set `EXPRESS_ENABLED = "true"`, deploy.
 Keys in the `CONTACT_SUBMISSIONS` namespace, all with a 30 day expiry (the order form promises deletion after 30 days):
 
 - `order:<uuid>`: the order (tier, express, currency, Steam link, email, optional fields, status, and after payment
-  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`).
+  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency`, and `amountMatches` when the paid total equals the expected one).
 - `order:paid:<checkout session id>`: marks a session as processed, so a repeated Stripe delivery changes nothing.
 - `order:rl:<ip>`: rate limit, 5 orders per IP per 10 minutes.
 
@@ -67,8 +73,8 @@ Publisher 3 (2 with Express). The list ends with 2027: after that the helper ski
 
 `node build-single.mjs` writes `worker.single.js`: `worker.js` and `business-days.js` in one file, with no imports.
 Paste it into the dashboard editor. The dashboard does not read `wrangler.toml`, so there you also set by hand:
-the KV binding `CONTACT_SUBMISSIONS`, the variables `EXPRESS_ENABLED`, `PRICES`, `EXPRESS_PRICES` and `EXPRESS_AMOUNTS`
-(the last three as JSON), the two secrets, and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
+the KV binding `CONTACT_SUBMISSIONS`, the variables `EXPRESS_ENABLED`, `PRICES`, `EXPRESS_PRICES`, `PRICE_AMOUNTS` and `EXPRESS_AMOUNTS`
+(all but the first as JSON), the two secrets, and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
 
 ## Tests
 

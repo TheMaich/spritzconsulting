@@ -7,9 +7,10 @@
  *
  * - One Checkout session with two line items: the tier price and, when asked for, the Express
  *   price (quantity 1 each). Express never replaces the base price.
- * - The page is the source of the currency. The Worker only checks it against an allowed list.
- *   If Express is requested in a currency that has no Express price, the whole session falls
- *   back to EUR.
+ * - The visitor picks the currency on the page (EUR, USD or GBP). The Worker checks it against an
+ *   allowed list and answers 422 for anything else. A Checkout session has one currency, so an
+ *   Express order in a currency that has no Express price and amount is refused; it never falls
+ *   back to another currency.
  * - Orders live in the CONTACT_SUBMISSIONS KV namespace under the "order:" prefix and are
  *   deleted after 30 days, as the order form promises.
  * - Solo Dev (free) does not go through this Worker.
@@ -84,21 +85,40 @@ function expressEnabled(env) {
   return String(env.EXPRESS_ENABLED).toLowerCase() === 'true';
 }
 
-// Express for a tier in a currency, or null when it is off or has no price or no amount there.
+// Price ids per currency. A Stripe price can carry every currency, so the same id may repeat under
+// "eur", "usd" and "gbp"; a flat {standard, premium} object is accepted too and applies to all three.
+function pricesFor(value, currency) {
+  const obj = asObject(value);
+  if (obj[currency]) return obj[currency];
+  return obj.standard || obj.premium ? obj : {};
+}
+
+// Amounts shown on the page, in whole currency units: { eur: { standard, premium }, usd: {...}, gbp: {...} }.
+function amountFor(value, tier, currency) {
+  const n = Number(((asObject(value)[currency]) || {})[tier]);
+  return n > 0 ? n : null;
+}
+
+// Express for a tier in a currency, or null when it is off or has no price id or no amount there.
 function expressFor(env, tier, currency) {
   if (!expressEnabled(env)) return null;
-  const prices = asObject(env.EXPRESS_PRICES)[currency] || {};
-  const amounts = asObject(env.EXPRESS_AMOUNTS)[currency] || {};
-  const priceId = prices[tier];
-  const amount = Number(amounts[tier]);
-  if (!priceId || !(amount > 0)) return null;
+  const priceId = pricesFor(env.EXPRESS_PRICES, currency)[tier];
+  const amount = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
+  if (!priceId || !amount) return null;
   return { priceId, amount };
 }
 
+// What the order modal may offer: the tier amounts and, where Express is on and priced, the Express amounts.
 function publicConfig(env) {
+  const amounts = {};
   const express = {};
   for (const currency of CURRENCIES) {
     for (const tier of Object.keys(TIERS)) {
+      const base = amountFor(env.PRICE_AMOUNTS, tier, currency);
+      if (base) {
+        amounts[currency] = amounts[currency] || {};
+        amounts[currency][tier] = base;
+      }
       const e = expressFor(env, tier, currency);
       if (e) {
         express[currency] = express[currency] || {};
@@ -106,7 +126,14 @@ function publicConfig(env) {
       }
     }
   }
-  return { enabled: expressEnabled(env), express };
+  return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
+}
+
+// Total the customer should pay, in the smallest currency unit, or null when the tier amount is not configured.
+function expectedTotal(env, tier, currency, express) {
+  const base = amountFor(env.PRICE_AMOUNTS, tier, currency);
+  if (!base) return null;
+  return Math.round((base + (express ? express.amount : 0)) * 100);
 }
 
 // ---- Rate limit (same shape as contact-form, own key prefix) ---------------------------
@@ -220,20 +247,18 @@ async function handleOrder(request, env) {
     if (!(price > 0 && price < 1000)) return json(422, { ok: false, error: 'invalid_price' }, origin);
   }
 
-  // The page names the currency; we only accept values from the allowed list.
-  let currency = body.currency == null || body.currency === '' ? DEFAULT_CURRENCY : clip(body.currency, 3).toLowerCase();
-  if (!CURRENCIES.includes(currency)) return json(422, { ok: false, error: 'invalid_currency' }, origin);
+  // The visitor picks the currency on the page; only values from the allowed list pass.
+  const asked = body.currency == null || body.currency === '' ? DEFAULT_CURRENCY : body.currency;
+  const currency = typeof asked === 'string' ? asked.trim().toLowerCase() : '';
+  if (!CURRENCIES.includes(currency)) return json(422, { ok: false, error: 'invalid_currency', allowed: CURRENCIES }, origin);
 
-  // Express is for Indie and Publisher only, and only when it is switched on and priced.
+  // Express is for Indie and Publisher only. It needs to be switched on and to have a price and an amount in
+  // the chosen currency. A session cannot mix currencies, so there is no fallback to another one.
   const wantsExpress = body.express === true;
   let express = null;
   if (wantsExpress) {
     express = expressFor(env, tier, currency);
-    if (!express) {
-      currency = DEFAULT_CURRENCY;                       // no Express price in that currency: fall back to EUR
-      express = expressFor(env, tier, currency);
-    }
-    if (!express) return json(422, { ok: false, error: 'express_unavailable' }, origin);
+    if (!express) return json(422, { ok: false, error: 'express_unavailable', currency }, origin);
   }
 
   const basePrice = asObject(env.PRICES)[tier];
@@ -254,6 +279,7 @@ async function handleOrder(request, env) {
     tier,
     express: !!express,
     currency,
+    expectedTotal: expectedTotal(env, tier, currency, express),
     steam,
     email,
     quarter,
@@ -337,6 +363,8 @@ async function handleWebhook(request, env) {
   order.stripeSessionId = session.id;
   order.amountTotal = session.amount_total;
   order.paidCurrency = session.currency;
+  order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
+  if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
   order.businessDays = days;
   order.due_date = due ? due.due : null;
   order.due_start_date = due ? due.start : null;

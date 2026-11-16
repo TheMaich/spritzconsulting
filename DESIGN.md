@@ -161,6 +161,15 @@ components:
   chip-filter-active:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
+  currency-option:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-2}"
+    typography: "{typography.label}"
+    rounded: "{rounded.pill}"
+    padding: "8px 16px"
+  currency-option-selected:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
   checkbox-row:
     backgroundColor: "transparent"
     textColor: "{colors.ink-2}"
@@ -324,6 +333,16 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Boxed row** (`.om-express`, a choice with a price): `paper` fill, rule border, radius 12px, `padding: 12px 14px`. Hover → border 45%-mix clay. Checked → clay border, `ink` text.
 - **Invalid:** `2px` danger outline with a 2px offset, same as inputs.
 - **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed. State is still shown by colour and border.
+
+### Currency Selector
+- **Control:** three native `<input type="radio">` inside labels, one group, styled as a segmented pill. The radio is invisible and covers its label, so mouse, touch and arrow keys all work without extra script.
+- **Container:** `paper-3` fill, rule border, pill radius, 4px inner padding, 2px gap (the `toggle-pill` tokens).
+- **Option:** pill, `padding: 8px 16px`, mono label 13px, ls 0.065em, uppercase, `ink-2` text. Hover on an unselected option → text `ink`, 180ms on `ease-default`.
+- **Selected:** `ink` fill, `paper` text, as `toggle-pill-active`.
+- **Pressed** (`:active` on the label): the option scales to 0.94, 180ms on `ease-default`.
+- **Focus:** keyboard focus draws a 2px clay outline with a 2px offset around the option.
+- **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed. The selected state still shows by fill and text colour.
+- **Use:** one per page above the price cards, and a second inside the order modal. Both stay in step and the choice persists in `localStorage` (wrapped in try/catch).
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
