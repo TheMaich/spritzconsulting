@@ -37,7 +37,7 @@ Key facts:
 ## Optional
 
 - [Resources hub](https://spritzconsulting.com/resources/): All published guides and tools.
-- [Privacy policy](https://spritzconsulting.com/privacy/): Cookieless site; contact form data handling.
+- [Terms and privacy](https://spritzconsulting.com/privacy/): Terms for Steam Analysis, privacy and cookie information.
 - [Michele Di Nardo on LinkedIn](https://www.linkedin.com/in/michele-dinardo/)
 - [Michele Di Nardo on MobyGames](https://www.mobygames.com/person/878901/michele-di-nardo/)
 - [Spritz Consulting on LinkedIn](https://www.linkedin.com/company/115837121/)
