@@ -342,6 +342,20 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed; the on state still shows by colour and knob position.
 - **Use:** one boolean choice with a price attached, such as Express delivery. For a plain yes or no inside a sentence, use the Checkbox.
 
+### Tier Card
+- **Source:** `assets/css/steam-tier-card.css`, loaded by `/steam-analysis/` and by the homepage. The two pages show the same card. Change the stylesheet, never a copy of the rules.
+- **Surface** (`.sa-tier`): `paper-3` fill with a 12% clay glow in the top right corner, rule border, radius 18px, `shadow-md`, padding `28px 26px 52px`. The extra bottom padding keeps the three buttons aligned.
+- **Title** (`h3`): serif 500, opsz 72, centred. The tier name is a clay italic and the word "Analysis" stays `ink`.
+- **Price** (`.sa-price`): serif amounts in one line, `EUR / USD / GBP`, separated by a faint slash. A rule line closes the block. The amounts are information only. Stripe shows the buyer's currency at checkout.
+- **Hover and focus:** the card scales to 1.03 over 350ms, the border mixes 35% clay and a clay glow appears. The feature list blurs to 6% opacity and the "Made for" panel (`.sa-for`) fades in over it. Keyboard focus inside the card does the same.
+- **Touch screens** (`hover: none`): the panel is always visible above the list and the list does not blur.
+- **Solo Dev:** `.sa-tier.free` keeps a constant soft clay glow, and `.sa-limit` shows the cap of three analyses.
+- **Button** (`.sa-buy`): clay outline. On hover and focus it fills with clay, lifts 2px and glows. `:active` returns it to the baseline.
+- **Order:** the page buttons carry `data-order="free|standard|premium"` and open the order modal. On other pages, the same button is a plain link to `/steam-analysis/?tier=free|standard|premium`, which opens that order form.
+- **Reveal:** the card sits inside an element with `data-reveal`, so it fades up on scroll like every other section.
+- **Reduced motion:** the scale, the fades and the button lift are removed. The panel still shows on hover and focus.
+- **Load order:** the stylesheet goes after the page's `.btn` rule. `.sa-buy` overrides the border and colour of `.btn` by source order.
+
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
 - **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with a clay italic `Σ` prefix and a clay-tinted rule extending to the right.
