@@ -14,12 +14,12 @@ const FULL = {
   enabled: true,
   currencies: ['eur', 'usd', 'gbp'],
   amounts: { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 } },
-  express: { standard: { eur: 49, usd: 54, gbp: 44 }, premium: { eur: 99, usd: 109, gbp: 82 } },
+  express: { standard: { eur: 49, usd: 49, gbp: 49 }, premium: { eur: 99, usd: 99, gbp: 99 } },
 };
 const KILL = '*,*::before,*::after{animation:none!important;transition:none!important}[data-reveal],.blur-reveal{opacity:1!important;filter:none!important;transform:none!important}';
 const PRICE_ROW = { standard: '€99 / $109 / £89', premium: '€299 / $329 / £249' };
-const EXPRESS_ROW = { standard: '+€49 / $54 / £44', premium: '+€99 / $109 / £82' };
-const TOTAL_ROW = { standard: 'Total with Express: €148 / $163 / £133', premium: 'Total with Express: €398 / $438 / £331' };
+const EXPRESS_ROW = { standard: '+€49 / $49 / £49', premium: '+€99 / $99 / £99' };
+const TOTAL_ROW = { standard: 'Total with Express: €148 / $158 / £138', premium: 'Total with Express: €398 / $428 / £348' };
 const FASTER = { standard: 'Delivered in 1 business day instead of 2', premium: 'Delivered in 2 business days instead of 3' };
 
 let failed = 0;
@@ -87,7 +87,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(!('currency' in posts[0]), 'the order carries no currency: Stripe chooses it');
   });
 
-  const noGbpStandard = { ...FULL, express: { standard: { eur: 49, usd: 54 }, premium: FULL.express.premium } };
+  const noGbpStandard = { ...FULL, express: { standard: { eur: 49, usd: 49 }, premium: FULL.express.premium } };
   await session('Express needs all three currencies', { config: noGbpStandard }, async (p) => {
     await openModal(p, 'standard');
     ok(!(await p.isVisible('#om-express')), 'Indie: no Express row when one currency has no Express amount');
@@ -116,13 +116,48 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(await text(p, '#om-go span') === 'Get Solo Dev Analysis', 'free button unchanged');
   });
 
-  await session('checkbox motion', {}, async (p) => {
-    await p.evaluate(() => { document.querySelectorAll('style').forEach((s) => { if (s.textContent.indexOf('animation:none!important') >= 0) s.remove(); }); });
-    ok(await p.evaluate(() => getComputedStyle(document.querySelector('.om-chk')).transitionDuration.split(',').every((d) => d.trim() === '0.18s')), 'checkbox rows transition in 180ms');
+  const clayOf = (p) => p.evaluate(() => { const t = document.createElement('i'); t.style.color = 'var(--clay)'; document.body.appendChild(t); const c = getComputedStyle(t).color; t.remove(); return c; });
+  await session('Express switch', {}, async (p) => {
+    await openModal(p, 'standard');
+    const sw = p.locator('input[name=express]');
+    ok(await sw.getAttribute('role') === 'switch', 'the Express control is a switch');
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]')).appearance === 'none'), 'native checkbox drawn as a switch');
+    const clay = await clayOf(p);
+    const off = await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]')).backgroundColor);
+    ok(off !== clay, 'off track is not clay (' + off + ')');
+    await p.click('#om-express'); await p.waitForTimeout(250);
+    const on = await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]')).backgroundColor);
+    ok(on === clay, 'on track is clay: ' + on + ' = ' + clay);
+    const knob = await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]'), '::after').transform);
+    ok(/matrix\(1, 0, 0, 1, 18, 0\)/.test(knob), 'the knob moves to the right when on: ' + knob);
+    const box = await sw.boundingBox();
+    ok(Math.abs(box.width - 46) < 1 && Math.abs(box.height - 28) < 1, 'switch is 46 x 28: ' + Math.round(box.width) + ' x ' + Math.round(box.height));
+    await p.click('#om-express'); await p.waitForTimeout(250);
+    ok(!(await sw.isChecked()), 'a second click turns it off');
+    await p.focus('input[name=express]'); await p.keyboard.press('Space'); await p.waitForTimeout(150);
+    ok(await sw.isChecked(), 'the Space key toggles it');
   });
-  await session('reduced motion', { ctx: { reducedMotion: 'reduce' } }, async (p) => {
+  await session('switch motion', {}, async (p) => {
+    await openModal(p, 'standard');
     await p.evaluate(() => { document.querySelectorAll('style').forEach((s) => { if (s.textContent.indexOf('animation:none!important') >= 0) s.remove(); }); });
-    ok(await p.evaluate(() => getComputedStyle(document.querySelector('.om-chk')).transitionDuration.split(',').every((d) => d.trim() === '0s')), 'no checkbox transition under reduced motion');
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]')).transitionDuration.split(',').every((d) => d.trim() === '0.18s')), 'switch transitions last 180ms');
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]'), '::after').transitionDuration.split(',').every((d) => d.trim() === '0.18s')), 'knob transitions last 180ms');
+    const box = await p.locator('input[name=express]').boundingBox();
+    await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await p.mouse.down(); await p.waitForTimeout(350);
+    const t = await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]')).transform);
+    await p.mouse.up();
+    ok(/matrix\(0\.94/.test(t), ':active scales the switch to 0.94, got ' + t);
+  });
+  await session('checkbox rows', { ctx: { reducedMotion: 'reduce' } }, async (p) => {
+    await p.evaluate(() => { document.querySelectorAll('style').forEach((s) => { if (s.textContent.indexOf('animation:none!important') >= 0) s.remove(); }); });
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('#om-news')).transitionDuration.split(',').every((d) => d.trim() === '0s')), 'newsletter checkbox row has no transition under reduced motion');
+  });
+  await session('switch under reduced motion', { ctx: { reducedMotion: 'reduce' } }, async (p) => {
+    await openModal(p, 'standard');
+    await p.evaluate(() => { document.querySelectorAll('style').forEach((s) => { if (s.textContent.indexOf('animation:none!important') >= 0) s.remove(); }); });
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]')).transitionDuration.split(',').every((d) => d.trim() === '0s')), 'no switch transition under reduced motion');
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('input[name=express]'), '::after').transitionDuration.split(',').every((d) => d.trim() === '0s')), 'no knob transition under reduced motion');
+    ok(await p.evaluate(() => getComputedStyle(document.querySelector('#om-express')).transitionDuration.split(',').every((d) => d.trim() === '0s')), 'no row transition under reduced motion');
   });
 
   for (const vp of [{ w: 1280, h: 900 }, { w: 390, h: 844 }]) {
@@ -140,8 +175,8 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
       if (SHOTS) { await p.evaluate(() => document.getElementById('versions').scrollIntoView()); await p.waitForTimeout(250); await p.screenshot({ path: path.join(SHOTS, 'cards-' + vp.w + '.png') }); }
       for (const tier of ['standard', 'premium']) {
         await openModal(p, tier); await p.click('#om-express'); await p.waitForTimeout(300);
-        const geo = await p.evaluate(() => { const d = document.getElementById('order-modal').getBoundingClientRect(), vh = innerHeight; const ok2 = (s) => { const x = document.querySelector(s).getBoundingClientRect(); return x.top >= Math.max(0, d.top) - 1 && x.bottom <= Math.min(vh, d.bottom) + 1 && x.left >= d.left - 1 && x.right <= d.right + 1; }; return { express: ok2('#om-express'), total: ok2('#om-total'), go: ok2('#om-go') }; });
-        ok(geo.express && geo.total && geo.go, vp.w + 'px ' + tier + ': Express row, total and pay button fully visible ' + JSON.stringify(geo));
+        const geo = await p.evaluate(() => { const d = document.getElementById('order-modal').getBoundingClientRect(), vh = innerHeight; const ok2 = (s) => { const x = document.querySelector(s).getBoundingClientRect(); return x.top >= Math.max(0, d.top) - 1 && x.bottom <= Math.min(vh, d.bottom) + 1 && x.left >= d.left - 1 && x.right <= d.right + 1; }; return { express: ok2('#om-express'), sw: ok2('input[name=express]'), total: ok2('#om-total'), go: ok2('#om-go') }; });
+        ok(geo.express && geo.sw && geo.total && geo.go, vp.w + 'px ' + tier + ': Express row, switch, total and pay button fully visible ' + JSON.stringify(geo));
         const wrap = await p.evaluate(() => { const t = document.getElementById('om-total'); return t.scrollWidth <= t.clientWidth + 1; });
         ok(wrap, vp.w + 'px ' + tier + ': the total line is not cut off');
         const copyW = await p.evaluate(() => document.getElementById('om-express-copy') ? 0 : document.querySelector('.om-express-copy').getBoundingClientRect().width);

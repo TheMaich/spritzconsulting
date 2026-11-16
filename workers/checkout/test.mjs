@@ -88,14 +88,14 @@ async function workerSuite(label, worker) {
       eur: { standard: 99, premium: 299 }, usd: { standard: 109, premium: 329 }, gbp: { standard: 89, premium: 249 },
     },
     EXPRESS_AMOUNTS: {
-      eur: { standard: 49, premium: 99 }, usd: { standard: 54, premium: 109 }, gbp: { standard: 44, premium: 82 },
+      eur: { standard: 49, premium: 99 }, usd: { standard: 49, premium: 99 }, gbp: { standard: 49, premium: 99 },
     },
   };
   const FULL_CONFIG = {
     enabled: true,
     currencies: ['eur', 'usd', 'gbp'],
     amounts: { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 } },
-    express: { standard: { eur: 49, usd: 54, gbp: 44 }, premium: { eur: 99, usd: 109, gbp: 82 } },
+    express: { standard: { eur: 49, usd: 49, gbp: 49 }, premium: { eur: 99, usd: 99, gbp: 99 } },
   };
   let stripeCalls = [];
   globalThis.fetch = async (url, init) => {
@@ -121,7 +121,7 @@ async function workerSuite(label, worker) {
     assert.deepEqual(j, { enabled: false, currencies: ['eur', 'usd', 'gbp'], amounts: FULL_CONFIG.amounts, express: {} });
   });
   await test(label + ' ' + 'config: Express is off for a tier when one currency has no Express amount', async () => {
-    const env = { ...baseEnv, EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: { standard: 54, premium: 109 }, gbp: { standard: 44 } } };
+    const env = { ...baseEnv, EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: { standard: 49, premium: 99 }, gbp: { standard: 49 } } };
     const j = await (await call('/api/order/config', { method: 'GET' }, env)).json();
     assert.deepEqual(j.express, { standard: FULL_CONFIG.express.standard });
   });
@@ -184,10 +184,10 @@ async function workerSuite(label, worker) {
       assert.equal(stripeCalls[0].params.get('currency'), null);
     }
   });
-  await test(label + ' ' + 'totals match the agreed price table (Indie 148/163/133, Publisher 398/438/331)', async () => {
+  await test(label + ' ' + 'totals follow the price table (Indie 148/158/138, Publisher 398/428/348)', async () => {
     const t = (tier, cur) => baseEnv.PRICE_AMOUNTS[cur][tier] + baseEnv.EXPRESS_AMOUNTS[cur][tier];
-    assert.deepEqual(['eur', 'usd', 'gbp'].map((c) => t('standard', c)), [148, 163, 133]);
-    assert.deepEqual(['eur', 'usd', 'gbp'].map((c) => t('premium', c)), [398, 438, 331]);
+    assert.deepEqual(['eur', 'usd', 'gbp'].map((c) => t('standard', c)), [148, 158, 138]);
+    assert.deepEqual(['eur', 'usd', 'gbp'].map((c) => t('premium', c)), [398, 428, 348]);
   });
   await test(label + ' ' + 'Express is refused when one currency has no Express amount, with no Stripe call and no record', async () => {
     const env = { ...baseEnv, EXPRESS_AMOUNTS: { eur: { standard: 49, premium: 99 }, usd: {}, gbp: { standard: 44, premium: 82 } } };
@@ -264,7 +264,7 @@ async function workerSuite(label, worker) {
     assert.equal(rec.amountTotal, 14800);
     assert.ok(kv.has('order:paid:cs_test_1'));
   });
-  await test(label + ' ' + 'webhook: the record stores the currency Stripe used and checks the total (Publisher with Express paid in GBP, 331)', async () => {
+  await test(label + ' ' + 'webhook: the record stores the currency Stripe used and checks the total (Publisher with Express paid in GBP, 348)', async () => {
     stripeCalls = [];
     await post(order({ version: 'premium', express: true }));
     const key = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).pop();
@@ -272,18 +272,18 @@ async function workerSuite(label, worker) {
     const created = Math.floor(new Date('2026-11-17T10:00:00+01:00').getTime() / 1000);
     const mk = (sid, oid, tier, express, total, cur) => JSON.stringify({ type: 'checkout.session.completed', created, data: { object: {
       id: sid, payment_status: 'paid', metadata: { order_id: oid, tier, express }, amount_total: total, currency: cur } } });
-    const good = mk('cs_gbp_1', id, 'premium', 'true', 33100, 'gbp');
+    const good = mk('cs_gbp_1', id, 'premium', 'true', 34800, 'gbp');
     assert.equal((await call('/api/order/webhook', { method: 'POST', headers: signed(good), body: good })).status, 200);
     let rec = JSON.parse(kv.get(key));
-    assert.deepEqual([rec.paidCurrency, rec.amountTotal, rec.expectedTotal, rec.amountMatches], ['gbp', 33100, 33100, true]);
+    assert.deepEqual([rec.paidCurrency, rec.amountTotal, rec.expectedTotal, rec.amountMatches], ['gbp', 34800, 34800, true]);
     assert.equal(rec.businessDays, 2);
-    // The same order paid in USD would be 43800; the other currencies check against their own amounts.
+    // The same order paid in USD would be 42800; the other currencies check against their own amounts.
     await post(order({ version: 'premium', express: true }));
     const k2 = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).pop();
-    const usd = mk('cs_usd_1', k2.slice(6), 'premium', 'true', 43800, 'usd');
+    const usd = mk('cs_usd_1', k2.slice(6), 'premium', 'true', 42800, 'usd');
     await call('/api/order/webhook', { method: 'POST', headers: signed(usd), body: usd });
     rec = JSON.parse(kv.get(k2));
-    assert.deepEqual([rec.paidCurrency, rec.expectedTotal, rec.amountMatches], ['usd', 43800, true]);
+    assert.deepEqual([rec.paidCurrency, rec.expectedTotal, rec.amountMatches], ['usd', 42800, true]);
     // A paid total that differs from the expected one is flagged, never rejected.
     await post(order({ version: 'standard' }));
     const k3 = [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k)).pop();

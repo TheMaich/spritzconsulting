@@ -173,6 +173,13 @@ components:
     padding: "12px 14px"
   checkbox-boxed-checked:
     textColor: "{colors.ink}"
+  switch-off:
+    backgroundColor: "{colors.paper-3}"
+    rounded: "{rounded.pill}"
+  switch-on:
+    backgroundColor: "{colors.clay}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.pill}"
   toggle-pill:
     backgroundColor: "{colors.paper-3}"
     textColor: "{colors.ink-3}"
@@ -321,9 +328,19 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Control:** the native `<input type="checkbox">`, never a custom replacement. `accent-color: clay`, 17px, `cursor: pointer`.
 - **Row** (`.om-chk`): flex, 10px gap, `ink-2` text. Hover → text `ink`, 180ms on `ease-default`. The whole label is the hit area.
 - **Pressed** (`:active` on the input): `transform: scale(0.94)`, 180ms on `ease-default`.
-- **Boxed row** (`.om-express`, a choice with a price): `paper` fill, rule border, radius 12px, `padding: 12px 14px`. Hover → border 45%-mix clay. Checked → clay border, `ink` text.
+- **Boxed row** (`.om-express`, a choice with a price): `paper` fill, rule border, radius 12px, `padding: 12px 14px`. Hover → border 45%-mix clay. On → clay border, `ink` text. Its control is the Switch below.
 - **Invalid:** `2px` danger outline with a 2px offset, same as inputs.
 - **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed. State is still shown by colour and border.
+
+### Switch
+- **Control:** a native `<input type="checkbox" role="switch">` with `appearance: none`, drawn as a pill track and a round knob. It keeps keyboard (Space), label click and screen reader state without extra script.
+- **Size:** 46px by 28px, pill radius, 1px rule border. The knob is 22px with a 2px inset.
+- **Off:** the track is a quiet 16%-mix of `ink` over `paper`, the knob is `ink`.
+- **On:** the track is `clay` with a clay border, the knob is `paper` and slides 18px right. This is the clay fill with paper text pairing the buttons use.
+- **Motion:** track colour, border and knob slide take 180ms on `ease-default`. `:active` scales the whole switch to 0.94.
+- **Focus:** a 2px clay outline with a 2px offset. Disabled: 45% opacity, not-allowed cursor.
+- **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed; the on state still shows by colour and knob position.
+- **Use:** one boolean choice with a price attached, such as Express delivery. For a plain yes or no inside a sentence, use the Checkbox.
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).

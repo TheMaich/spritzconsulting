@@ -42,7 +42,7 @@ EXPRESS_PRICES = { eur = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium 
 PRICE_AMOUNTS = { eur = { standard = 99, premium = 299 }, usd = { standard = 109, premium = 329 }, gbp = { standard = 89, premium = 249 } }
 
 # Express amounts the page shows, same units. They must equal the Express prices above.
-EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 54, premium = 109 }, gbp = { standard = 44, premium = 82 } }
+EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49, premium = 99 }, gbp = { standard = 49, premium = 99 } }
 
 # Secrets (never in this file). Set them with:
 #   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)

@@ -1300,19 +1300,27 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-express{ align-items: center; justify-content: space-between; gap: 14px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; transition: border-color .18s var(--ease), color .18s var(--ease); }
 .om-express:hover{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
 .om-express:has(input:checked){ border-color: var(--clay); color: var(--ink); }
-.om-express input{ margin: 0; }
+.om-express{ cursor: pointer; }
+/* iOS style switch: a native checkbox drawn as a pill and a knob. Off: quiet track. On: clay track. 180ms, :active press. */
+.om-express input{ -webkit-appearance: none; appearance: none; box-sizing: border-box; position: relative; flex: none; width: 46px; height: 28px; margin: 0; border-radius: 999px; background: color-mix(in srgb, var(--ink) 16%, var(--paper)); border: 1px solid var(--rule); cursor: pointer; transition: background-color .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease); }
+.om-express input::after{ content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); box-shadow: 0 1px 3px color-mix(in srgb, var(--paper) 70%, transparent); transition: transform .18s var(--ease), background-color .18s var(--ease); }
+.om-express input:checked{ background: var(--clay); border-color: var(--clay); }
+.om-express input:checked::after{ transform: translateX(18px); background: var(--paper); }
+.om-express input:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.om-express input:disabled{ opacity: .45; cursor: not-allowed; }
 .om-express-copy{ flex: 1; display: grid; gap: 2px; }
 .om-express-title{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink); }
 .om-express-time{ font-size: 14.5px; line-height: 1.4; }
 .om-express-price{ flex: none; max-width: 11em; text-align: right; font-family: var(--serif); font-size: 18px; letter-spacing: -0.03em; line-height: 1.2; color: var(--clay); }
 .om-total{ margin: 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--ink); }
 .om-total[hidden]{ display: none; }
-@media (prefers-reduced-motion: reduce){ .om-express{ transition: none; } }
+@media (prefers-reduced-motion: reduce){ .om-express, .om-express input, .om-express input::after{ transition: none; } }
 /* Narrow screens: the three amounts move under the delivery text, so the text keeps its width */
 @media (max-width: 520px){
-  .om-express{ flex-wrap: wrap; row-gap: 6px; }
-  .om-express-copy{ flex: 1 1 0; min-width: 0; }
-  .om-express-price{ flex: 0 0 100%; box-sizing: border-box; max-width: none; text-align: left; padding-left: 31px; }
+  .om-express{ flex-wrap: wrap; row-gap: 8px; }
+  .om-express-copy{ order: 1; flex: 1 1 0; min-width: 0; }
+  .om-express input{ order: 2; }
+  .om-express-price{ order: 3; flex: 0 0 100%; max-width: none; text-align: left; }
 }
 
 .om-status{ margin: 0; border: 1px solid var(--clay); border-radius: 12px; padding: 10px 14px; font-size: 14.5px; color: var(--ink); }
@@ -1636,7 +1644,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     </div>
     <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Tell me about your team, release plans or anything else that helps"></textarea></div>
 
-    <label class="om-chk om-express" id="om-express" hidden><input type="checkbox" name="express" disabled><span class="om-express-copy"><span class="om-express-title">Express</span><span class="om-express-time" id="om-express-time"></span></span><span class="om-express-price" id="om-express-price"></span></label>
+    <label class="om-chk om-express" id="om-express" hidden><span class="om-express-copy"><span class="om-express-title">Express</span><span class="om-express-time" id="om-express-time"></span></span><span class="om-express-price" id="om-express-price"></span><input type="checkbox" role="switch" name="express" aria-label="Express delivery" disabled></label>
     <p class="om-total" id="om-total" hidden></p>
 
     <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
