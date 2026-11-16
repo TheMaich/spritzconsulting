@@ -31,8 +31,8 @@ PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJ
 
 # Express add-on price ids ("Express Delivery, Indie Tier Steam Analysis" and the Publisher one),
 # one entry per currency. Only EUR is planned for now, so USD and GBP stay empty.
-# Fill the ids from the Stripe dashboard (test mode first, then live).
-EXPRESS_PRICES = { eur = { standard = "", premium = "" }, usd = {}, gbp = {} }
+# These are the SANDBOX ids of "Express Delivery, Indie/Publisher Tier Steam Analysis".
+EXPRESS_PRICES = { eur = { standard = "price_1UcRY1JFkRG2ZYUJtgR6Shjg", premium = "price_1UcRYWJFkRG2ZYUJPXJkVNmj" }, usd = {}, gbp = {} }
 
 # Express amounts the page shows, in whole currency units. They must match the Stripe prices above.
 EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = {}, gbp = {} }
