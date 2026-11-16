@@ -1700,7 +1700,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   var plan = q.get('plan'), express = q.get('express') === '1', line;
   if (NAMES[plan]) {
     var n = DAYS[plan][express ? 1 : 0];
-    line = 'Your ' + NAMES[plan] + ' arrives within ' + n + ' business day' + (n === 1 ? '' : 's') + ' of your payment' + (express ? ' with Express' : '') + '.';
+    line = 'Your ' + NAMES[plan] + ' arrives within ' + n + ' business day' + (n === 1 ? '' : 's') + (express ? ' with Express' : '') + '. Payments after 12:00 Italian time count from the next business day.';
   } else {
     line = 'Your analysis arrives within the delivery time of your tier.';
   }

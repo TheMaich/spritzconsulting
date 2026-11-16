@@ -112,6 +112,7 @@ async function workerSuite(label, worker) {
     assert.equal(p.get('line_items[0][price]'), 'price_std');
     assert.equal(p.get('line_items[1][price]'), null);
     assert.equal(p.get('currency'), 'eur');
+    assert.equal(p.get('customer_email'), 'a@b.co');
     assert.equal(p.get('metadata[express]'), 'false');
   assert.equal(p.get('success_url'), 'https://spritzconsulting.com/steam-analysis/?paid=1&plan=standard');
     assert.equal(p.get('metadata[game_url]'), 'https://store.steampowered.com/app/1/');
