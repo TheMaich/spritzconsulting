@@ -224,6 +224,16 @@ async function workerSuite(label, worker) {
   });
 
 
+  await test(label + ' ' + 'dashboard variables given as JSON text work like objects', async () => {
+    const textEnv = { ...baseEnv, PRICES: JSON.stringify(baseEnv.PRICES), EXPRESS_PRICES: JSON.stringify(baseEnv.EXPRESS_PRICES), EXPRESS_AMOUNTS: JSON.stringify(baseEnv.EXPRESS_AMOUNTS) };
+    const cfg = await (await call('/api/order/config', { method: 'GET' }, textEnv)).json();
+    assert.deepEqual(cfg, { enabled: true, express: { eur: { standard: 49, premium: 99 } } });
+    stripeCalls = [];
+    const r = await post(order({ express: true }), textEnv);
+    assert.equal(r.status, 200);
+    assert.equal(stripeCalls[0].params.get('line_items[0][price]'), 'price_std');
+    assert.equal(stripeCalls[0].params.get('line_items[1][price]'), 'price_x_std');
+  });
 }
 
 await workerSuite('source:', worker);

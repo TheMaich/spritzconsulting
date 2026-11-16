@@ -154,6 +154,14 @@ function clip(value, max) {
 
 // ---- Express configuration -------------------------------------------------------------
 
+// Variables set in the dashboard can arrive as JSON text instead of objects. Accept both.
+function asObject(value) {
+  if (typeof value === 'string') {
+    try { return JSON.parse(value) || {}; } catch (err) { return {}; }
+  }
+  return value && typeof value === 'object' ? value : {};
+}
+
 function expressEnabled(env) {
   return String(env.EXPRESS_ENABLED).toLowerCase() === 'true';
 }
@@ -161,8 +169,10 @@ function expressEnabled(env) {
 // Express for a tier in a currency, or null when it is off or has no price or no amount there.
 function expressFor(env, tier, currency) {
   if (!expressEnabled(env)) return null;
-  const priceId = env.EXPRESS_PRICES && env.EXPRESS_PRICES[currency] && env.EXPRESS_PRICES[currency][tier];
-  const amount = Number(env.EXPRESS_AMOUNTS && env.EXPRESS_AMOUNTS[currency] && env.EXPRESS_AMOUNTS[currency][tier]);
+  const prices = asObject(env.EXPRESS_PRICES)[currency] || {};
+  const amounts = asObject(env.EXPRESS_AMOUNTS)[currency] || {};
+  const priceId = prices[tier];
+  const amount = Number(amounts[tier]);
   if (!priceId || !(amount > 0)) return null;
   return { priceId, amount };
 }
@@ -308,7 +318,7 @@ async function handleOrder(request, env) {
     if (!express) return json(422, { ok: false, error: 'express_unavailable' }, origin);
   }
 
-  const basePrice = env.PRICES && env.PRICES[tier];
+  const basePrice = asObject(env.PRICES)[tier];
   if (!basePrice || !env.STRIPE_SECRET_KEY) {
     console.log('order not configured: missing price id or STRIPE_SECRET_KEY');
     return json(500, { ok: false, error: 'not_configured' }, origin);
