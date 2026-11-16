@@ -63,9 +63,16 @@ after 12:00, or on a weekend or holiday, from the next business day. Indie is 2 
 Publisher 3 (2 with Express). The list ends with 2027: after that the helper skips weekends only and sets
 `due_date_approx: true`. Add the 2028 holidays before the end of 2027.
 
+## Single file for the Cloudflare dashboard
+
+`node build-single.mjs` writes `worker.single.js`: `worker.js` and `business-days.js` in one file, with no imports.
+Paste it into the dashboard editor. The dashboard does not read `wrangler.toml`, so there you also set by hand:
+the KV binding `CONTACT_SUBMISSIONS`, the variables `EXPRESS_ENABLED`, `PRICES`, `EXPRESS_PRICES` and `EXPRESS_AMOUNTS`
+(the last three as JSON), the two secrets, and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
+
 ## Tests
 
-`node test.mjs` runs the business-day cases and the Worker with a mocked Stripe and KV. No dependencies.
+`node test.mjs` rebuilds the single file, then runs the business-day cases and the Worker, source and single file, with a mocked Stripe and KV. No dependencies.
 
 ## Tax
 

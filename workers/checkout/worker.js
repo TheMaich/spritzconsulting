@@ -127,7 +127,8 @@ async function createCheckoutSession(env, order, lines, currency, origin) {
   params.set('metadata[express]', order.express ? 'true' : 'false');
   params.set('metadata[currency]', currency);
   params.set('payment_intent_data[metadata][order_id]', order.id);
-  params.set('success_url', origin + '/steam-analysis/?paid=1');
+  // The page reads plan and express to say how soon the analysis arrives. It uses "plan", not "tier", because ?tier= opens the order form.
+  params.set('success_url', origin + '/steam-analysis/?paid=1&plan=' + order.tier + (order.express ? '&express=1' : ''));
   params.set('cancel_url', origin + '/steam-analysis/?tier=' + order.tier);
 
   const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {

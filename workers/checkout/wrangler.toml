@@ -15,6 +15,12 @@ binding = "CONTACT_SUBMISSIONS"
 id = "151a51cc4d7b4e0c827dce67a3b15813"
 
 [vars]
+# MOVING TO LIVE: three things change, nothing else in this file.
+#   1. PRICES                the two tier price ids (live products, not the sandbox ids below).
+#   2. EXPRESS_PRICES.eur    the two Express price ids from the live Express products.
+#   3. The Stripe secrets    STRIPE_SECRET_KEY (live restricted key) and STRIPE_WEBHOOK_SECRET
+#                            (signing secret of the webhook endpoint created in live mode).
+# EXPRESS_AMOUNTS stays as it is as long as the live Express prices match the amounts there.
 # Express delivery is off until this is "true". With it off the page hides the Express row
 # and the Worker refuses express orders.
 EXPRESS_ENABLED = "false"

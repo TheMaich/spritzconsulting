@@ -1086,6 +1086,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Hero (homepage .hero-h1 / .hero-intro) */
 .sa-hero{ padding-top: clamp(16px, 2.4vw, 32px); padding-bottom: clamp(8px, 1.5vw, 16px); }
 .sa-hero .crumbs{ margin-bottom: clamp(20px, 3vw, 36px); }
+/* Shown after Stripe sends the customer back with ?paid=1 */
+.sa-paid{ margin: 0 0 clamp(20px, 3vw, 36px); padding: 18px 22px; border: 1px solid var(--clay); border-radius: 16px; background: var(--paper-3); color: var(--ink); display: grid; gap: 6px; }
+.sa-paid[hidden]{ display: none; }
+.sa-paid p{ margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
+.sa-paid .sa-paid-title{ font-family: var(--serif); font-size: clamp(22px, 2.6vw, 30px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.04em; line-height: 1.1; color: var(--ink); }
 .hero-h1{ font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.6vw, 100px); font-variation-settings: "opsz" 96; line-height: 0.96; letter-spacing: -0.06em; color: var(--ink); text-wrap: balance; margin: 16px 0 0; }
 .hero-h1 em{ font-style: italic; font-variation-settings: "opsz" 96; color: var(--clay); }
 .hero-intro{ max-width: none; font-size: clamp(16px, 1.35vw, 20px); color: var(--ink-2); line-height: 1.6; margin: 28px 0 0; }
@@ -1425,6 +1430,11 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
         <li aria-current="page">Steam analysis</li>
       </ol>
     </nav>
+    <div class="sa-paid" id="sa-paid" role="status" hidden>
+      <p class="sa-paid-title">Your payment went through.</p>
+      <p id="sa-paid-line"></p>
+      <p>A confirmation arrives from Stripe.</p>
+    </div>
     <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1">Steam Game Sales Analysis &amp; <em>Revenue Forecast</em> for Developers and Publishers</h1>
     <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me any Steam page, yours or a competitor&rsquo;s, and I turn its public data into an analysis of where the game stands today, delivered as a PDF. Before launch, it shows <b>how many followers and wishlists the page has</b> and how fast they are growing, <b>how four comparable games have sold</b>, and <b>the wishlists, copies and gross revenue the game could reach</b> under two release dates. After launch, it shows <b>how the game has sold so far</b>, how its sales hold up over time and how it compares with similar games. With it you know whether the game is on track, how it measures up against its genre, and what to do next. Built for solo developers and indie studios, and for publishing teams who scout games or size up a competitor.</p>
   </section>
@@ -1682,6 +1692,23 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 })();
 
 (function () {
+  /* Payment confirmation: Stripe returns the customer to /steam-analysis/?paid=1&plan=standard|premium[&express=1] */
+  var q = new URLSearchParams(location.search);
+  if (q.get('paid') !== '1') return;
+  var NAMES = { standard: 'Indie Analysis', premium: 'Publisher Analysis' };
+  var DAYS = { standard: [2, 1], premium: [3, 2] };            /* business days: normal, Express */
+  var plan = q.get('plan'), express = q.get('express') === '1', line;
+  if (NAMES[plan]) {
+    var n = DAYS[plan][express ? 1 : 0];
+    line = 'Your ' + NAMES[plan] + ' arrives within ' + n + ' business day' + (n === 1 ? '' : 's') + ' of your payment' + (express ? ' with Express' : '') + '.';
+  } else {
+    line = 'Your analysis arrives within the delivery time of your tier.';
+  }
+  document.getElementById('sa-paid-line').textContent = line;
+  document.getElementById('sa-paid').hidden = false;
+})();
+
+(function () {
   var dlg = document.getElementById('order-modal');
   if (!dlg || typeof dlg.showModal !== 'function') return;     /* old browsers keep the /#contact link */
   var form = document.getElementById('order-form');
@@ -1773,7 +1800,11 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     renderExpress();
     if (paid) loadConfig();
   }
-  form.elements.express.addEventListener('change', renderExpress);
+  form.elements.express.addEventListener('change', function () {
+    renderExpress();
+    /* The total and the pay button sit below the row: on a short screen, scroll just enough to keep them in view. */
+    if (form.elements.express.checked) document.getElementById('om-go').scrollIntoView({ block: 'nearest', behavior: reduce.matches ? 'auto' : 'smooth' });
+  });
   /* ---- Open / close: the tier card flips and warps into the modal (and back) ----
      Timing and curves follow the site: --ease (0.16, 1, 0.3, 1) for settling, an ease-in-out for the turn.
      Twelve principles at work: anticipation (the card presses in first), squash and stretch (the warp
