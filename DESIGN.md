@@ -351,10 +351,19 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Touch screens** (`hover: none`): the panel is always visible above the list and the list does not blur.
 - **Solo Dev:** `.sa-tier.free` keeps a constant soft clay glow, and `.sa-limit` shows the cap of three analyses.
 - **Button** (`.sa-buy`): clay outline. On hover and focus it fills with clay, lifts 2px and glows. `:active` returns it to the baseline.
-- **Order:** the page buttons carry `data-order="free|standard|premium"` and open the order modal. On other pages, the same button is a plain link to `/steam-analysis/?tier=free|standard|premium`, which opens that order form.
+- **Order:** the button carries `data-order="free|standard|premium"` and opens the Order modal below, on any page that loads the modal files. The `href` is the fallback when the script does not run. On the homepage it points to `/steam-analysis/?tier=free|standard|premium`.
 - **Reveal:** the card sits inside an element with `data-reveal`, so it fades up on scroll like every other section.
 - **Reduced motion:** the scale, the fades and the button lift are removed. The panel still shows on hover and focus.
 - **Load order:** the stylesheet goes after the page's `.btn` rule. `.sa-buy` overrides the border and colour of `.btn` by source order.
+
+### Order Modal
+- **Source:** `assets/css/steam-order-modal.css` and `assets/js/steam-order-modal.js`, loaded by `/steam-analysis/` and by the homepage. The script builds the `<dialog id="order-modal">` itself, so a page needs only the two files, the Tier Card stylesheet, and buttons with `data-order="free|standard|premium"`.
+- **Surface** (`.sa-modal`): `paper-3` fill, rule border, radius 22px, `min(560px, 100vw - 32px)` wide, the same clay glow as the card in the top right corner. The backdrop blurs the page by 6px.
+- **Open and close:** on desktop the tier card flips and warps into the modal and back. The turn overshoots 185 degrees and settles at 180, with a press-in beforehand and a clay glow ring. Phones and reduced motion get a plain 280ms fade.
+- **Fields:** Steam link and email for every tier. Indie and Publisher add an optional release quarter, wishlist count and planned price. Indie adds a note. The form follows the Inputs, Checkbox and Switch entries.
+- **Price and Express:** the amounts come from `/api/order/config` and show in the three currencies. The Express row shows only when every currency has an amount.
+- **Errors:** an invalid field gets the `danger` colour. The modal shakes like a damped spring and pulses a `danger` ring twice. Reduced motion keeps the pulse and drops the shake.
+- **Needs:** the tokens, `.kicker`, `.btn` and `--danger`. Load it after the Tier Card stylesheet.
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
