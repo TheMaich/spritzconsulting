@@ -161,6 +161,18 @@ components:
   chip-filter-active:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
+  checkbox-row:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-2}"
+  checkbox-row-hover:
+    textColor: "{colors.ink}"
+  checkbox-boxed:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink-2}"
+    rounded: "{rounded.card}"
+    padding: "12px 14px"
+  checkbox-boxed-checked:
+    textColor: "{colors.ink}"
   toggle-pill:
     backgroundColor: "{colors.paper-3}"
     textColor: "{colors.ink-3}"
@@ -304,6 +316,14 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Wrap** (`.calc-input-wrap`): paper-2 fill, rule border, radius 8px, overflow hidden so the prefix/suffix chips read as integral parts. Focus-within → clay border.
 - **Prefix/Suffix** (`.calc-currency`, `.calc-suffix`): paper-3 fill, ink-3 mono text, `padding: 14px 16px`, divided by 1px rule line.
 - **Input** (`.calc-input`): transparent fill, ink text, Lato 16px, padding `14px 16px`. Webkit spinners dimmed to opacity 0.3. Wheel-blur on number inputs (JS) to prevent scroll-jumping values.
+
+### Checkbox
+- **Control:** the native `<input type="checkbox">`, never a custom replacement. `accent-color: clay`, 17px, `cursor: pointer`.
+- **Row** (`.om-chk`): flex, 10px gap, `ink-2` text. Hover → text `ink`, 180ms on `ease-default`. The whole label is the hit area.
+- **Pressed** (`:active` on the input): `transform: scale(0.94)`, 180ms on `ease-default`.
+- **Boxed row** (`.om-express`, a choice with a price): `paper` fill, rule border, radius 12px, `padding: 12px 14px`. Hover → border 45%-mix clay. Checked → clay border, `ink` text.
+- **Invalid:** `2px` danger outline with a 2px offset, same as inputs.
+- **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed. State is still shown by colour and border.
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).

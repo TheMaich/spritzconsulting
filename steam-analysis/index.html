@@ -1143,6 +1143,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-price{ container-type: inline-size; align-self: stretch; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 6px 0 4px; }
 .sa-amts{ display: flex; justify-content: center; align-items: baseline; flex-wrap: nowrap; white-space: nowrap; gap: 0 0.3em; font-family: var(--serif); font-size: clamp(22px, 10.5cqi, 38px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.05em; line-height: 1; color: var(--ink); }
 .sa-price{ padding: 6px 0 20px; border-bottom: 1px solid var(--rule); }
+.sa-price.is-plain{ padding-bottom: calc(20px + 10px + 14.4px); }   /* same height as the Solo Dev block, which has a note line */
 .sa-price small{ display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: 0.065em; line-height: 1.2; text-transform: uppercase; color: var(--ink-2); }
 
 /* One button style for all three tiers; on hover it fills with clay, lifts and glows */
@@ -1282,6 +1283,25 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
 .om-err{ margin: 0; font-size: 14.5px; }
 .om-submit{ width: 100%; }
+/* Checkbox rows (waiver, newsletter, Express): 180ms hover, a small press on :active, no motion if the visitor asks for none */
+.om-chk{ cursor: pointer; transition: color .18s var(--ease); }
+.om-chk:hover{ color: var(--ink); }
+.om-chk input{ cursor: pointer; transition: transform .18s var(--ease); }
+.om-chk input:active{ transform: scale(0.94); }
+@media (prefers-reduced-motion: reduce){ .om-chk, .om-chk input{ transition: none; } .om-chk input:active{ transform: none; } }
+
+/* Express delivery row and total */
+.om-express{ align-items: center; justify-content: space-between; gap: 14px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; transition: border-color .18s var(--ease), color .18s var(--ease); }
+.om-express:hover{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
+.om-express:has(input:checked){ border-color: var(--clay); color: var(--ink); }
+.om-express input{ margin-top: 0; }
+.om-express-copy{ flex: 1; display: grid; gap: 2px; }
+.om-express-title{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink); }
+.om-express-time{ font-size: 14.5px; line-height: 1.4; }
+.om-express-price{ flex: none; font-family: var(--serif); font-size: 22px; letter-spacing: -0.03em; line-height: 1; color: var(--clay); }
+.om-total{ margin: 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--ink); }
+.om-total[hidden]{ display: none; }
+
 .om-status{ margin: 0; border: 1px solid var(--clay); border-radius: 12px; padding: 10px 14px; font-size: 14.5px; color: var(--ink); }
 @media (prefers-reduced-motion: reduce){ .sa-modal[open], .sa-modal[open]::backdrop{ animation: none; } }
 
@@ -1386,11 +1406,11 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 </div>
 
 <!--
-  DRAFT, NOT LAUNCHED. Closed: Solo Dev (free) within 1 day (changed from 2 hours, 14 Nov), VAT-inclusive prices, released games now accepted (Michele, 14 Nov),
+  DRAFT, NOT LAUNCHED. Closed: Solo Dev (free) within 1 day (changed from 2 hours, 14 Nov), tax behaviour of the prices unspecified until the accountant answers, released games now accepted (Michele, 14 Nov),
   no accuracy claim until the back-test, no Raw Fury titles. Case studies live on the homepage, not here.
   Still open before launch. Then set robots to "index, follow", add the page to sitemap.xml and llms.txt,
   and link it from the four Steam calculators:
-  1. Order form is NOT wired: no endpoint, no Stripe links. The submit handler only shows a notice.
+  1. Order form: Indie and Publisher post to the checkout Worker (workers/checkout, /api/order). Still needed: deploy it, add the Stripe secrets, live price ids, Express products. Solo Dev is still a notice only.
   2. Refund wording and the withdrawal waiver at checkout: accountant or lawyer; link full terms. (The refund FAQ was removed from the page; terms must say it.)
   3. The EUR 120 consultation and the booking link are no longer on the page: decide where they go.
   5. Order form removed with the Start section: the version buttons point to /#contact until the real order flow exists.
@@ -1441,7 +1461,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       </div>
       <div class="sa-tier">
         <h3><em>Indie</em> <span class="an">Analysis</span></h3>
-        <div class="sa-price"><span class="sa-amts"><span>&euro;99</span><span class="sep" aria-hidden="true">/</span><span>$109</span><span class="sep" aria-hidden="true">/</span><span>&pound;89</span></span><small>VAT included</small></div>
+        <div class="sa-price is-plain"><span class="sa-amts"><span>&euro;99</span><span class="sep" aria-hidden="true">/</span><span>$109</span><span class="sep" aria-hidden="true">/</span><span>&pound;89</span></span></div>
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>A complete PDF analysis of the game&rsquo;s current situation</span></li>
@@ -1462,7 +1482,7 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       </div>
       <div class="sa-tier pro">
         <h3><em>Publisher</em> <span class="an">Analysis</span></h3>
-        <div class="sa-price"><span class="sa-amts"><span>&euro;299</span><span class="sep" aria-hidden="true">/</span><span>$329</span><span class="sep" aria-hidden="true">/</span><span>&pound;249</span></span><small>VAT included</small></div>
+        <div class="sa-price is-plain"><span class="sa-amts"><span>&euro;299</span><span class="sep" aria-hidden="true">/</span><span>$329</span><span class="sep" aria-hidden="true">/</span><span>&pound;249</span></span></div>
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>An in-depth analysis of the game&rsquo;s current situation</span></li>
@@ -1597,12 +1617,15 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     </div>
     <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Tell me about your team, release plans or anything else that helps"></textarea></div>
 
+    <label class="om-chk om-express" id="om-express" hidden><input type="checkbox" name="express" disabled><span class="om-express-copy"><span class="om-express-title">Express</span><span class="om-express-time" id="om-express-time"></span></span><span class="om-express-price" id="om-express-price"></span></label>
+    <p class="om-total" id="om-total" hidden></p>
+
     <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
     <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
 
     <p class="om-fine">I use your email and Steam link to make and send your analysis, and delete them after 30 days. <a class="sa-link" href="/privacy/">Privacy policy</a>.</p>
     <p class="om-err" id="om-err" role="alert" hidden></p>
-    <!-- TODO before launch: wire this form (endpoint + Stripe payment links). Nothing is sent today. -->
+    <!-- Paid tiers post to /api/order (workers/checkout). Solo Dev and an unreachable Worker show the notice below. -->
     <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get Solo Dev Analysis</span></button>
     <p class="om-status" id="om-status" role="status" hidden>Ordering is not open yet. Nothing was sent.</p>
   </form>
@@ -1664,8 +1687,8 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
   var form = document.getElementById('order-form');
   var T = {
     free:     { title: 'Solo Dev Analysis',          price: 'No payment needed. Delivered within 1 day.',                                  go: 'Get Solo Dev Analysis' },
-    standard: { title: 'Indie Analysis',            price: '€99 / $109 / £89, VAT included. Pay at the start with Stripe.',   go: 'Pay €99 with Stripe' },
-    premium:  { title: 'Publisher Analysis',    price: '€299 / $329 / £249, VAT included. Pay at the start with Stripe.', go: 'Pay €299 with Stripe' }
+    standard: { title: 'Indie Analysis',            price: '€99 / $109 / £89. Pay at the start with Stripe.',   go: 'Pay €99 with Stripe', base: 99, faster: 'Delivered in 1 business day instead of 2' },
+    premium:  { title: 'Publisher Analysis',    price: '€299 / $329 / £249. Pay at the start with Stripe.', go: 'Pay €299 with Stripe', base: 299, faster: 'Delivered in 2 business days instead of 3' }
   };
   var last = null;
   function track(ev, extra) {                             /* Zaraz is injected by Cloudflare; guard every call */
@@ -1690,6 +1713,41 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     var nd = document.createElement('option'); nd.value = 'undecided'; nd.textContent = 'Not decided yet';
     sel.appendChild(nd);
   })();
+  /* ---- Express delivery: shown only when the order Worker says it is on and has a price in this currency ----
+     The page shows euros, so it sends currency 'eur'. The amounts come from /api/order/config, never from this file. */
+  var PAGE_CURRENCY = 'eur', SYMBOL = { eur: '€', usd: '$', gbp: '£' };
+  var cfg = null, cfgState = 'idle';                      /* idle | loading | ok | failed */
+  function money(n) { return SYMBOL[PAGE_CURRENCY] + (Number.isInteger(n) ? n : n.toFixed(2)); }
+  function expressAmount(v) {
+    var c = cfg && cfg.enabled && cfg.express && cfg.express[PAGE_CURRENCY];
+    var n = c ? Number(c[v]) : 0;
+    return n > 0 ? n : 0;
+  }
+  function renderExpress() {
+    var v = form.elements.version.value, box = form.elements.express;
+    var amt = (v === 'free' || !T[v]) ? 0 : expressAmount(v);
+    var row = document.getElementById('om-express'), total = document.getElementById('om-total');
+    row.hidden = !amt;
+    box.disabled = !amt;
+    if (!amt) box.checked = false;
+    else {
+      document.getElementById('om-express-time').textContent = T[v].faster;
+      document.getElementById('om-express-price').textContent = '+' + money(amt);
+    }
+    var on = !!amt && box.checked;
+    total.hidden = !on;
+    if (on) total.textContent = 'Total with Express: ' + money(T[v].base + amt);
+    if (T[v]) document.querySelector('#om-go span').textContent = on ? 'Pay ' + money(T[v].base + amt) + ' with Stripe' : T[v].go;
+  }
+  function loadConfig() {
+    if (cfgState === 'loading' || cfgState === 'ok') return;
+    cfgState = 'loading';
+    fetch('/api/order/config', { headers: { Accept: 'application/json' } })
+      .then(function (r) { if (!r.ok) throw new Error('http_' + r.status); return r.json(); })
+      .then(function (j) { cfg = j; cfgState = 'ok'; })
+      .catch(function () { cfg = null; cfgState = 'failed'; })
+      .then(renderExpress);
+  }
   function pick(v) {
     if (!T[v]) v = 'free';
     form.elements.version.value = v;
@@ -1711,7 +1769,11 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
     form.elements.quarter.disabled = !(prem || std);
     form.elements.wishlists.disabled = !(prem || std);
     form.elements.price.disabled = !(prem || std);
+    form.elements.express.checked = false;
+    renderExpress();
+    if (paid) loadConfig();
   }
+  form.elements.express.addEventListener('change', renderExpress);
   /* ---- Open / close: the tier card flips and warps into the modal (and back) ----
      Timing and curves follow the site: --ease (0.16, 1, 0.3, 1) for settling, an ease-in-out for the turn.
      Twelve principles at work: anticipation (the card presses in first), squash and stretch (the warp
@@ -1933,9 +1995,50 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
       return fail('Please confirm that I can start the work right away.', form.elements.waiver);
     }
     document.getElementById('om-err').hidden = true;
-    track('order_form_submit', { tier: form.elements.version.value });
-    /* Not wired yet: replace with the real submit once the endpoint and Stripe links exist. */
-    document.getElementById('om-status').hidden = false;
+    var v = form.elements.version.value, el = form.elements;
+    var express = !el.express.disabled && el.express.checked;
+    track('order_form_submit', { tier: v, express: express });
+    /* Solo Dev is not part of the order Worker. If the Worker cannot be reached, keep the notice. */
+    if (v === 'free' || cfgState !== 'ok') { document.getElementById('om-status').hidden = false; return; }
+    document.getElementById('om-status').hidden = true;
+    var go = document.getElementById('om-go'), label = go.querySelector('span');
+    go.disabled = true; label.textContent = 'Opening Stripe…';
+    function unbusy() { go.disabled = false; renderExpress(); }
+    fetch('/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        version: v,
+        steam: el.steam.value.trim(),
+        email: el.email.value.trim(),
+        quarter: el.quarter.disabled ? '' : el.quarter.value,
+        wishlists: el.wishlists.disabled ? '' : el.wishlists.value,
+        price: el.price.disabled ? '' : el.price.value,
+        notes: el.notes.disabled ? '' : el.notes.value.trim(),
+        waiver: el.waiver.checked,
+        news: !el.news.disabled && el.news.checked,
+        express: express,
+        currency: PAGE_CURRENCY,
+        page: location.pathname,
+        referrer: document.referrer || ''
+      })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { status: r.status, body: j }; }, function () { return { status: r.status, body: {} }; });
+    }).then(function (res) {
+      if (res.status === 200 && res.body && res.body.url) { window.location.href = res.body.url; return; }
+      unbusy();
+      var e = res.body && res.body.error;
+      if (res.status === 429) return fail('Too many attempts. Please wait a few minutes and try again.');
+      if (e === 'express_unavailable') return fail('Express is not available right now. Untick it and try again.');
+      fail('Something went wrong and nothing was charged. Please try again.');
+    }).catch(function () {
+      unbusy();
+      fail('Could not reach the order service and nothing was charged. Please try again.');
+    });
+  });
+  /* Back from Stripe with the browser's back button: the page may come from the cache with the button still busy. */
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) { document.getElementById('om-go').disabled = false; renderExpress(); }
   });
   /* Deep link from the free deck's last slide: /steam-analysis/?tier=standard or ?tier=premium (?tier=extended works too) opens that order form. */
   var want = new URLSearchParams(location.search).get('tier');

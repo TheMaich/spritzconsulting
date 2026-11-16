@@ -1,0 +1,36 @@
+name = "checkout"
+main = "worker.js"
+compatibility_date = "2026-07-20"
+
+# Order endpoints for the Steam Analysis page: /api/order, /api/order/config, /api/order/webhook.
+# The contact-form Worker keeps /api/contact; the two never overlap.
+routes = [
+  { pattern = "spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" },
+  { pattern = "www.spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" }
+]
+
+# Same KV namespace as contact-form. This Worker only touches keys that start with "order:".
+[[kv_namespaces]]
+binding = "CONTACT_SUBMISSIONS"
+id = "151a51cc4d7b4e0c827dce67a3b15813"
+
+[vars]
+# Express delivery is off until this is "true". With it off the page hides the Express row
+# and the Worker refuses express orders.
+EXPRESS_ENABLED = "false"
+
+# Stripe price ids of the two tiers. These are the SANDBOX ids; replace them with the live ids
+# when the live products exist. Each price already carries its EUR, GBP and USD amounts.
+PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJFkRG2ZYUJbNZbcOh7" }
+
+# Express add-on price ids ("Express Delivery, Indie Tier Steam Analysis" and the Publisher one),
+# one entry per currency. Only EUR is planned for now, so USD and GBP stay empty.
+# Fill the ids from the Stripe dashboard (test mode first, then live).
+EXPRESS_PRICES = { eur = { standard = "", premium = "" }, usd = {}, gbp = {} }
+
+# Express amounts the page shows, in whole currency units. They must match the Stripe prices above.
+EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = {}, gbp = {} }
+
+# Secrets (never in this file). Set them with:
+#   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)
+#   npx wrangler secret put STRIPE_WEBHOOK_SECRET   (signing secret of the /api/order/webhook endpoint)
