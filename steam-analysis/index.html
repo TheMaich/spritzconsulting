@@ -1117,7 +1117,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Tiers */
 .sa-tiers{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 </style>
-<link rel="stylesheet" href="/assets/css/steam-tier-card.css?v=20261116">
+<link rel="stylesheet" href="/assets/css/steam-tier-card.css?v=20261117">
 <style>
 .sa-tiers-note{ margin: 22px 0 0; text-align: center; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
 .sa-fine{ font-size: 14px; color: var(--ink-2); margin: 16px 0 0; max-width: 70ch; }
@@ -1220,7 +1220,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 
 </style>
-<link rel="stylesheet" href="/assets/css/steam-order-modal.css?v=20261116">
+<link rel="stylesheet" href="/assets/css/steam-order-modal.css?v=20261117">
 <style>
 /* The homepage defines --danger (signal magenta); this page only had --accent-2, which is the same colour per theme */
 :root{ --danger: var(--accent-2); }
@@ -1526,11 +1526,11 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 })();
 
 (function () {
-  /* Payment confirmation: Stripe returns the customer to /steam-analysis/?paid=1&plan=standard|premium[&express=1] */
+  /* Payment confirmation: Stripe returns the customer to /steam-analysis/?paid=1&plan=standard|premium|upgrade[&express=1] */
   var q = new URLSearchParams(location.search);
   if (q.get('paid') !== '1') return;
-  var NAMES = { standard: 'Indie Analysis', premium: 'Publisher Analysis' };
-  var DAYS = { standard: [2, 1], premium: [3, 2] };            /* business days: normal, Express */
+  var NAMES = { standard: 'Indie Analysis', premium: 'Publisher Analysis', upgrade: 'Publisher Analysis upgrade' };
+  var DAYS = { standard: [2, 1], premium: [3, 2], upgrade: [3, 2] };            /* business days: normal, Express */
   var plan = q.get('plan'), express = q.get('express') === '1', line;
   if (NAMES[plan]) {
     var n = DAYS[plan][express ? 1 : 0];
@@ -1543,7 +1543,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 })();
 
 </script>
-<script src="/assets/js/steam-order-modal.js?v=20261116" defer></script>
+<script src="/assets/js/steam-order-modal.js?v=20261117" defer></script>
 
 <footer class="site-footer">
   <div class="wrap footer-grid">

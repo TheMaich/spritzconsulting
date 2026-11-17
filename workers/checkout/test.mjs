@@ -77,7 +77,7 @@ async function workerSuite(label, worker) {
     STRIPE_SECRET_KEY: 'sk_test_x',
     STRIPE_WEBHOOK_SECRET: 'whsec_test',
     EXPRESS_ENABLED: 'true',
-    PRICES: { standard: 'price_std', premium: 'price_prem' },
+    PRICES: { standard: 'price_std', premium: 'price_prem', upgrade: 'price_upg' },
     // The same Express price id repeats under every currency, because one Stripe price carries all three.
     EXPRESS_PRICES: {
       eur: { standard: 'price_x_std', premium: 'price_x_prem' },
@@ -85,7 +85,11 @@ async function workerSuite(label, worker) {
       gbp: { standard: 'price_x_std', premium: 'price_x_prem' },
     },
     PRICE_AMOUNTS: {
-      eur: { standard: 99, premium: 299 }, usd: { standard: 109, premium: 329 }, gbp: { standard: 89, premium: 249 },
+      eur: { standard: 99, premium: 299, upgrade: 190 }, usd: { standard: 109, premium: 329, upgrade: 209 }, gbp: { standard: 89, premium: 249, upgrade: 158 },
+    },
+    PROMOS: {
+      SOLODEV20: { tier: 'standard', coupon: 'V7V7n4Fm', active: true, amounts: { eur: 79, usd: 87, gbp: 71 } },
+      SOLODEV10: { tier: 'premium', coupon: 'yZBBORrT', active: true, amounts: { eur: 269, usd: 296, gbp: 224 } },
     },
     EXPRESS_AMOUNTS: {
       eur: { standard: 49, premium: 99 }, usd: { standard: 49, premium: 99 }, gbp: { standard: 49, premium: 99 },
@@ -94,8 +98,8 @@ async function workerSuite(label, worker) {
   const FULL_CONFIG = {
     enabled: true,
     currencies: ['eur', 'usd', 'gbp'],
-    amounts: { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 } },
-    express: { standard: { eur: 49, usd: 49, gbp: 49 }, premium: { eur: 99, usd: 99, gbp: 99 } },
+    amounts: { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 }, upgrade: { eur: 190, usd: 209, gbp: 158 } },
+    express: { standard: { eur: 49, usd: 49, gbp: 49 }, premium: { eur: 99, usd: 99, gbp: 99 }, upgrade: { eur: 99, usd: 99, gbp: 99 } },
   };
   let stripeCalls = [];
   globalThis.fetch = async (url, init) => {
@@ -128,7 +132,7 @@ async function workerSuite(label, worker) {
   await test(label + ' ' + 'config: Express is off when the price id differs between currencies', async () => {
     const env = { ...baseEnv, EXPRESS_PRICES: { ...baseEnv.EXPRESS_PRICES, gbp: { standard: 'price_other', premium: 'price_x_prem' } } };
     const j = await (await call('/api/order/config', { method: 'GET' }, env)).json();
-    assert.deepEqual(j.express, { premium: FULL_CONFIG.express.premium });
+    assert.deepEqual(j.express, { premium: FULL_CONFIG.express.premium, upgrade: FULL_CONFIG.express.upgrade });
   });
   await test(label + ' ' + 'order without Express: one line item', async () => {
     stripeCalls = [];
@@ -330,9 +334,212 @@ async function workerSuite(label, worker) {
     assert.equal(records(), n, 'pending record removed');
   });
 
+  // ---- promotion codes, upgrade, promo endpoint -----------------------------------------------
+  const records = () => [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k));
+  const lastRecord = () => { const k = records().pop(); return { key: k, id: k.slice(6), rec: JSON.parse(kv.get(k)) }; };
+  const created = Math.floor(new Date('2026-11-17T10:00:00+01:00').getTime() / 1000);
+  let sessionSeq = 0;
+  async function pay(id, tier, express, total, cur, extra = {}) {
+    const sid = 'cs_promo_' + (++sessionSeq);
+    const body = JSON.stringify({ type: 'checkout.session.completed', created, data: { object: {
+      id: sid, payment_status: 'paid', metadata: { order_id: id, tier, express: String(express), ...(extra.meta || {}) },
+      amount_total: total, currency: cur, ...(extra.session || {}) } } });
+    const r = await call('/api/order/webhook', { method: 'POST', headers: signed(body), body });
+    assert.equal(r.status, 200);
+    return { sid, body, rec: JSON.parse(kv.get('order:' + id)) };
+  }
+  const promoGet = (code, ip = '9.9.9.' + Math.floor(Math.random() * 250), env = baseEnv) => call('/api/order/promo' + (code === undefined ? '' : '?code=' + encodeURIComponent(code)), {
+    method: 'GET', headers: { Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': ip } }, env);
+  const OWNER = { steam: 'https://store.steampowered.com/app/4242/Some_Game/', email: 'Owner@Studio.example' };
+  async function seedIndieOwner(steam, email) {
+    await post(order({ steam, email }));
+    const { id } = lastRecord();
+    await pay(id, 'standard', false, 9900, 'eur');
+    return id;
+  }
+
+  await test(label + ' ' + 'config lists the upgrade amounts and gives it the Publisher Express amounts', async () => {
+    const j = await (await call('/api/order/config', { method: 'GET' })).json();
+    assert.deepEqual(j.amounts.upgrade, { eur: 190, usd: 209, gbp: 158 });
+    assert.deepEqual(j.express.upgrade, { eur: 99, usd: 99, gbp: 99 });
+  });
+  await test(label + ' ' + 'a valid code sends its coupon, the code and a cancel URL that keeps the promo', async () => {
+    stripeCalls = [];
+    assert.equal((await post(order({ promo: 'SOLODEV20' }))).status, 200);
+    const p = stripeCalls[0].params;
+    assert.equal(p.get('discounts[0][coupon]'), 'V7V7n4Fm');
+    assert.equal(p.get('metadata[promo]'), 'SOLODEV20');
+    assert.equal(p.get('cancel_url'), 'https://spritzconsulting.com/steam-analysis/?tier=standard&promo=SOLODEV20');
+    assert.equal(lastRecord().rec.promo, 'SOLODEV20');
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'premium', promo: ' solodev10 ' }))).status, 200);
+    assert.equal(stripeCalls[0].params.get('discounts[0][coupon]'), 'yZBBORrT');
+  });
+  await test(label + ' ' + 'a bad, empty, disabled or wrong-tier code is ignored: list price, no coupon, no error', async () => {
+    const off = { ...baseEnv, PROMOS: { ...baseEnv.PROMOS, SOLODEV20: { ...baseEnv.PROMOS.SOLODEV20, active: false } } };
+    const cases = [
+      [order({ promo: 'NOPE123' }), baseEnv],
+      [order({ promo: '' }), baseEnv],
+      [order({ promo: '<script>' }), baseEnv],
+      [order({ promo: 'SOLODEV20', version: 'premium' }), baseEnv],
+      [order({ promo: 'SOLODEV10', version: 'standard' }), baseEnv],
+      [order({ promo: 'SOLODEV20', version: 'upgrade', steam: 'https://store.steampowered.com/app/9001/', email: 'promo-upgrade@x.co' }), baseEnv],
+      [order({ promo: 'SOLODEV20' }), off],
+      [order({ promo: 'SOLODEV20' }), { ...baseEnv, PROMOS: undefined }],
+    ];
+    for (const [body, env] of cases) {
+      stripeCalls = [];
+      if (body.version === 'upgrade') await seedIndieOwner(body.steam, body.email);
+      stripeCalls = [];
+      const r = await post(body, env);
+      assert.equal(r.status, 200, JSON.stringify(body.promo) + ' ' + body.version);
+      assert.equal(stripeCalls[0].params.get('discounts[0][coupon]'), null);
+      assert.equal(stripeCalls[0].params.get('metadata[promo]'), null);
+      assert.equal(lastRecord().rec.promo, '');
+    }
+  });
+  await test(label + ' ' + 'Express never carries a discount: one coupon on the order, two plain line items', async () => {
+    stripeCalls = [];
+    assert.equal((await post(order({ promo: 'SOLODEV20', express: true }))).status, 200);
+    const p = stripeCalls[0].params;
+    assert.equal(p.get('line_items[0][price]'), 'price_std');
+    assert.equal(p.get('line_items[1][price]'), 'price_x_std');
+    assert.equal(p.get('discounts[0][coupon]'), 'V7V7n4Fm');
+    assert.equal(p.get('discounts[1][coupon]'), null);
+    assert.deepEqual([...p.keys()].filter((k) => k.startsWith('line_items[1]')), ['line_items[1][price]', 'line_items[1][quantity]']);
+  });
+  await test(label + ' ' + 'amountMatches is true in EUR, USD and GBP, with and without Express, for both promotions', async () => {
+    const table = [
+      ['standard', 'SOLODEV20', { eur: 79, usd: 87, gbp: 71 }, 49],
+      ['premium', 'SOLODEV10', { eur: 269, usd: 296, gbp: 224 }, 99],
+    ];
+    const seen = [];
+    for (const [tier, code, amounts, extra] of table) {
+      for (const cur of ['eur', 'usd', 'gbp']) {
+        for (const express of [false, true]) {
+          await post(order({ version: tier, promo: code, express }));
+          const { id } = lastRecord();
+          const total = (amounts[cur] + (express ? extra : 0)) * 100;
+          const { rec } = await pay(id, tier, express, total, cur, { session: { total_details: { amount_discount: 2000 } } });
+          assert.deepEqual([rec.expectedTotal, rec.amountMatches, rec.discountApplied], [total, true, true], tier + ' ' + cur + ' ' + express);
+          if (express) seen.push(total / 100);
+        }
+      }
+    }
+    // Totals with Express in the brief: Indie 128/136/120, Publisher 368/395/323.
+    assert.deepEqual(seen, [128, 136, 120, 368, 395, 323]);
+  });
+  await test(label + ' ' + 'a promotion paid without a discount is flagged: list total recorded, discountApplied false, amountMatches false', async () => {
+    await post(order({ promo: 'SOLODEV20' }));
+    const { id } = lastRecord();
+    const { rec } = await pay(id, 'standard', false, 9900, 'eur', { session: { total_details: { amount_discount: 0 } } });
+    assert.deepEqual([rec.discountApplied, rec.amountMatches, rec.expectedTotal, rec.listTotal], [false, false, 7900, 9900]);
+  });
+  await test(label + ' ' + 'an order without a promotion records list totals and no discount', async () => {
+    await post(order({ express: true }));
+    const { id } = lastRecord();
+    const { rec } = await pay(id, 'standard', true, 14800, 'eur');
+    assert.deepEqual([rec.promo, rec.discountApplied, rec.listTotal, rec.amountMatches], ['', false, 14800, true]);
+  });
+  await test(label + ' ' + 'an upgrade is refused without an Indie order: 422 no_indie_order, no Stripe call, no record', async () => {
+    stripeCalls = [];
+    const n = records().length;
+    const r = await post(order({ version: 'upgrade', ...OWNER }));
+    assert.equal(r.status, 422);
+    assert.equal((await r.json()).error, 'no_indie_order');
+    assert.equal(stripeCalls.length, 0);
+    assert.equal(records().length, n);
+  });
+  await test(label + ' ' + 'an upgrade needs a store link with an app id', async () => {
+    const r = await post(order({ version: 'upgrade', steam: 'https://steamcommunity.com/games/4242', email: OWNER.email }));
+    assert.equal(r.status, 422);
+    assert.equal((await r.json()).error, 'invalid_steam_link');
+  });
+  await test(label + ' ' + 'a paid Publisher order does not unlock the upgrade, a paid Indie order does', async () => {
+    await post(order({ version: 'premium', ...OWNER }));
+    await pay(lastRecord().id, 'premium', false, 29900, 'eur');
+    assert.equal((await post(order({ version: 'upgrade', ...OWNER }))).status, 422);
+    const indieId = await seedIndieOwner(OWNER.steam, OWNER.email);
+    assert.equal(kv.get('order:own:4242:' + crypto.createHash('sha256').update('owner@studio.example').digest('hex')), indieId);
+    stripeCalls = [];
+    // Same game and same email, written differently: the app id and the lower-cased email decide.
+    const r = await post(order({ version: 'upgrade', steam: 'https://store.steampowered.com/app/4242/', email: 'owner@STUDIO.example' }));
+    assert.equal(r.status, 200);
+    const p = stripeCalls[0].params;
+    assert.equal(p.get('line_items[0][price]'), 'price_upg');
+    assert.equal(p.get('line_items[1][price]'), null);
+    assert.equal(p.get('discounts[0][coupon]'), null);
+    assert.equal(p.get('metadata[tier]'), 'upgrade');
+    assert.equal(p.get('metadata[upgrade_from]'), indieId);
+    assert.equal(p.get('success_url'), 'https://spritzconsulting.com/steam-analysis/?paid=1&plan=upgrade');
+    assert.equal(p.get('cancel_url'), 'https://spritzconsulting.com/steam-analysis/?tier=upgrade');
+    assert.equal(lastRecord().rec.upgradeFrom, indieId);
+  });
+  await test(label + ' ' + 'another game or another email does not unlock the upgrade', async () => {
+    await seedIndieOwner(OWNER.steam, OWNER.email);
+    assert.equal((await post(order({ version: 'upgrade', steam: 'https://store.steampowered.com/app/4243/', email: OWNER.email }))).status, 422);
+    assert.equal((await post(order({ version: 'upgrade', steam: OWNER.steam, email: 'other@studio.example' }))).status, 422);
+  });
+  await test(label + ' ' + 'upgrade: 190/209/158, with Express 289/308/257, due in 3 business days (2 with Express)', async () => {
+    await seedIndieOwner(OWNER.steam, OWNER.email);
+    const base = { eur: 190, usd: 209, gbp: 158 };
+    const seen = [];
+    for (const cur of ['eur', 'usd', 'gbp']) {
+      for (const express of [false, true]) {
+        stripeCalls = [];
+        const r = await post(order({ version: 'upgrade', express, ...OWNER }));
+        assert.equal(r.status, 200);
+        assert.equal(stripeCalls[0].params.get('line_items[1][price]'), express ? 'price_x_prem' : null);
+        const total = (base[cur] + (express ? 99 : 0)) * 100;
+        const { rec } = await pay(lastRecord().id, 'upgrade', express, total, cur);
+        assert.deepEqual([rec.expectedTotal, rec.amountMatches, rec.businessDays], [total, true, express ? 2 : 3]);
+        assert.equal(rec.due_date, express ? '2026-11-19' : '2026-11-20');
+        if (express) seen.push(total / 100);
+      }
+    }
+    assert.deepEqual(seen, [289, 308, 257]);
+  });
+  await test(label + ' ' + 'a repeated webhook for a promotion order changes nothing, ownership key included', async () => {
+    await post(order({ promo: 'SOLODEV20', steam: 'https://store.steampowered.com/app/555/', email: 'dup@x.co' }));
+    const { id } = lastRecord();
+    const first = await pay(id, 'standard', false, 7900, 'eur', { session: { total_details: { amount_discount: 2000 } } });
+    const snap = () => JSON.stringify([...kv.entries()].filter(([k]) => k.startsWith('order:') && !k.startsWith('order:rl')));
+    const before = snap();
+    const r = await call('/api/order/webhook', { method: 'POST', headers: signed(first.body), body: first.body });
+    assert.equal((await r.json()).duplicate, true);
+    assert.equal(snap(), before);
+  });
+  await test(label + ' ' + 'promo endpoint: valid, invalid, disabled and missing codes', async () => {
+    let j = await (await promoGet('solodev20')).json();
+    assert.deepEqual(j, { valid: true, tier: 'standard', amounts: { eur: 79, usd: 87, gbp: 71 } });
+    j = await (await promoGet('SOLODEV10')).json();
+    assert.deepEqual(j, { valid: true, tier: 'premium', amounts: { eur: 269, usd: 296, gbp: 224 } });
+    for (const code of ['NOPE', '', undefined, 'a b', 'x'.repeat(80)]) {
+      const r = await promoGet(code);
+      assert.equal(r.status, 200);
+      assert.deepEqual(await r.json(), { valid: false });
+    }
+    const off = { ...baseEnv, PROMOS: { ...baseEnv.PROMOS, SOLODEV20: { ...baseEnv.PROMOS.SOLODEV20, active: false } } };
+    const r = await promoGet('SOLODEV20', undefined, off);
+    assert.equal(r.status, 200);
+    assert.deepEqual(await r.json(), { valid: false });
+    const none = await promoGet('SOLODEV20', undefined, { ...baseEnv, PROMOS: undefined });
+    assert.deepEqual([none.status, await none.json()], [200, { valid: false }]);
+  });
+  await test(label + ' ' + 'promo endpoint: rate limited per IP, separate from the order limit', async () => {
+    const ip = '8.8.8.8';
+    for (let i = 0; i < 20; i++) assert.equal((await promoGet('SOLODEV20', ip)).status, 200);
+    assert.equal((await promoGet('SOLODEV20', ip)).status, 429);
+    const r = await call('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': ip }, body: JSON.stringify(order()) });
+    assert.equal(r.status, 200);
+  });
+  await test(label + ' ' + 'promo endpoint: foreign origin and POST are refused', async () => {
+    assert.equal((await call('/api/order/promo?code=SOLODEV20', { method: 'GET', headers: { Origin: 'https://evil.example' } })).status, 403);
+    assert.equal((await call('/api/order/promo', { method: 'POST' })).status, 405);
+  });
 
   await test(label + ' ' + 'dashboard variables given as JSON text work like objects', async () => {
-    const textEnv = { ...baseEnv, PRICES: JSON.stringify(baseEnv.PRICES), EXPRESS_PRICES: JSON.stringify(baseEnv.EXPRESS_PRICES), PRICE_AMOUNTS: JSON.stringify(baseEnv.PRICE_AMOUNTS), EXPRESS_AMOUNTS: JSON.stringify(baseEnv.EXPRESS_AMOUNTS) };
+    const textEnv = { ...baseEnv, PRICES: JSON.stringify(baseEnv.PRICES), EXPRESS_PRICES: JSON.stringify(baseEnv.EXPRESS_PRICES), PRICE_AMOUNTS: JSON.stringify(baseEnv.PRICE_AMOUNTS), EXPRESS_AMOUNTS: JSON.stringify(baseEnv.EXPRESS_AMOUNTS), PROMOS: JSON.stringify(baseEnv.PROMOS) };
     const cfg = await (await call('/api/order/config', { method: 'GET' }, textEnv)).json();
     assert.deepEqual(cfg, FULL_CONFIG);
     stripeCalls = [];

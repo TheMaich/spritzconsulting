@@ -5,6 +5,7 @@
  *   GET  /api/order/config   what the order modal may offer (Express on or off, Express amounts)
  *   POST /api/order          validate the order, store it, create a Stripe Checkout session
  *   POST /api/order/webhook  Stripe tells us the session was paid: mark it paid, compute due_date
+ *   GET  /api/order/promo    is a promotion code valid (and for which tier and amounts)
  *
  * - One Checkout session with two line items: the tier price and, when asked for, the Express
  *   price (quantity 1 each). Express never replaces the base price.
@@ -16,12 +17,30 @@
  *   for that tier, because Stripe could pick the missing one for a buyer.
  * - Orders live in the CONTACT_SUBMISSIONS KV namespace under the "order:" prefix and are
  *   deleted after 30 days, as the order form promises.
+ * - Promotion codes (PROMOS) map a code to one tier, one Stripe coupon and the discounted amounts. The coupon is
+ *   sent as discounts[0][coupon] on that tier's order only. It never touches the Express line, because the coupon
+ *   is limited to the tier's product in Stripe. A code on the wrong tier is ignored without an error.
+ * - The upgrade tier (Indie owner to Publisher) needs a paid Indie order for the same game and email: the webhook
+ *   writes order:own:<app id>:<sha256 of the email> when an Indie order is paid, and the upgrade order looks it up.
  * - Solo Dev (free) does not go through this Worker.
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
  * - No notification email yet; read orders from KV (see README).
  */
 
 // ---- business-days.js ----------------------------------------------------------------
+/**
+ * Business-day helper for delivery due dates.
+ *
+ * A business day is Monday to Friday and not an Italian public holiday.
+ * The holiday list is hard-coded for 2026 and 2027 only. Outside those two
+ * years the helper skips weekends only and reports approx: true, so a due date
+ * is never silently wrong. Add the 2028 list before the end of 2027.
+ *
+ * Day 0 rule: an order paid on a business day up to 12:00 Europe/Rome counts
+ * from that day (day 0). Paid after 12:00, or on a weekend or holiday, it counts
+ * from the next business day (day 0). The due date is day 0 plus N business days.
+ */
+
 const FIRST_YEAR = 2026;
 const LAST_YEAR = 2027;
 
@@ -115,17 +134,21 @@ const CURRENCIES = ['eur', 'usd', 'gbp'];
 const TIERS = {
   standard: { days: 2, expressDays: 1 },
   premium: { days: 3, expressDays: 2 },
+  upgrade: { days: 3, expressDays: 2 },
 };
 
 const ORDER_TTL_SECONDS = 30 * 24 * 60 * 60;
 const RATE_WINDOW_SECONDS = 600;
 const ORDERS_PER_WINDOW = 5;
+const PROMO_CHECKS_PER_WINDOW = 20;
 const WEBHOOK_TOLERANCE_SECONDS = 300;
 const MAX_FIELD_LENGTH = 200;
 const MAX_NOTES_LENGTH = 1000;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const STEAM_RE = /^https?:\/\/(store\.steampowered\.com|steamcommunity\.com)\//i;
+const APP_RE = /^https?:\/\/store\.steampowered\.com\/app\/(\d+)/i;
+const PROMO_RE = /^[A-Z0-9]{3,30}$/;
 const QUARTER_RE = /^(released|undecided|\d{4}-Q[1-4])$/;
 
 function corsHeaders(origin) {
@@ -195,11 +218,17 @@ function amountsOfTier(value, tier) {
 
 // Express for a tier, or null. Stripe picks the buyer's currency, so Express must be priced in all three:
 // the same price id and an amount for each currency. Otherwise Express is off for that tier.
+// The upgrade delivers a Publisher analysis, so its Express is the Publisher Express.
+function expressTier(tier) {
+  return tier === 'upgrade' ? 'premium' : tier;
+}
+
 function expressFor(env, tier) {
   if (!expressEnabled(env)) return null;
-  const amounts = amountsOfTier(env.EXPRESS_AMOUNTS, tier);
+  const et = expressTier(tier);
+  const amounts = amountsOfTier(env.EXPRESS_AMOUNTS, et);
   if (!amounts) return null;
-  const ids = CURRENCIES.map((currency) => pricesFor(env.EXPRESS_PRICES, currency)[tier]);
+  const ids = CURRENCIES.map((currency) => pricesFor(env.EXPRESS_PRICES, currency)[et]);
   if (!ids[0] || ids.some((id) => id !== ids[0])) return null;
   return { priceId: ids[0], amounts };
 }
@@ -217,28 +246,82 @@ function publicConfig(env) {
   return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
 }
 
+// ---- Promotion codes --------------------------------------------------------------------
+
+// PROMOS: { CODE: { tier: "standard"|"premium", coupon: "<Stripe coupon id>", active: true, amounts: { eur, usd, gbp } } }.
+// "indie" and "publisher" are accepted as names of the two tiers. Express is never part of a promotion.
+const TIER_ALIASES = { indie: 'standard', publisher: 'premium' };
+
+function normalizeCode(value) {
+  const code = clip(value, 40).toUpperCase();
+  return PROMO_RE.test(code) ? code : '';
+}
+
+// The promotion for a code and tier, or null: missing, unknown, switched off, wrong tier or incomplete amounts.
+function findPromo(env, code, tier) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  const entry = asObject(env.PROMOS)[key];
+  if (!entry || typeof entry !== 'object' || entry.active === false || entry.active === 'false') return null;
+  const promoTier = TIER_ALIASES[entry.tier] || entry.tier;
+  if (!TIERS[promoTier] || promoTier !== tier || !entry.coupon) return null;
+  const amounts = {};
+  for (const currency of CURRENCIES) {
+    const n = Number((entry.amounts || {})[currency]);
+    if (!(n > 0)) return null;
+    amounts[currency] = n;
+  }
+  return { code: key, tier: promoTier, coupon: String(entry.coupon), amounts };
+}
+
+// Same, when the caller does not know the tier yet (the /api/order/promo endpoint).
+function findPromoAnyTier(env, code) {
+  const key = normalizeCode(code);
+  const entry = key ? asObject(env.PROMOS)[key] : null;
+  if (!entry || typeof entry !== 'object') return null;
+  return findPromo(env, key, TIER_ALIASES[entry.tier] || entry.tier);
+}
+
 // Total the customer should pay in the currency Stripe used, in the smallest unit, or null when it is not configured.
-function expectedTotal(env, tier, express, currency) {
-  const base = amountFor(env.PRICE_AMOUNTS, tier, currency);
+// With a promotion the base is the discounted amount; Express is added at its list amount.
+function expectedTotal(env, tier, express, currency, promo) {
+  const base = promo ? Number(promo.amounts[currency]) : amountFor(env.PRICE_AMOUNTS, tier, currency);
   if (!base) return null;
   if (!express) return Math.round(base * 100);
-  const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
+  const extra = amountFor(env.EXPRESS_AMOUNTS, expressTier(tier), currency);
   return extra ? Math.round((base + extra) * 100) : null;
+}
+
+// ---- Ownership of an Indie order (needed for the upgrade) -------------------------------
+
+function appIdOf(steam) {
+  const m = APP_RE.exec(steam || '');
+  return m ? m[1] : '';
+}
+
+async function sha256Hex(text) {
+  return toHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
+}
+
+async function ownershipKey(steam, email) {
+  const appId = appIdOf(steam);
+  if (!appId || !email) return '';
+  return 'order:own:' + appId + ':' + (await sha256Hex(String(email).trim().toLowerCase()));
 }
 
 // ---- Rate limit (same shape as contact-form, own key prefix) ---------------------------
 
-async function checkRateLimit(env, ip) {
-  const key = 'order:rl:' + ip;
+async function checkRateLimit(env, ip, prefix = 'order:rl:', limit = ORDERS_PER_WINDOW) {
+  const key = prefix + ip;
   const current = parseInt((await env.CONTACT_SUBMISSIONS.get(key)) || '0', 10);
-  if (current >= ORDERS_PER_WINDOW) return false;
+  if (current >= limit) return false;
   await env.CONTACT_SUBMISSIONS.put(key, String(current + 1), { expirationTtl: RATE_WINDOW_SECONDS });
   return true;
 }
 
 // ---- Stripe ------------------------------------------------------------------------------
 
-async function createCheckoutSession(env, order, lines, origin) {
+async function createCheckoutSession(env, order, lines, origin, promo) {
   const params = new URLSearchParams();
   params.set('mode', 'payment');
   lines.forEach((priceId, i) => {
@@ -251,10 +334,16 @@ async function createCheckoutSession(env, order, lines, origin) {
   params.set('metadata[game_url]', clip(order.steam, 500));
   params.set('metadata[tier]', order.tier);
   params.set('metadata[express]', order.express ? 'true' : 'false');
+  if (promo) {
+    // The coupon is limited to the tier's product in Stripe, so the Express line is never discounted.
+    params.set('discounts[0][coupon]', promo.coupon);
+    params.set('metadata[promo]', promo.code);
+  }
+  if (order.upgradeFrom) params.set('metadata[upgrade_from]', order.upgradeFrom);
   params.set('payment_intent_data[metadata][order_id]', order.id);
   // The page reads plan and express to say how soon the analysis arrives. It uses "plan", not "tier", because ?tier= opens the order form.
   params.set('success_url', origin + '/steam-analysis/?paid=1&plan=' + order.tier + (order.express ? '&express=1' : ''));
-  params.set('cancel_url', origin + '/steam-analysis/?tier=' + order.tier);
+  params.set('cancel_url', origin + '/steam-analysis/?tier=' + order.tier + (promo ? '&promo=' + encodeURIComponent(promo.code) : ''));
 
   const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',
@@ -349,6 +438,17 @@ async function handleOrder(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!(await checkRateLimit(env, ip))) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
+  // The upgrade is for owners of a paid Indie order: same Steam app id and same email.
+  let upgradeFrom = '';
+  if (tier === 'upgrade') {
+    const own = await ownershipKey(steam, email);
+    if (!own) return json(422, { ok: false, error: 'invalid_steam_link' }, origin);
+    upgradeFrom = (await env.CONTACT_SUBMISSIONS.get(own)) || '';
+    if (!upgradeFrom) return json(422, { ok: false, error: 'no_indie_order' }, origin);
+  }
+  // A promotion code that is unknown, switched off or for another tier is ignored: the order goes through at list price.
+  const promo = findPromo(env, body.promo, tier);
+
   const id = crypto.randomUUID();
   const key = 'order:' + id;
   const order = {
@@ -363,6 +463,8 @@ async function handleOrder(request, env) {
     wishlists,
     price,
     notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
+    promo: promo ? promo.code : '',
+    upgradeFrom,
     news: body.news === true,
     waiver: true,
     page: clip(body.page, 500),
@@ -376,7 +478,7 @@ async function handleOrder(request, env) {
   if (express) lines.push(express.priceId);
   const successOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   try {
-    const session = await createCheckoutSession(env, order, lines, successOrigin);
+    const session = await createCheckoutSession(env, order, lines, successOrigin, promo);
     order.stripeSessionId = session.id;
     await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
     return json(200, { ok: true, url: session.url }, origin);
@@ -385,6 +487,17 @@ async function handleOrder(request, env) {
     await env.CONTACT_SUBMISSIONS.delete(key);
     return json(502, { ok: false, error: 'checkout_failed' }, origin);
   }
+}
+
+// GET /api/order/promo?code=XYZ: lets the order page show the discount. Missing, wrong or disabled answers valid false.
+async function handlePromo(request, env) {
+  const origin = request.headers.get('Origin') || '';
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (!(await checkRateLimit(env, ip, 'order:rlp:', PROMO_CHECKS_PER_WINDOW))) return json(429, { ok: false, error: 'rate_limited' }, origin);
+  const promo = findPromoAnyTier(env, new URL(request.url).searchParams.get('code'));
+  if (!promo) return json(200, { valid: false }, origin);
+  return json(200, { valid: true, tier: promo.tier, amounts: promo.amounts }, origin);
 }
 
 async function handleWebhook(request, env) {
@@ -423,6 +536,8 @@ async function handleWebhook(request, env) {
       id: orderId,
       tier: meta.tier || '',
       express: meta.express === 'true',
+      promo: meta.promo || '',
+      upgradeFrom: meta.upgrade_from || '',
       steam: meta.game_url || '',
       email: (session.customer_details && session.customer_details.email) || session.customer_email || '',
       rebuilt: true,
@@ -440,15 +555,26 @@ async function handleWebhook(request, env) {
   order.amountTotal = session.amount_total;
   order.paidCurrency = session.currency;
   // Stripe chose the currency, so the expected total is worked out now, from the currency it used.
-  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency);
+  // A promotion counts only while its code still maps to this tier; the discounted amounts are the expected ones.
+  const promo = order.promo ? findPromo(env, order.promo, order.tier) : null;
+  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo);
   order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
   if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
+  order.listTotal = expectedTotal(env, order.tier, !!order.express, session.currency, null);
+  const discount = session.total_details && Number(session.total_details.amount_discount);
+  order.discountApplied = !!order.promo && discount > 0;
+  if (order.promo && !order.discountApplied) console.log('promotion ' + order.promo + ' paid without a discount: ' + session.id);
   order.businessDays = days;
   order.due_date = due ? due.due : null;
   order.due_start_date = due ? due.start : null;
   order.due_date_approx = due ? due.approx : null;
 
   await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
+  // A paid Indie order lets its buyer upgrade the same game with the same email later.
+  if (order.tier === 'standard') {
+    const own = await ownershipKey(order.steam, order.email);
+    if (own) await env.CONTACT_SUBMISSIONS.put(own, orderId, { expirationTtl: ORDER_TTL_SECONDS });
+  }
   await env.CONTACT_SUBMISSIONS.put(paidKey, paidAt.toISOString(), { expirationTtl: ORDER_TTL_SECONDS });
   return json(200, { ok: true }, '');
 }
@@ -471,6 +597,10 @@ export default {
       if (request.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
       if (origin && !ALLOWED_ORIGINS.includes(origin)) return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
       return json(200, publicConfig(env), origin);
+    }
+    if (path === '/api/order/promo') {
+      if (request.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
+      return handlePromo(request, env);
     }
     if (path === '/api/order') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
