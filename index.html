@@ -565,7 +565,7 @@ body.is-tab-hidden .dot{
   .hero-h1{ font-size: clamp(44px, min(7.4vw, calc(21.3vh - 89px)), 112px); }
 }
 .hero-h1 em{
-  font-style: italic;
+  font-style: normal;
   font-variation-settings: "opsz" 96;
   color: var(--clay);
 }
@@ -2165,12 +2165,12 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 }
 
 /* Italic-accent em pulse on parent hover */
-.hero-h1 em, .services-title em, .say-hi em{
+.services-title em, .say-hi em{
   display: inline-block;
   transform-origin: center;
   transition: transform .45s var(--ease), text-shadow .4s var(--ease);
 }
-.hero-h1:hover em, .services-title:hover em, .say-hi:hover em{
+.services-title:hover em, .say-hi:hover em{
   transform: scale(1.06);
   text-shadow: 0 0 30px color-mix(in srgb, var(--clay) 50%, transparent);
 }
@@ -2185,7 +2185,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
 @media (prefers-reduced-motion: reduce){
   .hero-h1, .about-title, .services-title,
   .faq-head h2, .contact-copy h2, .say-hi,
-  .hero-h1 em, .services-title em, .say-hi em,
+  .services-title em, .say-hi em,
   .portrait-tilt{
     transition: none !important;
   }
@@ -2193,7 +2193,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
   .faq-head h2:hover, .contact-copy h2:hover, .say-hi:hover{
     font-variation-settings: "opsz" 96;
   }
-  .hero-h1:hover em, .services-title:hover em, .say-hi:hover em{
+  .services-title:hover em, .say-hi:hover em{
     transform: none;
     text-shadow: none;
   }
@@ -3121,6 +3121,7 @@ html[data-theme="light"] .logo-tile .logo-theme--light{ display: block; }
         <article class="tc">
           <div class="tc-media">
             <div class="tc-photo"><img src="/assets/testimonials/jason.jpg" alt="Jason R., Co-Founder and Tech Director at Meteor Pixel" width="300" height="300" loading="lazy" decoding="async"></div>
+            <div class="tc-logo"><img src="/assets/testimonials/logo-meteorpixel-icon.webp" width="200" height="200" alt="Meteor Pixel" loading="lazy" decoding="async"></div>
           </div>
           <h3 class="tc-name">Jason R.</h3>
           <p class="tc-role">Co-Founder and Tech Director, Meteor Pixel</p>
