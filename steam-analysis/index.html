@@ -1201,8 +1201,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 /* Heading hover, as on the homepage */
 .hero-h1, .sa-title, .faq-head h2{ transition: font-variation-settings .4s var(--ease); }
-.hero-h1 em, .sa-title em{ display: inline-block; transform-origin: center; transition: transform .45s var(--ease), text-shadow .4s var(--ease); }
-.hero-h1:hover em, .sa-title:hover em{ transform: scale(1.06); text-shadow: 0 0 30px color-mix(in srgb, var(--clay) 50%, transparent); }
+.hero-h1 em, .sa-title em{ display: inline-block; }
 
 @media (max-width: 900px){
   .sa-intro, .faq-head, .sa-order{ grid-template-columns: 1fr; align-items: start; }
@@ -1215,8 +1214,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (prefers-reduced-motion: reduce){
   [data-reveal]{ opacity: 1; transform: none; transition: none; }
   .blur-reveal, .blur-reveal.is-visible{ opacity: 1; animation: none; }
-  .hero-h1 em, .sa-title em{ transition: none; }
-  .hero-h1:hover em, .sa-title:hover em{ transform: none; text-shadow: none; }
 }
 
 </style>
