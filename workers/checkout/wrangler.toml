@@ -52,7 +52,9 @@ EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49
 # These are the SANDBOX coupons: swap the coupon ids for the live ones when the live coupons exist.
 #   SOLODEV20  Indie       minus 20 EUR / 22 USD / 18 GBP  (coupon V7V7n4Fm)
 #   SOLODEV10  Publisher   minus 30 EUR / 33 USD / 25 GBP  (coupon yZBBORrT)
-PROMOS = { SOLODEV20 = { tier = "standard", coupon = "V7V7n4Fm", active = true, amounts = { eur = 79, usd = 87, gbp = 71 } }, SOLODEV10 = { tier = "premium", coupon = "yZBBORrT", active = true, amounts = { eur = 269, usd = 296, gbp = 224 } } }
+#   INDIE36    Publisher   minus 108 EUR / 118 USD / 90 GBP (36%, for Indie buyers; coupon NOT CREATED YET: create it in the Stripe
+#              sandbox (amount_off per currency, applies to the Publisher product only), put its id below and set active = true)
+PROMOS = { SOLODEV20 = { tier = "standard", coupon = "V7V7n4Fm", active = true, amounts = { eur = 79, usd = 87, gbp = 71 } }, SOLODEV10 = { tier = "premium", coupon = "yZBBORrT", active = true, amounts = { eur = 269, usd = 296, gbp = 224 } }, INDIE36 = { tier = "premium", coupon = "TODO_COUPON_ID", active = false, amounts = { eur = 191, usd = 211, gbp = 159 } } }
 
 # Secrets (never in this file). Set them with:
 #   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)
