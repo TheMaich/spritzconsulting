@@ -1,6 +1,6 @@
 /* Steam Analysis order modal: the form, the card flip, the price and Express rows, and the call to the order Worker.
    Shared by /steam-analysis/ and the homepage, together with assets/css/steam-order-modal.css and
-   assets/css/steam-tier-card.css. Any element with data-order="free|standard|premium|upgrade" opens the modal for that tier.
+   assets/css/steam-tier-card.css. Any element with data-order="free|standard|premium" opens the modal for that tier.
    When the element sits inside a .sa-tier card, the card flips into the modal. A ?tier= deep link opens it too.
    ?promo=CODE shows a discount on the tier the code belongs to, once /api/order/promo says the code is valid.
    Needs /api/order/config, /api/order and /api/order/promo (workers/checkout). Load it with defer. */
@@ -20,7 +20,6 @@
     <div class="om-field"><label class="om-label" for="om-steam">Steam store link</label><input id="om-steam" name="steam" type="url" required inputmode="url" autocomplete="off" placeholder="https://store.steampowered.com/app/&hellip;"></div>
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
     <p class="om-fine om-follow" id="om-follow" hidden>We’ll send your Solo Dev PDF, then one follow-up email with an offer. Unsubscribe anytime.</p>
-    <p class="om-fine om-upgrade-note" id="om-upgrade-note" hidden>Your email and Steam link must match your paid Indie Analysis order. The upgrade is open for 30 days after that order.</p>
     <div class="om-extra" id="om-extra" hidden>
       <p class="om-hint" id="om-hint">Every detail you share makes the forecasts a little more accurate. Each of these three is optional, but every one you add tightens the numbers.</p>
       <div class="om-field"><label class="om-label" for="om-quarter">Release (optional)</label>
@@ -54,12 +53,11 @@
   var T = {
     free:     { title: 'Solo Dev Analysis',          price: 'No payment needed. Delivered within 1 day.',                                  go: 'Get Solo Dev Analysis' },
     standard: { title: 'Indie Analysis',     faster: 'Delivered in 1 business day instead of 2' },
-    premium:  { title: 'Publisher Analysis', faster: 'Delivered in 2 business days instead of 3' },
-    upgrade:  { title: 'Upgrade to Publisher Analysis', faster: 'Delivered in 2 business days instead of 3' }
+    premium:  { title: 'Publisher Analysis', faster: 'Delivered in 2 business days instead of 3' }
   };
   /* Amounts shown for information, in the three currencies. Stripe decides which one the buyer pays in, from their
      location. /api/order/config overrides these when it answers. */
-  var BASE = { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 }, upgrade: { eur: 190, usd: 209, gbp: 158 } };
+  var BASE = { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 } };
   var last = null;
   function track(ev, extra) {                             /* Zaraz is injected by Cloudflare; guard every call */
     try {
@@ -162,8 +160,7 @@
     form.elements.waiver.required = paid;
     /* Free: Steam link and email only. Standard: plus the optional release quarter, wishlist count and planned price,
        and a free-text note. Premium: the same three optional fields, no note. */
-    var prem = (v === 'premium' || v === 'upgrade'), std = (v === 'standard');
-    document.getElementById('om-upgrade-note').hidden = (v !== 'upgrade');
+    var prem = (v === 'premium'), std = (v === 'standard');
     document.getElementById('om-notes-wrap').hidden = !std;
     document.getElementById('om-news').hidden = !paid;
     document.getElementById('om-follow').hidden = paid;
@@ -438,8 +435,6 @@
       var e = res.body && res.body.error;
       if (res.status === 429) return fail('Too many attempts. Please wait a few minutes and try again.');
       if (e === 'express_unavailable') return fail('Express is not available right now. Untick it and try again.');
-      if (e === 'no_indie_order') return fail('We found no paid Indie Analysis order for this email and Steam link. Please use the same email and link as in your Indie order.');
-      if (e === 'invalid_steam_link' && v === 'upgrade') return fail('Please paste the store link with the game number, like https://store.steampowered.com/app/123/.');
       fail('Something went wrong and nothing was charged. Please try again.');
     }).catch(function () {
       unbusy();
@@ -450,12 +445,12 @@
   window.addEventListener('pageshow', function (e) {
     if (e.persisted) { document.getElementById('om-go').disabled = false; renderOrder(); }
   });
-  /* Deep link from the decks: /steam-analysis/?tier=standard, ?tier=premium or ?tier=upgrade (?tier=indie and ?tier=publisher work too) opens that order form.
+  /* Deep link from the decks: /steam-analysis/?tier=standard or ?tier=premium (?tier=indie and ?tier=publisher work too) opens that order form.
      ?promo=CODE in the same link adds the discount of that code to its own tier. */
   loadPromo();
   var want = new URLSearchParams(location.search).get('tier');
   if (want === 'extended' || want === 'publisher') want = 'premium';
   if (want === 'indie') want = 'standard';
   if (want === 'solo' || want === 'solo-dev') want = 'free';
-  if (want === 'free' || want === 'standard' || want === 'premium' || want === 'upgrade') { track('tier_deeplink', { tier: want }); open(want, null); }
+  if (want === 'free' || want === 'standard' || want === 'premium') { track('tier_deeplink', { tier: want }); open(want, null); }
 })();

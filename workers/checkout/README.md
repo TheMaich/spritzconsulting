@@ -49,8 +49,6 @@ From this folder:
   requested tier; a code for another tier, an unknown or an inactive code is ignored without an error. The coupons must be limited
   to the tier's own product in Stripe, so the Express line is never discounted. `SOLODEV20` is Indie (79 / 87 / 71 against 99 / 109 / 89),
   `SOLODEV10` is Publisher (269 / 296 / 224 against 299 / 329 / 249). Express is added at its list amount to the discounted base.
-- `upgrade` in `PRICES` and `PRICE_AMOUNTS`: the Indie owner to Publisher upgrade (190 EUR / 209 USD / 158 GBP). Its Express is the
-  Publisher Express (+99), and it is delivered in 3 business days (2 with Express). It takes no promotion code.
 - `EXPRESS_ENABLED`: `"false"` by default. With it off the page hides the Express row and the Worker refuses Express.
 
 To open Express: create the two Express products in Stripe, paste their price ids into `EXPRESS_PRICES.eur`,
@@ -61,10 +59,7 @@ set `EXPRESS_ENABLED = "true"`, deploy.
 Keys in the `CONTACT_SUBMISSIONS` namespace, all with a 30 day expiry (the order form promises deletion after 30 days):
 
 - `order:<uuid>`: the order (tier, express, Steam link, email, optional fields, status, and after payment
-  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus `promo`, `discountApplied` (the session carried a discount), `listTotal` (the total at list price) and `upgradeFrom`).
-- `order:own:<Steam app id>:<sha256 of the lower-cased email>`: the id of a paid Indie order, written by the webhook. An upgrade order
-  needs it (same game, same email), otherwise the Worker answers 422 `no_indie_order`. It expires with the order after 30 days, so the
-  upgrade is open for 30 days after the Indie order.
+  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus `promo`, `discountApplied` (the session carried a discount) and `listTotal` (the total at list price)).
 - `order:paid:<checkout session id>`: marks a session as processed, so a repeated Stripe delivery changes nothing.
 - `order:rl:<ip>`: rate limit, 5 orders per IP per 10 minutes.
 

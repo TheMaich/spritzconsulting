@@ -27,8 +27,7 @@ EXPRESS_ENABLED = "false"
 
 # Stripe price ids of the two tiers. These are the SANDBOX ids; replace them with the live ids
 # when the live products exist. Each price already carries its EUR, GBP and USD amounts.
-# "upgrade" is the Indie owner to Publisher price (190 EUR / 209 USD / 158 GBP).
-PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJFkRG2ZYUJbNZbcOh7", upgrade = "price_1UcaqvJFkRG2ZYUJ7GvrJiyx" }
+PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJFkRG2ZYUJbNZbcOh7" }
 
 # Express add-on price ids, one entry per currency. Each Express price carries EUR, USD and GBP, so the same
 # id repeats under "eur", "usd" and "gbp". These are the SANDBOX ids of "Express Delivery, Indie/Publisher Tier
@@ -42,7 +41,7 @@ EXPRESS_PRICES = { eur = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium 
 # Tier amounts the page shows, in whole currency units. They must equal the amounts of the Stripe tier prices.
 # The Worker reads them for /api/order/config and, once a payment arrives, to check the paid total in the
 # currency Stripe used (amountMatches in the KV record).
-PRICE_AMOUNTS = { eur = { standard = 99, premium = 299, upgrade = 190 }, usd = { standard = 109, premium = 329, upgrade = 209 }, gbp = { standard = 89, premium = 249, upgrade = 158 } }
+PRICE_AMOUNTS = { eur = { standard = 99, premium = 299 }, usd = { standard = 109, premium = 329 }, gbp = { standard = 89, premium = 249 } }
 
 # Express amounts the page shows, same units. They must equal the Express prices above.
 EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49, premium = 99 }, gbp = { standard = 49, premium = 99 } }

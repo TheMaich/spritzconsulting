@@ -20,8 +20,6 @@
  * - Promotion codes (PROMOS) map a code to one tier, one Stripe coupon and the discounted amounts. The coupon is
  *   sent as discounts[0][coupon] on that tier's order only. It never touches the Express line, because the coupon
  *   is limited to the tier's product in Stripe. A code on the wrong tier is ignored without an error.
- * - The upgrade tier (Indie owner to Publisher) needs a paid Indie order for the same game and email: the webhook
- *   writes order:own:<app id>:<sha256 of the email> when an Indie order is paid, and the upgrade order looks it up.
  * - Solo Dev (free) does not go through this Worker.
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
  * - No notification email yet; read orders from KV (see README).
@@ -134,7 +132,6 @@ const CURRENCIES = ['eur', 'usd', 'gbp'];
 const TIERS = {
   standard: { days: 2, expressDays: 1 },
   premium: { days: 3, expressDays: 2 },
-  upgrade: { days: 3, expressDays: 2 },
 };
 
 const ORDER_TTL_SECONDS = 30 * 24 * 60 * 60;
@@ -147,7 +144,6 @@ const MAX_NOTES_LENGTH = 1000;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const STEAM_RE = /^https?:\/\/(store\.steampowered\.com|steamcommunity\.com)\//i;
-const APP_RE = /^https?:\/\/store\.steampowered\.com\/app\/(\d+)/i;
 const PROMO_RE = /^[A-Z0-9]{3,30}$/;
 const QUARTER_RE = /^(released|undecided|\d{4}-Q[1-4])$/;
 
@@ -218,17 +214,11 @@ function amountsOfTier(value, tier) {
 
 // Express for a tier, or null. Stripe picks the buyer's currency, so Express must be priced in all three:
 // the same price id and an amount for each currency. Otherwise Express is off for that tier.
-// The upgrade delivers a Publisher analysis, so its Express is the Publisher Express.
-function expressTier(tier) {
-  return tier === 'upgrade' ? 'premium' : tier;
-}
-
 function expressFor(env, tier) {
   if (!expressEnabled(env)) return null;
-  const et = expressTier(tier);
-  const amounts = amountsOfTier(env.EXPRESS_AMOUNTS, et);
+  const amounts = amountsOfTier(env.EXPRESS_AMOUNTS, tier);
   if (!amounts) return null;
-  const ids = CURRENCIES.map((currency) => pricesFor(env.EXPRESS_PRICES, currency)[et]);
+  const ids = CURRENCIES.map((currency) => pricesFor(env.EXPRESS_PRICES, currency)[tier]);
   if (!ids[0] || ids.some((id) => id !== ids[0])) return null;
   return { priceId: ids[0], amounts };
 }
@@ -288,25 +278,8 @@ function expectedTotal(env, tier, express, currency, promo) {
   const base = promo ? Number(promo.amounts[currency]) : amountFor(env.PRICE_AMOUNTS, tier, currency);
   if (!base) return null;
   if (!express) return Math.round(base * 100);
-  const extra = amountFor(env.EXPRESS_AMOUNTS, expressTier(tier), currency);
+  const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
   return extra ? Math.round((base + extra) * 100) : null;
-}
-
-// ---- Ownership of an Indie order (needed for the upgrade) -------------------------------
-
-function appIdOf(steam) {
-  const m = APP_RE.exec(steam || '');
-  return m ? m[1] : '';
-}
-
-async function sha256Hex(text) {
-  return toHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
-}
-
-async function ownershipKey(steam, email) {
-  const appId = appIdOf(steam);
-  if (!appId || !email) return '';
-  return 'order:own:' + appId + ':' + (await sha256Hex(String(email).trim().toLowerCase()));
 }
 
 // ---- Rate limit (same shape as contact-form, own key prefix) ---------------------------
@@ -339,7 +312,6 @@ async function createCheckoutSession(env, order, lines, origin, promo) {
     params.set('discounts[0][coupon]', promo.coupon);
     params.set('metadata[promo]', promo.code);
   }
-  if (order.upgradeFrom) params.set('metadata[upgrade_from]', order.upgradeFrom);
   params.set('payment_intent_data[metadata][order_id]', order.id);
   // The page reads plan and express to say how soon the analysis arrives. It uses "plan", not "tier", because ?tier= opens the order form.
   params.set('success_url', origin + '/steam-analysis/?paid=1&plan=' + order.tier + (order.express ? '&express=1' : ''));
@@ -438,14 +410,6 @@ async function handleOrder(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!(await checkRateLimit(env, ip))) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
-  // The upgrade is for owners of a paid Indie order: same Steam app id and same email.
-  let upgradeFrom = '';
-  if (tier === 'upgrade') {
-    const own = await ownershipKey(steam, email);
-    if (!own) return json(422, { ok: false, error: 'invalid_steam_link' }, origin);
-    upgradeFrom = (await env.CONTACT_SUBMISSIONS.get(own)) || '';
-    if (!upgradeFrom) return json(422, { ok: false, error: 'no_indie_order' }, origin);
-  }
   // A promotion code that is unknown, switched off or for another tier is ignored: the order goes through at list price.
   const promo = findPromo(env, body.promo, tier);
 
@@ -464,7 +428,6 @@ async function handleOrder(request, env) {
     price,
     notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
     promo: promo ? promo.code : '',
-    upgradeFrom,
     news: body.news === true,
     waiver: true,
     page: clip(body.page, 500),
@@ -537,7 +500,6 @@ async function handleWebhook(request, env) {
       tier: meta.tier || '',
       express: meta.express === 'true',
       promo: meta.promo || '',
-      upgradeFrom: meta.upgrade_from || '',
       steam: meta.game_url || '',
       email: (session.customer_details && session.customer_details.email) || session.customer_email || '',
       rebuilt: true,
@@ -570,11 +532,6 @@ async function handleWebhook(request, env) {
   order.due_date_approx = due ? due.approx : null;
 
   await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
-  // A paid Indie order lets its buyer upgrade the same game with the same email later.
-  if (order.tier === 'standard') {
-    const own = await ownershipKey(order.steam, order.email);
-    if (own) await env.CONTACT_SUBMISSIONS.put(own, orderId, { expirationTtl: ORDER_TTL_SECONDS });
-  }
   await env.CONTACT_SUBMISSIONS.put(paidKey, paidAt.toISOString(), { expirationTtl: ORDER_TTL_SECONDS });
   return json(200, { ok: true }, '');
 }
