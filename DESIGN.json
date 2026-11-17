@@ -42,7 +42,7 @@
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display (Familjen Grotesk)", "purpose": "Hero H1. Italic emphasis is always clay." },
+      "display": { "displayName": "Display (Familjen Grotesk)", "purpose": "Hero H1. Emphasis is clay and upright." },
       "headline": { "displayName": "Headline (Familjen Grotesk)", "purpose": "Resources / calculator hero. Max 22ch line." },
       "title": { "displayName": "Title (Familjen Grotesk 500)", "purpose": "Resource card title, calculator input label." },
       "body": { "displayName": "Body (Lato 17/1.55)", "purpose": "Default site copy." },
@@ -122,7 +122,7 @@
       "refersTo": "card-result",
       "description": "Calculator output — clay-tinted surface, serif Σ-prefixed label with extending rule, oversized tabular-num value.",
       "html": "<div class=\"ds-calc-result\"><span class=\"ds-calc-result-label\">Marketing budget</span><span class=\"ds-calc-result-value\">$125,000</span><div class=\"ds-calc-result-breakdown\"><div class=\"ds-row\"><span>RATE</span><span>25% OF BUDGET</span></div><div class=\"ds-row\"><span>RECOUP UNITS @ $20</span><span>6,250</span></div></div></div>",
-      "css": ".ds-calc-result{position:relative;background:color-mix(in srgb,#E5B415 6%,#12141A);border:1px solid color-mix(in srgb,#E5B415 28%,#262A33);border-radius:14px;padding:32px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 0 color-mix(in srgb,#E5B415 18%,transparent) inset,0 24px 60px -32px color-mix(in srgb,#E5B415 35%,transparent)}.ds-calc-result-label{display:flex;align-items:center;gap:16px;font-family:\"Familjen Grotesk\",system-ui,sans-serif;font-weight:500;font-size:clamp(24px,2.8vw,32px);font-variation-settings:\"opsz\" 36;letter-spacing:-0.045em;color:#ECEFF6;line-height:1.1}.ds-calc-result-label::before{content:\"\\03A3\";font-family:\"Familjen Grotesk\",serif;font-size:0.9em;color:#E5B415;font-style:italic;font-weight:400}.ds-calc-result-label::after{content:\"\";flex:1;height:1px;background:color-mix(in srgb,#E5B415 35%,transparent)}.ds-calc-result-value{font-family:\"Familjen Grotesk\",system-ui,sans-serif;font-size:clamp(56px,10vw,104px);font-weight:600;color:#ECEFF6;letter-spacing:-0.07em;line-height:0.96;font-variation-settings:\"opsz\" 96;font-variant-numeric:tabular-nums;margin-top:4px}.ds-calc-result-breakdown{font-family:\"Sofia Sans Extra Condensed\",\"Arial Narrow\",sans-serif;font-size:13px;color:#8E95A4;line-height:1.9;margin-top:16px;padding-top:16px;border-top:1px solid color-mix(in srgb,#E5B415 22%,#262A33);display:grid;gap:4px;font-variant-numeric:tabular-nums}.ds-calc-result-breakdown .ds-row{display:flex;justify-content:space-between;gap:16px}.ds-calc-result-breakdown .ds-row span:first-child{color:#5C6272;letter-spacing:0.06em;text-transform:uppercase;font-size:11px}"
+      "css": ".ds-calc-result{position:relative;background:color-mix(in srgb,#E5B415 6%,#12141A);border:1px solid color-mix(in srgb,#E5B415 28%,#262A33);border-radius:14px;padding:32px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 0 color-mix(in srgb,#E5B415 18%,transparent) inset,0 24px 60px -32px color-mix(in srgb,#E5B415 35%,transparent)}.ds-calc-result-label{display:flex;align-items:center;gap:16px;font-family:\"Familjen Grotesk\",system-ui,sans-serif;font-weight:500;font-size:clamp(24px,2.8vw,32px);font-variation-settings:\"opsz\" 36;letter-spacing:-0.045em;color:#ECEFF6;line-height:1.1}.ds-calc-result-label::before{content:\"\\03A3\";font-family:\"Familjen Grotesk\",serif;font-size:0.9em;color:#E5B415;font-style:normal;font-weight:400}.ds-calc-result-label::after{content:\"\";flex:1;height:1px;background:color-mix(in srgb,#E5B415 35%,transparent)}.ds-calc-result-value{font-family:\"Familjen Grotesk\",system-ui,sans-serif;font-size:clamp(56px,10vw,104px);font-weight:600;color:#ECEFF6;letter-spacing:-0.07em;line-height:0.96;font-variation-settings:\"opsz\" 96;font-variant-numeric:tabular-nums;margin-top:4px}.ds-calc-result-breakdown{font-family:\"Sofia Sans Extra Condensed\",\"Arial Narrow\",sans-serif;font-size:13px;color:#8E95A4;line-height:1.9;margin-top:16px;padding-top:16px;border-top:1px solid color-mix(in srgb,#E5B415 22%,#262A33);display:grid;gap:4px;font-variant-numeric:tabular-nums}.ds-calc-result-breakdown .ds-row{display:flex;justify-content:space-between;gap:16px}.ds-calc-result-breakdown .ds-row span:first-child{color:#5C6272;letter-spacing:0.06em;text-transform:uppercase;font-size:11px}"
     },
     {
       "name": "TL;DR Card",
@@ -175,7 +175,7 @@
       { "name": "The One Mustard Rule", "body": "Clay is the only chromatic accent on any screen unless the role is semantic (danger = magenta, success = green). If something needs to pop but isn't a CTA, the answer is weight or scale, not a second color.", "section": "colors" },
       { "name": "The Photographic-Origin Rule", "body": "--portrait-bg: #E5B415 is theme-invariant. The brand color is locked to the portrait's actual backdrop. Don't theme-shift it for variety.", "section": "colors" },
       { "name": "The Tinted-Black Rule", "body": "Never #000, never #fff. Paper is always tilted toward the brand hue.", "section": "colors" },
-      { "name": "The Italic-Means-Clay Rule", "body": "Italic text is always clay. Never an italic in default ink.", "section": "typography" },
+      { "name": "The Upright-Clay Rule", "body": "Clay emphasis is upright (font-style normal). The only italic is the tier name in the Steam Analysis tier cards.", "section": "typography" },
       { "name": "The Counter-Header Rule", "body": "Article H2 carries a ::before numeral counter (decimal-leading-zero) in clay Sofia Sans Extra Condensed above the heading. The number is the marker, the heading is the content.", "section": "typography" },
       { "name": "The Op-Size Rule", "body": "Familjen Grotesk has no opsz axis, so neither display sizes nor the wordmark need font-variation-settings.", "section": "typography" },
       { "name": "The Mono-For-Numbers Rule", "body": "Any numeric value rendered in chrome uses font-variant-numeric: tabular-nums.", "section": "typography" },
@@ -191,7 +191,7 @@
       "Do use Sofia Sans Extra Condensed 600 uppercase for labels, kickers, nav, and meta — never for body.",
       "Do use the ::before counter pattern (decimal-leading-zero in clay Sofia Sans Extra Condensed) for article H2 chapter marks.",
       "Do apply font-variant-numeric: tabular-nums to every chrome number.",
-      "Do italicize the emphasized phrase in headlines in clay (<em>).",
+      "Do colour the emphasized phrase in headlines clay (<em>) and keep it upright (font-style: normal).",
       "Do keep CTA cards, TL;DR cards, and result cards at radius 14–18px; pills at 999px; inputs at 8px.",
       "Do clamp display sizes and section padding with clamp().",
       "Do keep grain + aurora running but barely visible. Pause on prefers-reduced-motion and tab-hidden.",

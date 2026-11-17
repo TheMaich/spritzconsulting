@@ -214,7 +214,7 @@ Rejects: SaaS gradient buttons; navy-and-cyan B2B template; glassmorphism beyond
 The system runs on a single saturated brand color against a tinted near-black or warm cream. Primary carries identity; magenta carries danger and one light-theme expression; neutrals tilt warm.
 
 ### Primary
-- **Clay Mustard** (`#E5B415`, deep `#C4970A`, soft wash `#2A1F05`): brand signature — primary button fill, headline italics, kicker bar, scrollbar thumb, focus outline, aurora gradient, link hover. In light theme, deepens to `#8A6600` for cream-surface legibility.
+- **Clay Mustard** (`#E5B415`, deep `#C4970A`, soft wash `#2A1F05`): brand signature — primary button fill, headline emphasis (upright), kicker bar, scrollbar thumb, focus outline, aurora gradient, link hover. In light theme, deepens to `#8A6600` for cream-surface legibility.
 
 ### Secondary
 - **Magenta** (`#FF2EC8` dark / `#BE1383` light): danger state, form errors, and (light-theme only) kicker bar + numeral accent. Never a decorative accent — semantic role only.
@@ -255,7 +255,7 @@ The system runs on a single saturated brand color against a tinted near-black or
 **Character:** Editorial pairing — a characterful grotesque for display does the heavy expression, Lato keeps body warm and legible, Sofia Sans Extra Condensed does meta/labels/numerals at small sizes with tight uppercase. Sofia is "mono" by role (tickers, kickers, nav, meta) even though it's a condensed sans — chosen for editorial weight, not for monospace fidelity.
 
 ### Hierarchy
-- **Display** (Familjen 400, `clamp(44px, 7.4vw, 112px)`, lh 0.94, ls -0.06em): hero H1. Italics in clay for the emphasized phrase.
+- **Display** (Familjen 400, `clamp(44px, 7.4vw, 112px)`, lh 0.94, ls -0.06em): hero H1. The emphasized phrase is set upright in clay.
 - **Headline** (Familjen 400, `clamp(40px, 5.4vw, 76px)`, lh 1.0, ls -0.055em): resources hero, calculator hero.
 - **Article H1** (Familjen 600, `clamp(48px, 8vw, 104px)`, lh 1.02, ls -0.065em): article title.
 - **Article H2** (Familjen 600, `clamp(26px, 3.4vw, 40px)`, lh 1.12, ls -0.05em): with `01` `02` mono counters in clay above, plus top border-rule.
@@ -268,7 +268,7 @@ The system runs on a single saturated brand color against a tinted near-black or
 
 ### Named Rules
 
-**The Italic-Means-Clay Rule.** Italic text is always clay (`em` in headlines, `em` in body, deck italics). Never an italic in default ink.
+**The Upright-Clay Rule.** Clay emphasis is upright. `em` in headlines and in body copy takes `color: var(--clay)` and `font-style: normal`, never an italic. The one exception is the tier name in the Steam Analysis tier cards on `/steam-analysis/`, which stays a clay italic. Do not add italics anywhere else.
 
 **The Counter-Header Rule.** Article H2 carries an `::before` numeral counter (`01`, `02`) in clay Sofia above the heading. The number is the marker, the heading is the content.
 
@@ -367,7 +367,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
-- **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with a clay italic `Σ` prefix and a clay-tinted rule extending to the right.
+- **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with an upright clay `Σ` prefix and a clay-tinted rule extending to the right.
 - **Value**: serif 600, `clamp(56px, 10vw, 104px)`, ls -0.045em, opsz 96, tabular-nums.
 - **Breakdown rows**: Sofia XCond 13px mono, ls 0.045em, tabular-nums, separated by 1px clay-tinted rule.
 
@@ -406,7 +406,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Do** use Sofia Sans Extra Condensed 600 uppercase for labels, kickers, nav, and meta — never for body.
 - **Do** use the `::before` counter pattern (`decimal-leading-zero` in clay Sofia) for article H2 chapter marks.
 - **Do** apply `font-variant-numeric: tabular-nums` to every chrome number (counters, breakdown values, calculator results, nav numerals).
-- **Do** italicize the emphasized phrase in headlines in clay (`<em>`).
+- **Do** colour the emphasized phrase in headlines clay (`<em>`) and keep it upright (`font-style: normal`).
 - **Do** keep CTA cards, TL;DR cards, and result cards at radius 14–18px; pills at 999px; inputs at 8px.
 - **Do** clamp display sizes (`clamp(44px, 7.4vw, 112px)`) and clamp section padding (`clamp(80px, 12vw, 160px)`).
 - **Do** keep grain + aurora running but barely visible (opacity 0.05 / 0.42). Pause on `prefers-reduced-motion` and `body.is-tab-hidden`.

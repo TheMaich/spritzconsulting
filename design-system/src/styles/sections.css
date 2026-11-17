@@ -40,7 +40,7 @@
 }
 
 .spz-section-title em {
-  font-style: italic;
+  font-style: normal;
   color: var(--spz-clay);
   font-variation-settings: "opsz" 96;
 }
@@ -67,7 +67,7 @@
 }
 
 .spz-display em {
-  font-style: italic;
+  font-style: normal;
   font-variation-settings: "opsz" 96;
   color: var(--spz-clay);
 }
@@ -521,7 +521,7 @@
 .spz-bubble-lead {
   color: var(--spz-clay);
   font-family: var(--spz-serif);
-  font-style: italic;
+  font-style: normal;
   font-variation-settings: "opsz" 36;
   font-weight: 500;
   font-size: 18px;

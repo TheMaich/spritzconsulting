@@ -54,8 +54,8 @@ in both themes. Hardcoded hexes are not.
 
 ## 3. Typographic signatures — use these, they carry the brand
 
-- **Clay italic emphasis.** `Display` and `Section`'s `title` render `<em>` as
-  italic clay. This is the single most recognisable Spritz move — use it on one
+- **Clay emphasis.** `Display` and `Section`'s `title` render `<em>` as
+  upright clay (no italics). This is the single most recognisable Spritz move — use it on one
   phrase per heading, never more:
   `<Display>Ship the game, <em>not the excuses</em>.</Display>`
 - **`Kicker`** opens a section: a clay rule, a tabular number, an uppercase label
