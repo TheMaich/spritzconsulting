@@ -30,6 +30,7 @@ html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
 .om-chk input{ margin-top: 3px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
 .om-follow[hidden]{ display: none; }
 .om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.om-price del{ color: var(--ink-2); text-decoration-thickness: 1px; }
 .om-err{ margin: 0; font-size: 14.5px; }
 .om-submit{ width: 100%; }
 /* Checkbox rows (waiver, newsletter, Express): 180ms hover, a small press on :active, no motion if the visitor asks for none */

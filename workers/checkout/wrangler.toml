@@ -46,6 +46,14 @@ PRICE_AMOUNTS = { eur = { standard = 99, premium = 299 }, usd = { standard = 109
 # Express amounts the page shows, same units. They must equal the Express prices above.
 EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49, premium = 99 }, gbp = { standard = 49, premium = 99 } }
 
+# Promotion codes. A code applies to one tier only (standard = Indie, premium = Publisher) and sends that Stripe coupon with
+# the order. The coupons are limited to the tier's own product in Stripe, so the Express line is never discounted.
+# "amounts" are the discounted tier amounts and drive the expected total (amountMatches). Set active = false to switch a code off.
+# These are the SANDBOX coupons: swap the coupon ids for the live ones when the live coupons exist.
+#   SOLODEV20  Indie       minus 20 EUR / 22 USD / 18 GBP  (coupon V7V7n4Fm)
+#   SOLODEV10  Publisher   minus 30 EUR / 33 USD / 25 GBP  (coupon yZBBORrT)
+PROMOS = { SOLODEV20 = { tier = "standard", coupon = "V7V7n4Fm", active = true, amounts = { eur = 79, usd = 87, gbp = 71 } }, SOLODEV10 = { tier = "premium", coupon = "yZBBORrT", active = true, amounts = { eur = 269, usd = 296, gbp = 224 } } }
+
 # Secrets (never in this file). Set them with:
 #   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)
 #   npx wrangler secret put STRIPE_WEBHOOK_SECRET   (signing secret of the /api/order/webhook endpoint)

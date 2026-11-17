@@ -2,7 +2,8 @@
    Shared by /steam-analysis/ and the homepage, together with assets/css/steam-order-modal.css and
    assets/css/steam-tier-card.css. Any element with data-order="free|standard|premium" opens the modal for that tier.
    When the element sits inside a .sa-tier card, the card flips into the modal. A ?tier= deep link opens it too.
-   Needs /api/order/config and /api/order (workers/checkout). Load it with defer. */
+   ?promo=CODE shows a discount on the tier the code belongs to, once /api/order/promo says the code is valid.
+   Needs /api/order/config, /api/order and /api/order/promo (workers/checkout). Load it with defer. */
 (function () {
   /* The dialog markup lives here, so every page that loads this script gets the same modal. */
   var MARKUP = `<dialog class="sa-modal" id="order-modal" aria-labelledby="om-title" data-lenis-prevent>
@@ -93,12 +94,36 @@
     var a = cfg && cfg.enabled && cfg.express && cfg.express[v];
     return a && ORDER.every(function (c) { return Number(a[c]) > 0; }) ? a : null;
   }
+  /* A promotion code from ?promo=. It counts only after the Worker says it is valid, and only on the tier it belongs to.
+     A missing, wrong or switched-off code leaves the list price in place and shows nothing. */
+  var promo = null;                                       /* { code, tier, amounts } once the Worker confirmed it */
+  function promoFor(v) {
+    return promo && promo.tier === v && ORDER.every(function (c) { return Number(promo.amounts[c]) > 0; }) ? promo : null;
+  }
+  function loadPromo() {
+    var code = (new URLSearchParams(location.search).get('promo') || '').trim().toUpperCase();
+    if (!/^[A-Z0-9]{3,30}$/.test(code)) return;
+    fetch('/api/order/promo?code=' + encodeURIComponent(code), { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { if (j && j.valid === true && j.tier && j.amounts) promo = { code: code, tier: j.tier, amounts: j.amounts }; })
+      .catch(function () { promo = null; })
+      .then(renderOrder);
+  }
   function renderOrder() {
     var v = form.elements.version.value, box = form.elements.express;
     if (!T[v]) return;
     var paid = (v !== 'free');
-    var base = paid ? baseAmounts(v) : null;
-    document.getElementById('om-price').textContent = paid ? list(base) + '. Stripe shows the price in your currency at checkout.' : T[v].price;
+    var p = paid ? promoFor(v) : null;
+    var base = paid ? (p ? p.amounts : baseAmounts(v)) : null;
+    var priceEl = document.getElementById('om-price');
+    if (!paid) priceEl.textContent = T[v].price;
+    else if (p) {
+      var was = document.createElement('del');
+      was.textContent = list(baseAmounts(v));
+      priceEl.textContent = '';
+      priceEl.appendChild(was);
+      priceEl.appendChild(document.createTextNode(' ' + list(base) + '. Code ' + p.code + ' is applied. Stripe shows the price in your currency at checkout.'));
+    } else priceEl.textContent = list(base) + '. Stripe shows the price in your currency at checkout.';
     var ex = paid ? expressAmounts(v) : null;
     var row = document.getElementById('om-express'), total = document.getElementById('om-total');
     row.hidden = !ex;
@@ -398,6 +423,7 @@
         waiver: el.waiver.checked,
         news: !el.news.disabled && el.news.checked,
         express: express,
+        promo: promoFor(v) ? promoFor(v).code : '',
         page: location.pathname,
         referrer: document.referrer || ''
       })
@@ -419,7 +445,9 @@
   window.addEventListener('pageshow', function (e) {
     if (e.persisted) { document.getElementById('om-go').disabled = false; renderOrder(); }
   });
-  /* Deep link from the free deck's last slide: /steam-analysis/?tier=standard or ?tier=premium (?tier=extended works too) opens that order form. */
+  /* Deep link from the decks: /steam-analysis/?tier=standard or ?tier=premium (?tier=indie and ?tier=publisher work too) opens that order form.
+     ?promo=CODE in the same link adds the discount of that code to its own tier. */
+  loadPromo();
   var want = new URLSearchParams(location.search).get('tier');
   if (want === 'extended' || want === 'publisher') want = 'premium';
   if (want === 'indie') want = 'standard';
