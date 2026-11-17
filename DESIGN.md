@@ -161,6 +161,25 @@ components:
   chip-filter-active:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
+  checkbox-row:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-2}"
+  checkbox-row-hover:
+    textColor: "{colors.ink}"
+  checkbox-boxed:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink-2}"
+    rounded: "{rounded.card}"
+    padding: "12px 14px"
+  checkbox-boxed-checked:
+    textColor: "{colors.ink}"
+  switch-off:
+    backgroundColor: "{colors.paper-3}"
+    rounded: "{rounded.pill}"
+  switch-on:
+    backgroundColor: "{colors.clay}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.pill}"
   toggle-pill:
     backgroundColor: "{colors.paper-3}"
     textColor: "{colors.ink-3}"
@@ -304,6 +323,47 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Wrap** (`.calc-input-wrap`): paper-2 fill, rule border, radius 8px, overflow hidden so the prefix/suffix chips read as integral parts. Focus-within → clay border.
 - **Prefix/Suffix** (`.calc-currency`, `.calc-suffix`): paper-3 fill, ink-3 mono text, `padding: 14px 16px`, divided by 1px rule line.
 - **Input** (`.calc-input`): transparent fill, ink text, Lato 16px, padding `14px 16px`. Webkit spinners dimmed to opacity 0.3. Wheel-blur on number inputs (JS) to prevent scroll-jumping values.
+
+### Checkbox
+- **Control:** the native `<input type="checkbox">`, never a custom replacement. `accent-color: clay`, 17px, `cursor: pointer`.
+- **Row** (`.om-chk`): flex, 10px gap, `ink-2` text. Hover → text `ink`, 180ms on `ease-default`. The whole label is the hit area.
+- **Pressed** (`:active` on the input): `transform: scale(0.94)`, 180ms on `ease-default`.
+- **Boxed row** (`.om-express`, a choice with a price): `paper` fill, rule border, radius 12px, `padding: 12px 14px`. Hover → border 45%-mix clay. On → clay border, `ink` text. Its control is the Switch below.
+- **Invalid:** `2px` danger outline with a 2px offset, same as inputs.
+- **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed. State is still shown by colour and border.
+
+### Switch
+- **Control:** a native `<input type="checkbox" role="switch">` with `appearance: none`, drawn as a pill track and a round knob. It keeps keyboard (Space), label click and screen reader state without extra script.
+- **Size:** 46px by 28px, pill radius, 1px rule border. The knob is 22px with a 2px inset.
+- **Off:** the track is a quiet 16%-mix of `ink` over `paper`, the knob is `ink`.
+- **On:** the track is `clay` with a clay border, the knob is `paper` and slides 18px right. This is the clay fill with paper text pairing the buttons use.
+- **Motion:** track colour, border and knob slide take 180ms on `ease-default`. `:active` scales the whole switch to 0.94.
+- **Focus:** a 2px clay outline with a 2px offset. Disabled: 45% opacity, not-allowed cursor.
+- **Reduced motion:** under `prefers-reduced-motion: reduce` the transitions and the `:active` scale are removed; the on state still shows by colour and knob position.
+- **Use:** one boolean choice with a price attached, such as Express delivery. For a plain yes or no inside a sentence, use the Checkbox.
+
+### Tier Card
+- **Source:** `assets/css/steam-tier-card.css`, loaded by `/steam-analysis/` and by the homepage. The two pages show the same card. Change the stylesheet, never a copy of the rules.
+- **Surface** (`.sa-tier`): `paper-3` fill with a 12% clay glow in the top right corner, rule border, radius 18px, `shadow-md`, padding `28px 26px 52px`. The extra bottom padding keeps the three buttons aligned.
+- **Title** (`h3`): serif 500, opsz 72, centred. The tier name is a clay italic and the word "Analysis" stays `ink`.
+- **Price** (`.sa-price`): serif amounts in one line, `EUR / USD / GBP`, separated by a faint slash. A rule line closes the block. The amounts are information only. Stripe shows the buyer's currency at checkout.
+- **Hover and focus:** the card scales to 1.03 over 350ms, the border mixes 35% clay and a clay glow appears. The feature list blurs to 6% opacity and the "Made for" panel (`.sa-for`) fades in over it. Keyboard focus inside the card does the same.
+- **Touch screens** (`hover: none`): the panel is always visible above the list and the list does not blur.
+- **Solo Dev:** `.sa-tier.free` keeps a constant soft clay glow, and `.sa-limit` shows the cap of three analyses.
+- **Button** (`.sa-buy`): clay outline. On hover and focus it fills with clay, lifts 2px and glows. `:active` returns it to the baseline.
+- **Order:** the button carries `data-order="free|standard|premium"` and opens the Order modal below, on any page that loads the modal files. The `href` is the fallback when the script does not run. On the homepage it points to `/steam-analysis/?tier=free|standard|premium`.
+- **Reveal:** the card sits inside an element with `data-reveal`, so it fades up on scroll like every other section.
+- **Reduced motion:** the scale, the fades and the button lift are removed. The panel still shows on hover and focus.
+- **Load order:** the stylesheet goes after the page's `.btn` rule. `.sa-buy` overrides the border and colour of `.btn` by source order.
+
+### Order Modal
+- **Source:** `assets/css/steam-order-modal.css` and `assets/js/steam-order-modal.js`, loaded by `/steam-analysis/` and by the homepage. The script builds the `<dialog id="order-modal">` itself, so a page needs only the two files, the Tier Card stylesheet, and buttons with `data-order="free|standard|premium"`.
+- **Surface** (`.sa-modal`): `paper-3` fill, rule border, radius 22px, `min(560px, 100vw - 32px)` wide, the same clay glow as the card in the top right corner. The backdrop blurs the page by 6px.
+- **Open and close:** on desktop the tier card flips and warps into the modal and back. The turn overshoots 185 degrees and settles at 180, with a press-in beforehand and a clay glow ring. Phones and reduced motion get a plain 280ms fade.
+- **Fields:** Steam link and email for every tier. Indie and Publisher add an optional release quarter, wishlist count and planned price. Indie adds a note. The form follows the Inputs, Checkbox and Switch entries.
+- **Price and Express:** the amounts come from `/api/order/config` and show in the three currencies. The Express row shows only when every currency has an amount.
+- **Errors:** an invalid field gets the `danger` colour. The modal shakes like a damped spring and pulses a `danger` ring twice. Reduced motion keeps the pulse and drops the shake.
+- **Needs:** the tokens, `.kicker`, `.btn` and `--danger`. Load it after the Tier Card stylesheet.
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).

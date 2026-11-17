@@ -1,0 +1,59 @@
+name = "checkout"
+main = "worker.js"
+compatibility_date = "2026-07-20"
+
+# Order endpoints for the Steam Analysis page: /api/order, /api/order/config, /api/order/webhook.
+# The contact-form Worker keeps /api/contact; the two never overlap.
+routes = [
+  { pattern = "spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" },
+  { pattern = "www.spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" }
+]
+
+# Same KV namespace as contact-form. This Worker only touches keys that start with "order:".
+[[kv_namespaces]]
+binding = "CONTACT_SUBMISSIONS"
+id = "151a51cc4d7b4e0c827dce67a3b15813"
+
+[vars]
+# MOVING TO LIVE: three things change, nothing else in this file.
+#   1. PRICES                the two tier price ids (live products, not the sandbox ids below).
+#   2. EXPRESS_PRICES        the two Express price ids from the live Express products (repeat them under eur, usd, gbp).
+#   3. The Stripe secrets    STRIPE_SECRET_KEY (live restricted key) and STRIPE_WEBHOOK_SECRET
+#                            (signing secret of the webhook endpoint created in live mode).
+# PRICE_AMOUNTS and EXPRESS_AMOUNTS stay as they are as long as the live prices match the amounts there.
+# Express delivery is off until this is "true". With it off the page hides the Express row
+# and the Worker refuses express orders.
+EXPRESS_ENABLED = "false"
+
+# Stripe price ids of the two tiers. These are the SANDBOX ids; replace them with the live ids
+# when the live products exist. Each price already carries its EUR, GBP and USD amounts.
+PRICES = { standard = "price_1UcQHyJFkRG2ZYUJ6I1kIEzX", premium = "price_1UcO3WJFkRG2ZYUJbNZbcOh7" }
+
+# Express add-on price ids, one entry per currency. Each Express price carries EUR, USD and GBP, so the same
+# id repeats under "eur", "usd" and "gbp". These are the SANDBOX ids of "Express Delivery, Indie/Publisher Tier
+# Steam Analysis". The first two prices created for them (EUR only) are archived: Stripe refuses an archived price in
+# Checkout. The ids below are the current prices with EUR, USD and GBP. The dashboard holds the live copy of this
+# variable, so keep the two in step.
+# Stripe chooses the buyer's currency, so Express must be priced in all three: the same id and an amount for each.
+# If one is empty or different, Express is off for that tier (the page hides the row, the Worker refuses the order).
+EXPRESS_PRICES = { eur = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium = "price_1UcSlMJFkRG2ZYUJSnGVxA4l" }, usd = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium = "price_1UcSlMJFkRG2ZYUJSnGVxA4l" }, gbp = { standard = "price_1UcSjmJFkRG2ZYUJfTNMrdXV", premium = "price_1UcSlMJFkRG2ZYUJSnGVxA4l" } }
+
+# Tier amounts the page shows, in whole currency units. They must equal the amounts of the Stripe tier prices.
+# The Worker reads them for /api/order/config and, once a payment arrives, to check the paid total in the
+# currency Stripe used (amountMatches in the KV record).
+PRICE_AMOUNTS = { eur = { standard = 99, premium = 299 }, usd = { standard = 109, premium = 329 }, gbp = { standard = 89, premium = 249 } }
+
+# Express amounts the page shows, same units. They must equal the Express prices above.
+EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49, premium = 99 }, gbp = { standard = 49, premium = 99 } }
+
+# Promotion codes. A code applies to one tier only (standard = Indie, premium = Publisher) and sends that Stripe coupon with
+# the order. The coupons are limited to the tier's own product in Stripe, so the Express line is never discounted.
+# "amounts" are the discounted tier amounts and drive the expected total (amountMatches). Set active = false to switch a code off.
+# These are the SANDBOX coupons: swap the coupon ids for the live ones when the live coupons exist.
+#   SOLODEV20  Indie       minus 20 EUR / 22 USD / 18 GBP  (coupon V7V7n4Fm)
+#   SOLODEV10  Publisher   minus 30 EUR / 33 USD / 25 GBP  (coupon yZBBORrT)
+PROMOS = { SOLODEV20 = { tier = "standard", coupon = "V7V7n4Fm", active = true, amounts = { eur = 79, usd = 87, gbp = 71 } }, SOLODEV10 = { tier = "premium", coupon = "yZBBORrT", active = true, amounts = { eur = 269, usd = 296, gbp = 224 } } }
+
+# Secrets (never in this file). Set them with:
+#   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)
+#   npx wrangler secret put STRIPE_WEBHOOK_SECRET   (signing secret of the /api/order/webhook endpoint)

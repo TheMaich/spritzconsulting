@@ -113,7 +113,8 @@
     gl.clearColor(C.c1[0], C.c1[1], C.c1[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.drawElements(gl.TRIANGLES, idx.length, gl.UNSIGNED_SHORT, 0);
   }
-  function loop(now) { raf = 0; draw(now); if (visible && !reduce.matches) raf = requestAnimationFrame(loop); }
+  /* html.om-open: a modal covers the page (dimmed); stop redrawing so the modal animation has the GPU to itself */
+  function loop(now) { raf = 0; draw(now); if (visible && !reduce.matches && !root.classList.contains('om-open')) raf = requestAnimationFrame(loop); }
   function kick() { if (!raf) raf = requestAnimationFrame(loop); }
 
   readTheme(); kick();

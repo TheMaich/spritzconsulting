@@ -1,0 +1,111 @@
+/* Steam Analysis order modal.
+   Shared by /steam-analysis/ and the homepage, together with assets/js/steam-order-modal.js. The script builds the dialog
+   itself, so a page needs only this file, the script and buttons with data-order="free|standard|premium".
+   Needs the site tokens (--paper, --paper-3, --clay, --rule, --ink, --ink-2, --shadow-md, --ease, --serif, --mono,
+   --danger), the site .kicker and .btn rules, and assets/css/steam-tier-card.css (the flip copies a tier card).
+   Load it after steam-tier-card.css. Markup and rules: see DESIGN.md, "Order modal". */
+.sa-link{ color: var(--clay); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Order modal */
+html.om-open{ overflow: hidden; scrollbar-gutter: stable; }
+.sa-modal{ border: 1px solid var(--rule); border-radius: 22px; padding: 0; width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper-3); color: var(--ink); box-shadow: var(--shadow-md), 0 40px 90px -30px rgba(0,0,0,.6); }
+.sa-modal::backdrop{ transition: opacity .42s var(--ease);  background: color-mix(in srgb, var(--paper) 70%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.sa-modal.om-flip::backdrop{ backdrop-filter: none; -webkit-backdrop-filter: none; transition: opacity .42s var(--ease), backdrop-filter .4s var(--ease), -webkit-backdrop-filter .4s var(--ease); }
+.sa-modal.om-flip.om-landed::backdrop{ backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.sa-modal[open]{ animation: om-in .28s var(--ease); }
+.sa-modal[open]::backdrop{ animation: om-fade .28s var(--ease); }
+@keyframes om-in{ from{ opacity: 0; transform: translateY(12px) scale(.98); } to{ opacity: 1; transform: none; } }
+@keyframes om-fade{ from{ opacity: 0; } to{ opacity: 1; } }
+.sa-modal .om-form{ position: relative; display: grid; gap: 16px; padding: clamp(24px, 4vw, 36px); background-image: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%); }
+.om-close{ position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--rule); color: var(--ink); transition: border-color .2s var(--ease), color .2s var(--ease); }
+.om-close:hover, .om-close:focus-visible{ border-color: var(--clay); color: var(--clay); outline: none; }
+.om-title{ font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 4.4vw, 44px); font-variation-settings: "opsz" 96; line-height: 1; letter-spacing: -0.055em; margin: 0; padding-right: 48px; color: var(--ink); }
+.om-price{ margin: -6px 0 2px; color: var(--ink-2); font-size: 16px; line-height: 1.5; }
+.om-label{ display: block; font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 8px; padding: 0; }
+.sa-modal input[type=url], .sa-modal input[type=email], .sa-modal textarea{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.sa-modal textarea{ resize: vertical; min-height: 84px; }
+.sa-modal input:focus-visible, .sa-modal textarea:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.om-chk{ display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
+.om-chk[hidden], .om-field[hidden]{ display: none; }
+.om-chk input{ margin-top: 3px; accent-color: var(--clay); width: 17px; height: 17px; flex: none; }
+.om-follow[hidden]{ display: none; }
+.om-fine{ margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.om-price del{ color: var(--ink-2); text-decoration-thickness: 1px; }
+.om-err{ margin: 0; font-size: 14.5px; }
+.om-submit{ width: 100%; }
+/* Checkbox rows (waiver, newsletter, Express): 180ms hover, a small press on :active, no motion if the visitor asks for none */
+.om-chk{ cursor: pointer; transition: color .18s var(--ease); }
+.om-chk:hover{ color: var(--ink); }
+.om-chk input{ cursor: pointer; transition: transform .18s var(--ease); }
+.om-chk input:active{ transform: scale(0.94); }
+@media (prefers-reduced-motion: reduce){ .om-chk, .om-chk input{ transition: none; } .om-chk input:active{ transform: none; } }
+
+/* Express delivery row and total */
+.om-express{ align-items: center; justify-content: space-between; gap: 14px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; transition: border-color .18s var(--ease), color .18s var(--ease); }
+.om-express:hover{ border-color: color-mix(in srgb, var(--clay) 45%, var(--rule)); }
+.om-express:has(input:checked){ border-color: var(--clay); color: var(--ink); }
+.om-express{ cursor: pointer; }
+/* iOS style switch: a native checkbox drawn as a pill and a knob. Off: quiet track. On: clay track. 180ms, :active press. */
+.om-express input{ -webkit-appearance: none; appearance: none; box-sizing: border-box; position: relative; flex: none; width: 46px; height: 28px; margin: 0; border-radius: 999px; background: color-mix(in srgb, var(--ink) 16%, var(--paper)); border: 1px solid var(--rule); cursor: pointer; transition: background-color .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease); }
+.om-express input::after{ content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); box-shadow: 0 1px 3px color-mix(in srgb, var(--paper) 70%, transparent); transition: transform .18s var(--ease), background-color .18s var(--ease); }
+.om-express input:checked{ background: var(--clay); border-color: var(--clay); }
+.om-express input:checked::after{ transform: translateX(18px); background: var(--paper); }
+.om-express input:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.om-express input:disabled{ opacity: .45; cursor: not-allowed; }
+.om-express-copy{ flex: 1; display: grid; gap: 2px; }
+.om-express-title{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink); }
+.om-express-time{ font-size: 14.5px; line-height: 1.4; }
+.om-express-price{ flex: none; max-width: 11em; text-align: right; font-family: var(--serif); font-size: 18px; letter-spacing: -0.03em; line-height: 1.2; color: var(--clay); }
+.om-total{ margin: 0; font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--ink); }
+.om-total[hidden]{ display: none; }
+@media (prefers-reduced-motion: reduce){ .om-express, .om-express input, .om-express input::after{ transition: none; } }
+/* Narrow screens: the three amounts move under the delivery text, so the text keeps its width */
+@media (max-width: 520px){
+  .om-express{ flex-wrap: wrap; row-gap: 8px; }
+  .om-express-copy{ order: 1; flex: 1 1 0; min-width: 0; }
+  .om-express input{ order: 2; }
+  .om-express-price{ order: 3; flex: 0 0 100%; max-width: none; text-align: left; }
+}
+
+.om-status{ margin: 0; border: 1px solid var(--clay); border-radius: 12px; padding: 10px 14px; font-size: 14.5px; color: var(--ink); }
+@media (prefers-reduced-motion: reduce){ .sa-modal[open], .sa-modal[open]::backdrop{ animation: none; } }
+
+/* Card to modal flip */
+.sa-modal.om-flip[open]{ animation: none; }
+.sa-modal.om-flip[open]::backdrop{ animation: none; }
+.sa-modal.om-pre::backdrop, .sa-modal.om-leaving::backdrop{ opacity: 0; }
+.sa-modal.om-landed .om-close{ animation: om-pop .5s cubic-bezier(0.34, 1.45, 0.64, 1) both; }
+@keyframes om-pop{ from{ transform: scale(.4) rotate(-90deg); opacity: 0; } to{ transform: none; opacity: 1; } }
+.om-flipper[popover]{ position: fixed; inset: auto; margin: 0; padding: 0; border: 0; background: none; overflow: visible; color: var(--ink); perspective: 1900px; perspective-origin: 50% 50%; pointer-events: none; }
+.om-geo, .om-lift, .om-inner{ position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 50%; will-change: transform; }
+.om-face{ position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.om-back{ transform: rotateY(180deg); }
+.om-face .om-card-copy{ position: absolute; left: 0; top: 0; scale: 1; transition: none; margin: 0; }
+.om-card-copy.sa-tier{ border-color: color-mix(in srgb, var(--clay) 35%, var(--rule)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--clay) 15%, transparent), 0 0 28px -10px color-mix(in srgb, var(--clay) 22%, transparent), 0 22px 50px -28px color-mix(in srgb, var(--clay) 32%, transparent); }
+.om-card-copy h3{ color: var(--clay); }
+.sa-buy.is-hot{ background: var(--clay); color: var(--paper); border-color: var(--clay); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay) 22%, transparent), 0 12px 28px -10px color-mix(in srgb, var(--clay) 60%, transparent); }
+.om-ghost .om-close{ visibility: hidden; }
+.om-ghost{ position: relative; display: block; max-height: none; overflow: hidden; margin: 0; }
+.om-glow{ position: absolute; inset: -30px; border-radius: 36px; background: radial-gradient(closest-side, color-mix(in srgb, var(--clay) 50%, transparent), color-mix(in srgb, var(--clay) 12%, transparent) 62%, transparent 100%); opacity: 0; z-index: -1; }
+
+/* Behind the modal: stop the page's ambient animations, so the flip is the only thing moving */
+html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-flipper *){ animation-play-state: paused !important; }
+
+/* Invalid field: the danger colour (signal magenta) until the visitor edits it */
+.sa-modal input[type=url][aria-invalid="true"], .sa-modal input[type=email][aria-invalid="true"], .sa-modal textarea[aria-invalid="true"]{ border-color: var(--danger); }
+.sa-modal input[type=checkbox][aria-invalid="true"]{ outline: 2px solid var(--danger); outline-offset: 2px; }
+.om-err{ color: var(--danger); }
+.sa-modal input[type=url][aria-invalid="true"]:focus-visible, .sa-modal input[type=email][aria-invalid="true"]:focus-visible, .sa-modal textarea[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
+
+/* Premium extras: release quarter, wishlists, price */
+.om-hint{ margin: 0; padding-left: 14px; border-left: 2px solid var(--clay); font-size: 15px; line-height: 1.5; color: var(--ink); }
+.om-hint[hidden], .om-extra[hidden]{ display: none; }
+.om-extra{ display: grid; gap: 16px; }
+.om-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px){ .om-row{ grid-template-columns: 1fr; } }
+.sa-modal input[type=number], .sa-modal select{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.sa-modal select{ appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none' stroke='%23e5b415' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+.sa-modal select option{ background: var(--paper-3); color: var(--ink); }
+.sa-modal input[type=number]:focus-visible, .sa-modal select:focus-visible{ outline: 2px solid var(--clay); outline-offset: 2px; }
+.sa-modal input[type=number][aria-invalid="true"], .sa-modal select[aria-invalid="true"]{ border-color: var(--danger); }
+.sa-modal input[type=number][aria-invalid="true"]:focus-visible, .sa-modal select[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
