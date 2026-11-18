@@ -371,9 +371,8 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Desktop:** the slides overlap in a tilted fan (`perspective(5000px) rotateY(-45deg)`), each at `clamp(13rem, 22vw, 20rem)` wide and showing its right 20%. The middle slide stands highest and the lift falls by 20px per step toward the edges. Hover or focus brings one slide to the front, lifts it by 130px, straightens it and grows it by 1.5 (`--hs`), and drops the others to the baseline, in 250ms. The list item holds the hover and the slide inside it moves, so the lifted slide never leaves the pointer.
 - **Entrance:** when the gallery reveals, the slides rise 200px with a 50ms stagger.
 - **Phone:** a looping strip at 40s per round. It pauses on touch, hover and focus. The copy that makes the loop is hidden from assistive technology, and it is made only when the gallery is about to come into view.
-- **Viewer:** a click or tap opens the slide full size in a native dialog with a counter, previous and next buttons and a close button. Arrow keys move, Escape closes, and focus returns to the slide. The slides are plain links to the full size images, so they still open without the script.
-- **Images:** thumbnails are 960 by 540 WebP with set dimensions, `loading="lazy"` and `fetchpriority="low"`. Full size files are 1920 by 1080.
-- **Reduced motion:** no loop, no entrance and no lift. The strip is a plain swipe row, and the slides still open in the viewer.
+- **Images:** WebP slides, 960 by 540, with set dimensions, `loading="lazy"` and `fetchpriority="low"`. The slides are for looking at only: they are not links and there is no full size viewer.
+- **Reduced motion:** no loop, no entrance and no lift. The strip is a plain swipe row.
 
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).

@@ -1,4 +1,4 @@
-/* Steam Analysis sample gallery: ten slides of a real Publisher Analysis, with a full size viewer.
+/* Steam Analysis sample gallery: slides of a real Publisher Analysis, for looking at only.
    Desktop: the slides overlap in a tilted fan, the middle one highest. Hover or focus lifts one slide and drops the others.
    Phone: a looping strip that pauses on touch or hover. With reduced motion it is a plain swipe row.
    Needs the site tokens (--paper, --paper-2, --paper-3, --clay, --rule, --ink, --ink-2, --shadow-md, --ease, --mono).
@@ -13,10 +13,9 @@
 .sa-reel::-webkit-scrollbar{ display: none; }
 .sa-reel[aria-hidden="true"]{ display: none; }
 .sa-slide-item{ flex: none; width: min(16rem, 72vw); scroll-snap-align: center; }
-.sa-slide{ display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper-2); box-shadow: var(--shadow-md); cursor: zoom-in; transition: transform .3s var(--ease), border-color .3s var(--ease); }
+.sa-slide{ display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper-2); box-shadow: var(--shadow-md); transition: transform .3s var(--ease), border-color .3s var(--ease); }
 .sa-slide img{ display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
 .sa-slide:hover{ border-color: color-mix(in srgb, var(--clay) 35%, var(--rule)); }
-.sa-slide:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
 
 /* Phone: the loop. The script adds .is-marquee and a second copy of the strip. */
 @media (max-width: 767.98px){
@@ -49,19 +48,3 @@
   .sa-reel:has(.sa-slide-item:is(:hover, :focus-within)) .sa-slide-item{ --y: calc(var(--lift, 0px) * -1); }
   .sa-slide-item:is(:hover, :focus-within){ --y: calc(var(--lift, 0px) * -1) !important; --s: 1; --ry: 0deg; z-index: calc(10 - var(--i)); }
 }
-
-/* Full size viewer */
-html.sa-lb-open{ overflow: hidden; scrollbar-gutter: stable; }
-.sa-lightbox{ border: 1px solid var(--rule); border-radius: 22px; padding: 0; width: min(1100px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; background: var(--paper-3); color: var(--ink); box-shadow: var(--shadow-md); }
-.sa-lightbox::backdrop{ background: color-mix(in srgb, var(--paper) 70%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.sa-lightbox[open]{ animation: sa-lb-in .28s var(--ease); }
-@keyframes sa-lb-in{ from{ opacity: 0; transform: translateY(12px) scale(.98); } to{ opacity: 1; transform: none; } }
-.sa-lb-body{ display: grid; gap: 12px; padding: 16px; }
-.sa-lb-img{ display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; border-radius: 12px; background: var(--paper); }
-.sa-lb-bar{ display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.sa-lb-count{ font-family: var(--mono); font-size: 13px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--ink-2); }
-.sa-lb-nav{ display: flex; gap: 8px; }
-.sa-lb-btn{ width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer; transition: border-color .18s var(--ease), color .18s var(--ease), transform .18s var(--ease); }
-.sa-lb-btn:hover, .sa-lb-btn:focus-visible{ border-color: var(--clay); color: var(--clay); outline: none; }
-.sa-lb-btn:active{ transform: scale(0.94); }
-@media (prefers-reduced-motion: reduce){ .sa-lightbox[open]{ animation: none; } .sa-lb-btn{ transition: none; } .sa-lb-btn:active{ transform: none; } }
