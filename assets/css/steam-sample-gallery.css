@@ -6,9 +6,9 @@
 
 .sa-sample{ padding-top: clamp(24px, 3vw, 40px); padding-bottom: clamp(32px, 4vw, 56px); }
 
-.sa-gallery{ position: relative; overflow: hidden; background-color: var(--paper-3); background-image: radial-gradient(120% 60% at 90% 0%, color-mix(in srgb, var(--clay) 12%, transparent), transparent 60%); border: 1px solid var(--rule); border-radius: 18px; box-shadow: var(--shadow-md); padding: clamp(16px, 3vw, 32px) 0; }
+.sa-gallery{ position: relative; overflow-x: clip; padding: clamp(16px, 3vw, 32px) 0; }   /* no frame and no fill: the slides sit on the page */
 .sa-track{ display: flex; }
-.sa-reel{ list-style: none; margin: 0; padding: 8px 16px; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; flex: none; }
+.sa-reel{ list-style: none; margin: 0; padding: 8px 16px 32px; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; flex: none; }
 .sa-reel::-webkit-scrollbar{ display: none; }
 .sa-reel[aria-hidden="true"]{ display: none; }
 .sa-slide-item{ flex: none; width: min(16rem, 72vw); scroll-snap-align: center; }
@@ -21,6 +21,7 @@
 
 /* Phone: the loop. The script adds .is-marquee and a second copy of the strip. */
 @media (max-width: 767.98px){
+  .sa-gallery{ margin-inline: calc(50% - 50vw); }   /* the strip runs to both edges of the screen */
   .sa-gallery.is-marquee .sa-track{ width: max-content; animation: sa-marquee 40s linear infinite; }
   .sa-gallery.is-marquee .sa-reel{ overflow: visible; scroll-snap-type: none; padding-left: 0; padding-right: 1rem; }
   .sa-gallery.is-marquee .sa-reel[aria-hidden="true"]{ display: flex; }
