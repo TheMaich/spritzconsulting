@@ -365,6 +365,16 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Errors:** an invalid field gets the `danger` colour. The modal shakes like a damped spring and pulses a `danger` ring twice. Reduced motion keeps the pulse and drops the shake.
 - **Needs:** the tokens, `.kicker`, `.btn` and `--danger`. Load it after the Tier Card stylesheet.
 
+### Sample Gallery
+- **Source:** `assets/css/steam-sample-gallery.css` and `assets/js/steam-sample-gallery.js`, used by the `#sample` section of `/steam-analysis/`, right under the tier cards. It shows ten slides of a real deck.
+- **Surface** (`.sa-gallery`): the same `paper-3` fill, clay glow, rule border, radius 18px and `shadow-md` as the Tier Card.
+- **Desktop:** the slides overlap in a tilted fan (`perspective(5000px) rotateY(-45deg)`). Each slide shows its right 20%. The middle slide stands highest and the lift falls by 20px per step toward the edges. Hover or focus lifts one slide by 120px, scales it to 1.05 and drops the others to the baseline, in 200ms. The list item holds the hover and the slide inside it moves, so the lifted slide never leaves the pointer.
+- **Entrance:** when the gallery reveals, the slides rise 200px with a 50ms stagger.
+- **Phone:** a looping strip at 40s per round. It pauses on touch, hover and focus. The copy that makes the loop is hidden from assistive technology, and it is made only when the gallery is about to come into view.
+- **Viewer:** a click or tap opens the slide full size in a native dialog with a counter, previous and next buttons and a close button. Arrow keys move, Escape closes, and focus returns to the slide. The slides are plain links to the full size images, so they still open without the script.
+- **Images:** thumbnails are 960 by 540 WebP with set dimensions, `loading="lazy"` and `fetchpriority="low"`. Full size files are 1920 by 1080.
+- **Reduced motion:** no loop, no entrance and no lift. The strip is a plain swipe row, and the slides still open in the viewer.
+
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
 - **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with an upright clay `Σ` prefix and a clay-tinted rule extending to the right.

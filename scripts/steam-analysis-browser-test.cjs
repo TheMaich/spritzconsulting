@@ -160,6 +160,63 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(await p.evaluate(() => getComputedStyle(document.querySelector('#om-express')).transitionDuration.split(',').every((d) => d.trim() === '0s')), 'no row transition under reduced motion');
   });
 
+  /* Sample gallery: ten slides of a Publisher Analysis, under the three tier cards, with a full size viewer. */
+  await session('sample gallery, desktop', { config: null }, async (p) => {
+    const order = await p.evaluate(() => [...document.querySelectorAll('main > section')].map((s) => s.id).join(','));
+    ok(/versions,sample,faq/.test(order), 'the sample sits right under the tier cards: ' + order);
+    const slides = await p.$$eval('.sa-reel:not([aria-hidden]) .sa-slide img', (els) => els.map((e) => ({ alt: !!e.alt, w: e.getAttribute('width'), h: e.getAttribute('height'), lazy: e.loading })));
+    ok(slides.length === 10 && slides.every((s) => s.alt && s.w && s.h && s.lazy === 'lazy'), 'ten slides, each with alt text, size and lazy loading');
+    ok(await p.evaluate(() => document.querySelectorAll('.sa-reel[aria-hidden="true"]').length) === 0, 'the loop copy is not made until the gallery is near');
+    await p.evaluate(() => document.getElementById('sample').scrollIntoView()); await p.waitForTimeout(1500);
+    ok(await p.evaluate(() => document.querySelectorAll('.sa-reel[aria-hidden="true"]').length) === 1 && await p.evaluate(() => getComputedStyle(document.querySelector('.sa-reel[aria-hidden="true"]')).display) === 'none', 'the loop copy exists once the gallery is near, and stays hidden on desktop');
+    const top = (i) => p.evaluate((n) => document.querySelectorAll('.sa-reel:not([aria-hidden]) .sa-slide')[n].getBoundingClientRect().top, i);
+    const before = [await top(4), await top(0)];
+    /* A slide covers 80 percent of the next one, so only its right strip can be pointed at. */
+    const strip = async (i) => { const b = await (await p.$$('.sa-reel:not([aria-hidden]) .sa-slide'))[i].boundingBox(); return { x: b.x + b.width - 14, y: b.y + b.height / 2 }; };
+    const pt = await strip(4);
+    await p.mouse.move(pt.x, pt.y); await p.waitForTimeout(600);
+    const after = [await top(4), await top(0)];
+    ok(after[0] < before[0] - 10, 'hover lifts the hovered slide (' + Math.round(before[0]) + ' to ' + Math.round(after[0]) + ')');
+    ok(after[1] > before[1] + 10, 'hover drops the others (' + Math.round(before[1]) + ' to ' + Math.round(after[1]) + ')');
+    await p.waitForTimeout(500);
+    ok(Math.abs((await top(4)) - after[0]) < 1.5, 'the lifted slide stays put, no flicker');
+    await p.mouse.move(2, 2);
+    const pt2 = await strip(4);
+    await p.mouse.click(pt2.x, pt2.y); await p.waitForTimeout(500);
+    ok(await p.evaluate(() => document.getElementById('sa-lightbox').open), 'a click opens the viewer');
+    ok((await text(p, '.sa-lb-count')) === '5 / 10', 'the viewer shows 5 / 10');
+    ok(await p.evaluate(() => /slide-05-full\.webp$/.test(document.querySelector('.sa-lb-img').src)), 'the viewer loads the full size slide');
+    await p.keyboard.press('ArrowRight'); await p.waitForTimeout(150);
+    ok((await text(p, '.sa-lb-count')) === '6 / 10', 'the right arrow key goes to 6 / 10');
+    await p.click('[data-lb-prev]'); await p.click('[data-lb-prev]'); await p.waitForTimeout(150);
+    ok((await text(p, '.sa-lb-count')) === '4 / 10', 'the previous button goes back to 4 / 10');
+    for (let i = 0; i < 4; i++) await p.keyboard.press('ArrowLeft');
+    ok((await text(p, '.sa-lb-count')) === '10 / 10', 'the viewer wraps from the first slide to the last');
+    ok(await p.evaluate(() => document.documentElement.classList.contains('sa-lb-open')), 'the page behind is locked while the viewer is open');
+    await p.keyboard.press('Escape'); await p.waitForTimeout(400);
+    ok(!(await p.evaluate(() => document.getElementById('sa-lightbox').open)), 'Escape closes the viewer');
+    ok(await p.evaluate(() => !document.documentElement.classList.contains('sa-lb-open') && document.activeElement && document.activeElement.classList.contains('sa-slide')), 'the page unlocks and focus returns to a slide');
+    await p.click('.sa-sample-cta [data-order="premium"]'); await p.waitForSelector('#order-modal[open]');
+    ok(await p.evaluate(() => document.getElementById('order-form').elements.version.value) === 'premium', 'the Get Publisher Analysis button opens the Publisher order form');
+    ok(!(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)), 'no horizontal overflow');
+  });
+  await session('sample gallery, phone', { ctx: { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true }, config: null }, async (p) => {
+    await p.evaluate(() => document.getElementById('sample').scrollIntoView()); await p.waitForTimeout(800);
+    const info = await p.evaluate(() => { const g = document.querySelector('.sa-gallery'), t = g.querySelector('.sa-track'); return { marquee: g.classList.contains('is-marquee'), reels: g.querySelectorAll('.sa-reel').length, trackW: Math.round(t.getBoundingClientRect().width), hidden: g.querySelector('.sa-reel[aria-hidden="true"]') && getComputedStyle(g.querySelector('.sa-reel[aria-hidden="true"]')).display, tab: [...g.querySelectorAll('.sa-reel[aria-hidden="true"] a')].every((a) => a.tabIndex === -1), over: document.documentElement.scrollWidth > innerWidth + 1 }; });
+    ok(info.marquee && info.reels === 2 && info.trackW > 800 && info.hidden === 'flex', 'the phone strip loops, two copies side by side: ' + JSON.stringify({ reels: info.reels, trackWidth: info.trackW }));
+    ok(info.tab, 'the copy of the strip is out of the tab order');
+    ok(!info.over, 'no horizontal overflow on the phone');
+    await p.evaluate(() => document.querySelector('.sa-gallery .sa-reel:not([aria-hidden]) .sa-slide[data-i="1"]').click()); await p.waitForTimeout(500);
+    ok(await p.evaluate(() => document.getElementById('sa-lightbox').open), 'a tap opens the viewer on the phone');
+    const fit = await p.evaluate(() => { const r = document.getElementById('sa-lightbox').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1 && r.bottom <= innerHeight + 1; });
+    ok(fit, 'the viewer fits the phone screen');
+  });
+  await session('sample gallery, reduced motion', { ctx: { reducedMotion: 'reduce' }, config: null }, async (p) => {
+    const info = await p.evaluate(() => { const g = document.querySelector('.sa-gallery'); return { marquee: g.classList.contains('is-marquee'), reels: g.querySelectorAll('.sa-reel').length, anim: getComputedStyle(document.querySelector('.sa-slide-item')).animationName }; });
+    ok(!info.marquee && info.reels === 1, 'no loop with reduced motion: a plain strip');
+    ok(info.anim === 'none', 'no entrance animation with reduced motion');
+  });
+
   for (const vp of [{ w: 1280, h: 900 }, { w: 390, h: 844 }]) {
     await session('layout ' + vp.w + 'px', { ctx: { viewport: { width: vp.w, height: vp.h } } }, async (p) => {
       const inside = await p.evaluate(() => [...document.querySelectorAll('.sa-tier')].map((t) => {
