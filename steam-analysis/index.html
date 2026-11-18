@@ -409,7 +409,7 @@ html{
   text-wrap: balance;
 }
 .say-hi em{
-  font-style: italic;
+  font-style: normal;
   color: var(--clay);
 }
 .footer-meta{
@@ -614,7 +614,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   color: var(--ink);
   text-wrap: balance;
 }
-.article-wrap h1 em{ color: var(--clay); font-style: italic; }
+.article-wrap h1 em{ color: var(--clay); font-style: normal; }
 .article-wrap .meta{
   display: flex;
   flex-wrap: wrap;
@@ -641,7 +641,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 }
 .article-wrap p{ margin-bottom: 26px; color: var(--ink-2); }
 .article-wrap p strong{ color: var(--ink); font-weight: 500; }
-.article-wrap p em{ color: var(--clay); font-style: italic; }
+.article-wrap p em{ color: var(--clay); font-style: normal; }
 .article-wrap h2{
   font-family: var(--serif);
   font-size: clamp(26px, 3.4vw, 40px);
@@ -1092,7 +1092,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-paid p{ margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
 .sa-paid .sa-paid-title{ font-family: var(--serif); font-size: clamp(22px, 2.6vw, 30px); font-weight: 400; font-variation-settings: "opsz" 96; letter-spacing: -0.04em; line-height: 1.1; color: var(--ink); }
 .hero-h1{ font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 6.6vw, 100px); font-variation-settings: "opsz" 96; line-height: 0.96; letter-spacing: -0.06em; color: var(--ink); text-wrap: balance; margin: 16px 0 0; }
-.hero-h1 em{ font-style: italic; font-variation-settings: "opsz" 96; color: var(--clay); }
+.hero-h1 em{ font-style: normal; font-variation-settings: "opsz" 96; color: var(--clay); }
 .hero-intro{ max-width: none; font-size: clamp(16px, 1.35vw, 20px); color: var(--ink-2); line-height: 1.6; margin: 28px 0 0; }
 .hero-intro b{ color: var(--ink); font-weight: 700; }
 
@@ -1110,7 +1110,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* Section heads (homepage .services-intro / .faq-head) */
 .sa-intro{ display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(24px, 4vw, 72px); align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
 .sa-title, .faq-head h2{ font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 4.6vw, 64px); font-variation-settings: "opsz" 96; line-height: 1; letter-spacing: -0.055em; margin: 18px 0 0; text-wrap: balance; color: var(--ink); }
-.sa-title em, .faq-head h2 em{ font-style: italic; color: var(--clay); font-variation-settings: "opsz" 96; }
+.sa-title em, .faq-head h2 em{ font-style: normal; color: var(--clay); font-variation-settings: "opsz" 96; }
 .sa-intro p, .faq-head p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0; }
 .sa-intro p b{ color: var(--ink); }
 
@@ -1148,7 +1148,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 /* For / not for */
 .sa-two{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px 64px; }
 .sa-two h3{ font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3vw, 44px); font-variation-settings: "opsz" 96; letter-spacing: -0.055em; line-height: 1.05; margin: 14px 0 14px; color: var(--ink); }
-.sa-two h3 em{ font-style: italic; color: var(--clay); }
+.sa-two h3 em{ font-style: normal; color: var(--clay); }
 .sa-two p{ color: var(--ink-2); font-size: 17px; line-height: 1.6; max-width: 52ch; margin: 0; }
 
 /* About */
@@ -1201,8 +1201,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 /* Heading hover, as on the homepage */
 .hero-h1, .sa-title, .faq-head h2{ transition: font-variation-settings .4s var(--ease); }
-.hero-h1 em, .sa-title em{ display: inline-block; transform-origin: center; transition: transform .45s var(--ease), text-shadow .4s var(--ease); }
-.hero-h1:hover em, .sa-title:hover em{ transform: scale(1.06); text-shadow: 0 0 30px color-mix(in srgb, var(--clay) 50%, transparent); }
+.hero-h1 em, .sa-title em{ display: inline-block; }
 
 @media (max-width: 900px){
   .sa-intro, .faq-head, .sa-order{ grid-template-columns: 1fr; align-items: start; }
@@ -1215,8 +1214,6 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 @media (prefers-reduced-motion: reduce){
   [data-reveal]{ opacity: 1; transform: none; transition: none; }
   .blur-reveal, .blur-reveal.is-visible{ opacity: 1; animation: none; }
-  .hero-h1 em, .sa-title em{ transition: none; }
-  .hero-h1:hover em, .sa-title:hover em{ transform: none; text-shadow: none; }
 }
 
 </style>
@@ -1241,13 +1238,13 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 <header class="site-header" id="site-header">
   <div class="wrap bar">
     <a href="/" class="wordmark" aria-label="Spritz Consulting, home">
-      <span>spritz<span class="dot" aria-hidden="true"></span>consulting</span>
+      <span>Spritz<span class="dot" aria-hidden="true"></span>Consulting</span>
       <span class="role"></span>
     </a>
     <div class="bar-right">
       <nav class="nav" aria-label="Primary">
         <a href="/#consultancy"><span>My Experience</span></a>
-        <a href="/#services"><span>Services</span></a>
+        <a href="/#services"><span>Consulting Services</span></a>
         <a href="/steam-analysis/" class="is-active" aria-current="page"><span>Steam Analysis</span></a>
         <a href="/#faq"><span>FAQ</span></a>
         <a href="/#testimonials"><span>Testimonials</span></a>
@@ -1263,14 +1260,14 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 <div class="mobile-menu" id="mobile-menu" data-open="false" aria-hidden="true">
   <div class="top">
-    <span class="wordmark"><span>spritz<span class="dot" aria-hidden="true"></span> consulting</span></span>
+    <span class="wordmark"><span>Spritz<span class="dot" aria-hidden="true"></span> Consulting</span></span>
     <button class="menu-toggle" id="menu-close" aria-label="Close menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
     </button>
   </div>
   <nav aria-label="Mobile">
     <a href="/#consultancy" data-menu-link><span>My Experience</span></a>
-    <a href="/#services" data-menu-link><span>Services</span></a>
+    <a href="/#services" data-menu-link><span>Consulting Services</span></a>
     <a href="/steam-analysis/" data-menu-link aria-current="page"><span>Steam Analysis</span></a>
     <a href="/#faq" data-menu-link><span>FAQ</span></a>
     <a href="/#testimonials" data-menu-link><span>Testimonials</span></a>
