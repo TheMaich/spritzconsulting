@@ -1,0 +1,50 @@
+/* Steam Analysis sample gallery: slides of a real Publisher Analysis, for looking at only.
+   Desktop: the slides overlap in a tilted fan, the middle one highest. Hover or focus lifts one slide and drops the others.
+   Phone: a looping strip that pauses on touch or hover. With reduced motion it is a plain swipe row.
+   Needs the site tokens (--paper, --paper-2, --paper-3, --clay, --rule, --ink, --ink-2, --shadow-md, --ease, --mono).
+   Markup and script: see steam-analysis/index.html (#sample) and assets/js/steam-sample-gallery.js. */
+
+.sa-sample{ padding-top: clamp(24px, 3vw, 40px); padding-bottom: clamp(32px, 4vw, 56px); }
+
+.sa-sample .hl{ color: var(--clay); font-weight: 650; }
+.sa-gallery{ position: relative; overflow-x: clip; padding: clamp(16px, 3vw, 32px) 0; }   /* no frame and no fill: the slides sit on the page */
+.sa-track{ display: flex; }
+.sa-reel{ list-style: none; margin: 0; padding: 8px 16px 32px; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; flex: none; }
+.sa-reel::-webkit-scrollbar{ display: none; }
+.sa-reel[aria-hidden="true"]{ display: none; }
+.sa-slide-item{ flex: none; width: min(18rem, 80vw); scroll-snap-align: center; }
+.sa-slide{ display: block; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper-2); box-shadow: var(--shadow-md); transition: transform .3s var(--ease), border-color .3s var(--ease); }
+.sa-slide img{ display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+.sa-slide:hover{ border-color: color-mix(in srgb, var(--clay) 35%, var(--rule)); }
+
+/* Phone: the loop. The script adds .is-marquee and a second copy of the strip. */
+@media (max-width: 767.98px){
+  .sa-gallery{ margin-inline: calc(50% - 50vw); }   /* the strip runs to both edges of the screen */
+  .sa-gallery.is-marquee .sa-track{ width: max-content; animation: sa-marquee 40s linear infinite; }
+  .sa-gallery.is-marquee .sa-reel{ overflow: visible; scroll-snap-type: none; padding-left: 0; padding-right: 1rem; }
+  .sa-gallery.is-marquee .sa-reel[aria-hidden="true"]{ display: flex; }
+  .sa-gallery.is-marquee:hover .sa-track, .sa-gallery.is-marquee:focus-within .sa-track, .sa-gallery.is-marquee:active .sa-track{ animation-play-state: paused; }
+}
+@keyframes sa-marquee{ to{ transform: translateX(-50%); } }
+
+/* Desktop: the tilted fan. The list item stays still and receives the hover; the slide inside it lifts, straightens and
+   grows. A moving slide therefore never leaves the pointer, so the effect cannot flicker. --hs is how much a slide grows. --sx shifts a slide at either end of the fan back inside the gallery. */
+@media (min-width: 768px){
+  .sa-gallery{ --k: calc(1 + 0.2 * (var(--n) - 1)); --w: clamp(9rem, calc(88vw / var(--k)), min(22rem, calc(1150px / var(--k)))); --hs: 1.9; padding: 0; container-type: inline-size; }
+  .sa-track{ justify-content: center; align-items: flex-end; height: calc(var(--w) * 0.5625 * (0.5 + var(--hs) / 2) + 130px + 56px); }
+  .sa-reel{ overflow: visible; scroll-snap-type: none; gap: 0; padding: 0 0 40px; align-items: flex-end; }
+  .sa-slide-item{ width: var(--w); scroll-snap-align: none; position: relative; z-index: calc(40 - var(--i)); --y: calc(var(--lift) * -1); --s: 1; --ry: 0deg; --tx: 0px; --c: calc(var(--i) - (var(--n) - 1) / 2); --cx: calc(var(--c) * 0.2 * var(--w)); --half: calc(var(--w) * var(--hs) / 2); --sx: calc(min(0px, 50cqw - 8px - var(--half) - var(--cx)) + max(0px, var(--half) - 50cqw + 8px - var(--cx))); transform-style: preserve-3d; transform: perspective(5000px) rotateY(-45deg); }
+  .sa-slide-item + .sa-slide-item{ margin-left: calc(var(--w) * -0.8); }
+  .sa-slide{ transform: rotateY(var(--ry)) translate(var(--tx), var(--y)) scale(var(--s)); transition: transform .25s cubic-bezier(0.25, 0.1, 0.25, 1), border-color .3s var(--ease); }
+  .sa-reel:has(.sa-slide-item:is(:hover, :focus-within)) .sa-slide-item{ --y: 0px; }
+  .sa-slide-item:is(:hover, :focus-within){ --y: -130px !important; --s: var(--hs); --ry: 45deg; --tx: var(--sx); z-index: 60; }
+  .sa-gallery.is-in .sa-slide{ animation: sa-rise .5s var(--ease) backwards; animation-delay: calc(var(--i) * 50ms); }
+}
+@keyframes sa-rise{ from{ opacity: 0; transform: translateY(200px); } }
+
+@media (prefers-reduced-motion: reduce){
+  .sa-slide{ transition: none; }
+  .sa-gallery .sa-slide{ animation: none !important; }
+  .sa-reel:has(.sa-slide-item:is(:hover, :focus-within)) .sa-slide-item{ --y: calc(var(--lift, 0px) * -1); }
+  .sa-slide-item:is(:hover, :focus-within){ --y: calc(var(--lift, 0px) * -1) !important; --s: 1; --ry: 0deg; --tx: 0px; z-index: calc(40 - var(--i)); }
+}
