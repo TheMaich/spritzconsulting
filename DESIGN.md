@@ -365,6 +365,15 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Errors:** an invalid field gets the `danger` colour. The modal shakes like a damped spring and pulses a `danger` ring twice. Reduced motion keeps the pulse and drops the shake.
 - **Needs:** the tokens, `.kicker`, `.btn` and `--danger`. Load it after the Tier Card stylesheet.
 
+### Tier Deck
+- **Source:** `assets/css/steam-tier-deck.css` and `assets/js/steam-tier-deck.js`, loaded by `/steam-analysis/` after the Tier Card stylesheet. They turn the three tier cards into the same deck the homepage testimonial cards use on the phone (`assets/css/testi-cards.css`, `assets/js/testi-cards.js`).
+- **Markup:** `<div class="sd-wrap">` around the `.sa-tiers` grid, then `<div class="sd-controls">` with `[data-sd-prev]`, `.sd-dots` and `[data-sd-next]`. Reuse it on the homepage with the same markup.
+- **Wide screens (901px and up):** nothing runs. The three cards sit side by side as before.
+- **Phone (900px and narrower):** a straight stack. The two cards behind step up and to the right by 14px (`--sd-dx`, `--sd-dy`) inside the side gutters, and the card in front is the only one that can be tapped. All three cards take the height of the tallest. Next arrow, previous arrow, the dots and a swipe move the deck; the front card leaves to the left in 180ms.
+- **Autoplay:** off (`AUTO = 0` in the script). The cards are tall and hold prices, so they wait for the reader. Set `AUTO` to a number of seconds to get the testimonial behaviour; it then pauses for hover, focus, an open order window, a hidden tab or the section off screen.
+- **Reduced motion:** no animation; the arrows still work.
+- **Without the script:** a row the reader scrolls.
+
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
 - **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with an upright clay `Σ` prefix and a clay-tinted rule extending to the right.

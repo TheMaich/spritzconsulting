@@ -1,0 +1,51 @@
+/* Steam Analysis tier cards on the phone: the same deck as the homepage testimonial cards
+   (assets/css/testi-cards.css). 900px and narrower: a straight stack, the two cards behind stepping up
+   and to the right inside the side gutters, one card in front that moves on every few seconds and follows
+   swipes, with arrows and dots under it. Wider than 900px: the three cards sit side by side as before.
+   steam-tier-deck.js sets data-layout on .sd-wrap; without the script the cards sit in a row the reader scrolls.
+   Load AFTER steam-tier-card.css. Reusable on the homepage with the same markup (see DESIGN.md, "Tier Deck"). */
+:root{ --sd-dx: 14px; --sd-dy: 14px; --sd-dur: 300ms; }
+
+.sd-wrap{ position: relative; }
+.sd-controls{ display: none; align-items: center; justify-content: center; gap: 14px; margin-top: 26px; }
+.sd-btn{
+  all: unset; box-sizing: border-box; cursor: pointer; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; border: 1px solid var(--rule); color: var(--ink-2);
+  transition: border-color .2s var(--ease), color .2s var(--ease), transform .18s var(--ease);
+}
+.sd-btn svg{ width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.sd-btn:hover{ border-color: var(--clay); color: var(--clay); }
+.sd-btn:active{ transform: scale(0.94); }
+.sd-btn:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
+.sd-dots{ display: flex; gap: 8px; }
+.sd-dot{ all: unset; cursor: pointer; width: 8px; height: 8px; border-radius: 999px; background: var(--rule); transition: width .3s var(--ease), background-color .3s var(--ease); }
+.sd-dot.is-active{ width: 22px; background: var(--clay); }
+.sd-dot:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
+
+@media (max-width: 900px){
+  /* No script yet: a row the reader scrolls */
+  .sd-wrap:not([data-layout]) .sa-tiers{ display: flex; gap: 16px; align-items: flex-start; overflow-x: auto; scrollbar-width: none; padding-block: 8px 24px; }
+  .sd-wrap:not([data-layout]) .sa-tiers::-webkit-scrollbar{ display: none; }
+  .sd-wrap:not([data-layout]) .sa-tiers > .sa-tier{ width: min(340px, 86vw); flex: none; }
+
+  /* Safety net: anything in the deck that reaches past the side gutters is clipped at the window
+     edge, so the phone page never scrolls sideways. */
+  #versions{ overflow-x: clip; }
+
+  /* Deck */
+  .sd-wrap[data-layout="deck"] .sa-tiers{ display: block; position: relative; padding: 0; height: calc(var(--sd-deck-h, 520px) + 2 * var(--sd-dy) + 8px); touch-action: pan-y; }
+  .sd-wrap[data-layout="deck"] .sa-tier{
+    position: absolute; top: calc(2 * var(--sd-dy)); left: 0; width: calc(100% - 2 * var(--sd-dx));
+    height: var(--sd-deck-h, auto); box-sizing: border-box;
+    transition: transform var(--sd-dur) var(--ease), opacity var(--sd-dur) var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+    transform: var(--sd-pose);
+  }
+  .sd-wrap[data-layout="deck"] .sa-tier:hover{ scale: 1; }
+  .sd-wrap[data-layout="deck"] .sa-tier:not(.is-front){ pointer-events: none; }
+  .sd-wrap[data-layout="deck"] .sa-tier.is-out{ transition-duration: calc(var(--sd-dur) * .6); }
+  .sd-wrap[data-layout="deck"] .sd-controls{ display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sd-wrap[data-layout="deck"] .sa-tier{ transition: none; }
+}
