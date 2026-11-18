@@ -171,11 +171,17 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(await p.evaluate(() => document.querySelectorAll('.sa-reel[aria-hidden="true"]').length) === 1 && await p.evaluate(() => getComputedStyle(document.querySelector('.sa-reel[aria-hidden="true"]')).display) === 'none', 'the loop copy exists once the gallery is near, and stays hidden on desktop');
     const top = (i) => p.evaluate((n) => document.querySelectorAll('.sa-reel:not([aria-hidden]) .sa-slide')[n].getBoundingClientRect().top, i);
     const before = [await top(4), await top(0)];
+    const rect = (i) => p.evaluate((n) => { const r = document.querySelectorAll('.sa-reel:not([aria-hidden]) .sa-slide')[n].getBoundingClientRect(); return { w: r.width, h: r.height }; }, i);
+    const restRect = await rect(4);
     /* A slide covers 80 percent of the next one, so only its right strip can be pointed at. */
     const strip = async (i) => { const b = await (await p.$$('.sa-reel:not([aria-hidden]) .sa-slide'))[i].boundingBox(); return { x: b.x + b.width - 14, y: b.y + b.height / 2 }; };
     const pt = await strip(4);
     await p.mouse.move(pt.x, pt.y); await p.waitForTimeout(600);
     const after = [await top(4), await top(0)];
+    const hoverRect = await rect(4);
+    ok(hoverRect.w > restRect.w * 1.3, 'the hovered slide grows (' + Math.round(restRect.w) + ' to ' + Math.round(hoverRect.w) + ' px wide)');
+    ok(Math.abs(hoverRect.w / hoverRect.h - 16 / 9) < 0.12, 'the hovered slide is straight, 16 by 9 (ratio ' + (hoverRect.w / hoverRect.h).toFixed(2) + ')');
+    ok(restRect.w / restRect.h < 16 / 9 - 0.2, 'a slide at rest is tilted (ratio ' + (restRect.w / restRect.h).toFixed(2) + ')');
     ok(after[0] < before[0] - 10, 'hover lifts the hovered slide (' + Math.round(before[0]) + ' to ' + Math.round(after[0]) + ')');
     ok(after[1] > before[1] + 10, 'hover drops the others (' + Math.round(before[1]) + ' to ' + Math.round(after[1]) + ')');
     await p.waitForTimeout(500);
@@ -196,8 +202,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     await p.keyboard.press('Escape'); await p.waitForTimeout(400);
     ok(!(await p.evaluate(() => document.getElementById('sa-lightbox').open)), 'Escape closes the viewer');
     ok(await p.evaluate(() => !document.documentElement.classList.contains('sa-lb-open') && document.activeElement && document.activeElement.classList.contains('sa-slide')), 'the page unlocks and focus returns to a slide');
-    await p.click('.sa-sample-cta [data-order="premium"]'); await p.waitForSelector('#order-modal[open]');
-    ok(await p.evaluate(() => document.getElementById('order-form').elements.version.value) === 'premium', 'the Get Publisher Analysis button opens the Publisher order form');
+    ok(await p.evaluate(() => !document.querySelector('.sa-sample-cta, #sample [data-order]')), 'no order button under the gallery');
     ok(!(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)), 'no horizontal overflow');
   });
   await session('sample gallery, phone', { ctx: { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true }, config: null }, async (p) => {

@@ -6,6 +6,7 @@
 
 .sa-sample{ padding-top: clamp(24px, 3vw, 40px); padding-bottom: clamp(32px, 4vw, 56px); }
 
+.sa-sample .hl{ color: var(--clay); font-weight: 650; }
 .sa-gallery{ position: relative; overflow-x: clip; padding: clamp(16px, 3vw, 32px) 0; }   /* no frame and no fill: the slides sit on the page */
 .sa-track{ display: flex; }
 .sa-reel{ list-style: none; margin: 0; padding: 8px 16px 32px; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; flex: none; }
@@ -16,8 +17,6 @@
 .sa-slide img{ display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
 .sa-slide:hover{ border-color: color-mix(in srgb, var(--clay) 35%, var(--rule)); }
 .sa-slide:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
-.sa-sample-cta{ display: flex; justify-content: center; margin-top: clamp(20px, 3vw, 32px); }
-.sa-sample-cta .sa-buy{ align-self: auto; min-width: min(280px, 100%); }
 
 /* Phone: the loop. The script adds .is-marquee and a second copy of the strip. */
 @media (max-width: 767.98px){
@@ -29,17 +28,17 @@
 }
 @keyframes sa-marquee{ to{ transform: translateX(-50%); } }
 
-/* Desktop: the tilted fan. The list item stays still and receives the hover; the slide inside it lifts. A lifted slide
-   therefore never moves out from under the pointer, so the effect cannot flicker. */
+/* Desktop: the tilted fan. The list item stays still and receives the hover; the slide inside it lifts, straightens and
+   grows. A moving slide therefore never leaves the pointer, so the effect cannot flicker. --hs is how much a slide grows. */
 @media (min-width: 768px){
-  .sa-gallery{ --w: clamp(15rem, 28vw, 24rem); padding: clamp(24px, 3vw, 40px) 0 0; }
-  .sa-track{ justify-content: center; align-items: flex-end; height: calc(var(--w) * 9 / 16 + 120px + 56px); }
+  .sa-gallery{ --w: clamp(13rem, 22vw, 20rem); --hs: 1.5; padding: 0; }
+  .sa-track{ justify-content: center; align-items: flex-end; height: calc(var(--w) * 0.5625 * (0.5 + var(--hs) / 2) + 130px + 56px); }
   .sa-reel{ overflow: visible; scroll-snap-type: none; gap: 0; padding: 0 0 40px; align-items: flex-end; }
-  .sa-slide-item{ width: var(--w); scroll-snap-align: none; position: relative; z-index: calc(10 - var(--i)); --y: calc(var(--lift) * -1); --s: 1; transform: perspective(5000px) rotateY(-45deg); }
+  .sa-slide-item{ width: var(--w); scroll-snap-align: none; position: relative; z-index: calc(10 - var(--i)); --y: calc(var(--lift) * -1); --s: 1; --ry: 0deg; transform-style: preserve-3d; transform: perspective(5000px) rotateY(-45deg); }
   .sa-slide-item + .sa-slide-item{ margin-left: calc(var(--w) * -0.8); }
-  .sa-slide{ transform: translateY(var(--y)) scale(var(--s)); transition: transform .2s cubic-bezier(0.25, 0.1, 0.25, 1), border-color .3s var(--ease); }
+  .sa-slide{ transform: translateY(var(--y)) rotateY(var(--ry)) scale(var(--s)); transition: transform .25s cubic-bezier(0.25, 0.1, 0.25, 1), border-color .3s var(--ease); }
   .sa-reel:has(.sa-slide-item:is(:hover, :focus-within)) .sa-slide-item{ --y: 0px; }
-  .sa-slide-item:is(:hover, :focus-within){ --y: -120px !important; --s: 1.05; }
+  .sa-slide-item:is(:hover, :focus-within){ --y: -130px !important; --s: var(--hs); --ry: 45deg; z-index: 30; }
   .sa-gallery.is-in .sa-slide{ animation: sa-rise .5s var(--ease) backwards; animation-delay: calc(var(--i) * 50ms); }
 }
 @keyframes sa-rise{ from{ opacity: 0; transform: translateY(200px); } }
@@ -48,7 +47,7 @@
   .sa-slide{ transition: none; }
   .sa-gallery .sa-slide{ animation: none !important; }
   .sa-reel:has(.sa-slide-item:is(:hover, :focus-within)) .sa-slide-item{ --y: calc(var(--lift, 0px) * -1); }
-  .sa-slide-item:is(:hover, :focus-within){ --y: calc(var(--lift, 0px) * -1) !important; --s: 1; }
+  .sa-slide-item:is(:hover, :focus-within){ --y: calc(var(--lift, 0px) * -1) !important; --s: 1; --ry: 0deg; z-index: calc(10 - var(--i)); }
 }
 
 /* Full size viewer */
