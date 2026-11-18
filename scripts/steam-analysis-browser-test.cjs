@@ -54,7 +54,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(errs.length === 0, 'no console errors ' + errs.join(' | '));
     await ctx.close();
   }
-  const openModal = async (p, v) => { await p.click('[data-order="' + v + '"]'); await p.waitForSelector('#order-modal[open]'); await p.waitForTimeout(1300); await p.addStyleTag({ content: KILL }); await p.waitForTimeout(300); };
+  const openModal = async (p, v) => { await p.evaluate((o) => { const w = document.querySelector('.sd-wrap'); if (w && w.dataset.layout === 'deck') { const i = ['free', 'standard', 'premium'].indexOf(o); const d = w.querySelectorAll('.sd-dot')[i]; if (d) d.click(); } }, v); await p.waitForTimeout(400); await p.click('[data-order="' + v + '"]'); await p.waitForSelector('#order-modal[open]'); await p.waitForTimeout(1300); await p.addStyleTag({ content: KILL }); await p.waitForTimeout(300); };
   const text = (p, sel) => p.evaluate((s) => document.querySelector(s).textContent.trim().replace(/\s+/g, ' '), sel);
   const fill = async (p) => { await p.fill('#om-steam', 'https://store.steampowered.com/app/123/x/'); await p.fill('#om-email', 'a@b.co'); await p.check('input[name=waiver]'); };
 
@@ -234,6 +234,29 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
       }
     });
   }
+
+  // Tier cards: a deck on the phone (like the homepage testimonials), side by side on wide screens
+  await session('tier deck phone', { ctx: { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true } }, async (p) => {
+    await p.evaluate(() => document.getElementById('versions').scrollIntoView()); await p.waitForTimeout(400);
+    const front = () => p.evaluate(() => [...document.querySelectorAll('.sa-tier')].map((c) => c.classList.contains('is-front')));
+    const st = () => p.evaluate(() => ({ h: [...document.querySelectorAll('.sa-tier')].map((c) => Math.round(c.getBoundingClientRect().height)), inert: [...document.querySelectorAll('.sa-tier')].map((c) => c.inert), wide: document.documentElement.scrollWidth > innerWidth, layout: document.querySelector('.sd-wrap').dataset.layout }));
+    let s = await st();
+    ok(s.layout === 'deck', 'phone: the tier cards are a deck');
+    ok(s.h.every((h) => h === s.h[0]), 'phone: the three cards share one height');
+    ok(s.inert.join() === 'false,true,true' && !s.wide, 'phone: only the front card is active, no sideways scroll');
+    ok((await front()).join() === 'true,false,false', 'phone: Solo Dev is in front');
+    await p.click('[data-sd-next]'); await p.waitForTimeout(500);
+    ok((await front()).join() === 'false,true,false', 'phone: next arrow brings Indie to the front');
+    await p.click('.sd-dot:nth-child(3)'); await p.waitForTimeout(400);
+    ok((await front()).join() === 'false,false,true', 'phone: a dot brings Publisher to the front');
+    await p.click('[data-sd-prev]'); await p.waitForTimeout(400);
+    ok((await front()).join() === 'false,true,false', 'phone: previous arrow steps back');
+  });
+  await session('tier cards wide', { ctx: { viewport: { width: 1280, height: 900 } } }, async (p) => {
+    const d = await p.evaluate(() => ({ layout: document.querySelector('.sd-wrap').dataset.layout, pos: [...document.querySelectorAll('.sa-tier')].map((c) => getComputedStyle(c).position), inert: [...document.querySelectorAll('.sa-tier')].some((c) => c.inert), tops: [...document.querySelectorAll('.sa-tier')].map((c) => Math.round(c.getBoundingClientRect().top)), ctl: getComputedStyle(document.querySelector('.sd-controls')).display }));
+    ok(d.layout === 'grid' && d.pos.every((x) => x === 'relative') && !d.inert && d.ctl === 'none', 'wide: three plain cards, no arrows');
+    ok(d.tops[0] === d.tops[1] && d.tops[1] === d.tops[2], 'wide: the cards sit side by side');
+  });
 
   await browser.close(); server.close();
   console.log(failed ? failed + ' FAILED' : 'ALL OK');

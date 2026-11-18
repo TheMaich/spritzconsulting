@@ -365,6 +365,15 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Errors:** an invalid field gets the `danger` colour. The modal shakes like a damped spring and pulses a `danger` ring twice. Reduced motion keeps the pulse and drops the shake.
 - **Needs:** the tokens, `.kicker`, `.btn` and `--danger`. Load it after the Tier Card stylesheet.
 
+### Tier Deck
+- **Source:** `assets/css/steam-tier-deck.css` and `assets/js/steam-tier-deck.js`, loaded by `/steam-analysis/` after the Tier Card stylesheet. They turn the three tier cards into the same deck the homepage testimonial cards use on the phone (`assets/css/testi-cards.css`, `assets/js/testi-cards.js`).
+- **Markup:** `<div class="sd-wrap">` around the `.sa-tiers` grid, then `<div class="sd-controls">` with `[data-sd-prev]`, `.sd-dots` and `[data-sd-next]`. Reuse it on the homepage with the same markup.
+- **Wide screens (901px and up):** nothing runs. The three cards sit side by side as before.
+- **Phone (900px and narrower):** a straight stack. The two cards behind step up and to the right by 14px (`--sd-dx`, `--sd-dy`) inside the side gutters, and the card in front is the only one that can be tapped. All three cards take the height of the tallest. Next arrow, previous arrow, the dots and a swipe move the deck; the front card leaves to the left in 180ms.
+- **Autoplay:** off (`AUTO = 0` in the script). The cards are tall and hold prices, so they wait for the reader. Set `AUTO` to a number of seconds to get the testimonial behaviour; it then pauses for hover, focus, an open order window, a hidden tab or the section off screen.
+- **Reduced motion:** no animation; the arrows still work.
+- **Without the script:** a row the reader scrolls.
+
 ### Sample Gallery
 - **Source:** `assets/css/steam-sample-gallery.css` and `assets/js/steam-sample-gallery.js`, used by the `#sample` section of `/steam-analysis/`, right under the tier cards. It shows ten slides of a real deck.
 - **Surface** (`.sa-gallery`): none. There is no frame and no fill, so the slides sit straight on the page and cast their own `shadow-md`. Each slide has a rule border and radius 12px. On phones the strip runs to both screen edges, so no shadow is cut off.
