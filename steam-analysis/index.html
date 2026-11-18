@@ -1118,6 +1118,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 .sa-tiers{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 </style>
 <link rel="stylesheet" href="/assets/css/steam-tier-card.css?v=20261117">
+<link rel="stylesheet" href="/assets/css/steam-tier-deck.css?v=20261119">
 <style>
 .sa-tiers-note{ margin: 22px 0 0; text-align: center; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
 .sa-fine{ font-size: 14px; color: var(--ink-2); margin: 16px 0 0; max-width: 70ch; }
@@ -1316,6 +1317,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <h2 class="sa-title blur-reveal" id="versions-h">Pick your <em>tier</em>.</h2>
       </div>
     </div>
+    <!-- Wide screens: three cards side by side. Phone: a deck like the homepage testimonial cards (assets/js/steam-tier-deck.js). -->
+    <div class="sd-wrap">
     <div class="sa-tiers" data-reveal>
       <div class="sa-tier free">
         <h3><em>Solo Dev</em> <span class="an">Analysis</span></h3>
@@ -1381,6 +1384,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         </div>
         <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Get Publisher Analysis</span></a>
       </div>
+    </div>
+    <div class="sd-controls" role="group" aria-label="Browse the tiers">
+      <button type="button" class="sd-btn" data-sd-prev aria-label="Previous tier"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="sd-dots"></div>
+      <button type="button" class="sd-btn" data-sd-next aria-label="Next tier"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
     </div>
     <p class="sa-tiers-note">Prices appear in euros, dollars and pounds. Stripe shows the matching currency at checkout.</p>
   </section>
@@ -1541,6 +1550,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
 
 </script>
 <script src="/assets/js/steam-order-modal.js?v=20261117" defer></script>
+<script src="/assets/js/steam-tier-deck.js?v=20261119" defer></script>
 
 <footer class="site-footer">
   <div class="wrap footer-grid">
