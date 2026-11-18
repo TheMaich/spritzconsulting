@@ -374,6 +374,15 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Reduced motion:** no animation; the arrows still work.
 - **Without the script:** a row the reader scrolls.
 
+### Sample Gallery
+- **Source:** `assets/css/steam-sample-gallery.css` and `assets/js/steam-sample-gallery.js`, used by the `#sample` section of `/steam-analysis/`, right under the tier cards. It shows ten slides of a real deck.
+- **Surface** (`.sa-gallery`): none. There is no frame and no fill, so the slides sit straight on the page and cast their own `shadow-md`. Each slide has a rule border and radius 12px. On phones the strip runs to both screen edges, so no shadow is cut off.
+- **Desktop:** the slides overlap in a tilted fan (`perspective(5000px) rotateY(-45deg)`), each at `clamp(13rem, 22vw, 20rem)` wide and showing its right 20%. The middle slide stands highest and the lift falls by 20px per step toward the edges. Hover or focus brings one slide to the front, lifts it by 130px, straightens it and grows it by 1.5 (`--hs`), and drops the others to the baseline, in 250ms. The list item holds the hover and the slide inside it moves, so the lifted slide never leaves the pointer. A slide near either end of the fan also shifts sideways, by exactly as much as it needs, so that it stays inside the gallery and inside the screen on 16:9 displays from 1024 to 1920 px wide.
+- **Entrance:** when the gallery reveals, the slides rise 200px with a 50ms stagger.
+- **Phone:** a looping strip at 40s per round. It pauses on touch, hover and focus. The copy that makes the loop is hidden from assistive technology, and it is made only when the gallery is about to come into view.
+- **Images:** WebP slides, 960 by 540, with set dimensions, `loading="lazy"` and `fetchpriority="low"`. The slides are for looking at only: they are not links and there is no full size viewer.
+- **Reduced motion:** no loop, no entrance and no lift. The strip is a plain swipe row.
+
 ### Result Card
 - **Surface** (`.calc-result`): clay-mix paper-2 (6% clay tint), clay-mix rule border (28%), radius 14px, dual shadow (inner 1px clay highlight + soft drop).
 - **Label**: serif 500, opsz 36, sized `clamp(24px, 2.8vw, 32px)`, with an upright clay `Σ` prefix and a clay-tinted rule extending to the right.
