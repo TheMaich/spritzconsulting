@@ -3,10 +3,12 @@
    and to the right inside the side gutters, one card in front that moves on every few seconds and follows
    swipes, with arrows and dots under it. Wider than 900px: the three cards sit side by side as before.
    steam-tier-deck.js sets data-layout on .sd-wrap; without the script the cards sit in a row the reader scrolls.
-   Load AFTER steam-tier-card.css. Reusable on the homepage with the same markup (see DESIGN.md, "Tier Deck"). */
+   The deck cards keep name, price, "Made for" and the button always visible; the feature list opens on a tap
+   on the card body, with a dashed hint row that says so. Load AFTER steam-tier-card.css. Reusable on the homepage with the same markup (see DESIGN.md, "Tier Deck"). */
 :root{ --sd-dx: 14px; --sd-dy: 14px; --sd-dur: 300ms; }
 
 .sd-wrap{ position: relative; }
+.sa-more{ display: none; }
 .sd-controls{ display: none; align-items: center; justify-content: center; gap: 14px; margin-top: 26px; }
 .sd-btn{
   all: unset; box-sizing: border-box; cursor: pointer; width: 44px; height: 44px; border-radius: 50%;
@@ -44,8 +46,35 @@
   .sd-wrap[data-layout="deck"] .sa-tier:not(.is-front){ pointer-events: none; }
   .sd-wrap[data-layout="deck"] .sa-tier.is-out{ transition-duration: calc(var(--sd-dur) * .6); }
   .sd-wrap[data-layout="deck"] .sd-controls{ display: flex; }
+
+  /* Deck cards: name, price, "Made for" and the button are always shown. The feature list opens on a tap
+     on the card body (steam-tier-deck.js builds the hint row and toggles .is-open), so the card stays short. */
+  .sd-wrap[data-layout="deck"] .sa-for{ position: static; opacity: 1; transform: none; order: -1; padding-bottom: 14px; margin-bottom: 4px; border-bottom: 1px solid var(--rule); pointer-events: auto; }
+  .sd-wrap[data-layout="deck"] .sa-for p{ font-size: 19px; }
+  .sd-wrap[data-layout="deck"] .sa-tier:hover .sa-body > ul,
+  .sd-wrap[data-layout="deck"] .sa-tier:focus-within .sa-body > ul{ opacity: 1; filter: none; }
+  .sd-wrap[data-layout="deck"] .sa-body > ul[hidden]{ display: none; }
+  .sd-wrap[data-layout="deck"] .sa-tier.is-front .sa-body{ cursor: pointer; }
+  .sd-wrap[data-layout="deck"] .sa-more{
+    all: unset; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 8px;
+    align-self: stretch; margin: 6px 0 12px; padding: 10px 12px; min-height: 44px; cursor: pointer;
+    border: 1px dashed color-mix(in srgb, var(--clay) 45%, var(--rule)); border-radius: 12px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; line-height: 1.3; text-transform: uppercase; text-align: center; color: var(--ink-2);
+    transition: border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .sd-wrap[data-layout="deck"] .sa-more:hover, .sd-wrap[data-layout="deck"] .sa-more[aria-expanded="true"]{ border-color: var(--clay); color: var(--ink); }
+  .sd-wrap[data-layout="deck"] .sa-more:focus-visible{ outline: 2px solid var(--clay); outline-offset: 3px; }
+  .sa-more svg{ flex: none; width: 16px; height: 16px; fill: none; stroke: var(--clay); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+  .sa-more[aria-expanded="true"] svg{ transform: rotate(180deg); }
+  /* A small nudge on the chevron of the front card until the reader has tapped once */
+  .sd-wrap:not(.is-tapped) .sa-tier.is-front .sa-more[aria-expanded="false"] svg{ animation: sd-nudge 1.8s var(--ease) 1.2s infinite; }
+  @keyframes sd-nudge{ 0%, 55%, 100%{ transform: translateY(0); } 25%{ transform: translateY(3px); } }
+  .sd-wrap[data-layout="deck"] .sa-body > ul:not([hidden]){ animation: sd-list-in .3s var(--ease); }
+  @keyframes sd-list-in{ from{ opacity: 0; transform: translateY(-4px); } to{ opacity: 1; transform: none; } }
 }
 
 @media (prefers-reduced-motion: reduce){
   .sd-wrap[data-layout="deck"] .sa-tier{ transition: none; }
+  .sa-more svg{ transition: none; animation: none !important; }
+  .sd-wrap[data-layout="deck"] .sa-body > ul:not([hidden]){ animation: none; }
 }

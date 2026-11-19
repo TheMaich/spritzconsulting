@@ -4,7 +4,10 @@
    by every AUTO seconds when AUTO is set (off here); the autoplay pauses for a mouse hover, keyboard focus inside, the section off screen, an open order
    window or a hidden tab; a tap on the arrows does not pause it. Swipe left for the next card, right
    for the previous one. Reduced motion: no animation, no autoplay. Wider than 900px: nothing runs and
-   the cards stay side by side. */
+   the cards stay side by side.
+   Each card shows its name, price, the "Made for" paragraph and its button all the time; the feature
+   list opens when the reader taps the card body or its hint row, and closes on the next tap or when
+   the deck moves. */
 (function () {
   'use strict';
   var wrap = document.querySelector('.sd-wrap');
@@ -19,6 +22,20 @@
   var timer = 0, hovering = false, focused = false, inView = true, busy = false;
 
   function layout() { return wrap.getAttribute('data-layout'); }
+  var LABEL_CLOSED = 'Tap the card to see what\u2019s included', LABEL_OPEN = 'Tap to hide what\u2019s included';
+  var CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  function listOf(c) { return c.querySelector('.sa-body > ul'); }
+  function setOpen(c, on) {
+    var b = c.querySelector('.sa-more'), ul = listOf(c);
+    c.classList.toggle('is-open', on);
+    if (b) { b.setAttribute('aria-expanded', on ? 'true' : 'false'); b.querySelector('.sa-more-t').textContent = on ? LABEL_OPEN : LABEL_CLOSED; }
+    if (ul) ul.hidden = !on;
+  }
+  function closeAll() {
+    var any = false;
+    cards.forEach(function (c) { if (c.classList.contains('is-open')) { any = true; setOpen(c, false); } });
+    return any;
+  }
   function modalOpen() { return !!document.querySelector('dialog[open]'); }
 
   function sizeDeck() {
@@ -33,6 +50,7 @@
   }
   function pose() {
     var n = order.length;
+    if (closeAll()) sizeDeck();
     order.forEach(function (ci, k) {
       var c = cards[ci];
       c.style.setProperty('--sd-pose', poseFor(k));
@@ -50,7 +68,8 @@
   function clearDeck() {
     cards.forEach(function (c) {
       c.style.removeProperty('--sd-pose'); c.style.zIndex = ''; c.style.opacity = '';
-      c.classList.remove('is-front', 'is-out'); c.removeAttribute('aria-hidden'); c.inert = false;
+      c.classList.remove('is-front', 'is-out', 'is-open'); c.removeAttribute('aria-hidden'); c.inert = false;
+      var ul = listOf(c); if (ul) ul.hidden = false;
     });
     wrap.style.removeProperty('--sd-deck-h');
   }
@@ -78,9 +97,29 @@
   function apply() {
     var l = phone.matches ? 'deck' : 'grid';
     wrap.setAttribute('data-layout', l);
-    if (l === 'grid') clearDeck(); else { sizeDeck(); pose(); }
+    if (l === 'grid') clearDeck(); else { cards.forEach(function (c) { setOpen(c, false); }); sizeDeck(); pose(); }
     restart();
   }
+
+  cards.forEach(function (c, i) {
+    var ul = listOf(c), b = document.createElement('button');
+    if (!ul) return;
+    ul.id = ul.id || 'sd-list-' + i;
+    b.type = 'button'; b.className = 'sa-more'; b.setAttribute('aria-controls', ul.id); b.setAttribute('aria-expanded', 'false');
+    b.innerHTML = '<span class="sa-more-t"></span>' + CHEV;
+    b.querySelector('.sa-more-t').textContent = LABEL_CLOSED;
+    ul.parentNode.insertBefore(b, ul);
+  });
+  var swiped = false;
+  track.addEventListener('click', function (e) {
+    if (layout() !== 'deck') return;
+    var c = e.target.closest('.sa-tier');
+    if (!c || !c.classList.contains('is-front')) return;
+    if (swiped) { swiped = false; return; }
+    if (e.target.closest('a, button:not(.sa-more)')) return;
+    var on = !c.classList.contains('is-open');
+    setOpen(c, on); sizeDeck(); wrap.classList.add('is-tapped');
+  });
 
   var names = cards.map(function (c) { var h = c.querySelector('h3'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : 'Tier'; });
   cards.forEach(function (c, i) {
@@ -97,11 +136,12 @@
   wrap.addEventListener('focusout', function () { focused = false; });
 
   var sx = null, sy = 0;
-  track.addEventListener('pointerdown', function (e) { if (layout() === 'deck') { sx = e.clientX; sy = e.clientY; } });
+  track.addEventListener('pointerdown', function (e) { swiped = false; if (layout() === 'deck') { sx = e.clientX; sy = e.clientY; } });
   track.addEventListener('pointercancel', function () { sx = null; });
   track.addEventListener('pointerup', function (e) {
     if (sx == null) return;
     var dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+    if (Math.abs(dx) > 10) swiped = true;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { step(dx < 0 ? 1 : -1); restart(); }
   });
 

@@ -269,9 +269,26 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     await p.click('[data-sd-prev]'); await p.waitForTimeout(400);
     ok((await front()).join() === 'false,true,false', 'phone: previous arrow steps back');
   });
+  await session('tier deck tap to open', { ctx: { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true } }, async (p) => {
+    await p.evaluate(() => document.getElementById('versions').scrollIntoView()); await p.waitForTimeout(400);
+    const st = () => p.evaluate(() => { const cs = [...document.querySelectorAll('.sa-tier')]; return { h: Math.round(cs[0].getBoundingClientRect().height), open: cs.map((c) => c.classList.contains('is-open')), list: cs.map((c) => { const u = c.querySelector('.sa-body > ul'); return !u.hidden && getComputedStyle(u).display !== 'none'; }), forOn: cs.every((c) => getComputedStyle(c.querySelector('.sa-for')).opacity === '1'), hint: cs.map((c) => c.querySelector('.sa-more') && c.querySelector('.sa-more').getAttribute('aria-expanded')) }; });
+    let s = await st(); const short = s.h;
+    ok(s.list.every((x) => !x) && s.forOn, 'phone: Made for is always shown, the feature lists start closed');
+    ok(s.hint.join() === 'false,false,false', 'phone: every card has a hint row');
+    const fb = await (await p.$('.sa-tier.is-front .sa-for p')).boundingBox();
+    await p.touchscreen.tap(fb.x + 20, fb.y + 10); await p.waitForTimeout(500);
+    s = await st(); ok(s.open[0] && s.list[0] && s.hint[0] === 'true' && s.h > short, 'phone: a tap on the card body opens the list and the deck grows');
+    await p.click('.sa-tier.is-front .sa-more'); await p.waitForTimeout(400);
+    s = await st(); ok(!s.open[0] && !s.list[0] && s.h === short, 'phone: a tap on the hint closes it again');
+    await p.click('.sa-tier.is-front .sa-more'); await p.waitForTimeout(300); await p.click('[data-sd-next]'); await p.waitForTimeout(600);
+    s = await st(); ok(s.open.every((x) => !x), 'phone: moving the deck closes the list');
+    await p.click('.sa-tier.is-front .sa-buy'); await p.waitForSelector('#order-modal[open]');
+    s = await st(); ok(!s.open[1], 'phone: the buy button does not toggle the list');
+  });
   await session('tier cards wide', { ctx: { viewport: { width: 1280, height: 900 } } }, async (p) => {
     const d = await p.evaluate(() => ({ layout: document.querySelector('.sd-wrap').dataset.layout, pos: [...document.querySelectorAll('.sa-tier')].map((c) => getComputedStyle(c).position), inert: [...document.querySelectorAll('.sa-tier')].some((c) => c.inert), tops: [...document.querySelectorAll('.sa-tier')].map((c) => Math.round(c.getBoundingClientRect().top)), ctl: getComputedStyle(document.querySelector('.sd-controls')).display }));
     ok(d.layout === 'grid' && d.pos.every((x) => x === 'relative') && !d.inert && d.ctl === 'none', 'wide: three plain cards, no arrows');
+    ok(await p.evaluate(() => [...document.querySelectorAll('.sa-more')].every((m) => getComputedStyle(m).display === 'none') && [...document.querySelectorAll('.sa-body > ul')].every((u) => !u.hidden)), 'wide: no hint row, every feature list shown');
     ok(d.tops[0] === d.tops[1] && d.tops[1] === d.tops[2], 'wide: the cards sit side by side');
   });
 
