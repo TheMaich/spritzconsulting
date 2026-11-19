@@ -59,7 +59,7 @@ set `EXPRESS_ENABLED = "true"`, deploy.
 Keys in the `CONTACT_SUBMISSIONS` namespace, all with a 30 day expiry (the order form promises deletion after 30 days):
 
 - `order:<uuid>`: the order (tier, express, Steam link, email, optional fields, status, and after payment
-  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus `promo`, `discountApplied` (the session carried a discount) and `listTotal` (the total at list price)).
+  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus, only when Stripe took a discount off (`total_details.amount_discount` above 0), `promo`, `discountApplied` and `listTotal` (the total at list price)).
 - `order:paid:<checkout session id>`: marks a session as processed, so a repeated Stripe delivery changes nothing.
 - `order:rl:<ip>`: rate limit, 5 orders per IP per 10 minutes.
 

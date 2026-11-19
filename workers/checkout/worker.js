@@ -422,15 +422,23 @@ async function handleWebhook(request, env) {
   order.amountTotal = session.amount_total;
   order.paidCurrency = session.currency;
   // Stripe chose the currency, so the expected total is worked out now, from the currency it used.
-  // A promotion counts only while its code still maps to this tier; the discounted amounts are the expected ones.
-  const promo = order.promo ? findPromo(env, order.promo, order.tier) : null;
+  // A promotion is recorded only when Stripe really took a discount off (total_details.amount_discount > 0).
+  // Otherwise the code was ignored, the buyer paid list price, and promo, discountApplied and listTotal are not kept.
+  const discount = session.total_details && Number(session.total_details.amount_discount);
+  const promo = order.promo && discount > 0 ? findPromo(env, order.promo, order.tier) : null;
+  if (promo) {
+    order.promo = promo.code;
+    order.discountApplied = true;
+    order.listTotal = expectedTotal(env, order.tier, !!order.express, session.currency, null);
+  } else {
+    if (order.promo) console.log('promotion ' + order.promo + ' paid without a discount: ' + session.id);
+    delete order.promo;
+    delete order.discountApplied;
+    delete order.listTotal;
+  }
   order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo);
   order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
   if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
-  order.listTotal = expectedTotal(env, order.tier, !!order.express, session.currency, null);
-  const discount = session.total_details && Number(session.total_details.amount_discount);
-  order.discountApplied = !!order.promo && discount > 0;
-  if (order.promo && !order.discountApplied) console.log('promotion ' + order.promo + ' paid without a discount: ' + session.id);
   order.businessDays = days;
   order.due_date = due ? due.due : null;
   order.due_start_date = due ? due.start : null;

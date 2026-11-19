@@ -414,17 +414,17 @@ async function workerSuite(label, worker) {
     // Totals with Express in the brief: Indie 128/136/120, Publisher 368/395/323.
     assert.deepEqual(seen, [128, 136, 120, 368, 395, 323]);
   });
-  await test(label + ' ' + 'a promotion paid without a discount is flagged: list total recorded, discountApplied false, amountMatches false', async () => {
+  await test(label + ' ' + 'a promotion paid without a discount is dropped from the record: no promo, discountApplied or listTotal, list total expected', async () => {
     await post(order({ promo: 'SOLODEV20' }));
     const { id } = lastRecord();
     const { rec } = await pay(id, 'standard', false, 9900, 'eur', { session: { total_details: { amount_discount: 0 } } });
-    assert.deepEqual([rec.discountApplied, rec.amountMatches, rec.expectedTotal, rec.listTotal], [false, false, 7900, 9900]);
+    assert.deepEqual([rec.promo, rec.discountApplied, rec.listTotal, rec.amountMatches, rec.expectedTotal], [undefined, undefined, undefined, true, 9900]);
   });
-  await test(label + ' ' + 'an order without a promotion records list totals and no discount', async () => {
+  await test(label + ' ' + 'an order without a promotion records no promo fields', async () => {
     await post(order({ express: true }));
     const { id } = lastRecord();
     const { rec } = await pay(id, 'standard', true, 14800, 'eur');
-    assert.deepEqual([rec.promo, rec.discountApplied, rec.listTotal, rec.amountMatches], ['', false, 14800, true]);
+    assert.deepEqual([rec.promo, rec.discountApplied, rec.listTotal, rec.amountMatches], [undefined, undefined, undefined, true]);
   });
   await test(label + ' ' + 'a repeated webhook for a promotion order changes nothing', async () => {
     await post(order({ promo: 'SOLODEV20', steam: 'https://store.steampowered.com/app/555/', email: 'dup@x.co' }));
