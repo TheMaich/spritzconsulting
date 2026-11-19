@@ -20,25 +20,17 @@
  * - Promotion codes (PROMOS) map a code to one tier, one Stripe coupon and the discounted amounts. The coupon is
  *   sent as discounts[0][coupon] on that tier's order only. It never touches the Express line, because the coupon
  *   is limited to the tier's product in Stripe. A code on the wrong tier is ignored without an error.
+ * - Indie to Publisher codes start with INDIE- and are one-time promotion codes made by hand in Stripe on the coupon
+ *   "Indie Publisher". Only these codes are looked up in Stripe (GET /v1/promotion_codes); every other code is checked
+ *   against PROMOS and never reaches Stripe. The lookup must return an active code on the coupon in
+ *   INDIE_PUBLISHER_COUPON_ID with times_redeemed below max_redemptions, and the order must be Publisher. The session
+ *   then sends discounts[0][promotion_code]. Anything else is ignored silently and charges the full price.
  * - Solo Dev (free) does not go through this Worker.
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
  * - No notification email yet; read orders from KV (see README).
  */
 
 // ---- business-days.js ----------------------------------------------------------------
-/**
- * Business-day helper for delivery due dates.
- *
- * A business day is Monday to Friday and not an Italian public holiday.
- * The holiday list is hard-coded for 2026 and 2027 only. Outside those two
- * years the helper skips weekends only and reports approx: true, so a due date
- * is never silently wrong. Add the 2028 list before the end of 2027.
- *
- * Day 0 rule: an order paid on a business day up to 12:00 Europe/Rome counts
- * from that day (day 0). Paid after 12:00, or on a weekend or holiday, it counts
- * from the next business day (day 0). The due date is day 0 plus N business days.
- */
-
 const FIRST_YEAR = 2026;
 const LAST_YEAR = 2027;
 
@@ -134,6 +126,12 @@ const TIERS = {
   premium: { days: 3, expressDays: 2 },
 };
 
+// Indie to Publisher codes (INDIE-...): Publisher only. The discounted Publisher amounts in whole units
+// (list 299 / 329 / 249). Express is added on top at its list amount.
+const INDIE_PREFIX = 'INDIE-';
+const INDIE_TIER = 'premium';
+const INDIE_PUBLISHER_AMOUNTS = { eur: 190, usd: 209, gbp: 158 };
+
 const ORDER_TTL_SECONDS = 30 * 24 * 60 * 60;
 const RATE_WINDOW_SECONDS = 600;
 const ORDERS_PER_WINDOW = 5;
@@ -144,7 +142,7 @@ const MAX_NOTES_LENGTH = 1000;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const STEAM_RE = /^https?:\/\/(store\.steampowered\.com|steamcommunity\.com)\//i;
-const PROMO_RE = /^[A-Z0-9]{3,30}$/;
+const PROMO_RE = /^[A-Z0-9-]{3,30}$/;
 const QUARTER_RE = /^(released|undecided|\d{4}-Q[1-4])$/;
 
 function corsHeaders(origin) {
@@ -272,6 +270,71 @@ function findPromoAnyTier(env, code) {
   return findPromo(env, key, TIER_ALIASES[entry.tier] || entry.tier);
 }
 
+function isIndieCode(key) {
+  return key.length > INDIE_PREFIX.length && key.startsWith(INDIE_PREFIX);
+}
+
+// The coupon of a Stripe promotion code. Newer API versions put it under promotion.coupon, older ones under coupon.
+// It is an id, or an object when it was expanded.
+function couponOf(promotionCode) {
+  const raw = (promotionCode.promotion && promotionCode.promotion.coupon) || promotionCode.coupon;
+  if (raw && typeof raw === 'object') return { id: String(raw.id || ''), valid: raw.valid !== false };
+  return { id: raw ? String(raw) : '', valid: true };
+}
+
+// An INDIE- code that Stripe confirms, or null. Null for: no INDIE- prefix, a tier other than Publisher, no coupon id in
+// INDIE_PUBLISHER_COUPON_ID, an unknown or inactive code, another coupon, a used-up code, a code that is not limited to
+// one use, or any Stripe error. The caller charges the full price and says nothing. No other code ever reaches Stripe.
+async function findIndiePromo(env, code, tier) {
+  const key = normalizeCode(code);
+  const couponId = String(env.INDIE_PUBLISHER_COUPON_ID || '').trim();
+  if (!isIndieCode(key) || tier !== INDIE_TIER) return null;
+  if (!couponId || couponId.startsWith('REPLACE') || !env.STRIPE_SECRET_KEY) return null;
+  try {
+    const url = 'https://api.stripe.com/v1/promotion_codes?code=' + encodeURIComponent(key) + '&active=true&limit=1&expand[]=data.promotion.coupon';
+    const response = await fetch(url, { method: 'GET', headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY } });
+    if (!response.ok) {
+      console.log('indie code lookup failed: stripe_' + response.status);
+      return null;
+    }
+    const list = await response.json();
+    const found = list && Array.isArray(list.data) ? list.data[0] : null;
+    if (!found || found.active === false || String(found.code || '').toUpperCase() !== key) return null;
+    const coupon = couponOf(found);
+    if (coupon.id !== couponId || !coupon.valid) return null;
+    const max = Number(found.max_redemptions);
+    const used = Number(found.times_redeemed || 0);
+    if (!(max >= 1) || !(used < max)) return null;
+    return { code: key, tier: INDIE_TIER, promotionCode: String(found.id), amounts: { ...INDIE_PUBLISHER_AMOUNTS } };
+  } catch (err) {
+    console.log('indie code lookup failed: ' + (err && err.message));
+    return null;
+  }
+}
+
+// The promotion for a code and tier: an INDIE- code is checked in Stripe, any other code in PROMOS (no Stripe call).
+async function resolvePromo(env, code, tier) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  return isIndieCode(key) ? findIndiePromo(env, key, tier) : findPromo(env, key, tier);
+}
+
+// Same, when the tier is not known yet (the /api/order/promo endpoint).
+async function resolvePromoAnyTier(env, code) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  return isIndieCode(key) ? findIndiePromo(env, key, INDIE_TIER) : findPromoAnyTier(env, key);
+}
+
+// The promotion that discounted a paid session, to work out the expected total. An INDIE- code was checked in Stripe
+// when the session was created, so the webhook makes no second lookup.
+function paidPromo(env, code, tier) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  if (isIndieCode(key)) return tier === INDIE_TIER ? { code: key, tier, amounts: { ...INDIE_PUBLISHER_AMOUNTS } } : null;
+  return findPromo(env, key, tier);
+}
+
 // Total the customer should pay in the currency Stripe used, in the smallest unit, or null when it is not configured.
 // With a promotion the base is the discounted amount; Express is added at its list amount.
 function expectedTotal(env, tier, express, currency, promo) {
@@ -309,7 +372,9 @@ async function createCheckoutSession(env, order, lines, origin, promo) {
   params.set('metadata[express]', order.express ? 'true' : 'false');
   if (promo) {
     // The coupon is limited to the tier's product in Stripe, so the Express line is never discounted.
-    params.set('discounts[0][coupon]', promo.coupon);
+    // An INDIE- code goes in as its promotion code (which Stripe counts as one redemption); a PROMOS code goes in as its coupon.
+    if (promo.promotionCode) params.set('discounts[0][promotion_code]', promo.promotionCode);
+    else params.set('discounts[0][coupon]', promo.coupon);
     params.set('metadata[promo]', promo.code);
   }
   params.set('payment_intent_data[metadata][order_id]', order.id);
@@ -410,8 +475,9 @@ async function handleOrder(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!(await checkRateLimit(env, ip))) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
-  // A promotion code that is unknown, switched off or for another tier is ignored: the order goes through at list price.
-  const promo = findPromo(env, body.promo, tier);
+  // A promotion code that is unknown, switched off, used up or for another tier is ignored: the order goes through at list price.
+  // Only an INDIE- code on a Publisher order is looked up in Stripe.
+  const promo = await resolvePromo(env, body.promo, tier);
 
   const id = crypto.randomUUID();
   const key = 'order:' + id;
@@ -427,7 +493,6 @@ async function handleOrder(request, env) {
     wishlists,
     price,
     notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
-    promo: promo ? promo.code : '',
     news: body.news === true,
     waiver: true,
     page: clip(body.page, 500),
@@ -458,7 +523,7 @@ async function handlePromo(request, env) {
   if (origin && !ALLOWED_ORIGINS.includes(origin)) return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!(await checkRateLimit(env, ip, 'order:rlp:', PROMO_CHECKS_PER_WINDOW))) return json(429, { ok: false, error: 'rate_limited' }, origin);
-  const promo = findPromoAnyTier(env, new URL(request.url).searchParams.get('code'));
+  const promo = await resolvePromoAnyTier(env, new URL(request.url).searchParams.get('code'));
   if (!promo) return json(200, { valid: false }, origin);
   return json(200, { valid: true, tier: promo.tier, amounts: promo.amounts }, origin);
 }
@@ -499,7 +564,6 @@ async function handleWebhook(request, env) {
       id: orderId,
       tier: meta.tier || '',
       express: meta.express === 'true',
-      promo: meta.promo || '',
       steam: meta.game_url || '',
       email: (session.customer_details && session.customer_details.email) || session.customer_email || '',
       rebuilt: true,
@@ -516,16 +580,26 @@ async function handleWebhook(request, env) {
   order.stripeSessionId = session.id;
   order.amountTotal = session.amount_total;
   order.paidCurrency = session.currency;
+  // A promotion is recorded only when Stripe took money off (total_details.amount_discount above 0). The code comes from the
+  // session metadata; an order saved by an earlier version of the Worker carries it in the record instead.
+  const promoCode = String(meta.promo || order.promo || '');
+  const discount = Number(session.total_details && session.total_details.amount_discount);
+  const discounted = !!promoCode && discount > 0;
+  delete order.promo;
+  delete order.discountApplied;
+  if (discounted) {
+    order.promo = promoCode;
+    order.discountApplied = true;
+  } else if (promoCode) {
+    console.log('a promotion code was sent but the session has no discount: ' + session.id);
+  }
   // Stripe chose the currency, so the expected total is worked out now, from the currency it used.
-  // A promotion counts only while its code still maps to this tier; the discounted amounts are the expected ones.
-  const promo = order.promo ? findPromo(env, order.promo, order.tier) : null;
+  // With a discount the base is the discounted amount (it counts only while the code still maps to this tier); without one it is the list amount.
+  const promo = discounted ? paidPromo(env, promoCode, order.tier) : null;
   order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo);
   order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
   if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
   order.listTotal = expectedTotal(env, order.tier, !!order.express, session.currency, null);
-  const discount = session.total_details && Number(session.total_details.amount_discount);
-  order.discountApplied = !!order.promo && discount > 0;
-  if (order.promo && !order.discountApplied) console.log('promotion ' + order.promo + ' paid without a discount: ' + session.id);
   order.businessDays = days;
   order.due_date = due ? due.due : null;
   order.due_start_date = due ? due.start : null;

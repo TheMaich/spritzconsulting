@@ -7,7 +7,7 @@ Order backend for the Steam Analysis page, Indie and Publisher tiers. Solo Dev (
 | `GET /api/order/config` | Tells the order modal the tier amounts and, where Express is on and priced in every currency, the Express amounts. Both are per tier and per currency, for display only. |
 | `POST /api/order` | Validates the order, stores it in KV, creates a Stripe Checkout session, returns `{ url }`. |
 | `POST /api/order/webhook` | Stripe calls it when the session is paid. Marks the order paid and stores `due_date`. |
-| `GET /api/order/promo?code=` | Says whether a promotion code is valid: `{ valid, tier, amounts }`. A missing, wrong or switched-off code answers `{ valid: false }` with status 200. Rate limited per IP (20 per 10 minutes, own counter). |
+| `GET /api/order/promo?code=` | Says whether a promotion code is valid: `{ valid, tier, amounts }`. A missing, wrong, used or switched-off code answers `{ valid: false }` with status 200. An `INDIE-` code is checked in Stripe (see "Indie to Publisher codes"); any other code is checked against `PROMOS` and never reaches Stripe. Rate limited per IP (20 per 10 minutes, own counter, also for `INDIE-` codes, because each check is a Stripe call). |
 
 The Worker is named `checkout`. `contact-form` is untouched and keeps `/api/contact`.
 
@@ -23,7 +23,9 @@ Zone: `spritzconsulting.com`. The cache rules already skip anything under `/api/
 
 From this folder:
 
-1. `npx wrangler secret put STRIPE_SECRET_KEY`. A restricted key with only **Checkout Sessions: Write**.
+1. `npx wrangler secret put STRIPE_SECRET_KEY`. A restricted key with **Checkout Sessions: Write**, **Promotion Codes: Read** and
+   **Coupons: Read**. The last two are for the `INDIE-` code lookup. Without them Stripe answers 403, the lookup fails and every
+   `INDIE-` code is silently ignored (the buyer pays the full price).
 2. `npx wrangler secret put STRIPE_WEBHOOK_SECRET`. The signing secret (`whsec_...`) of the endpoint in step 4.
 3. `npx wrangler deploy`
 4. In Stripe, add a webhook endpoint `https://spritzconsulting.com/api/order/webhook` listening to
@@ -49,6 +51,9 @@ From this folder:
   requested tier; a code for another tier, an unknown or an inactive code is ignored without an error. The coupons must be limited
   to the tier's own product in Stripe, so the Express line is never discounted. `SOLODEV20` is Indie (79 / 87 / 71 against 99 / 109 / 89),
   `SOLODEV10` is Publisher (269 / 296 / 224 against 299 / 329 / 249). Express is added at its list amount to the discounted base.
+- `INDIE_PUBLISHER_COUPON_ID`: the id of the Stripe coupon "Indie Publisher". The repo holds the placeholder `REPLACE_WITH_COUPON_ID`:
+  paste the real id from Stripe dashboard > Product catalogue > Coupons > Indie Publisher > Details > ID. While it starts with `REPLACE`,
+  every `INDIE-` code is ignored. Sandbox and live have different coupons, so the live id replaces it at go-live.
 - `EXPRESS_ENABLED`: `"false"` by default. With it off the page hides the Express row and the Worker refuses Express.
 
 To open Express: create the two Express products in Stripe, paste their price ids into `EXPRESS_PRICES.eur`,
@@ -59,7 +64,7 @@ set `EXPRESS_ENABLED = "true"`, deploy.
 Keys in the `CONTACT_SUBMISSIONS` namespace, all with a 30 day expiry (the order form promises deletion after 30 days):
 
 - `order:<uuid>`: the order (tier, express, Steam link, email, optional fields, status, and after payment
-  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus `promo`, `discountApplied` (the session carried a discount) and `listTotal` (the total at list price)).
+  `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus `listTotal` (the total at list price)). `promo` and `discountApplied` are written only when Stripe took money off (`total_details.amount_discount` above 0); otherwise neither key exists, and `expectedTotal` is the list total.
 - `order:paid:<checkout session id>`: marks a session as processed, so a repeated Stripe delivery changes nothing.
 - `order:rl:<ip>`: rate limit, 5 orders per IP per 10 minutes.
 
@@ -69,6 +74,35 @@ npx wrangler kv key get "order:<uuid>" --binding CONTACT_SUBMISSIONS --remote
 ```
 
 There is **no notification email yet**. Check KV for `status: "paid"` records until the mail service exists.
+
+## Indie to Publisher codes (one code per order)
+
+An `INDIE-` code gives a buyer who already holds an Indie analysis the Publisher analysis at **190 EUR / 209 USD / 158 GBP**
+(list 299 / 329 / 249). Express is never discounted: it is added at its list amount (Publisher with Express is
+289 / 308 / 257). Each code works once. You create the codes by hand in Stripe. Test mode and live mode each need their own coupon.
+
+**Once: create the coupon "Indie Publisher"**
+
+1. Stripe dashboard, switch to the right mode (the Sandbox banner on top in test mode). Open **Product catalogue** (Catalogo prodotti), tab **Coupons**, button **Create coupon** (Crea coupon).
+2. Name: `Indie Publisher`. Type: **Fixed amount discount** (Importo scontato fisso). Amount **109.00 EUR**. Use **Add amount for other currencies** and add **120.00 USD** and **91.00 GBP**.
+3. Duration: **Once** (Una sola volta).
+4. Tick **Apply to specific products** (Prodotti idonei) and select **Publisher Analysis** only. Do not select Indie Analysis or either Express product.
+5. Leave the redemption limit and the expiry date of the coupon empty: the limit lives on each code. Click **Create coupon**.
+6. Open the new coupon. Under **Details**, copy the coupon **ID**. Paste it in `wrangler.toml` as `INDIE_PUBLISHER_COUPON_ID`
+   (replacing `REPLACE_WITH_COUPON_ID`) and add the same value as a plain text variable `INDIE_PUBLISHER_COUPON_ID` in the Cloudflare dashboard
+   (Workers & Pages > checkout > Settings > Variables and secrets). Deploy as usual.
+
+**For every order: create one code**
+
+1. Open the coupon **Indie Publisher**. In the **Promotion codes** (Codici promozionali) box click **New code** (the plus button).
+2. Code: `INDIE-` followed by 8 random capital letters or digits, for example `INDIE-K7M2Q9XA`. Use only A to Z, 0 to 9 and the one hyphen after `INDIE-`. The Worker upper-cases what the buyer types.
+3. Open **Additional options** (Opzioni aggiuntive). Tick **Limit the total number of times this code can be redeemed** and enter **1**. This is what makes the code one-time. A code with no limit is refused by the Worker.
+4. Leave **Active** on, and leave the other limits empty (first-time order only off, no minimum amount). An expiry date is optional.
+5. Click **Create code**. Send the code to the buyer. They type it in the promo field of the Publisher order form.
+6. After the payment Stripe shows the code as redeemed 1 of 1, and the Worker ignores it from then on. The order record in KV carries `promo` and `discountApplied: true`.
+
+The Worker accepts a code only when all of these hold: it starts with `INDIE-`, it is active, its coupon id equals `INDIE_PUBLISHER_COUPON_ID`,
+the order is Publisher, and `times_redeemed` is below `max_redemptions`. A wrong, used or wrong-tier code is ignored without an error and the buyer pays the full price.
 
 ## Delivery date
 
@@ -82,8 +116,8 @@ Publisher 3 (2 with Express). The list ends with 2027: after that the helper ski
 
 `node build-single.mjs` writes `worker.single.js`: `worker.js` and `business-days.js` in one file, with no imports.
 Paste it into the dashboard editor. The dashboard does not read `wrangler.toml`, so there you also set by hand:
-the KV binding `CONTACT_SUBMISSIONS`, the variables `EXPRESS_ENABLED`, `PRICES`, `EXPRESS_PRICES`, `PRICE_AMOUNTS` and `EXPRESS_AMOUNTS`
-(all but the first as JSON), the two secrets, and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
+the KV binding `CONTACT_SUBMISSIONS`, the variables `EXPRESS_ENABLED`, `PRICES`, `EXPRESS_PRICES`, `PRICE_AMOUNTS`, `EXPRESS_AMOUNTS`
+and `PROMOS` (all but `EXPRESS_ENABLED` as JSON), the plain text variable `INDIE_PUBLISHER_COUPON_ID`, the two secrets, and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
 
 ## Tests
 

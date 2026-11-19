@@ -54,6 +54,15 @@ EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49
 #   SOLODEV10  Publisher   minus 30 EUR / 33 USD / 25 GBP  (coupon yZBBORrT)
 PROMOS = { SOLODEV20 = { tier = "standard", coupon = "V7V7n4Fm", active = true, amounts = { eur = 79, usd = 87, gbp = 71 } }, SOLODEV10 = { tier = "premium", coupon = "yZBBORrT", active = true, amounts = { eur = 269, usd = 296, gbp = 224 } } }
 
+# Indie to Publisher codes (INDIE-...). One-time promotion codes made by hand in Stripe on the coupon "Indie Publisher"
+# (Publisher product only, 109 EUR / 120 USD / 91 GBP off, so Publisher costs 190 / 209 / 158). The Worker looks an INDIE- code up
+# in Stripe and accepts it only when its coupon id equals this value. See the README for the dashboard steps.
+# PASTE THE REAL ID HERE: Stripe dashboard > Product catalogue > Coupons > Indie Publisher > Details > ID.
+# The Cloudflare dashboard does not read this file: add INDIE_PUBLISHER_COUPON_ID there as a plain text variable too.
+# While the value starts with REPLACE, every INDIE- code is ignored and the order is charged in full. Sandbox and live have
+# different coupons, so the live id replaces this one when the live coupon exists.
+INDIE_PUBLISHER_COUPON_ID = "REPLACE_WITH_COUPON_ID"
+
 # Secrets (never in this file). Set them with:
-#   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)
+#   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key: Checkout Sessions Write, Promotion Codes Read, Coupons Read)
 #   npx wrangler secret put STRIPE_WEBHOOK_SECRET   (signing secret of the /api/order/webhook endpoint)

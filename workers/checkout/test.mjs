@@ -67,9 +67,10 @@ await test('2028 is outside the list: weekends only and approx is true', () => {
 async function workerSuite(label, worker) {
   // ---- Worker ----------------------------------------------------------------------------
   const kv = new Map();
+  const kvTtl = new Map();
   const KV = {
     async get(k) { return kv.has(k) ? kv.get(k) : null; },
-    async put(k, v) { kv.set(k, v); },
+    async put(k, v, opts) { kv.set(k, v); kvTtl.set(k, opts && opts.expirationTtl); },
     async delete(k) { kv.delete(k); },
   };
   const baseEnv = {
@@ -94,6 +95,7 @@ async function workerSuite(label, worker) {
     EXPRESS_AMOUNTS: {
       eur: { standard: 49, premium: 99 }, usd: { standard: 49, premium: 99 }, gbp: { standard: 49, premium: 99 },
     },
+    INDIE_PUBLISHER_COUPON_ID: 'cpn_indie',
   };
   const FULL_CONFIG = {
     enabled: true,
@@ -101,15 +103,29 @@ async function workerSuite(label, worker) {
     amounts: { standard: { eur: 99, usd: 109, gbp: 89 }, premium: { eur: 299, usd: 329, gbp: 249 } },
     express: { standard: { eur: 49, usd: 49, gbp: 49 }, premium: { eur: 99, usd: 99, gbp: 99 } },
   };
+  // Mocked Stripe API: Checkout sessions, and the promotion code list that the Worker reads for INDIE- codes.
   let stripeCalls = [];
-  globalThis.fetch = async (url, init) => {
-    stripeCalls.push({ url, params: new URLSearchParams(init.body) });
+  const stripePromoCodes = new Map();   // code -> Stripe promotion code object
+  let promoLookupStatus = 200;
+  globalThis.fetch = async (url, init = {}) => {
+    const href = String(url);
+    stripeCalls.push({ url: href, method: init.method || 'GET', auth: (init.headers || {}).Authorization, params: new URLSearchParams(init.body || '') });
+    if (href.startsWith('https://api.stripe.com/v1/promotion_codes')) {
+      if (promoLookupStatus !== 200) return new Response(JSON.stringify({ error: { type: 'invalid_request_error', message: 'x' } }), { status: promoLookupStatus });
+      const q = new URL(href).searchParams;
+      const wanted = (q.get('code') || '').toUpperCase();
+      const data = [...stripePromoCodes.values()].filter((p) => p.code.toUpperCase() === wanted && (q.get('active') !== 'true' || p.active));
+      return new Response(JSON.stringify({ object: 'list', data }), { status: 200 });
+    }
     return new Response(JSON.stringify({ id: 'cs_test_1', url: 'https://checkout.stripe.com/c/pay/cs_test_1' }), { status: 200 });
   };
+  const lookups = () => stripeCalls.filter((c) => c.url.startsWith('https://api.stripe.com/v1/promotion_codes'));
+  const checkoutCall = () => stripeCalls.filter((c) => c.url === 'https://api.stripe.com/v1/checkout/sessions').pop();
   const call = (path, init, env = baseEnv) => worker.fetch(new Request('https://spritzconsulting.com' + path, init), env);
+  let ipSeq = 0;   // a fresh IP per order, so the order rate limit (5 per 10 minutes per IP) never gets in the way
   const post = (body, env) => call('/api/order', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': '1.2.3.' + Math.floor(Math.random() * 250) },
+    headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': '1.2.3.' + (ipSeq++ % 250) },
     body: JSON.stringify(body),
   }, env);
   const order = (extra) => ({
@@ -358,10 +374,11 @@ async function workerSuite(label, worker) {
     assert.equal(p.get('discounts[0][coupon]'), 'V7V7n4Fm');
     assert.equal(p.get('metadata[promo]'), 'SOLODEV20');
     assert.equal(p.get('cancel_url'), 'https://spritzconsulting.com/steam-analysis/?tier=standard&promo=SOLODEV20');
-    assert.equal(lastRecord().rec.promo, 'SOLODEV20');
+    assert.equal('promo' in lastRecord().rec, false, 'the pending record holds no promo: the webhook records it, and only with a discount');
     stripeCalls = [];
     assert.equal((await post(order({ version: 'premium', promo: ' solodev10 ' }))).status, 200);
     assert.equal(stripeCalls[0].params.get('discounts[0][coupon]'), 'yZBBORrT');
+    assert.equal(lookups().length, 0, 'a PROMOS code never reaches the Stripe promotion code API');
   });
   await test(label + ' ' + 'a bad, empty, disabled or wrong-tier code is ignored: list price, no coupon, no error', async () => {
     const off = { ...baseEnv, PROMOS: { ...baseEnv.PROMOS, SOLODEV20: { ...baseEnv.PROMOS.SOLODEV20, active: false } } };
@@ -380,7 +397,7 @@ async function workerSuite(label, worker) {
       assert.equal(r.status, 200, JSON.stringify(body.promo) + ' ' + body.version);
       assert.equal(stripeCalls[0].params.get('discounts[0][coupon]'), null);
       assert.equal(stripeCalls[0].params.get('metadata[promo]'), null);
-      assert.equal(lastRecord().rec.promo, '');
+      assert.equal('promo' in lastRecord().rec, false);
     }
   });
   await test(label + ' ' + 'Express never carries a discount: one coupon on the order, two plain line items', async () => {
@@ -405,8 +422,8 @@ async function workerSuite(label, worker) {
           await post(order({ version: tier, promo: code, express }));
           const { id } = lastRecord();
           const total = (amounts[cur] + (express ? extra : 0)) * 100;
-          const { rec } = await pay(id, tier, express, total, cur, { session: { total_details: { amount_discount: 2000 } } });
-          assert.deepEqual([rec.expectedTotal, rec.amountMatches, rec.discountApplied], [total, true, true], tier + ' ' + cur + ' ' + express);
+          const { rec } = await pay(id, tier, express, total, cur, { meta: { promo: code }, session: { total_details: { amount_discount: 2000 } } });
+          assert.deepEqual([rec.expectedTotal, rec.amountMatches, rec.discountApplied, rec.promo], [total, true, true, code], tier + ' ' + cur + ' ' + express);
           if (express) seen.push(total / 100);
         }
       }
@@ -414,22 +431,28 @@ async function workerSuite(label, worker) {
     // Totals with Express in the brief: Indie 128/136/120, Publisher 368/395/323.
     assert.deepEqual(seen, [128, 136, 120, 368, 395, 323]);
   });
-  await test(label + ' ' + 'a promotion paid without a discount is flagged: list total recorded, discountApplied false, amountMatches false', async () => {
-    await post(order({ promo: 'SOLODEV20' }));
-    const { id } = lastRecord();
-    const { rec } = await pay(id, 'standard', false, 9900, 'eur', { session: { total_details: { amount_discount: 0 } } });
-    assert.deepEqual([rec.discountApplied, rec.amountMatches, rec.expectedTotal, rec.listTotal], [false, false, 7900, 9900]);
+  await test(label + ' ' + 'a promotion paid without a discount records no promo and no discountApplied: the expected total is the list total', async () => {
+    for (const total_details of [{ amount_discount: 0 }, undefined]) {
+      await post(order({ promo: 'SOLODEV20' }));
+      const { id } = lastRecord();
+      const { rec } = await pay(id, 'standard', false, 9900, 'eur', { meta: { promo: 'SOLODEV20' }, session: { total_details } });
+      assert.equal('promo' in rec, false);
+      assert.equal('discountApplied' in rec, false);
+      assert.deepEqual([rec.amountMatches, rec.expectedTotal, rec.listTotal], [true, 9900, 9900]);
+    }
   });
-  await test(label + ' ' + 'an order without a promotion records list totals and no discount', async () => {
+  await test(label + ' ' + 'an order without a promotion records list totals and no promo keys', async () => {
     await post(order({ express: true }));
     const { id } = lastRecord();
     const { rec } = await pay(id, 'standard', true, 14800, 'eur');
-    assert.deepEqual([rec.promo, rec.discountApplied, rec.listTotal, rec.amountMatches], ['', false, 14800, true]);
+    assert.equal('promo' in rec, false);
+    assert.equal('discountApplied' in rec, false);
+    assert.deepEqual([rec.listTotal, rec.amountMatches], [14800, true]);
   });
   await test(label + ' ' + 'a repeated webhook for a promotion order changes nothing', async () => {
     await post(order({ promo: 'SOLODEV20', steam: 'https://store.steampowered.com/app/555/', email: 'dup@x.co' }));
     const { id } = lastRecord();
-    const first = await pay(id, 'standard', false, 7900, 'eur', { session: { total_details: { amount_discount: 2000 } } });
+    const first = await pay(id, 'standard', false, 7900, 'eur', { meta: { promo: 'SOLODEV20' }, session: { total_details: { amount_discount: 2000 } } });
     const snap = () => JSON.stringify([...kv.entries()].filter(([k]) => k.startsWith('order:') && !k.startsWith('order:rl')));
     const before = snap();
     const r = await call('/api/order/webhook', { method: 'POST', headers: signed(first.body), body: first.body });
@@ -463,6 +486,171 @@ async function workerSuite(label, worker) {
   await test(label + ' ' + 'promo endpoint: foreign origin and POST are refused', async () => {
     assert.equal((await call('/api/order/promo?code=SOLODEV20', { method: 'GET', headers: { Origin: 'https://evil.example' } })).status, 403);
     assert.equal((await call('/api/order/promo', { method: 'POST' })).status, 405);
+  });
+
+  // ---- INDIE- one-time codes, with a mocked Stripe promotion code API ---------------------------
+  const indiePromo = (code, over = {}) => ({
+    id: 'promo_' + code.toLowerCase().replace(/[^a-z0-9]/g, ''), object: 'promotion_code', code, active: true,
+    max_redemptions: 1, times_redeemed: 0,
+    promotion: { type: 'coupon', coupon: { id: 'cpn_indie', object: 'coupon', valid: true } },
+    ...over,
+  });
+  const addPromo = (code, over) => { const p = indiePromo(code, over); stripePromoCodes.set(code, p); return p; };
+  const INDIE_AMOUNTS = { eur: 190, usd: 209, gbp: 158 };
+
+  await test(label + ' ' + 'INDIE: a valid code is looked up in Stripe and the session uses discounts[0][promotion_code]', async () => {
+    stripePromoCodes.clear();
+    const p = addPromo('INDIE-AB12CD34');
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'premium', promo: ' indie-ab12cd34 ' }))).status, 200);
+    assert.equal(lookups().length, 1);
+    const l = lookups()[0];
+    const u = new URL(l.url);
+    assert.equal(l.method, 'GET');
+    assert.equal(l.auth, 'Bearer sk_test_x');
+    assert.equal(u.searchParams.get('code'), 'INDIE-AB12CD34');
+    assert.equal(u.searchParams.get('active'), 'true');
+    assert.equal(u.searchParams.get('expand[]'), 'data.promotion.coupon');
+    const c = checkoutCall();
+    assert.equal(c.params.get('discounts[0][promotion_code]'), p.id);
+    assert.equal(c.params.get('discounts[0][coupon]'), null);
+    assert.equal(c.params.get('metadata[promo]'), 'INDIE-AB12CD34');
+    assert.equal(c.params.get('line_items[0][price]'), 'price_prem');
+    assert.equal(c.params.get('cancel_url'), 'https://spritzconsulting.com/steam-analysis/?tier=premium&promo=INDIE-AB12CD34');
+    assert.equal('promo' in lastRecord().rec, false);
+  });
+  await test(label + ' ' + 'INDIE: the promo endpoint answers valid with the discounted Publisher totals', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-AB12CD34');
+    assert.deepEqual(await (await promoGet('indie-ab12cd34')).json(), { valid: true, tier: 'premium', amounts: INDIE_AMOUNTS });
+  });
+  await test(label + ' ' + 'INDIE: the coupon may be a plain id or the legacy coupon field', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-STRING01', { promotion: { type: 'coupon', coupon: 'cpn_indie' } });
+    addPromo('INDIE-LEGACY01', { promotion: undefined, coupon: { id: 'cpn_indie', valid: true } });
+    for (const code of ['INDIE-LEGACY01']) {
+      assert.deepEqual(await (await promoGet(code)).json(), { valid: true, tier: 'premium', amounts: INDIE_AMOUNTS }, code);
+    }
+    // a plain id carries no validity flag: it is accepted, because the id itself was checked
+    assert.deepEqual(await (await promoGet('INDIE-STRING01')).json(), { valid: true, tier: 'premium', amounts: INDIE_AMOUNTS });
+  });
+  await test(label + ' ' + 'INDIE: a used, unknown, inactive or wrongly built code is ignored: full price, no discount, no error', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-USED0001', { times_redeemed: 1 });
+    addPromo('INDIE-OFF00001', { active: false });
+    addPromo('INDIE-NOLIMIT1', { max_redemptions: null });
+    addPromo('INDIE-OTHERCPN', { promotion: { type: 'coupon', coupon: { id: 'cpn_other', valid: true } } });
+    addPromo('INDIE-DEADCPN1', { promotion: { type: 'coupon', coupon: { id: 'cpn_indie', valid: false } } });
+    for (const code of ['INDIE-USED0001', 'INDIE-OFF00001', 'INDIE-NOLIMIT1', 'INDIE-OTHERCPN', 'INDIE-DEADCPN1', 'INDIE-NOSUCH01']) {
+      stripeCalls = [];
+      const r = await post(order({ version: 'premium', promo: code }));
+      assert.equal(r.status, 200, code);
+      const c = checkoutCall();
+      assert.equal(c.params.get('discounts[0][promotion_code]'), null, code);
+      assert.equal(c.params.get('discounts[0][coupon]'), null, code);
+      assert.equal(c.params.get('metadata[promo]'), null, code);
+      assert.equal(c.params.get('line_items[0][price]'), 'price_prem', code);
+      assert.deepEqual(await (await promoGet(code)).json(), { valid: false }, code);
+    }
+  });
+  await test(label + ' ' + 'INDIE: a Stripe error on the lookup charges the full price and shows no discount', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-AB12CD34');
+    promoLookupStatus = 500;
+    try {
+      stripeCalls = [];
+      assert.equal((await post(order({ version: 'premium', promo: 'INDIE-AB12CD34' }))).status, 200);
+      assert.equal(checkoutCall().params.get('discounts[0][promotion_code]'), null);
+      assert.deepEqual(await (await promoGet('INDIE-AB12CD34')).json(), { valid: false });
+    } finally { promoLookupStatus = 200; }
+  });
+  await test(label + ' ' + 'INDIE: a code without the INDIE- prefix never reaches the Stripe promotion code API', async () => {
+    stripePromoCodes.clear();
+    for (const code of ['WELCOME-1234', 'INDIE1234', 'XINDIE-AB12CD34', 'INDIE-', 'indie_ab12cd34', 'SOLODEV30']) {
+      addPromo(code);
+      stripeCalls = [];
+      assert.equal((await post(order({ version: 'premium', promo: code }))).status, 200, code);
+      assert.equal(checkoutCall().params.get('discounts[0][promotion_code]'), null, code);
+      assert.equal(checkoutCall().params.get('discounts[0][coupon]'), null, code);
+      assert.deepEqual(await (await promoGet(code)).json(), { valid: false }, code);
+      assert.equal(lookups().length, 0, code);
+    }
+  });
+  await test(label + ' ' + 'INDIE: the wrong tier is ignored with no Stripe lookup (Indie order, valid code)', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-AB12CD34');
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'standard', promo: 'INDIE-AB12CD34' }))).status, 200);
+    assert.equal(lookups().length, 0);
+    const c = checkoutCall();
+    assert.equal(c.params.get('discounts[0][promotion_code]'), null);
+    assert.equal(c.params.get('line_items[0][price]'), 'price_std');
+  });
+  await test(label + ' ' + 'INDIE: a missing or placeholder coupon id in the env disables every INDIE- code with no lookup', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-AB12CD34');
+    for (const id of [undefined, '', 'REPLACE_WITH_COUPON_ID']) {
+      stripeCalls = [];
+      const env = { ...baseEnv, INDIE_PUBLISHER_COUPON_ID: id };
+      assert.equal((await post(order({ version: 'premium', promo: 'INDIE-AB12CD34' }), env)).status, 200);
+      assert.equal(checkoutCall().params.get('discounts[0][promotion_code]'), null, String(id));
+      assert.equal(lookups().length, 0, String(id));
+    }
+  });
+  await test(label + ' ' + 'INDIE: Express is never discounted: two plain line items, one promotion code, and the Express supplement is added', async () => {
+    stripePromoCodes.clear();
+    const p = addPromo('INDIE-AB12CD34');
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'premium', promo: 'INDIE-AB12CD34', express: true }))).status, 200);
+    const c = checkoutCall();
+    assert.equal(c.params.get('line_items[0][price]'), 'price_prem');
+    assert.equal(c.params.get('line_items[1][price]'), 'price_x_prem');
+    assert.equal(c.params.get('line_items[0][quantity]'), '1');
+    assert.equal(c.params.get('line_items[1][quantity]'), '1');
+    assert.equal(c.params.get('discounts[0][promotion_code]'), p.id);
+    assert.equal(c.params.get('discounts[1][promotion_code]'), null);
+    assert.equal(c.params.get('discounts[0][coupon]'), null);
+  });
+  await test(label + ' ' + 'INDIE: webhook totals are 190/209/158 without Express and 289/308/257 with Express, and the promo is recorded', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-AB12CD34');
+    const cases = [
+      [false, 'eur', 19000, 10900], [false, 'usd', 20900, 12000], [false, 'gbp', 15800, 9100],
+      [true, 'eur', 28900, 10900], [true, 'usd', 30800, 12000], [true, 'gbp', 25700, 9100],
+    ];
+    for (const [express, cur, total, off] of cases) {
+      await post(order({ version: 'premium', promo: 'INDIE-AB12CD34', express }));
+      const { id } = lastRecord();
+      const { rec } = await pay(id, 'premium', express, total, cur, { meta: { promo: 'INDIE-AB12CD34' }, session: { total_details: { amount_discount: off } } });
+      assert.deepEqual([rec.expectedTotal, rec.amountMatches, rec.discountApplied, rec.promo], [total, true, true, 'INDIE-AB12CD34'], cur + ' ' + express);
+    }
+  });
+  await test(label + ' ' + 'INDIE: promo and discountApplied are recorded only when amount_discount is above 0', async () => {
+    stripePromoCodes.clear();
+    for (const total_details of [{ amount_discount: 0 }, undefined, {}]) {
+      await post(order({ version: 'premium', promo: 'INDIE-AB12CD34' }));
+      const { id } = lastRecord();
+      const { rec } = await pay(id, 'premium', false, 29900, 'eur', { meta: { promo: 'INDIE-AB12CD34' }, session: { total_details } });
+      assert.equal('promo' in rec, false);
+      assert.equal('discountApplied' in rec, false);
+      assert.deepEqual([rec.expectedTotal, rec.listTotal, rec.amountMatches], [29900, 29900, true]);
+    }
+  });
+  await test(label + ' ' + 'INDIE: promo rate limit is 20 checks per 10 minutes per IP, then 429 with no extra Stripe lookup', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-AB12CD34');
+    const ip = '7.7.7.7';
+    stripeCalls = [];
+    for (let i = 0; i < 20; i++) assert.equal((await promoGet('INDIE-AB12CD34', ip)).status, 200, 'check ' + (i + 1));
+    assert.equal(lookups().length, 20);
+    assert.equal((await promoGet('INDIE-AB12CD34', ip)).status, 429);
+    assert.equal(lookups().length, 20, 'a rate limited check does not call Stripe');
+    assert.equal(kvTtl.get('order:rlp:' + ip), 600);
+    // another IP has its own counter
+    assert.equal((await promoGet('INDIE-AB12CD34', '7.7.7.8')).status, 200);
+    // the order limit is a separate counter
+    const r = await call('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': ip }, body: JSON.stringify(order({ version: 'premium', promo: 'INDIE-AB12CD34' })) });
+    assert.equal(r.status, 200);
   });
 
   await test(label + ' ' + 'dashboard variables given as JSON text work like objects', async () => {
