@@ -42,6 +42,8 @@
 .sa-buy{ align-self: stretch; border: 1px solid var(--clay); color: var(--clay); background: transparent; font-weight: 600; }
 .sa-buy:hover, .sa-buy:focus-visible{ background: var(--clay); color: var(--paper); border-color: var(--clay); transform: translateY(-2px); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clay) 22%, transparent), 0 12px 28px -10px color-mix(in srgb, var(--clay) 60%, transparent); outline: none; }
 .sa-buy:active{ transform: translateY(0); }
+/* Touch screens have no hover, so the button is filled with clay by default; a press still lifts it like the hover does on desktop */
+@media (hover: none){ .sa-buy{ background: var(--clay); color: var(--paper); border-color: var(--clay); } }
 @media (prefers-reduced-motion: reduce){ .sa-buy:hover, .sa-buy:focus-visible{ transform: none; } }
 .sa-tier ul{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; font-size: 16px; line-height: 1.5; flex: 1; color: var(--ink); }
 .sa-amts .sep{ color: var(--ink-2); opacity: .5; font-style: normal; }
