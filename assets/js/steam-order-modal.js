@@ -40,6 +40,7 @@
     <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
 
     <p class="om-fine">I use your email and Steam link to make and send your analysis, and I delete them after 30 days. By paying you accept the <a class="sa-link" href="/privacy/">Terms and privacy policy</a>.</p>
+    <p class="om-fine">Do you need an invoice? Write to <a class="sa-link" href="mailto:hello@spritzconsulting.it">hello@spritzconsulting.it</a>.</p>
     <p class="om-err" id="om-err" role="alert" hidden></p>
     <!-- Paid tiers post to /api/order (workers/checkout). Solo Dev and an unreachable Worker show the notice below. -->
     <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get Solo Dev Analysis</span></button>
