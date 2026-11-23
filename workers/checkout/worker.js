@@ -5,6 +5,7 @@
  *   POST /api/order          validate the order, store it, create a Stripe Checkout session
  *   POST /api/order/webhook  Stripe tells us the session was paid: mark it paid, compute due_date
  *   GET  /api/order/promo    is a promotion code valid (and for which tier and amounts)
+ *   POST /api/order/free     Solo Dev (free): validate, apply the free limits, store the order, no Stripe
  *
  * - One Checkout session with two line items: the tier price and, when asked for, the Express
  *   price (quantity 1 each). Express never replaces the base price.
@@ -29,7 +30,10 @@
  *   currency, because Stripe Checkout takes one discount per session. The coupon lives 25 hours; the webhook deletes it
  *   after payment and switches an INDIE- code off (Stripe does not count that redemption in this mode). Above 50 it needs a
  *   test key or ALLOW_DEEP_DISCOUNT=true. With 0 the Worker behaves as described above and makes no coupon.
- * - Solo Dev (free) does not go through this Worker.
+ * - Solo Dev (free) uses POST /api/order/free. It has no Stripe call, no waiver and no price. Limits: 3 orders per email,
+ *   1 per Steam app id, 5 per UTC day in total, and 5 per IP per 10 minutes (own counter, prefix order:rlf:). The counters
+ *   are free:email:<sha256 of the lowercased email>, free:app:<app id> and free:day:<YYYY-MM-DD>. The raw email is never
+ *   part of a counter key. Delivery is manual: read the orders from KV (status "free_new").
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
  * - No notification email yet; read orders from KV (see README).
  */
@@ -68,6 +72,13 @@ const RATE_WINDOW_SECONDS = 600;
 const ORDERS_PER_WINDOW = 5;
 const PROMO_CHECKS_PER_WINDOW = 20;
 const WEBHOOK_TOLERANCE_SECONDS = 300;
+// Solo Dev (free) limits. The email and game counters live for a year, the day counter for two days.
+const FREE_PER_EMAIL = 3;
+const FREE_PER_GAME = 1;
+const FREE_PER_DAY = 5;
+const FREE_COUNTER_TTL_SECONDS = 365 * 24 * 60 * 60;
+const FREE_DAY_TTL_SECONDS = 2 * 24 * 60 * 60;
+const FREE_ORDERS_PER_WINDOW = 5;
 const MAX_FIELD_LENGTH = 200;
 const MAX_NOTES_LENGTH = 1000;
 
@@ -583,6 +594,77 @@ async function handleOrder(request, env) {
   }
 }
 
+// The numeric app id of a Steam link of the form /app/<id>/, or '' when the link has none.
+function steamAppId(link) {
+  let url;
+  try { url = new URL(link); } catch (err) { return ''; }
+  const match = /^\/app\/(\d{1,10})(?:\/|$)/.exec(url.pathname);
+  return match ? match[1] : '';
+}
+
+// A one-way code of an email address (SHA-256 of the lowercased, trimmed address, in hex). Counter keys use it, never the address.
+async function emailCode(email) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
+  return toHex(digest);
+}
+
+async function readCount(env, key) {
+  return parseInt((await env.CONTACT_SUBMISSIONS.get(key)) || '0', 10) || 0;
+}
+
+// POST /api/order/free: Solo Dev. Order of checks: validation, per-IP limit, email limit, game limit, daily limit.
+// The counters go up only after the order is stored.
+async function handleFreeOrder(request, env) {
+  const origin = request.headers.get('Origin') || '';
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (err) {
+    return json(400, { ok: false, error: 'invalid_json' }, origin);
+  }
+
+  const steam = clip(body.steam, 500);
+  const appId = STEAM_RE.test(steam) ? steamAppId(steam) : '';
+  if (!appId) return json(422, { ok: false, error: 'invalid_steam_link' }, origin);
+  const email = clip(body.email, MAX_FIELD_LENGTH);
+  if (!EMAIL_RE.test(email)) return json(422, { ok: false, error: 'invalid_email' }, origin);
+
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (!(await checkRateLimit(env, ip, 'order:rlf:', FREE_ORDERS_PER_WINDOW))) return json(429, { ok: false, error: 'rate_limited' }, origin);
+
+  const emailKey = 'free:email:' + (await emailCode(email));
+  const appKey = 'free:app:' + appId;
+  const dayKey = 'free:day:' + new Date().toISOString().slice(0, 10);
+  const [emailCount, appCount, dayCount] = await Promise.all([readCount(env, emailKey), readCount(env, appKey), readCount(env, dayKey)]);
+  if (emailCount >= FREE_PER_EMAIL) return json(409, { ok: false, error: 'email_limit' }, origin);
+  if (appCount >= FREE_PER_GAME) return json(409, { ok: false, error: 'game_limit' }, origin);
+  if (dayCount >= FREE_PER_DAY) return json(429, { ok: false, error: 'daily_limit' }, origin);
+
+  const id = crypto.randomUUID();
+  const order = {
+    id,
+    createdAt: new Date().toISOString(),
+    status: 'free_new',
+    tier: 'free',
+    steam,
+    appId,
+    email,
+    page: clip(body.page, 500),
+    referrer: clip(body.referrer, 500),
+    ip,
+    country: (request.cf && request.cf.country) || '',
+  };
+  await env.CONTACT_SUBMISSIONS.put('order:' + id, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
+  await env.CONTACT_SUBMISSIONS.put(emailKey, String(emailCount + 1), { expirationTtl: FREE_COUNTER_TTL_SECONDS });
+  await env.CONTACT_SUBMISSIONS.put(appKey, String(appCount + 1), { expirationTtl: FREE_COUNTER_TTL_SECONDS });
+  await env.CONTACT_SUBMISSIONS.put(dayKey, String(dayCount + 1), { expirationTtl: FREE_DAY_TTL_SECONDS });
+  return json(200, { ok: true }, origin);
+}
+
 // GET /api/order/promo?code=XYZ: lets the order page show the discount. Missing, wrong or disabled answers valid false.
 async function handlePromo(request, env) {
   const origin = request.headers.get('Origin') || '';
@@ -712,6 +794,10 @@ export default {
     if (path === '/api/order/promo') {
       if (request.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
       return handlePromo(request, env);
+    }
+    if (path === '/api/order/free') {
+      if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
+      return handleFreeOrder(request, env);
     }
     if (path === '/api/order') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);

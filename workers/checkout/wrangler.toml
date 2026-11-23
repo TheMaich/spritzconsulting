@@ -2,14 +2,14 @@ name = "checkout"
 main = "worker.js"
 compatibility_date = "2026-07-20"
 
-# Order endpoints for the Steam Analysis page: /api/order, /api/order/config, /api/order/webhook.
+# Order endpoints for the Steam Analysis page: /api/order, /api/order/config, /api/order/webhook, /api/order/promo, /api/order/free.
 # The contact-form Worker keeps /api/contact; the two never overlap.
 routes = [
   { pattern = "spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" },
   { pattern = "www.spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" }
 ]
 
-# Same KV namespace as contact-form. This Worker only touches keys that start with "order:".
+# Same KV namespace as contact-form. This Worker only touches keys that start with "order:" or "free:".
 [[kv_namespaces]]
 binding = "CONTACT_SUBMISSIONS"
 id = "151a51cc4d7b4e0c827dce67a3b15813"

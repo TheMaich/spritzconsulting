@@ -1,12 +1,13 @@
 # Spritz checkout Worker
 
-Order backend for the Steam Analysis page, Indie and Publisher tiers. Solo Dev (free) does not use it.
+Order backend for the Steam Analysis page. Indie and Publisher use `POST /api/order`. Solo Dev (free) uses `POST /api/order/free`.
 
 | Route | What it does |
 | --- | --- |
 | `GET /api/order/config` | Tells the order modal the tier amounts and, where Express is on and priced in every currency, the Express amounts. Both are per tier and per currency, for display only. |
 | `POST /api/order` | Validates the order, stores it in KV, creates a Stripe Checkout session, returns `{ url }`. |
 | `POST /api/order/webhook` | Stripe calls it when the session is paid. Marks the order paid and stores `due_date`. |
+| `POST /api/order/free` | Solo Dev. Validates the Steam link (it needs `/app/<id>/`) and the email, applies the free limits, stores the order, returns `{ ok: true }`. No Stripe, no waiver, no price. See "Solo Dev (free) orders". |
 | `GET /api/order/promo?code=` | Says whether a promotion code is valid: `{ valid, tier, amounts }`. A missing, wrong, used or switched-off code answers `{ valid: false }` with status 200. An `INDIE-` code is checked in Stripe (see "Indie to Publisher codes"); any other code is checked against `PROMOS` and never reaches Stripe. Rate limited per IP (20 per 10 minutes, own counter, also for `INDIE-` codes, because each check is a Stripe call). |
 
 The Worker is named `checkout`. `contact-form` is untouched and keeps `/api/contact`.
@@ -61,7 +62,7 @@ set `EXPRESS_ENABLED = "true"`, deploy.
 
 ## What the Worker stores
 
-Keys in the `CONTACT_SUBMISSIONS` namespace, all with a 30 day expiry (the order form promises deletion after 30 days):
+Keys in the `CONTACT_SUBMISSIONS` namespace. Order records expire after 30 days (the order form promises deletion after 30 days). The Solo Dev counters have their own expiry, described in "Solo Dev (free) orders" below:
 
 - `order:<uuid>`: the order (tier, express, Steam link, email, optional fields, status, and after payment
   `paidAt`, `due_date`, `due_start_date`, `due_date_approx`, `amountTotal`, `paidCurrency` (the currency Stripe used), `expectedTotal` and `amountMatches`, plus `listTotal` (the total at list price)). `promo` and `discountApplied` are written only when Stripe took money off (`total_details.amount_discount` above 0); otherwise neither key exists, and `expectedTotal` is the list total.
@@ -73,7 +74,29 @@ npx wrangler kv key list --binding CONTACT_SUBMISSIONS --prefix order: --remote
 npx wrangler kv key get "order:<uuid>" --binding CONTACT_SUBMISSIONS --remote
 ```
 
-There is **no notification email yet**. Check KV for `status: "paid"` records until the mail service exists.
+There is **no notification email yet**. Check KV for `status: "paid"` records (and `status: "free_new"` for Solo Dev) until the mail service exists.
+
+## Solo Dev (free) orders
+
+`POST /api/order/free` takes `{ steam, email, page, referrer }`. The checks run in this order, and the first one that fails answers:
+
+1. Validation: the Steam link must be on `store.steampowered.com` or `steamcommunity.com` and contain `/app/<id>/`, otherwise 422 `invalid_steam_link`. The email must be valid, otherwise 422 `invalid_email`.
+2. Per-IP limit: 5 orders per IP per 600 seconds, counter `order:rlf:<ip>`, otherwise 429 `rate_limited`.
+3. Email limit: 3 orders per email, otherwise 409 `email_limit`.
+4. Game limit: 1 order per Steam app id, otherwise 409 `game_limit`.
+5. Daily limit: 5 orders per UTC day in total, otherwise 429 `daily_limit`.
+
+Keys in `CONTACT_SUBMISSIONS`:
+
+- `order:<uuid>`: the order, 30 day expiry. Fields: `id`, `createdAt`, `status` (`free_new`), `tier` (`free`), `steam`, `appId`, `email`, `page`, `referrer`, `ip`, `country`.
+- `free:email:<sha256>`: counter, 365 day expiry. The code is the SHA-256 (hex) of the lowercased, trimmed email. The raw email is never part of a key.
+- `free:app:<app id>`: counter, 365 day expiry.
+- `free:day:<YYYY-MM-DD>`: counter for that UTC day, 2 day expiry.
+- `order:rlf:<ip>`: per-IP limit, 600 second expiry.
+
+The counters go up only after the order is stored. Each new order resets the 365 day expiry of its email and game counters, so the one-way codes live for 12 months after the last free order. The privacy page says the same. Delivery is manual: list the `order:` keys, read the ones with `status: "free_new"`, send the PDF within 1 day.
+
+To compute an email code by hand: `printf '%s' 'name@example.com' | sha256sum`.
 
 ## Indie to Publisher codes (one code per order)
 

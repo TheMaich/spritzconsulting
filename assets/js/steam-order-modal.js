@@ -244,6 +244,7 @@
   function open(v, trigger) {
     if (busy) return;
     last = trigger || null;
+    restoreForm();
     pick(v);
     track('order_form_open', { tier: form.elements.version.value, source: trigger ? 'card' : 'url' });
     document.getElementById('om-status').hidden = true;
@@ -380,6 +381,48 @@
   form.querySelectorAll('input,textarea').forEach(function (n) {
     n.addEventListener('input', function () { n.removeAttribute('aria-invalid'); });
   });
+  /* Solo Dev: one POST to /api/order/free. On success the form fields give way to a short confirmation, and open() brings them back. */
+  var STATUS_NOTICE = document.getElementById('om-status').textContent;
+  function showDone() {
+    Array.prototype.forEach.call(form.children, function (n) {
+      if (n.hidden || n.classList.contains('om-close') || n.classList.contains('kicker') || n.id === 'om-title' || n.id === 'om-status') return;
+      n.hidden = true; n.setAttribute('data-done-hidden', '');
+    });
+    var st = document.getElementById('om-status');
+    st.textContent = 'Done. I will send your Solo Dev PDF to your email within 1 day.';
+    st.hidden = false;
+  }
+  function restoreForm() {
+    form.querySelectorAll('[data-done-hidden]').forEach(function (n) { n.hidden = false; n.removeAttribute('data-done-hidden'); });
+    document.getElementById('om-status').textContent = STATUS_NOTICE;
+  }
+  function submitFree(el) {
+    var go = document.getElementById('om-go'), label = go.querySelector('span');
+    document.getElementById('om-status').hidden = true;
+    go.disabled = true; label.textContent = 'Sending…';
+    function unbusy() { go.disabled = false; renderOrder(); }
+    fetch('/api/order/free', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ steam: el.steam.value.trim(), email: el.email.value.trim(), page: location.pathname, referrer: document.referrer || '' })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { status: r.status, body: j }; }, function () { return { status: r.status, body: {} }; });
+    }).then(function (res) {
+      if (res.status === 200 && res.body && res.body.ok) { unbusy(); showDone(); return; }
+      unbusy();
+      var e = res.body && res.body.error;
+      if (e === 'invalid_steam_link') return fail('Use the link of your Steam store page, the one with /app/ in it.', el.steam);
+      if (e === 'invalid_email') return fail('Enter a valid email address so I can send you the analysis.', el.email);
+      if (e === 'email_limit') return fail('This email already received 3 Solo Dev analyses.');
+      if (e === 'game_limit') return fail('This game already has a Solo Dev analysis.');
+      if (e === 'daily_limit') return fail("Today's free analyses are taken. Try again tomorrow.");
+      if (res.status === 429) return fail('Too many attempts. Nothing was sent. Please wait a few minutes and try again.');
+      fail('Something went wrong and nothing was sent. Please try again.');
+    }).catch(function () {
+      unbusy();
+      fail('Could not reach the order service and nothing was sent. Please try again.');
+    });
+  }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var steam = form.elements.steam.value.trim();
@@ -404,8 +447,9 @@
     var v = form.elements.version.value, el = form.elements;
     var express = !el.express.disabled && el.express.checked;
     track('order_form_submit', { tier: v, express: express });
-    /* Solo Dev is not part of the order Worker. If the Worker cannot be reached, keep the notice. */
-    if (v === 'free' || cfgState !== 'ok') { document.getElementById('om-status').hidden = false; return; }
+    /* Solo Dev posts to /api/order/free and needs no Stripe config. A paid tier needs the config; if the Worker cannot be reached, keep the notice. */
+    if (v === 'free') { submitFree(el); return; }
+    if (cfgState !== 'ok') { document.getElementById('om-status').hidden = false; return; }
     document.getElementById('om-status').hidden = true;
     var go = document.getElementById('om-go'), label = go.querySelector('span');
     go.disabled = true; label.textContent = 'Opening Stripe…';

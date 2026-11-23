@@ -39,18 +39,19 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
 
   async function session(name, opts, fn) {
     const ctx = await browser.newContext(Object.assign({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 2 }, opts.ctx || {}));
-    const p = await ctx.newPage(), errs = [], posts = [];
+    const p = await ctx.newPage(), errs = [], posts = [], freePosts = [];
     p.on('pageerror', (e) => errs.push(e.message));
     p.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errs.push(m.text()); });
     await p.route('**/api/order/config', (r) => opts.config === null
       ? r.fulfill({ status: 404, body: 'nf' })
       : r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(opts.config || FULL) }));
     await p.route('**/api/order', async (r) => { posts.push(JSON.parse(r.request().postData())); await r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, url: URL + '?paid=1' }) }); });
+    await p.route('**/api/order/free', async (r) => { freePosts.push(JSON.parse(r.request().postData())); const f = opts.free || { status: 200, body: { ok: true } }; await r.fulfill({ status: f.status, contentType: 'application/json', body: JSON.stringify(f.body) }); });
     await p.goto(URL + (opts.qs || ''));
     await p.addStyleTag({ content: KILL });
     await p.waitForTimeout(400);
     console.log('--- ' + name);
-    await fn(p, posts);
+    await fn(p, posts, freePosts);
     ok(errs.length === 0, 'no console errors ' + errs.join(' | '));
     await ctx.close();
   }
@@ -109,12 +110,39 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     await fill(p); await p.click('#om-go'); await p.waitForTimeout(300);
     ok(await p.isVisible('#om-status') && posts.length === 0, 'notice shown and nothing sent');
   });
-  await session('Solo Dev', {}, async (p) => {
+  await session('Solo Dev', {}, async (p, posts, freePosts) => {
     await openModal(p, 'free');
     ok(!(await p.isVisible('#om-express')) && !(await p.isVisible('#om-total')), 'no Express row and no total');
     ok(await text(p, '#om-price') === 'No payment needed. Delivered within 1 day.', 'free text unchanged');
     ok(await text(p, '#om-go span') === 'Get Solo Dev Analysis', 'free button unchanged');
+    await p.fill('#om-steam', 'https://store.steampowered.com/app/123/x/'); await p.fill('#om-email', 'a@b.co');
+    await p.click('#om-go'); await p.waitForTimeout(500);
+    ok(freePosts.length === 1 && posts.length === 0, 'free posts once to /api/order/free and never to /api/order');
+    ok(freePosts[0] && freePosts[0].steam === 'https://store.steampowered.com/app/123/x/' && freePosts[0].email === 'a@b.co' && !('waiver' in freePosts[0]) && !('version' in freePosts[0]), 'free body: ' + JSON.stringify(freePosts[0]));
+    ok(await text(p, '#om-status') === 'Done. I will send your Solo Dev PDF to your email within 1 day.', 'done message: ' + await text(p, '#om-status'));
+    ok(await p.isVisible('#om-status') && !(await p.isVisible('#om-steam')) && !(await p.isVisible('#om-go')), 'the form is hidden and the message shows');
+    await p.keyboard.press('Escape'); await p.waitForTimeout(900);
+    await openModal(p, 'free');
+    ok(await p.isVisible('#om-steam') && await p.isVisible('#om-go') && !(await p.isVisible('#om-status')), 'reopening brings the form back');
   });
+  const FREE_ERRORS = [
+    [422, 'invalid_steam_link', 'Use the link of your Steam store page, the one with /app/ in it.'],
+    [409, 'email_limit', 'This email already received 3 Solo Dev analyses.'],
+    [409, 'game_limit', 'This game already has a Solo Dev analysis.'],
+    [429, 'daily_limit', "Today's free analyses are taken. Try again tomorrow."],
+    [429, 'rate_limited', 'Too many attempts. Nothing was sent. Please wait a few minutes and try again.'],
+    [502, 'x', 'Something went wrong and nothing was sent. Please try again.'],
+  ];
+  for (const [status, error, msg] of FREE_ERRORS) {
+    await session('Solo Dev error ' + error, { free: { status, body: { ok: false, error } } }, async (p, posts) => {
+      await openModal(p, 'free');
+      await p.fill('#om-steam', 'https://store.steampowered.com/app/123/x/'); await p.fill('#om-email', 'a@b.co');
+      await p.click('#om-go'); await p.waitForTimeout(500);
+      ok(await text(p, '#om-err') === msg, error + ': ' + await text(p, '#om-err'));
+      ok(!(await p.isVisible('#om-status')) && await p.isVisible('#om-go') && !(await p.locator('#om-go').isDisabled()), error + ': the form stays and the button works again');
+      ok(posts.length === 0, error + ': nothing sent to /api/order');
+    });
+  }
 
   const clayOf = (p) => p.evaluate(() => { const t = document.createElement('i'); t.style.color = 'var(--clay)'; document.body.appendChild(t); const c = getComputedStyle(t).color; t.remove(); return c; });
   await session('Express switch', {}, async (p) => {

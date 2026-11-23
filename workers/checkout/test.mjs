@@ -874,6 +874,113 @@ async function workerSuite(label, worker) {
     assert.equal(rec.amountMatches, false);
   });
 
+  // ---- Solo Dev (free): POST /api/order/free ---------------------------------------------
+  const resetFree = () => { for (const k of [...kv.keys()]) if (k.startsWith('free:') || k.startsWith('order:rlf:') || k.startsWith('order:')) { kv.delete(k); kvTtl.delete(k); } stripeCalls = []; };
+  let freeIp = 0;
+  const freePost = (body, ip) => call('/api/order/free', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': ip || ('7.7.' + (freeIp >> 8) + '.' + (freeIp++ & 255)) },
+    body: JSON.stringify(body),
+  });
+  const free = (n, extra) => ({ steam: 'https://store.steampowered.com/app/' + n + '/', email: 'dev' + n + '@studio.co', page: '/steam-analysis/', referrer: '', ...extra });
+  const freeKeys = () => [...kv.keys()].filter((k) => k.startsWith('free:'));
+  const freeRecords = () => [...kv.entries()].filter(([k]) => k.startsWith('order:') && !k.startsWith('order:rl') && !k.startsWith('order:paid:')).map(([, v]) => JSON.parse(v));
+  const today = () => new Date().toISOString().slice(0, 10);
+
+  await test(label + ' ' + 'free: success stores the order and the three counters, and makes no Stripe call', async () => {
+    resetFree();
+    const r = await freePost(free(1234, { email: '  Raw.Email@Example.com ' }));
+    assert.equal(r.status, 200);
+    assert.deepEqual(await r.json(), { ok: true });
+    assert.deepEqual(stripeCalls, [], 'stripeCalls stays empty');
+    const recs = freeRecords();
+    assert.equal(recs.length, 1);
+    const rec = recs[0];
+    assert.deepEqual([rec.status, rec.tier, rec.appId, rec.email, rec.steam, rec.page], ['free_new', 'free', '1234', 'Raw.Email@Example.com', 'https://store.steampowered.com/app/1234/', '/steam-analysis/']);
+    for (const f of ['id', 'createdAt', 'referrer', 'ip', 'country']) assert.ok(f in rec, f);
+    assert.equal(kvTtl.get('order:' + rec.id), 30 * 24 * 3600);
+    const code = crypto.createHash('sha256').update('raw.email@example.com').digest('hex');
+    assert.deepEqual(freeKeys().sort(), ['free:app:1234', 'free:day:' + today(), 'free:email:' + code].sort());
+    assert.deepEqual([kv.get('free:email:' + code), kv.get('free:app:1234'), kv.get('free:day:' + today())], ['1', '1', '1']);
+    assert.deepEqual([kvTtl.get('free:email:' + code), kvTtl.get('free:app:1234'), kvTtl.get('free:day:' + today())], [365 * 86400, 365 * 86400, 2 * 86400]);
+  });
+  await test(label + ' ' + 'free: the raw email never appears in a free:* key or value', async () => {
+    resetFree();
+    await freePost(free(2001, { email: 'Secret.Name@Example.com' }));
+    for (const [k, v] of kv.entries()) {
+      if (!k.startsWith('free:')) continue;
+      assert.equal(k.toLowerCase().includes('secret'), false, k);
+      assert.equal(k.toLowerCase().includes('example'), false, k);
+      assert.equal(String(v).includes('@'), false, k);
+    }
+  });
+  await test(label + ' ' + 'free: the 4th order with the same email returns 409 email_limit, and counts nothing', async () => {
+    resetFree();
+    for (const n of [3001, 3002, 3003]) assert.equal((await freePost(free(n, { email: 'same@studio.co' }))).status, 200);
+    const r = await freePost(free(3004, { email: 'SAME@Studio.co' }));   // case does not matter
+    assert.deepEqual([r.status, await r.json()], [409, { ok: false, error: 'email_limit' }]);
+    assert.equal(kv.has('free:app:3004'), false);
+    assert.equal(kv.get('free:day:' + today()), '3');
+    assert.equal(freeRecords().length, 3);
+    assert.deepEqual(stripeCalls, []);
+  });
+  await test(label + ' ' + 'free: a second order for the same Steam app id returns 409 game_limit', async () => {
+    resetFree();
+    assert.equal((await freePost(free(4001, { email: 'a@studio.co' }))).status, 200);
+    const r = await freePost({ ...free(4001, { email: 'b@studio.co' }), steam: 'https://steamcommunity.com/app/4001/' });
+    assert.deepEqual([r.status, await r.json()], [409, { ok: false, error: 'game_limit' }]);
+    assert.equal(freeRecords().length, 1);
+    assert.equal(kv.get('free:day:' + today()), '1');
+  });
+  await test(label + ' ' + 'free: the 6th order of the UTC day returns 429 daily_limit', async () => {
+    resetFree();
+    for (let n = 5001; n <= 5005; n++) assert.equal((await freePost(free(n))).status, 200);
+    const r = await freePost(free(5006));
+    assert.deepEqual([r.status, await r.json()], [429, { ok: false, error: 'daily_limit' }]);
+    assert.equal(freeRecords().length, 5);
+    assert.equal(kv.get('free:day:' + today()), '5');
+  });
+  await test(label + ' ' + 'free: a link without an app id returns 422 invalid_steam_link and stores nothing', async () => {
+    resetFree();
+    for (const steam of ['https://steamcommunity.com/id/someone', 'https://steamcommunity.com/', 'https://store.steampowered.com/', 'https://store.steampowered.com/app/', 'https://store.steampowered.com/app/abc/', 'https://evil.example/app/123/', 'nope', '']) {
+      const r = await freePost(free(6001, { steam }));
+      assert.deepEqual([r.status, (await r.json()).error], [422, 'invalid_steam_link'], steam);
+    }
+    const bad = await freePost(free(6002, { email: 'not-an-email' }));
+    assert.deepEqual([bad.status, (await bad.json()).error], [422, 'invalid_email']);
+    assert.deepEqual([freeKeys(), freeRecords().length, stripeCalls], [[], 0, []]);
+  });
+  await test(label + ' ' + 'free: an app id link on steamcommunity.com and one without a trailing slash are accepted', async () => {
+    resetFree();
+    assert.equal((await freePost(free(7001, { steam: 'https://steamcommunity.com/app/7001' }))).status, 200);
+    assert.equal((await freePost(free(7002, { steam: 'https://store.steampowered.com/app/7002/Some_Game/?l=english' }))).status, 200);
+    assert.deepEqual(freeRecords().map((x) => x.appId).sort(), ['7001', '7002']);
+  });
+  await test(label + ' ' + 'free: per-IP limit is 5 per 600 seconds with its own prefix, then 429 rate_limited', async () => {
+    resetFree();
+    const ip = '9.9.9.9';
+    for (let n = 8001; n <= 8005; n++) assert.equal((await freePost(free(n), ip)).status, 200);
+    const r = await freePost(free(8006), ip);
+    assert.deepEqual([r.status, (await r.json()).error], [429, 'rate_limited']);
+    assert.equal(kvTtl.get('order:rlf:' + ip), 600);
+    assert.equal(kv.has('order:rl:' + ip), false, 'the paid counter is untouched');
+    assert.equal(freeRecords().length, 5);
+  });
+  await test(label + ' ' + 'free: foreign origin 403, GET 405, OPTIONS 204, bad JSON 400', async () => {
+    resetFree();
+    assert.equal((await call('/api/order/free', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://evil.example' }, body: JSON.stringify(free(9001)) })).status, 403);
+    assert.equal((await call('/api/order/free', { method: 'GET' })).status, 405);
+    assert.equal((await call('/api/order/free', { method: 'OPTIONS', headers: { Origin: 'https://spritzconsulting.com' } })).status, 204);
+    assert.equal((await call('/api/order/free', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com' }, body: '{' })).status, 400);
+    assert.deepEqual([freeKeys(), freeRecords().length], [[], 0]);
+  });
+  await test(label + ' ' + 'free: POST /api/order still refuses the free tier with 422 invalid_tier', async () => {
+    resetFree();
+    const r = await post(order({ version: 'free' }));
+    assert.deepEqual([r.status, (await r.json()).error], [422, 'invalid_tier']);
+    assert.deepEqual([freeKeys(), stripeCalls], [[], []]);
+  });
+
 }
 
 await workerSuite('source:', worker);
