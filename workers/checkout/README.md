@@ -104,6 +104,26 @@ An `INDIE-` code gives a buyer who already holds an Indie analysis the Publisher
 The Worker accepts a code only when all of these hold: it starts with `INDIE-`, it is active, its coupon id equals `INDIE_PUBLISHER_COUPON_ID`,
 the order is Publisher, and `times_redeemed` is below `max_redemptions`. A wrong, used or wrong-tier code is ignored without an error and the buyer pays the full price.
 
+## Global discount (PRICE_PERCENT_OFF)
+
+One variable lowers every price by the same percentage: 0 gives the prices as decided, 99 gives test prices (Indie 0.99 EUR,
+Publisher 2.99 EUR, Indie with Express 1.48 EUR), 50 runs a promotion.
+
+- Above 0 the Worker works out the final total for each currency: the price of the code (SOLODEV20, SOLODEV10, INDIE-) first,
+  then the percentage, with Express included. It makes one coupon for that order (amount off per currency, one redemption,
+  gone after 25 hours) and sends it as the only discount, because Checkout takes one discount per session.
+- The Stripe key needs Coupons Write. With an INDIE- code it also needs Promotion codes Write: the Worker switches the code
+  off when the payment arrives, because Stripe does not count the redemption in this mode.
+- Above 50 the value only works with a test key (sk_test_ or rk_test_) or with the variable ALLOW_DEEP_DISCOUNT set to "true".
+  Set that variable on purpose for live tests and remove it after. Without permission the Worker ignores the value and logs it.
+- A total under what Stripe charges (0.50 EUR, 0.50 USD, 0.30 GBP) gives 422 `amount_too_low`.
+- `GET /api/order/config` and `GET /api/order/promo` show the discounted amounts, `percentOff` and the list amounts. Read
+  `percentOff` from the public config to see that the variable is back to 0.
+- The paid record stores `percentOff`, and `amountMatches` checks the paid total against the discounted amount.
+- A race exists: two orders with the same INDIE- code, both started before the first payment, can both pay the discount.
+  The code is switched off at the first payment.
+- INDIE_PUBLISHER_AMOUNTS (JSON, whole units) replaces the built-in 190 / 209 / 158.
+
 ## Delivery date
 
 `business-days.js` holds `addBusinessDays` and `dueDate`. Business days are Monday to Friday except the Italian public

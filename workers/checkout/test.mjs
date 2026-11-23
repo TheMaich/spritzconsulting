@@ -117,8 +117,15 @@ async function workerSuite(label, worker) {
       const data = [...stripePromoCodes.values()].filter((p) => p.code.toUpperCase() === wanted && (q.get('active') !== 'true' || p.active));
       return new Response(JSON.stringify({ object: 'list', data }), { status: 200 });
     }
+    if (href.startsWith('https://api.stripe.com/v1/coupons')) {
+      if ((init.method || 'GET') === 'DELETE') return new Response(JSON.stringify({ id: href.split('/').pop(), deleted: true }), { status: 200 });
+      if (couponStatus !== 200) return new Response(JSON.stringify({ error: { type: 'invalid_request_error', message: 'coupon refused' } }), { status: couponStatus });
+      return new Response(JSON.stringify({ id: 'cpn_order_' + (++couponSeq) }), { status: 200 });
+    }
     return new Response(JSON.stringify({ id: 'cs_test_1', url: 'https://checkout.stripe.com/c/pay/cs_test_1' }), { status: 200 });
   };
+  let couponStatus = 200;
+  let couponSeq = 0;
   const lookups = () => stripeCalls.filter((c) => c.url.startsWith('https://api.stripe.com/v1/promotion_codes'));
   const checkoutCall = () => stripeCalls.filter((c) => c.url === 'https://api.stripe.com/v1/checkout/sessions').pop();
   const call = (path, init, env = baseEnv) => worker.fetch(new Request('https://spritzconsulting.com' + path, init), env);
@@ -663,6 +670,210 @@ async function workerSuite(label, worker) {
     assert.equal(stripeCalls[0].params.get('line_items[0][price]'), 'price_std');
     assert.equal(stripeCalls[0].params.get('line_items[1][price]'), 'price_x_std');
   });
+  // ---- PRICE_PERCENT_OFF: one global discount, one coupon per order ------------------------------
+  const couponCalls = () => stripeCalls.filter((c) => c.url === 'https://api.stripe.com/v1/coupons' && c.method === 'POST');
+  const deleteCalls = () => stripeCalls.filter((c) => c.method === 'DELETE');
+  const pctEnv = (p, extra) => ({ ...baseEnv, PRICE_PERCENT_OFF: p, ...extra });
+  const orderKeys = () => [...kv.keys()].filter((k) => /^order:[0-9a-f-]{36}$/.test(k));
+  const CENTS = (a, b, c) => ({ eur: a, usd: b, gbp: c });
+  // [label, order body, list total in cents, final total in cents at 99 percent]
+  const TABLE99 = [
+    ['Indie', { version: 'standard' }, CENTS(9900, 10900, 8900), CENTS(99, 109, 89)],
+    ['Indie + Express', { version: 'standard', express: true }, CENTS(14800, 15800, 13800), CENTS(148, 158, 138)],
+    ['Indie + SOLODEV20', { version: 'standard', promo: 'SOLODEV20' }, CENTS(9900, 10900, 8900), CENTS(79, 87, 71)],
+    ['Indie + SOLODEV20 + Express', { version: 'standard', promo: 'SOLODEV20', express: true }, CENTS(14800, 15800, 13800), CENTS(128, 136, 120)],
+    ['Publisher', { version: 'premium' }, CENTS(29900, 32900, 24900), CENTS(299, 329, 249)],
+    ['Publisher + Express', { version: 'premium', express: true }, CENTS(39800, 42800, 34800), CENTS(398, 428, 348)],
+    ['Publisher + SOLODEV10', { version: 'premium', promo: 'SOLODEV10' }, CENTS(29900, 32900, 24900), CENTS(269, 296, 224)],
+    ['Publisher + SOLODEV10 + Express', { version: 'premium', promo: 'SOLODEV10', express: true }, CENTS(39800, 42800, 34800), CENTS(368, 395, 323)],
+    ['Publisher + INDIE-', { version: 'premium', promo: 'INDIE-TABLE001' }, CENTS(29900, 32900, 24900), CENTS(190, 209, 158)],
+    ['Publisher + INDIE- + Express', { version: 'premium', promo: 'INDIE-TABLE001', express: true }, CENTS(39800, 42800, 34800), CENTS(289, 308, 257)],
+  ];
+  for (const [name, body, list, final] of TABLE99) {
+    await test(label + ' ' + 'percent 99: ' + name + ' makes one coupon worth list minus ' + final.eur + '/' + final.usd + '/' + final.gbp + ' cents', async () => {
+      stripePromoCodes.clear();
+      const p = addPromo('INDIE-TABLE001');
+      stripeCalls = [];
+      couponStatus = 200;
+      const r = await post(order(body), pctEnv(99));
+      assert.equal(r.status, 200);
+      const cc = couponCalls();
+      assert.equal(cc.length, 1);
+      const cp = cc[0].params;
+      assert.equal(cp.get('currency'), 'eur');
+      assert.equal(cp.get('amount_off'), String(list.eur - final.eur));
+      assert.equal(cp.get('currency_options[usd][amount_off]'), String(list.usd - final.usd));
+      assert.equal(cp.get('currency_options[gbp][amount_off]'), String(list.gbp - final.gbp));
+      assert.equal(cp.get('max_redemptions'), '1');
+      assert.equal(cp.get('duration'), 'once');
+      assert.ok(Number(cp.get('redeem_by')) > Date.now() / 1000 + 24 * 3600);
+      const c = checkoutCall().params;
+      assert.equal(c.get('discounts[0][coupon]'), 'cpn_order_' + couponSeq);
+      assert.equal(c.get('discounts[0][promotion_code]'), null);
+      assert.equal(c.get('discounts[1][coupon]'), null);
+      assert.equal(c.get('metadata[percent_off]'), '99');
+      assert.equal(c.get('metadata[coupon_id]'), 'cpn_order_' + couponSeq);
+      assert.equal(c.get('line_items[0][price]'), body.version === 'premium' ? 'price_prem' : 'price_std');
+      assert.equal(c.get('metadata[express]'), body.express ? 'true' : 'false');
+      if (body.promo) assert.equal(c.get('metadata[promo]'), body.promo);
+      if (body.promo && body.promo.startsWith('INDIE-')) assert.equal(c.get('metadata[promo_id]'), p.id);
+    });
+  }
+  await test(label + ' ' + 'percent 50: Publisher with Express costs half (398 becomes 199 / 214 / 174)', async () => {
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'premium', express: true }), pctEnv(50))).status, 200);
+    const cp = couponCalls()[0].params;
+    assert.equal(cp.get('amount_off'), '19900');
+    assert.equal(cp.get('currency_options[usd][amount_off]'), '21400');
+    assert.equal(cp.get('currency_options[gbp][amount_off]'), '17400');
+  });
+  await test(label + ' ' + 'percent 0, empty or missing: no coupon is made and the session is as before', async () => {
+    for (const v of [0, '0', '', undefined]) {
+      stripeCalls = [];
+      assert.equal((await post(order({ version: 'premium', promo: 'SOLODEV10' }), pctEnv(v))).status, 200);
+      assert.equal(couponCalls().length, 0);
+      assert.equal(checkoutCall().params.get('discounts[0][coupon]'), 'yZBBORrT');
+      assert.equal(checkoutCall().params.get('metadata[percent_off]'), null);
+    }
+  });
+  await test(label + ' ' + 'percent: values that are not whole numbers from 0 to 100 count as 0', async () => {
+    for (const v of [-5, 101, 12.5, 'abc', '1e1x']) {
+      stripeCalls = [];
+      assert.equal((await post(order({ version: 'standard' }), pctEnv(v))).status, 200, String(v));
+      assert.equal(couponCalls().length, 0, String(v));
+      assert.equal(checkoutCall().params.get('discounts[0][coupon]'), null, String(v));
+    }
+  });
+  await test(label + ' ' + 'percent above 50 with a live key needs ALLOW_DEEP_DISCOUNT', async () => {
+    const live = { STRIPE_SECRET_KEY: 'sk_live_x' };
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'standard' }), pctEnv(99, live))).status, 200);
+    assert.equal(couponCalls().length, 0);
+    assert.equal(checkoutCall().params.get('discounts[0][coupon]'), null);
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'standard' }), pctEnv(99, { ...live, ALLOW_DEEP_DISCOUNT: 'true' }))).status, 200);
+    assert.equal(couponCalls().length, 1);
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'standard' }), pctEnv(50, live))).status, 200);
+    assert.equal(couponCalls().length, 1);   // 50 or less needs no permission
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'standard' }), pctEnv(99, { STRIPE_SECRET_KEY: 'rk_test_x' }))).status, 200);
+    assert.equal(couponCalls().length, 1);   // a restricted test key counts as a test key
+  });
+  await test(label + ' ' + 'percent: a total under the Stripe minimum is refused with 422 amount_too_low, nothing stored', async () => {
+    const tiny = { PRICE_AMOUNTS: { eur: { standard: 40, premium: 299 }, usd: { standard: 109, premium: 329 }, gbp: { standard: 89, premium: 249 } } };
+    const before = orderKeys().length;
+    stripeCalls = [];
+    const r = await post(order({ version: 'standard' }), pctEnv(99, tiny));
+    assert.equal(r.status, 422);
+    assert.equal((await r.json()).error, 'amount_too_low');
+    assert.equal(stripeCalls.length, 0);
+    assert.equal(orderKeys().length, before);
+  });
+  await test(label + ' ' + 'percent: a missing list amount refuses the order with 500 not_configured', async () => {
+    const noUsd = { PRICE_AMOUNTS: { eur: { standard: 99, premium: 299 }, gbp: { standard: 89, premium: 249 } } };
+    stripeCalls = [];
+    const r = await post(order({ version: 'standard' }), pctEnv(99, noUsd));
+    assert.equal(r.status, 500);
+    assert.equal(stripeCalls.length, 0);
+  });
+  await test(label + ' ' + 'percent: if Stripe refuses the coupon the order fails with 502 and no session or record is left', async () => {
+    const before = orderKeys().length;
+    stripeCalls = [];
+    couponStatus = 400;
+    try {
+      const r = await post(order({ version: 'premium' }), pctEnv(99));
+      assert.equal(r.status, 502);
+      assert.equal((await r.json()).error, 'checkout_failed');
+      assert.equal(checkoutCall(), undefined);
+      assert.equal(orderKeys().length, before);
+    } finally { couponStatus = 200; }
+  });
+  await test(label + ' ' + 'percent: if the session fails after the coupon was made, the coupon is deleted', async () => {
+    const realFetch = globalThis.fetch;
+    stripeCalls = [];
+    globalThis.fetch = async (url, init = {}) => {
+      if (String(url) === 'https://api.stripe.com/v1/checkout/sessions') {
+        stripeCalls.push({ url: String(url), method: init.method || 'GET', params: new URLSearchParams(init.body || '') });
+        return new Response(JSON.stringify({ error: { type: 'invalid_request_error', message: 'x' } }), { status: 400 });
+      }
+      return realFetch(url, init);
+    };
+    try {
+      const r = await post(order({ version: 'premium' }), pctEnv(99));
+      assert.equal(r.status, 502);
+      assert.equal(deleteCalls().length, 1);
+      assert.equal(deleteCalls()[0].url, 'https://api.stripe.com/v1/coupons/cpn_order_' + couponSeq);
+    } finally { globalThis.fetch = realFetch; }
+  });
+  await test(label + ' ' + 'percent: config shows the discounted amounts, the percentage and the list amounts', async () => {
+    const j = await (await call('/api/order/config', { method: 'GET' }, pctEnv(99))).json();
+    assert.equal(j.percentOff, 99);
+    assert.deepEqual(j.amounts.standard, { eur: 0.99, usd: 1.09, gbp: 0.89 });
+    assert.deepEqual(j.amounts.premium, { eur: 2.99, usd: 3.29, gbp: 2.49 });
+    assert.deepEqual(j.express.standard, { eur: 0.49, usd: 0.49, gbp: 0.49 });
+    assert.deepEqual(j.express.premium, { eur: 0.99, usd: 0.99, gbp: 0.99 });
+    assert.deepEqual(j.listAmounts, FULL_CONFIG.amounts);
+    assert.deepEqual(j.listExpress, FULL_CONFIG.express);
+    const off = await (await call('/api/order/config', { method: 'GET' }, pctEnv(0))).json();
+    assert.deepEqual(off, FULL_CONFIG);   // no new fields when the discount is off
+  });
+  await test(label + ' ' + 'percent: /api/order/promo shows the code price after the percentage', async () => {
+    const r = await call('/api/order/promo?code=SOLODEV10', { method: 'GET', headers: { 'CF-Connecting-IP': '9.9.9.9' } }, pctEnv(50));
+    assert.deepEqual(await r.json(), { valid: true, tier: 'premium', amounts: { eur: 134.5, usd: 148, gbp: 112 }, listAmounts: { eur: 269, usd: 296, gbp: 224 }, percentOff: 50 });
+  });
+  await test(label + ' ' + 'percent: INDIE_PUBLISHER_AMOUNTS variable replaces the default amounts, and a broken one falls back', async () => {
+    stripePromoCodes.clear();
+    addPromo('INDIE-VAR00001');
+    const r1 = await call('/api/order/promo?code=INDIE-VAR00001', { method: 'GET', headers: { 'CF-Connecting-IP': '9.9.9.8' } }, { ...baseEnv, INDIE_PUBLISHER_AMOUNTS: JSON.stringify({ eur: 180, usd: 199, gbp: 150 }) });
+    assert.deepEqual((await r1.json()).amounts, { eur: 180, usd: 199, gbp: 150 });
+    const r2 = await call('/api/order/promo?code=INDIE-VAR00001', { method: 'GET', headers: { 'CF-Connecting-IP': '9.9.9.7' } }, { ...baseEnv, INDIE_PUBLISHER_AMOUNTS: '{"eur":180}' });
+    assert.deepEqual((await r2.json()).amounts, { eur: 190, usd: 209, gbp: 158 });
+  });
+  await test(label + ' ' + 'percent webhook: an INDIE- order is checked at the discounted total, the code is switched off and the coupon deleted', async () => {
+    stripePromoCodes.clear();
+    const p = addPromo('INDIE-HOOK0001');
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'premium', express: true, promo: 'INDIE-HOOK0001' }), pctEnv(99))).status, 200);
+    const id = orderKeys().pop().slice(6);
+    const couponId = 'cpn_order_' + couponSeq;
+    const created = Math.floor(new Date('2026-11-17T10:00:00+01:00').getTime() / 1000);
+    const ev = JSON.stringify({ type: 'checkout.session.completed', created, data: { object: {
+      id: 'cs_pct_1', payment_status: 'paid', amount_total: 289, currency: 'eur', total_details: { amount_discount: 39511 },
+      metadata: { order_id: id, tier: 'premium', express: 'true', promo: 'INDIE-HOOK0001', promo_id: p.id, percent_off: '99', coupon_id: couponId } } } });
+    stripeCalls = [];
+    assert.equal((await call('/api/order/webhook', { method: 'POST', headers: signed(ev), body: ev })).status, 200);
+    const rec = JSON.parse(kv.get('order:' + id));
+    assert.deepEqual([rec.percentOff, rec.promo, rec.discountApplied, rec.expectedTotal, rec.amountMatches, rec.listTotal], [99, 'INDIE-HOOK0001', true, 289, true, 39800]);
+    const off = stripeCalls.find((c) => c.method === 'POST' && c.url === 'https://api.stripe.com/v1/promotion_codes/' + p.id);
+    assert.ok(off, 'promotion code switched off');
+    assert.equal(off.params.get('active'), 'false');
+    assert.ok(stripeCalls.find((c) => c.method === 'DELETE' && c.url === 'https://api.stripe.com/v1/coupons/' + couponId), 'coupon deleted');
+    // Stripe may send the event twice: the second delivery does nothing more.
+    stripeCalls = [];
+    const again = await call('/api/order/webhook', { method: 'POST', headers: signed(ev), body: ev });
+    assert.equal((await again.json()).duplicate, true);
+    assert.equal(stripeCalls.length, 0);
+  });
+  await test(label + ' ' + 'percent webhook: a percentage without a code is recorded and the total is checked (Indie in GBP at 99 percent)', async () => {
+    stripeCalls = [];
+    assert.equal((await post(order({ version: 'standard' }), pctEnv(99))).status, 200);
+    const id = orderKeys().pop().slice(6);
+    const couponId = 'cpn_order_' + couponSeq;
+    const created = Math.floor(new Date('2026-11-17T10:00:00+01:00').getTime() / 1000);
+    const mk = (sid, total) => JSON.stringify({ type: 'checkout.session.completed', created, data: { object: {
+      id: sid, payment_status: 'paid', amount_total: total, currency: 'gbp', total_details: { amount_discount: 8811 },
+      metadata: { order_id: id, tier: 'standard', express: 'false', percent_off: '99', coupon_id: couponId } } } });
+    const good = mk('cs_pct_2', 89);
+    assert.equal((await call('/api/order/webhook', { method: 'POST', headers: signed(good), body: good })).status, 200);
+    let rec = JSON.parse(kv.get('order:' + id));
+    assert.deepEqual([rec.percentOff, rec.promo, rec.expectedTotal, rec.amountMatches], [99, undefined, 89, true]);
+    const bad = mk('cs_pct_3', 8900);   // the full price paid by mistake
+    assert.equal((await call('/api/order/webhook', { method: 'POST', headers: signed(bad), body: bad })).status, 200);
+    rec = JSON.parse(kv.get('order:' + id));
+    assert.equal(rec.amountMatches, false);
+  });
+
 }
 
 await workerSuite('source:', worker);

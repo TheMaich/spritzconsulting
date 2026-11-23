@@ -25,12 +25,30 @@
  *   against PROMOS and never reaches Stripe. The lookup must return an active code on the coupon in
  *   INDIE_PUBLISHER_COUPON_ID with times_redeemed below max_redemptions, and the order must be Publisher. The session
  *   then sends discounts[0][promotion_code]. Anything else is ignored silently and charges the full price.
+ * - Global discount: PRICE_PERCENT_OFF (whole percent, default 0). Above 0 the Worker works out the final total per currency
+ *   (the code price first, then the percentage, Express included) and makes ONE coupon for the order with an amount per
+ *   currency, because Stripe Checkout takes one discount per session. The coupon lives 25 hours; the webhook deletes it
+ *   after payment and switches an INDIE- code off (Stripe does not count that redemption in this mode). Above 50 it needs a
+ *   test key or ALLOW_DEEP_DISCOUNT=true. With 0 the Worker behaves as described above and makes no coupon.
  * - Solo Dev (free) does not go through this Worker.
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
  * - No notification email yet; read orders from KV (see README).
  */
 
 // ---- business-days.js ----------------------------------------------------------------
+/**
+ * Business-day helper for delivery due dates.
+ *
+ * A business day is Monday to Friday and not an Italian public holiday.
+ * The holiday list is hard-coded for 2026 and 2027 only. Outside those two
+ * years the helper skips weekends only and reports approx: true, so a due date
+ * is never silently wrong. Add the 2028 list before the end of 2027.
+ *
+ * Day 0 rule: an order paid on a business day up to 12:00 Europe/Rome counts
+ * from that day (day 0). Paid after 12:00, or on a weekend or holiday, it counts
+ * from the next business day (day 0). The due date is day 0 plus N business days.
+ */
+
 const FIRST_YEAR = 2026;
 const LAST_YEAR = 2027;
 
@@ -130,7 +148,15 @@ const TIERS = {
 // (list 299 / 329 / 249). Express is added on top at its list amount.
 const INDIE_PREFIX = 'INDIE-';
 const INDIE_TIER = 'premium';
+// Default amounts; the variable INDIE_PUBLISHER_AMOUNTS ({ eur, usd, gbp }) overrides them (see indieAmounts).
 const INDIE_PUBLISHER_AMOUNTS = { eur: 190, usd: 209, gbp: 158 };
+
+// PRICE_PERCENT_OFF lowers every price by the same percentage (0 = prices as decided, 99 = test prices, 50 = a promotion).
+// Above DEEP_DISCOUNT_LIMIT it only works with a test key or with ALLOW_DEEP_DISCOUNT set to "true".
+const DEEP_DISCOUNT_LIMIT = 50;
+const COUPON_LIFETIME_SECONDS = 25 * 60 * 60;
+// Smallest amount Stripe charges, in cents.
+const MIN_CHARGE_CENTS = { eur: 50, usd: 50, gbp: 30 };
 
 const ORDER_TTL_SECONDS = 30 * 24 * 60 * 60;
 const RATE_WINDOW_SECONDS = 600;
@@ -179,6 +205,42 @@ function asObject(value) {
     try { return JSON.parse(value) || {}; } catch (err) { return {}; }
   }
   return value && typeof value === 'object' ? value : {};
+}
+
+// Indie to Publisher amounts: the variable INDIE_PUBLISHER_AMOUNTS, or the defaults when it is missing or incomplete.
+function indieAmounts(env) {
+  const obj = asObject(env.INDIE_PUBLISHER_AMOUNTS);
+  const out = {};
+  for (const currency of CURRENCIES) {
+    const n = Number(obj[currency]);
+    if (!(n > 0)) return { ...INDIE_PUBLISHER_AMOUNTS };
+    out[currency] = n;
+  }
+  return out;
+}
+
+// The global discount in whole percent, 0 to 100. Anything else, or a deep discount without permission, counts as 0.
+function percentOff(env) {
+  const raw = env.PRICE_PERCENT_OFF;
+  if (raw === undefined || raw === null || String(raw).trim() === '') return 0;
+  const n = Number(String(raw).trim());
+  if (!Number.isInteger(n) || n < 0 || n > 100) {
+    console.log('PRICE_PERCENT_OFF ignored: not a whole number from 0 to 100');
+    return 0;
+  }
+  if (n > DEEP_DISCOUNT_LIMIT) {
+    const testKey = /^(sk|rk)_test_/.test(String(env.STRIPE_SECRET_KEY || ''));
+    if (!testKey && String(env.ALLOW_DEEP_DISCOUNT).toLowerCase() !== 'true') {
+      console.log('PRICE_PERCENT_OFF above ' + DEEP_DISCOUNT_LIMIT + ' ignored: needs a test key or ALLOW_DEEP_DISCOUNT');
+      return 0;
+    }
+  }
+  return n;
+}
+
+// An amount in whole units after the percentage, to the cent: applyPercent(299, 99) is 2.99.
+function applyPercent(value, pct) {
+  return Math.round(Math.round(value * 100) * (100 - pct) / 100) / 100;
 }
 
 function expressEnabled(env) {
@@ -231,7 +293,18 @@ function publicConfig(env) {
     const e = expressFor(env, tier);
     if (e) express[tier] = e.amounts;
   }
-  return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
+  const pct = percentOff(env);
+  if (!pct) return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
+  // With a global discount the amounts are the discounted ones; the list amounts stay available.
+  const cut = (tree) => {
+    const out = {};
+    for (const tier of Object.keys(tree)) {
+      out[tier] = {};
+      for (const currency of CURRENCIES) out[tier][currency] = applyPercent(tree[tier][currency], pct);
+    }
+    return out;
+  };
+  return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts: cut(amounts), express: cut(express), percentOff: pct, listAmounts: amounts, listExpress: express };
 }
 
 // ---- Promotion codes --------------------------------------------------------------------
@@ -305,7 +378,7 @@ async function findIndiePromo(env, code, tier) {
     const max = Number(found.max_redemptions);
     const used = Number(found.times_redeemed || 0);
     if (!(max >= 1) || !(used < max)) return null;
-    return { code: key, tier: INDIE_TIER, promotionCode: String(found.id), amounts: { ...INDIE_PUBLISHER_AMOUNTS } };
+    return { code: key, tier: INDIE_TIER, promotionCode: String(found.id), amounts: indieAmounts(env) };
   } catch (err) {
     console.log('indie code lookup failed: ' + (err && err.message));
     return null;
@@ -331,18 +404,35 @@ async function resolvePromoAnyTier(env, code) {
 function paidPromo(env, code, tier) {
   const key = normalizeCode(code);
   if (!key) return null;
-  if (isIndieCode(key)) return tier === INDIE_TIER ? { code: key, tier, amounts: { ...INDIE_PUBLISHER_AMOUNTS } } : null;
+  if (isIndieCode(key)) return tier === INDIE_TIER ? { code: key, tier, amounts: indieAmounts(env) } : null;
   return findPromo(env, key, tier);
 }
 
 // Total the customer should pay in the currency Stripe used, in the smallest unit, or null when it is not configured.
 // With a promotion the base is the discounted amount; Express is added at its list amount.
-function expectedTotal(env, tier, express, currency, promo) {
+function expectedTotal(env, tier, express, currency, promo, pct = 0) {
   const base = promo ? Number(promo.amounts[currency]) : amountFor(env.PRICE_AMOUNTS, tier, currency);
   if (!base) return null;
-  if (!express) return Math.round(base * 100);
-  const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
-  return extra ? Math.round((base + extra) * 100) : null;
+  let cents = Math.round(base * 100);
+  if (express) {
+    const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
+    if (!extra) return null;
+    cents = Math.round((base + extra) * 100);
+  }
+  return pct ? Math.round(cents * (100 - pct) / 100) : cents;
+}
+
+// With a global discount: per currency, in cents, the list total (no code, no percentage), the final total and the
+// difference, or null when a list amount is missing. The code price comes first, then the percentage; Express is included.
+function priceBreakdown(env, tier, express, promo, pct) {
+  const out = {};
+  for (const currency of CURRENCIES) {
+    const list = expectedTotal(env, tier, !!express, currency, null, 0);
+    const final = expectedTotal(env, tier, !!express, currency, promo, pct);
+    if (list == null || final == null) return null;
+    out[currency] = { list, final, discount: list - final };
+  }
+  return out;
 }
 
 // ---- Rate limit (same shape as contact-form, own key prefix) ---------------------------
@@ -357,7 +447,48 @@ async function checkRateLimit(env, ip, prefix = 'order:rl:', limit = ORDERS_PER_
 
 // ---- Stripe ------------------------------------------------------------------------------
 
-async function createCheckoutSession(env, order, lines, origin, promo) {
+// Stripe Checkout takes one discount per session, so a global percentage and a code price become one coupon made
+// for this order: one amount per currency, one redemption, gone after 25 hours. Returns the coupon id.
+async function createOrderCoupon(env, orderId, breakdown) {
+  const params = new URLSearchParams();
+  params.set('duration', 'once');
+  params.set('max_redemptions', '1');
+  params.set('redeem_by', String(Math.floor(Date.now() / 1000) + COUPON_LIFETIME_SECONDS));
+  params.set('name', 'Order ' + orderId.slice(0, 8));
+  params.set('currency', 'eur');
+  params.set('amount_off', String(breakdown.eur.discount));
+  params.set('currency_options[usd][amount_off]', String(breakdown.usd.discount));
+  params.set('currency_options[gbp][amount_off]', String(breakdown.gbp.discount));
+  const response = await fetch('https://api.stripe.com/v1/coupons', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+  const text = await response.text();
+  let coupon = null;
+  try { coupon = JSON.parse(text); } catch (err) { /* not JSON */ }
+  if (!response.ok || !coupon || !coupon.id) {
+    const detail = coupon && coupon.error ? (coupon.error.code || coupon.error.type) + ': ' + coupon.error.message : text.slice(0, 200);
+    throw new Error('stripe_coupon_' + response.status + ' ' + detail);
+  }
+  return String(coupon.id);
+}
+
+// Best effort: a failure only goes to the log.
+async function stripeCleanup(env, method, path, body) {
+  try {
+    const response = await fetch('https://api.stripe.com/v1/' + path, {
+      method,
+      headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    });
+    if (!response.ok) console.log('stripe cleanup failed: ' + method + ' ' + path + ' ' + response.status);
+  } catch (err) {
+    console.log('stripe cleanup failed: ' + method + ' ' + path + ' ' + (err && err.message));
+  }
+}
+
+async function createCheckoutSession(env, order, lines, origin, promo, orderCoupon, pct) {
   const params = new URLSearchParams();
   params.set('mode', 'payment');
   lines.forEach((priceId, i) => {
@@ -370,7 +501,17 @@ async function createCheckoutSession(env, order, lines, origin, promo) {
   params.set('metadata[game_url]', clip(order.steam, 500));
   params.set('metadata[tier]', order.tier);
   params.set('metadata[express]', order.express ? 'true' : 'false');
-  if (promo) {
+  if (orderCoupon) {
+    // Global discount: one coupon made for this order covers the code price and the percentage. The webhook deletes it,
+    // and switches an INDIE- code off, once the payment arrives.
+    params.set('discounts[0][coupon]', orderCoupon);
+    params.set('metadata[coupon_id]', orderCoupon);
+    params.set('metadata[percent_off]', String(pct));
+    if (promo) {
+      params.set('metadata[promo]', promo.code);
+      if (promo.promotionCode) params.set('metadata[promo_id]', promo.promotionCode);
+    }
+  } else if (promo) {
     // The coupon is limited to the tier's product in Stripe, so the Express line is never discounted.
     // An INDIE- code goes in as its promotion code (which Stripe counts as one redemption); a PROMOS code goes in as its coupon.
     if (promo.promotionCode) params.set('discounts[0][promotion_code]', promo.promotionCode);
@@ -479,6 +620,23 @@ async function handleOrder(request, env) {
   // Only an INDIE- code on a Publisher order is looked up in Stripe.
   const promo = await resolvePromo(env, body.promo, tier);
 
+  // Global discount: work out the totals now. A missing amount, or a total under what Stripe charges, stops the order here.
+  const pct = percentOff(env);
+  let breakdown = null;
+  if (pct > 0) {
+    breakdown = priceBreakdown(env, tier, !!express, promo, pct);
+    if (!breakdown) {
+      console.log('order not configured: a list amount is missing for the global discount');
+      return json(500, { ok: false, error: 'not_configured' }, origin);
+    }
+    for (const currency of CURRENCIES) {
+      if (breakdown[currency].final < MIN_CHARGE_CENTS[currency] || breakdown[currency].discount <= 0) {
+        console.log('order refused: the discounted total is under the Stripe minimum or has no discount in ' + currency);
+        return json(422, { ok: false, error: 'amount_too_low' }, origin);
+      }
+    }
+  }
+
   const id = crypto.randomUUID();
   const key = 'order:' + id;
   const order = {
@@ -505,13 +663,16 @@ async function handleOrder(request, env) {
   const lines = [basePrice];
   if (express) lines.push(express.priceId);
   const successOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  let orderCoupon = '';
   try {
-    const session = await createCheckoutSession(env, order, lines, successOrigin, promo);
+    if (breakdown) orderCoupon = await createOrderCoupon(env, id, breakdown);
+    const session = await createCheckoutSession(env, order, lines, successOrigin, promo, orderCoupon, pct);
     order.stripeSessionId = session.id;
     await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
     return json(200, { ok: true, url: session.url }, origin);
   } catch (err) {
     console.log('checkout session failed: ' + (err && err.message));
+    if (orderCoupon) await stripeCleanup(env, 'DELETE', 'coupons/' + encodeURIComponent(orderCoupon));
     await env.CONTACT_SUBMISSIONS.delete(key);
     return json(502, { ok: false, error: 'checkout_failed' }, origin);
   }
@@ -525,7 +686,11 @@ async function handlePromo(request, env) {
   if (!(await checkRateLimit(env, ip, 'order:rlp:', PROMO_CHECKS_PER_WINDOW))) return json(429, { ok: false, error: 'rate_limited' }, origin);
   const promo = await resolvePromoAnyTier(env, new URL(request.url).searchParams.get('code'));
   if (!promo) return json(200, { valid: false }, origin);
-  return json(200, { valid: true, tier: promo.tier, amounts: promo.amounts }, origin);
+  const pct = percentOff(env);
+  if (!pct) return json(200, { valid: true, tier: promo.tier, amounts: promo.amounts }, origin);
+  const cut = {};
+  for (const currency of CURRENCIES) cut[currency] = applyPercent(promo.amounts[currency], pct);
+  return json(200, { valid: true, tier: promo.tier, amounts: cut, listAmounts: promo.amounts, percentOff: pct }, origin);
 }
 
 async function handleWebhook(request, env) {
@@ -583,6 +748,9 @@ async function handleWebhook(request, env) {
   // A promotion is recorded only when Stripe took money off (total_details.amount_discount above 0). The code comes from the
   // session metadata; an order saved by an earlier version of the Worker carries it in the record instead.
   const promoCode = String(meta.promo || order.promo || '');
+  const pct = Number.isInteger(Number(meta.percent_off)) && Number(meta.percent_off) > 0 && Number(meta.percent_off) <= 100 ? Number(meta.percent_off) : 0;
+  delete order.percentOff;
+  if (pct) order.percentOff = pct;
   const discount = Number(session.total_details && session.total_details.amount_discount);
   const discounted = !!promoCode && discount > 0;
   delete order.promo;
@@ -596,7 +764,7 @@ async function handleWebhook(request, env) {
   // Stripe chose the currency, so the expected total is worked out now, from the currency it used.
   // With a discount the base is the discounted amount (it counts only while the code still maps to this tier); without one it is the list amount.
   const promo = discounted ? paidPromo(env, promoCode, order.tier) : null;
-  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo);
+  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo, pct);
   order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
   if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
   order.listTotal = expectedTotal(env, order.tier, !!order.express, session.currency, null);
@@ -607,6 +775,13 @@ async function handleWebhook(request, env) {
 
   await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
   await env.CONTACT_SUBMISSIONS.put(paidKey, paidAt.toISOString(), { expirationTtl: ORDER_TTL_SECONDS });
+
+  // Global discount cleanup, after the record is safe. An INDIE- code is not redeemed by Stripe in this mode (the order
+  // coupon carried the discount), so it is switched off here. The order coupon is deleted; the discount already applied stays.
+  if (meta.promo_id && promoCode.startsWith(INDIE_PREFIX)) {
+    await stripeCleanup(env, 'POST', 'promotion_codes/' + encodeURIComponent(meta.promo_id), 'active=false');
+  }
+  if (meta.coupon_id) await stripeCleanup(env, 'DELETE', 'coupons/' + encodeURIComponent(meta.coupon_id));
   return json(200, { ok: true }, '');
 }
 
