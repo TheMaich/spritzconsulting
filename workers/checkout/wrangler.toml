@@ -2,19 +2,21 @@ name = "checkout"
 main = "worker.js"
 compatibility_date = "2026-07-20"
 
-# Order endpoints for the Steam Analysis page: /api/order, /api/order/config, /api/order/webhook.
+# Order endpoints for the Steam Analysis page: /api/order, /api/order/config, /api/order/webhook, /api/order/promo, /api/order/free.
 # The contact-form Worker keeps /api/contact; the two never overlap.
 routes = [
   { pattern = "spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" },
   { pattern = "www.spritzconsulting.com/api/order*", zone_name = "spritzconsulting.com" }
 ]
 
-# Same KV namespace as contact-form. This Worker only touches keys that start with "order:".
+# Same KV namespace as contact-form. This Worker only touches keys that start with "order:" or "free:".
 [[kv_namespaces]]
 binding = "CONTACT_SUBMISSIONS"
 id = "151a51cc4d7b4e0c827dce67a3b15813"
 
 [vars]
+# Notification email (see README, "Notification email"): NOTIFY_URL, NOTIFY_SECRET and NOTIFY_TO are not kept here.
+# Set them as secrets (npx wrangler secret put NAME) or in the dashboard. Without all three the Worker sends no email.
 # MOVING TO LIVE: three things change, nothing else in this file.
 #   1. PRICES                the two tier price ids (live products, not the sandbox ids below).
 #   2. EXPRESS_PRICES        the two Express price ids from the live Express products (repeat them under eur, usd, gbp).
@@ -54,6 +56,24 @@ EXPRESS_AMOUNTS = { eur = { standard = 49, premium = 99 }, usd = { standard = 49
 #   SOLODEV10  Publisher   minus 30 EUR / 33 USD / 25 GBP  (coupon yZBBORrT)
 PROMOS = { SOLODEV20 = { tier = "standard", coupon = "V7V7n4Fm", active = true, amounts = { eur = 79, usd = 87, gbp = 71 } }, SOLODEV10 = { tier = "premium", coupon = "yZBBORrT", active = true, amounts = { eur = 269, usd = 296, gbp = 224 } } }
 
+# Indie to Publisher codes (INDIE-...). One-time promotion codes made by hand in Stripe on the coupon "Indie Publisher"
+# (Publisher product only, 109 EUR / 120 USD / 91 GBP off, so Publisher costs 190 / 209 / 158). The Worker looks an INDIE- code up
+# in Stripe and accepts it only when its coupon id equals this value. See the README for the dashboard steps.
+# PASTE THE REAL ID HERE: Stripe dashboard > Product catalogue > Coupons > Indie Publisher > Details > ID.
+# The Cloudflare dashboard does not read this file: add INDIE_PUBLISHER_COUPON_ID there as a plain text variable too.
+# While the value starts with REPLACE, every INDIE- code is ignored and the order is charged in full. Sandbox and live have
+# different coupons, so the live id replaces this one when the live coupon exists.
+INDIE_PUBLISHER_COUPON_ID = "xNfXQp7l"
+
+# Indie to Publisher amounts in whole units (list 299 / 329 / 249). Optional: without it the Worker uses 190 / 209 / 158.
+INDIE_PUBLISHER_AMOUNTS = { eur = 190, usd = 209, gbp = 158 }
+
+# Global discount in whole percent: 0 = prices as decided, 99 = test prices, 50 = a promotion. Add it in the dashboard too.
+# Above 50 it only works with a test key or with ALLOW_DEEP_DISCOUNT = "true" (a second variable, set on purpose and removed after).
+# With a value above 0 the Worker makes one coupon per order, which needs Coupons Write on the Stripe key (and Promotion codes Write
+# to switch an INDIE- code off after payment). With 0 nothing changes: no coupon is made.
+PRICE_PERCENT_OFF = 0
+
 # Secrets (never in this file). Set them with:
-#   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key, Checkout Sessions: Write only)
+#   npx wrangler secret put STRIPE_SECRET_KEY       (restricted key: Checkout Sessions Write, Promotion Codes Read, Coupons Read)
 #   npx wrangler secret put STRIPE_WEBHOOK_SECRET   (signing secret of the /api/order/webhook endpoint)

@@ -1012,7 +1012,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "Is the Solo Dev Tier really free?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with five slides, no Steam page review and no market visibility section."
+            "text": "The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with five slides, no Steam page review and no market visibility section. Each game gets one Solo Dev analysis."
           }
         },
         {
@@ -1287,7 +1287,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   no accuracy claim until the back-test, no Raw Fury titles. Case studies live on the homepage, not here.
   Still open before launch. Then set robots to "index, follow", add the page to sitemap.xml and llms.txt,
   and link it from the four Steam calculators:
-  1. Order form: Indie and Publisher post to the checkout Worker (workers/checkout, /api/order). Still needed: deploy it, add the Stripe secrets, live price ids, Express products. Solo Dev is still a notice only.
+  1. Order form: Indie and Publisher post to the checkout Worker (workers/checkout, /api/order). Still needed: deploy it, add the Stripe secrets, live price ids, Express products. Solo Dev posts to /api/order/free (stored in KV, delivered by hand).
   2. Refund wording and the withdrawal waiver at checkout: accountant or lawyer; link full terms. (The refund FAQ was removed from the page; terms must say it.)
   3. The EUR 120 consultation and the booking link are no longer on the page: decide where they go.
   5. Order form removed with the Start section: the version buttons point to /#contact until the real order flow exists.
@@ -1341,7 +1341,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           </div>
         </div>
         <a class="btn sa-buy" href="/#contact" data-order="free"><span>Get Solo Dev Analysis</span></a>
-        <p class="sa-limit">Each email gets a maximum of 3 analyses.</p>
+        <p class="sa-limit">Each email gets a maximum of 3 analyses. Each game gets one Solo Dev analysis.</p>
       </div>
       <div class="sa-tier">
         <h3><em>Indie</em> <span class="an">Analysis</span></h3>
@@ -1458,7 +1458,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-2" hidden>
-          <p>The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with five slides, no Steam page review and no market visibility section.</p>
+          <p>The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with five slides, no Steam page review and no market visibility section. Each game gets one Solo Dev analysis.</p>
         </div>
       </div>
       <div class="faq-item">

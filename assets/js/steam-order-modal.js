@@ -21,25 +21,16 @@
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
     <p class="om-fine om-follow" id="om-follow" hidden>We’ll send your Solo Dev PDF, then one follow-up email with an offer. Unsubscribe anytime.</p>
     <div class="om-extra" id="om-extra" hidden>
-      <p class="om-hint" id="om-hint">Every detail you share makes the forecasts a little more accurate. Each of these three is optional, but every one you add tightens the numbers.</p>
-      <div class="om-field"><label class="om-label" for="om-quarter">Release (optional)</label>
-        <select id="om-quarter" name="quarter"><option value="">Choose a quarter</option></select></div>
-      <div class="om-row">
-        <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
-          <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Enter your real count if you have it"></div>
-        <div class="om-field"><label class="om-label" for="om-pr">Planned price, USD (optional)</label>
-          <input id="om-pr" name="price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="19.99"></div>
-      </div>
+      <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
+        <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Enter your real count if you have it"></div>
     </div>
-    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Tell me about your team, release plans or anything else that helps"></textarea></div>
+    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="4" data-lenis-prevent></textarea></div>
 
     <label class="om-chk om-express" id="om-express" hidden><span class="om-express-copy"><span class="om-express-title">Express</span><span class="om-express-time" id="om-express-time"></span></span><span class="om-express-price" id="om-express-price"></span><input type="checkbox" role="switch" name="express" aria-label="Express delivery" disabled></label>
     <p class="om-total" id="om-total" hidden></p>
 
-    <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is delivered.</span></label>
     <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
 
-    <p class="om-fine">I use your email and Steam link to make and send your analysis, and I delete them after 30 days. By paying you accept the <a class="sa-link" href="/privacy/">Terms and privacy policy</a>.</p>
     <p class="om-err" id="om-err" role="alert" hidden></p>
     <!-- Paid tiers post to /api/order (workers/checkout). Solo Dev and an unreachable Worker show the notice below. -->
     <button class="btn sa-buy om-submit" type="submit" id="om-go"><span>Get Solo Dev Analysis</span></button>
@@ -68,19 +59,6 @@
       window.zaraz.track(ev, d);
     } catch (err) { /* analytics must never break the order form */ }
   }
-  (function quarters() {                                  /* release quarters, from now up to two years ahead */
-    var sel = document.getElementById('om-quarter'), now = new Date(), y = now.getFullYear(), q = Math.floor(now.getMonth() / 3);
-    var out = document.createElement('option'); out.value = 'released'; out.textContent = 'Already released'; sel.appendChild(out);
-    var span = ['Jan to Mar', 'Apr to Jun', 'Jul to Sep', 'Oct to Dec'];
-    for (var i = 0; i <= 8; i++) {
-      var o = document.createElement('option');
-      o.value = y + '-Q' + (q + 1); o.textContent = 'Q' + (q + 1) + ' ' + y + ' (' + span[q] + ')';
-      sel.appendChild(o);
-      if (++q === 4) { q = 0; y++; }
-    }
-    var nd = document.createElement('option'); nd.value = 'undecided'; nd.textContent = 'Not decided yet';
-    sel.appendChild(nd);
-  })();
   /* ---- Prices and Express, shown for information. Stripe chooses the currency at checkout, so the modal lists
      all three. Express shows only when the order Worker says it is on and has an amount in every currency. ---- */
   var SYMBOL = { eur: '€', usd: '$', gbp: '£' }, ORDER = ['eur', 'usd', 'gbp'];
@@ -151,25 +129,27 @@
       .catch(function () { cfg = null; cfgState = 'failed'; })
       .then(renderOrder);
   }
+  var NOTE_HINT = {
+    standard: 'Optional. A few details make the forecasts more accurate: your planned release (a quarter is enough), your wishlists today and the planned price in USD. Your team or anything else that helps is welcome too.',
+    premium: 'Optional. A few details make the forecasts more accurate: your planned release (a quarter is enough) and the planned price in USD. Your team or anything else that helps is welcome too.'
+  };
   function pick(v) {
     if (!T[v]) v = 'free';
     form.elements.version.value = v;
     var paid = (v !== 'free');
     document.getElementById('om-title').textContent = T[v].title;
-    document.getElementById('om-waiver').hidden = !paid;
-    form.elements.waiver.required = paid;
-    /* Free: Steam link and email only. Standard: plus the optional release quarter, wishlist count and planned price,
-       and a free-text note. Premium: the same three optional fields, no note. */
+    /* Free: Steam link and email only. Standard: plus one optional free-text note. Premium: the same note and an
+       optional wishlist count. What used to be separate optional fields (release, wishlists, planned price) is now a
+       hint inside the note, so the form stays short. */
     var prem = (v === 'premium'), std = (v === 'standard');
-    document.getElementById('om-notes-wrap').hidden = !std;
+    document.getElementById('om-notes-wrap').hidden = !paid;
+    form.elements.notes.placeholder = NOTE_HINT[v] || '';
     document.getElementById('om-news').hidden = !paid;
     document.getElementById('om-follow').hidden = paid;
-    document.getElementById('om-extra').hidden = !(prem || std);
-    form.elements.notes.disabled = !std;
+    document.getElementById('om-extra').hidden = !prem;
+    form.elements.notes.disabled = !paid;
     form.elements.news.disabled = !paid;
-    form.elements.quarter.disabled = !(prem || std);
-    form.elements.wishlists.disabled = !(prem || std);
-    form.elements.price.disabled = !(prem || std);
+    form.elements.wishlists.disabled = !prem;
     form.elements.express.checked = false;
     renderOrder();
     if (paid) loadConfig();
@@ -243,6 +223,7 @@
   function open(v, trigger) {
     if (busy) return;
     last = trigger || null;
+    restoreForm();
     pick(v);
     track('order_form_open', { tier: form.elements.version.value, source: trigger ? 'card' : 'url' });
     document.getElementById('om-status').hidden = true;
@@ -379,6 +360,48 @@
   form.querySelectorAll('input,textarea').forEach(function (n) {
     n.addEventListener('input', function () { n.removeAttribute('aria-invalid'); });
   });
+  /* Solo Dev: one POST to /api/order/free. On success the form fields give way to a short confirmation, and open() brings them back. */
+  var STATUS_NOTICE = document.getElementById('om-status').textContent;
+  function showDone() {
+    Array.prototype.forEach.call(form.children, function (n) {
+      if (n.hidden || n.classList.contains('om-close') || n.classList.contains('kicker') || n.id === 'om-title' || n.id === 'om-status') return;
+      n.hidden = true; n.setAttribute('data-done-hidden', '');
+    });
+    var st = document.getElementById('om-status');
+    st.textContent = 'Done. I will send your Solo Dev PDF to your email within 1 day.';
+    st.hidden = false;
+  }
+  function restoreForm() {
+    form.querySelectorAll('[data-done-hidden]').forEach(function (n) { n.hidden = false; n.removeAttribute('data-done-hidden'); });
+    document.getElementById('om-status').textContent = STATUS_NOTICE;
+  }
+  function submitFree(el) {
+    var go = document.getElementById('om-go'), label = go.querySelector('span');
+    document.getElementById('om-status').hidden = true;
+    go.disabled = true; label.textContent = 'Sending…';
+    function unbusy() { go.disabled = false; renderOrder(); }
+    fetch('/api/order/free', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ steam: el.steam.value.trim(), email: el.email.value.trim(), page: location.pathname, referrer: document.referrer || '' })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { status: r.status, body: j }; }, function () { return { status: r.status, body: {} }; });
+    }).then(function (res) {
+      if (res.status === 200 && res.body && res.body.ok) { unbusy(); showDone(); return; }
+      unbusy();
+      var e = res.body && res.body.error;
+      if (e === 'invalid_steam_link') return fail('Use the link of your Steam store page, the one with /app/ in it.', el.steam);
+      if (e === 'invalid_email') return fail('Enter a valid email address so I can send you the analysis.', el.email);
+      if (e === 'email_limit') return fail('This email already received 3 Solo Dev analyses.');
+      if (e === 'game_limit') return fail('This game already has a Solo Dev analysis.');
+      if (e === 'daily_limit') return fail("Today's free analyses are taken. Try again tomorrow.");
+      if (res.status === 429) return fail('Too many attempts. Nothing was sent. Please wait a few minutes and try again.');
+      fail('Something went wrong and nothing was sent. Please try again.');
+    }).catch(function () {
+      unbusy();
+      fail('Could not reach the order service and nothing was sent. Please try again.');
+    });
+  }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var steam = form.elements.steam.value.trim();
@@ -392,19 +415,13 @@
     if (!wl.disabled && wl.value !== '' && !(Number(wl.value) >= 0 && Number.isInteger(Number(wl.value)))) {
       return fail('Enter your wishlist count as a whole number, or leave it empty.', wl);
     }
-    var pr = form.elements.price;
-    if (!pr.disabled && pr.value !== '' && !(Number(pr.value) > 0 && Number(pr.value) < 1000)) {
-      return fail('Enter the planned price like 19.99, or leave it empty.', pr);
-    }
-    if (form.elements.waiver.required && !form.elements.waiver.checked) {
-      return fail('Please confirm that I can start the work right away.', form.elements.waiver);
-    }
     document.getElementById('om-err').hidden = true;
     var v = form.elements.version.value, el = form.elements;
     var express = !el.express.disabled && el.express.checked;
     track('order_form_submit', { tier: v, express: express });
-    /* Solo Dev is not part of the order Worker. If the Worker cannot be reached, keep the notice. */
-    if (v === 'free' || cfgState !== 'ok') { document.getElementById('om-status').hidden = false; return; }
+    /* Solo Dev posts to /api/order/free and needs no Stripe config. A paid tier needs the config; if the Worker cannot be reached, keep the notice. */
+    if (v === 'free') { submitFree(el); return; }
+    if (cfgState !== 'ok') { document.getElementById('om-status').hidden = false; return; }
     document.getElementById('om-status').hidden = true;
     var go = document.getElementById('om-go'), label = go.querySelector('span');
     go.disabled = true; label.textContent = 'Opening Stripe…';
@@ -416,11 +433,8 @@
         version: v,
         steam: el.steam.value.trim(),
         email: el.email.value.trim(),
-        quarter: el.quarter.disabled ? '' : el.quarter.value,
         wishlists: el.wishlists.disabled ? '' : el.wishlists.value,
-        price: el.price.disabled ? '' : el.price.value,
         notes: el.notes.disabled ? '' : el.notes.value.trim(),
-        waiver: el.waiver.checked,
         news: !el.news.disabled && el.news.checked,
         express: express,
         promo: promoFor(v) ? promoFor(v).code : '',

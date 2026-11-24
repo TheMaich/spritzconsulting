@@ -98,11 +98,8 @@ html.om-open body *:not(.sa-modal):not(.sa-modal *):not(.om-flipper):not(.om-fli
 .sa-modal input[type=url][aria-invalid="true"]:focus-visible, .sa-modal input[type=email][aria-invalid="true"]:focus-visible, .sa-modal textarea[aria-invalid="true"]:focus-visible{ outline-color: var(--danger); }
 
 /* Premium extras: release quarter, wishlists, price */
-.om-hint{ margin: 0; padding-left: 14px; border-left: 2px solid var(--clay); font-size: 15px; line-height: 1.5; color: var(--ink); }
-.om-hint[hidden], .om-extra[hidden]{ display: none; }
+.om-extra[hidden]{ display: none; }
 .om-extra{ display: grid; gap: 16px; }
-.om-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 520px){ .om-row{ grid-template-columns: 1fr; } }
 .sa-modal input[type=number], .sa-modal select{ width: 100%; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
 .sa-modal select{ appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none' stroke='%23e5b415' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
 .sa-modal select option{ background: var(--paper-3); color: var(--ink); }

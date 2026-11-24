@@ -6,6 +6,7 @@
  *   POST /api/order          validate the order, store it, create a Stripe Checkout session
  *   POST /api/order/webhook  Stripe tells us the session was paid: mark it paid, compute due_date
  *   GET  /api/order/promo    is a promotion code valid (and for which tier and amounts)
+ *   POST /api/order/free     Solo Dev (free): validate, apply the free limits, store the order, no Stripe
  *
  * - One Checkout session with two line items: the tier price and, when asked for, the Express
  *   price (quantity 1 each). Express never replaces the base price.
@@ -20,25 +21,29 @@
  * - Promotion codes (PROMOS) map a code to one tier, one Stripe coupon and the discounted amounts. The coupon is
  *   sent as discounts[0][coupon] on that tier's order only. It never touches the Express line, because the coupon
  *   is limited to the tier's product in Stripe. A code on the wrong tier is ignored without an error.
- * - Solo Dev (free) does not go through this Worker.
+ * - Indie to Publisher codes start with INDIE- and are one-time promotion codes made by hand in Stripe on the coupon
+ *   "Indie Publisher". Only these codes are looked up in Stripe (GET /v1/promotion_codes); every other code is checked
+ *   against PROMOS and never reaches Stripe. The lookup must return an active code on the coupon in
+ *   INDIE_PUBLISHER_COUPON_ID with times_redeemed below max_redemptions, and the order must be Publisher. The session
+ *   then sends discounts[0][promotion_code]. Anything else is ignored silently and charges the full price.
+ * - Global discount: PRICE_PERCENT_OFF (whole percent, default 0). Above 0 the Worker works out the final total per currency
+ *   (the code price first, then the percentage, Express included) and makes ONE coupon for the order with an amount per
+ *   currency, because Stripe Checkout takes one discount per session. The coupon lives 25 hours; the webhook deletes it
+ *   after payment and switches an INDIE- code off (Stripe does not count that redemption in this mode). Above 50 it needs a
+ *   test key or ALLOW_DEEP_DISCOUNT=true. With 0 the Worker behaves as described above and makes no coupon.
+ * - Solo Dev (free) uses POST /api/order/free. It has no Stripe call and no price. Limits: 3 orders per email,
+ *   1 per Steam app id, 5 per UTC day in total, and 5 per IP per 10 minutes (own counter, prefix order:rlf:). The counters
+ *   are free:email:<sha256 of the lowercased email>, free:app:<app id> and free:day:<YYYY-MM-DD>. The raw email is never
+ *   part of a counter key. Delivery is manual: read the orders from KV (status "free_new").
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
- * - No notification email yet; read orders from KV (see README).
+ * - Notification email: one plain text email per order, sent with a POST to a Google Apps Script web app (NOTIFY_URL, with
+ *   NOTIFY_SECRET in the body and NOTIFY_TO as the recipient; see README). A Solo Dev order sends it once the order is stored.
+ *   A paid order sends it only from the webhook, once per Checkout session (the order:paid: key), never when it is only
+ *   started. The send runs in ctx.waitUntil, catches every error and logs only a status code, so it can never fail or delay
+ *   an order. With a variable missing it is skipped and logged once. The IP address is not part of the email.
  */
 
 // ---- business-days.js ----------------------------------------------------------------
-/**
- * Business-day helper for delivery due dates.
- *
- * A business day is Monday to Friday and not an Italian public holiday.
- * The holiday list is hard-coded for 2026 and 2027 only. Outside those two
- * years the helper skips weekends only and reports approx: true, so a due date
- * is never silently wrong. Add the 2028 list before the end of 2027.
- *
- * Day 0 rule: an order paid on a business day up to 12:00 Europe/Rome counts
- * from that day (day 0). Paid after 12:00, or on a weekend or holiday, it counts
- * from the next business day (day 0). The due date is day 0 plus N business days.
- */
-
 const FIRST_YEAR = 2026;
 const LAST_YEAR = 2027;
 
@@ -134,17 +139,38 @@ const TIERS = {
   premium: { days: 3, expressDays: 2 },
 };
 
+// Indie to Publisher codes (INDIE-...): Publisher only. The discounted Publisher amounts in whole units
+// (list 299 / 329 / 249). Express is added on top at its list amount.
+const INDIE_PREFIX = 'INDIE-';
+const INDIE_TIER = 'premium';
+// Default amounts; the variable INDIE_PUBLISHER_AMOUNTS ({ eur, usd, gbp }) overrides them (see indieAmounts).
+const INDIE_PUBLISHER_AMOUNTS = { eur: 190, usd: 209, gbp: 158 };
+
+// PRICE_PERCENT_OFF lowers every price by the same percentage (0 = prices as decided, 99 = test prices, 50 = a promotion).
+// Above DEEP_DISCOUNT_LIMIT it only works with a test key or with ALLOW_DEEP_DISCOUNT set to "true".
+const DEEP_DISCOUNT_LIMIT = 50;
+const COUPON_LIFETIME_SECONDS = 25 * 60 * 60;
+// Smallest amount Stripe charges, in cents.
+const MIN_CHARGE_CENTS = { eur: 50, usd: 50, gbp: 30 };
+
 const ORDER_TTL_SECONDS = 30 * 24 * 60 * 60;
 const RATE_WINDOW_SECONDS = 600;
 const ORDERS_PER_WINDOW = 5;
 const PROMO_CHECKS_PER_WINDOW = 20;
 const WEBHOOK_TOLERANCE_SECONDS = 300;
+// Solo Dev (free) limits. The email and game counters live for a year, the day counter for two days.
+const FREE_PER_EMAIL = 3;
+const FREE_PER_GAME = 1;
+const FREE_PER_DAY = 5;
+const FREE_COUNTER_TTL_SECONDS = 365 * 24 * 60 * 60;
+const FREE_DAY_TTL_SECONDS = 2 * 24 * 60 * 60;
+const FREE_ORDERS_PER_WINDOW = 5;
 const MAX_FIELD_LENGTH = 200;
 const MAX_NOTES_LENGTH = 1000;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const STEAM_RE = /^https?:\/\/(store\.steampowered\.com|steamcommunity\.com)\//i;
-const PROMO_RE = /^[A-Z0-9]{3,30}$/;
+const PROMO_RE = /^[A-Z0-9-]{3,30}$/;
 const QUARTER_RE = /^(released|undecided|\d{4}-Q[1-4])$/;
 
 function corsHeaders(origin) {
@@ -181,6 +207,42 @@ function asObject(value) {
     try { return JSON.parse(value) || {}; } catch (err) { return {}; }
   }
   return value && typeof value === 'object' ? value : {};
+}
+
+// Indie to Publisher amounts: the variable INDIE_PUBLISHER_AMOUNTS, or the defaults when it is missing or incomplete.
+function indieAmounts(env) {
+  const obj = asObject(env.INDIE_PUBLISHER_AMOUNTS);
+  const out = {};
+  for (const currency of CURRENCIES) {
+    const n = Number(obj[currency]);
+    if (!(n > 0)) return { ...INDIE_PUBLISHER_AMOUNTS };
+    out[currency] = n;
+  }
+  return out;
+}
+
+// The global discount in whole percent, 0 to 100. Anything else, or a deep discount without permission, counts as 0.
+function percentOff(env) {
+  const raw = env.PRICE_PERCENT_OFF;
+  if (raw === undefined || raw === null || String(raw).trim() === '') return 0;
+  const n = Number(String(raw).trim());
+  if (!Number.isInteger(n) || n < 0 || n > 100) {
+    console.log('PRICE_PERCENT_OFF ignored: not a whole number from 0 to 100');
+    return 0;
+  }
+  if (n > DEEP_DISCOUNT_LIMIT) {
+    const testKey = /^(sk|rk)_test_/.test(String(env.STRIPE_SECRET_KEY || ''));
+    if (!testKey && String(env.ALLOW_DEEP_DISCOUNT).toLowerCase() !== 'true') {
+      console.log('PRICE_PERCENT_OFF above ' + DEEP_DISCOUNT_LIMIT + ' ignored: needs a test key or ALLOW_DEEP_DISCOUNT');
+      return 0;
+    }
+  }
+  return n;
+}
+
+// An amount in whole units after the percentage, to the cent: applyPercent(299, 99) is 2.99.
+function applyPercent(value, pct) {
+  return Math.round(Math.round(value * 100) * (100 - pct) / 100) / 100;
 }
 
 function expressEnabled(env) {
@@ -233,7 +295,18 @@ function publicConfig(env) {
     const e = expressFor(env, tier);
     if (e) express[tier] = e.amounts;
   }
-  return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
+  const pct = percentOff(env);
+  if (!pct) return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts, express };
+  // With a global discount the amounts are the discounted ones; the list amounts stay available.
+  const cut = (tree) => {
+    const out = {};
+    for (const tier of Object.keys(tree)) {
+      out[tier] = {};
+      for (const currency of CURRENCIES) out[tier][currency] = applyPercent(tree[tier][currency], pct);
+    }
+    return out;
+  };
+  return { enabled: expressEnabled(env), currencies: CURRENCIES, amounts: cut(amounts), express: cut(express), percentOff: pct, listAmounts: amounts, listExpress: express };
 }
 
 // ---- Promotion codes --------------------------------------------------------------------
@@ -272,14 +345,96 @@ function findPromoAnyTier(env, code) {
   return findPromo(env, key, TIER_ALIASES[entry.tier] || entry.tier);
 }
 
+function isIndieCode(key) {
+  return key.length > INDIE_PREFIX.length && key.startsWith(INDIE_PREFIX);
+}
+
+// The coupon of a Stripe promotion code. Newer API versions put it under promotion.coupon, older ones under coupon.
+// It is an id, or an object when it was expanded.
+function couponOf(promotionCode) {
+  const raw = (promotionCode.promotion && promotionCode.promotion.coupon) || promotionCode.coupon;
+  if (raw && typeof raw === 'object') return { id: String(raw.id || ''), valid: raw.valid !== false };
+  return { id: raw ? String(raw) : '', valid: true };
+}
+
+// An INDIE- code that Stripe confirms, or null. Null for: no INDIE- prefix, a tier other than Publisher, no coupon id in
+// INDIE_PUBLISHER_COUPON_ID, an unknown or inactive code, another coupon, a used-up code, a code that is not limited to
+// one use, or any Stripe error. The caller charges the full price and says nothing. No other code ever reaches Stripe.
+async function findIndiePromo(env, code, tier) {
+  const key = normalizeCode(code);
+  const couponId = String(env.INDIE_PUBLISHER_COUPON_ID || '').trim();
+  if (!isIndieCode(key) || tier !== INDIE_TIER) return null;
+  if (!couponId || couponId.startsWith('REPLACE') || !env.STRIPE_SECRET_KEY) return null;
+  try {
+    const url = 'https://api.stripe.com/v1/promotion_codes?code=' + encodeURIComponent(key) + '&active=true&limit=1&expand[]=data.promotion.coupon';
+    const response = await fetch(url, { method: 'GET', headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY } });
+    if (!response.ok) {
+      console.log('indie code lookup failed: stripe_' + response.status);
+      return null;
+    }
+    const list = await response.json();
+    const found = list && Array.isArray(list.data) ? list.data[0] : null;
+    if (!found || found.active === false || String(found.code || '').toUpperCase() !== key) return null;
+    const coupon = couponOf(found);
+    if (coupon.id !== couponId || !coupon.valid) return null;
+    const max = Number(found.max_redemptions);
+    const used = Number(found.times_redeemed || 0);
+    if (!(max >= 1) || !(used < max)) return null;
+    return { code: key, tier: INDIE_TIER, promotionCode: String(found.id), amounts: indieAmounts(env) };
+  } catch (err) {
+    console.log('indie code lookup failed: ' + (err && err.message));
+    return null;
+  }
+}
+
+// The promotion for a code and tier: an INDIE- code is checked in Stripe, any other code in PROMOS (no Stripe call).
+async function resolvePromo(env, code, tier) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  return isIndieCode(key) ? findIndiePromo(env, key, tier) : findPromo(env, key, tier);
+}
+
+// Same, when the tier is not known yet (the /api/order/promo endpoint).
+async function resolvePromoAnyTier(env, code) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  return isIndieCode(key) ? findIndiePromo(env, key, INDIE_TIER) : findPromoAnyTier(env, key);
+}
+
+// The promotion that discounted a paid session, to work out the expected total. An INDIE- code was checked in Stripe
+// when the session was created, so the webhook makes no second lookup.
+function paidPromo(env, code, tier) {
+  const key = normalizeCode(code);
+  if (!key) return null;
+  if (isIndieCode(key)) return tier === INDIE_TIER ? { code: key, tier, amounts: indieAmounts(env) } : null;
+  return findPromo(env, key, tier);
+}
+
 // Total the customer should pay in the currency Stripe used, in the smallest unit, or null when it is not configured.
 // With a promotion the base is the discounted amount; Express is added at its list amount.
-function expectedTotal(env, tier, express, currency, promo) {
+function expectedTotal(env, tier, express, currency, promo, pct = 0) {
   const base = promo ? Number(promo.amounts[currency]) : amountFor(env.PRICE_AMOUNTS, tier, currency);
   if (!base) return null;
-  if (!express) return Math.round(base * 100);
-  const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
-  return extra ? Math.round((base + extra) * 100) : null;
+  let cents = Math.round(base * 100);
+  if (express) {
+    const extra = amountFor(env.EXPRESS_AMOUNTS, tier, currency);
+    if (!extra) return null;
+    cents = Math.round((base + extra) * 100);
+  }
+  return pct ? Math.round(cents * (100 - pct) / 100) : cents;
+}
+
+// With a global discount: per currency, in cents, the list total (no code, no percentage), the final total and the
+// difference, or null when a list amount is missing. The code price comes first, then the percentage; Express is included.
+function priceBreakdown(env, tier, express, promo, pct) {
+  const out = {};
+  for (const currency of CURRENCIES) {
+    const list = expectedTotal(env, tier, !!express, currency, null, 0);
+    const final = expectedTotal(env, tier, !!express, currency, promo, pct);
+    if (list == null || final == null) return null;
+    out[currency] = { list, final, discount: list - final };
+  }
+  return out;
 }
 
 // ---- Rate limit (same shape as contact-form, own key prefix) ---------------------------
@@ -294,7 +449,48 @@ async function checkRateLimit(env, ip, prefix = 'order:rl:', limit = ORDERS_PER_
 
 // ---- Stripe ------------------------------------------------------------------------------
 
-async function createCheckoutSession(env, order, lines, origin, promo) {
+// Stripe Checkout takes one discount per session, so a global percentage and a code price become one coupon made
+// for this order: one amount per currency, one redemption, gone after 25 hours. Returns the coupon id.
+async function createOrderCoupon(env, orderId, breakdown) {
+  const params = new URLSearchParams();
+  params.set('duration', 'once');
+  params.set('max_redemptions', '1');
+  params.set('redeem_by', String(Math.floor(Date.now() / 1000) + COUPON_LIFETIME_SECONDS));
+  params.set('name', 'Order ' + orderId.slice(0, 8));
+  params.set('currency', 'eur');
+  params.set('amount_off', String(breakdown.eur.discount));
+  params.set('currency_options[usd][amount_off]', String(breakdown.usd.discount));
+  params.set('currency_options[gbp][amount_off]', String(breakdown.gbp.discount));
+  const response = await fetch('https://api.stripe.com/v1/coupons', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+  const text = await response.text();
+  let coupon = null;
+  try { coupon = JSON.parse(text); } catch (err) { /* not JSON */ }
+  if (!response.ok || !coupon || !coupon.id) {
+    const detail = coupon && coupon.error ? (coupon.error.code || coupon.error.type) + ': ' + coupon.error.message : text.slice(0, 200);
+    throw new Error('stripe_coupon_' + response.status + ' ' + detail);
+  }
+  return String(coupon.id);
+}
+
+// Best effort: a failure only goes to the log.
+async function stripeCleanup(env, method, path, body) {
+  try {
+    const response = await fetch('https://api.stripe.com/v1/' + path, {
+      method,
+      headers: { Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    });
+    if (!response.ok) console.log('stripe cleanup failed: ' + method + ' ' + path + ' ' + response.status);
+  } catch (err) {
+    console.log('stripe cleanup failed: ' + method + ' ' + path + ' ' + (err && err.message));
+  }
+}
+
+async function createCheckoutSession(env, order, lines, origin, promo, orderCoupon, pct) {
   const params = new URLSearchParams();
   params.set('mode', 'payment');
   lines.forEach((priceId, i) => {
@@ -307,9 +503,21 @@ async function createCheckoutSession(env, order, lines, origin, promo) {
   params.set('metadata[game_url]', clip(order.steam, 500));
   params.set('metadata[tier]', order.tier);
   params.set('metadata[express]', order.express ? 'true' : 'false');
-  if (promo) {
+  if (orderCoupon) {
+    // Global discount: one coupon made for this order covers the code price and the percentage. The webhook deletes it,
+    // and switches an INDIE- code off, once the payment arrives.
+    params.set('discounts[0][coupon]', orderCoupon);
+    params.set('metadata[coupon_id]', orderCoupon);
+    params.set('metadata[percent_off]', String(pct));
+    if (promo) {
+      params.set('metadata[promo]', promo.code);
+      if (promo.promotionCode) params.set('metadata[promo_id]', promo.promotionCode);
+    }
+  } else if (promo) {
     // The coupon is limited to the tier's product in Stripe, so the Express line is never discounted.
-    params.set('discounts[0][coupon]', promo.coupon);
+    // An INDIE- code goes in as its promotion code (which Stripe counts as one redemption); a PROMOS code goes in as its coupon.
+    if (promo.promotionCode) params.set('discounts[0][promotion_code]', promo.promotionCode);
+    else params.set('discounts[0][coupon]', promo.coupon);
     params.set('metadata[promo]', promo.code);
   }
   params.set('payment_intent_data[metadata][order_id]', order.id);
@@ -381,7 +589,6 @@ async function handleOrder(request, env) {
   if (!STEAM_RE.test(steam)) return json(422, { ok: false, error: 'invalid_steam_link' }, origin);
   const email = clip(body.email, MAX_FIELD_LENGTH);
   if (!EMAIL_RE.test(email)) return json(422, { ok: false, error: 'invalid_email' }, origin);
-  if (body.waiver !== true) return json(422, { ok: false, error: 'waiver_required' }, origin);
 
   const quarter = clip(body.quarter, 20);
   if (quarter && !QUARTER_RE.test(quarter)) return json(422, { ok: false, error: 'invalid_quarter' }, origin);
@@ -410,8 +617,26 @@ async function handleOrder(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!(await checkRateLimit(env, ip))) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
-  // A promotion code that is unknown, switched off or for another tier is ignored: the order goes through at list price.
-  const promo = findPromo(env, body.promo, tier);
+  // A promotion code that is unknown, switched off, used up or for another tier is ignored: the order goes through at list price.
+  // Only an INDIE- code on a Publisher order is looked up in Stripe.
+  const promo = await resolvePromo(env, body.promo, tier);
+
+  // Global discount: work out the totals now. A missing amount, or a total under what Stripe charges, stops the order here.
+  const pct = percentOff(env);
+  let breakdown = null;
+  if (pct > 0) {
+    breakdown = priceBreakdown(env, tier, !!express, promo, pct);
+    if (!breakdown) {
+      console.log('order not configured: a list amount is missing for the global discount');
+      return json(500, { ok: false, error: 'not_configured' }, origin);
+    }
+    for (const currency of CURRENCIES) {
+      if (breakdown[currency].final < MIN_CHARGE_CENTS[currency] || breakdown[currency].discount <= 0) {
+        console.log('order refused: the discounted total is under the Stripe minimum or has no discount in ' + currency);
+        return json(422, { ok: false, error: 'amount_too_low' }, origin);
+      }
+    }
+  }
 
   const id = crypto.randomUUID();
   const key = 'order:' + id;
@@ -426,10 +651,8 @@ async function handleOrder(request, env) {
     quarter,
     wishlists,
     price,
-    notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
-    promo: promo ? promo.code : '',
+    notes: clip(body.notes, MAX_NOTES_LENGTH),   // Indie and Publisher both have the note; Solo Dev never reaches this endpoint
     news: body.news === true,
-    waiver: true,
     page: clip(body.page, 500),
     referrer: clip(body.referrer, 500),
     ip,
@@ -440,16 +663,178 @@ async function handleOrder(request, env) {
   const lines = [basePrice];
   if (express) lines.push(express.priceId);
   const successOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  let orderCoupon = '';
   try {
-    const session = await createCheckoutSession(env, order, lines, successOrigin, promo);
+    if (breakdown) orderCoupon = await createOrderCoupon(env, id, breakdown);
+    const session = await createCheckoutSession(env, order, lines, successOrigin, promo, orderCoupon, pct);
     order.stripeSessionId = session.id;
     await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
     return json(200, { ok: true, url: session.url }, origin);
   } catch (err) {
     console.log('checkout session failed: ' + (err && err.message));
+    if (orderCoupon) await stripeCleanup(env, 'DELETE', 'coupons/' + encodeURIComponent(orderCoupon));
     await env.CONTACT_SUBMISSIONS.delete(key);
     return json(502, { ok: false, error: 'checkout_failed' }, origin);
   }
+}
+
+// ---- Notification email (Google Apps Script web app) ---------------------------------------
+
+let notifySkipLogged = false;
+
+// One value for the email body: empty becomes "-", and line breaks become spaces so every field stays on one line.
+function mailValue(value) {
+  const text = value == null ? '' : String(value).replace(/\s*[\r\n]+\s*/g, ' ').trim();
+  return text === '' ? '-' : text;
+}
+
+function mailAmount(cents, currency) {
+  return typeof cents === 'number' ? (cents / 100).toFixed(2) + ' ' + String(currency || '').toUpperCase() : '-';
+}
+
+function yesNo(value) {
+  return value === true ? 'Yes' : value === false ? 'No' : '-';
+}
+
+// Sends the notice. Never throws and never waits for the caller: the work runs in ctx.waitUntil, every error is caught,
+// and the log carries only a status code, never the URL or the secret.
+function notifyOrder(env, ctx, replyTo, subject, lines) {
+  if (!env.NOTIFY_URL || !env.NOTIFY_SECRET || !env.NOTIFY_TO) {
+    if (!notifySkipLogged) {
+      notifySkipLogged = true;
+      console.log('notification email skipped: NOTIFY_URL, NOTIFY_SECRET or NOTIFY_TO is not set');
+    }
+    return;
+  }
+  const job = (async () => {
+    try {
+      const response = await fetch(env.NOTIFY_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: env.NOTIFY_SECRET, to: env.NOTIFY_TO, replyTo, subject, body: lines.join('\n') }),
+      });
+      if (!response.ok) console.log('notification email failed: status ' + response.status);
+    } catch (err) {
+      console.log('notification email failed: no response');
+    }
+  })();
+  if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(job);
+}
+
+// The fields every notice starts with. The Steam link has its own line.
+function mailHead(order, appId) {
+  return [
+    'Order id: ' + mailValue(order.id),
+    'Created: ' + mailValue(order.createdAt),
+    'Customer email: ' + mailValue(order.email),
+    'Steam link:',
+    mailValue(order.steam),
+    'App id: ' + mailValue(appId),
+    'Page: ' + mailValue(order.page),
+    'Referrer: ' + mailValue(order.referrer),
+    'Country: ' + mailValue(order.country),
+  ];
+}
+
+function notifyFreeOrder(env, ctx, order) {
+  notifyOrder(env, ctx, order.email, 'New Solo Dev order: app ' + order.appId, mailHead(order, order.appId));
+}
+
+function notifyPaidOrder(env, ctx, order) {
+  const appId = steamAppId(order.steam || '');
+  const names = { standard: 'Indie', premium: 'Publisher' };
+  const tier = names[order.tier] || order.tier || 'unknown';
+  const subject = 'New ' + tier + ' order paid: app ' + (appId || 'unknown') + (order.express ? ' + Express' : '');
+  const lines = mailHead(order, appId).concat([
+    'Tier: ' + mailValue(tier),
+    'Express: ' + yesNo(!!order.express),
+    'Quarter: ' + mailValue(order.quarter),
+    'Wishlists: ' + mailValue(order.wishlists),
+    'Planned price: ' + mailValue(order.price),
+    'Notes: ' + mailValue(order.notes),
+    'Newsletter consent: ' + yesNo(order.news === true),
+    'Promo code: ' + mailValue(order.promo),
+    'Amount paid: ' + mailAmount(order.amountTotal, order.paidCurrency),
+    'Currency: ' + mailValue(String(order.paidCurrency || '').toUpperCase()),
+    'Expected total: ' + mailAmount(order.expectedTotal, order.paidCurrency),
+    'Matches expected total: ' + yesNo(order.amountMatches),
+    'Due date: ' + mailValue(order.due_date),
+    'Stripe session id: ' + mailValue(order.stripeSessionId),
+  ]);
+  notifyOrder(env, ctx, order.email, subject, lines);
+}
+
+// The numeric app id of a Steam link of the form /app/<id>/, or '' when the link has none.
+function steamAppId(link) {
+  let url;
+  try { url = new URL(link); } catch (err) { return ''; }
+  const match = /^\/app\/(\d{1,10})(?:\/|$)/.exec(url.pathname);
+  return match ? match[1] : '';
+}
+
+// A one-way code of an email address (SHA-256 of the lowercased, trimmed address, in hex). Counter keys use it, never the address.
+async function emailCode(email) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
+  return toHex(digest);
+}
+
+async function readCount(env, key) {
+  return parseInt((await env.CONTACT_SUBMISSIONS.get(key)) || '0', 10) || 0;
+}
+
+// POST /api/order/free: Solo Dev. Order of checks: validation, per-IP limit, email limit, game limit, daily limit.
+// The counters go up only after the order is stored.
+async function handleFreeOrder(request, env, ctx) {
+  const origin = request.headers.get('Origin') || '';
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (err) {
+    return json(400, { ok: false, error: 'invalid_json' }, origin);
+  }
+
+  const steam = clip(body.steam, 500);
+  const appId = STEAM_RE.test(steam) ? steamAppId(steam) : '';
+  if (!appId) return json(422, { ok: false, error: 'invalid_steam_link' }, origin);
+  const email = clip(body.email, MAX_FIELD_LENGTH);
+  if (!EMAIL_RE.test(email)) return json(422, { ok: false, error: 'invalid_email' }, origin);
+
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (!(await checkRateLimit(env, ip, 'order:rlf:', FREE_ORDERS_PER_WINDOW))) return json(429, { ok: false, error: 'rate_limited' }, origin);
+
+  const emailKey = 'free:email:' + (await emailCode(email));
+  const appKey = 'free:app:' + appId;
+  const dayKey = 'free:day:' + new Date().toISOString().slice(0, 10);
+  const [emailCount, appCount, dayCount] = await Promise.all([readCount(env, emailKey), readCount(env, appKey), readCount(env, dayKey)]);
+  if (emailCount >= FREE_PER_EMAIL) return json(409, { ok: false, error: 'email_limit' }, origin);
+  if (appCount >= FREE_PER_GAME) return json(409, { ok: false, error: 'game_limit' }, origin);
+  if (dayCount >= FREE_PER_DAY) return json(429, { ok: false, error: 'daily_limit' }, origin);
+
+  const id = crypto.randomUUID();
+  const order = {
+    id,
+    createdAt: new Date().toISOString(),
+    status: 'free_new',
+    tier: 'free',
+    steam,
+    appId,
+    email,
+    page: clip(body.page, 500),
+    referrer: clip(body.referrer, 500),
+    ip,
+    country: (request.cf && request.cf.country) || '',
+  };
+  await env.CONTACT_SUBMISSIONS.put('order:' + id, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
+  await env.CONTACT_SUBMISSIONS.put(emailKey, String(emailCount + 1), { expirationTtl: FREE_COUNTER_TTL_SECONDS });
+  await env.CONTACT_SUBMISSIONS.put(appKey, String(appCount + 1), { expirationTtl: FREE_COUNTER_TTL_SECONDS });
+  await env.CONTACT_SUBMISSIONS.put(dayKey, String(dayCount + 1), { expirationTtl: FREE_DAY_TTL_SECONDS });
+  notifyFreeOrder(env, ctx, order);
+  return json(200, { ok: true }, origin);
 }
 
 // GET /api/order/promo?code=XYZ: lets the order page show the discount. Missing, wrong or disabled answers valid false.
@@ -458,12 +843,16 @@ async function handlePromo(request, env) {
   if (origin && !ALLOWED_ORIGINS.includes(origin)) return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!(await checkRateLimit(env, ip, 'order:rlp:', PROMO_CHECKS_PER_WINDOW))) return json(429, { ok: false, error: 'rate_limited' }, origin);
-  const promo = findPromoAnyTier(env, new URL(request.url).searchParams.get('code'));
+  const promo = await resolvePromoAnyTier(env, new URL(request.url).searchParams.get('code'));
   if (!promo) return json(200, { valid: false }, origin);
-  return json(200, { valid: true, tier: promo.tier, amounts: promo.amounts }, origin);
+  const pct = percentOff(env);
+  if (!pct) return json(200, { valid: true, tier: promo.tier, amounts: promo.amounts }, origin);
+  const cut = {};
+  for (const currency of CURRENCIES) cut[currency] = applyPercent(promo.amounts[currency], pct);
+  return json(200, { valid: true, tier: promo.tier, amounts: cut, listAmounts: promo.amounts, percentOff: pct }, origin);
 }
 
-async function handleWebhook(request, env) {
+async function handleWebhook(request, env, ctx) {
   const raw = await request.text();
   const valid = await verifyStripeSignature(raw, request.headers.get('Stripe-Signature'), env.STRIPE_WEBHOOK_SECRET, Math.floor(Date.now() / 1000));
   if (!valid) return json(400, { ok: false, error: 'bad_signature' }, '');
@@ -499,7 +888,6 @@ async function handleWebhook(request, env) {
       id: orderId,
       tier: meta.tier || '',
       express: meta.express === 'true',
-      promo: meta.promo || '',
       steam: meta.game_url || '',
       email: (session.customer_details && session.customer_details.email) || session.customer_email || '',
       rebuilt: true,
@@ -516,16 +904,29 @@ async function handleWebhook(request, env) {
   order.stripeSessionId = session.id;
   order.amountTotal = session.amount_total;
   order.paidCurrency = session.currency;
+  // A promotion is recorded only when Stripe took money off (total_details.amount_discount above 0). The code comes from the
+  // session metadata; an order saved by an earlier version of the Worker carries it in the record instead.
+  const promoCode = String(meta.promo || order.promo || '');
+  const pct = Number.isInteger(Number(meta.percent_off)) && Number(meta.percent_off) > 0 && Number(meta.percent_off) <= 100 ? Number(meta.percent_off) : 0;
+  delete order.percentOff;
+  if (pct) order.percentOff = pct;
+  const discount = Number(session.total_details && session.total_details.amount_discount);
+  const discounted = !!promoCode && discount > 0;
+  delete order.promo;
+  delete order.discountApplied;
+  if (discounted) {
+    order.promo = promoCode;
+    order.discountApplied = true;
+  } else if (promoCode) {
+    console.log('a promotion code was sent but the session has no discount: ' + session.id);
+  }
   // Stripe chose the currency, so the expected total is worked out now, from the currency it used.
-  // A promotion counts only while its code still maps to this tier; the discounted amounts are the expected ones.
-  const promo = order.promo ? findPromo(env, order.promo, order.tier) : null;
-  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo);
+  // With a discount the base is the discounted amount (it counts only while the code still maps to this tier); without one it is the list amount.
+  const promo = discounted ? paidPromo(env, promoCode, order.tier) : null;
+  order.expectedTotal = expectedTotal(env, order.tier, !!order.express, session.currency, promo, pct);
   order.amountMatches = typeof order.expectedTotal === 'number' ? session.amount_total === order.expectedTotal : null;
   if (order.amountMatches === false) console.log('paid amount differs from the expected total: ' + session.id);
   order.listTotal = expectedTotal(env, order.tier, !!order.express, session.currency, null);
-  const discount = session.total_details && Number(session.total_details.amount_discount);
-  order.discountApplied = !!order.promo && discount > 0;
-  if (order.promo && !order.discountApplied) console.log('promotion ' + order.promo + ' paid without a discount: ' + session.id);
   order.businessDays = days;
   order.due_date = due ? due.due : null;
   order.due_start_date = due ? due.start : null;
@@ -533,11 +934,20 @@ async function handleWebhook(request, env) {
 
   await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
   await env.CONTACT_SUBMISSIONS.put(paidKey, paidAt.toISOString(), { expirationTtl: ORDER_TTL_SECONDS });
+  // The order is paid and marked as processed: one notice per Checkout session.
+  notifyPaidOrder(env, ctx, order);
+
+  // Global discount cleanup, after the record is safe. An INDIE- code is not redeemed by Stripe in this mode (the order
+  // coupon carried the discount), so it is switched off here. The order coupon is deleted; the discount already applied stays.
+  if (meta.promo_id && promoCode.startsWith(INDIE_PREFIX)) {
+    await stripeCleanup(env, 'POST', 'promotion_codes/' + encodeURIComponent(meta.promo_id), 'active=false');
+  }
+  if (meta.coupon_id) await stripeCleanup(env, 'DELETE', 'coupons/' + encodeURIComponent(meta.coupon_id));
   return json(200, { ok: true }, '');
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, '');
     const origin = request.headers.get('Origin') || '';
@@ -548,7 +958,7 @@ export default {
 
     if (path === '/api/order/webhook') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
-      return handleWebhook(request, env);
+      return handleWebhook(request, env, ctx);
     }
     if (path === '/api/order/config') {
       if (request.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
@@ -558,6 +968,10 @@ export default {
     if (path === '/api/order/promo') {
       if (request.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
       return handlePromo(request, env);
+    }
+    if (path === '/api/order/free') {
+      if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
+      return handleFreeOrder(request, env, ctx);
     }
     if (path === '/api/order') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
