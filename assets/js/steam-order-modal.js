@@ -21,17 +21,10 @@
     <div class="om-field"><label class="om-label" for="om-email">Your email</label><input id="om-email" name="email" type="email" required autocomplete="email" placeholder="you@studio.com"></div>
     <p class="om-fine om-follow" id="om-follow" hidden>We’ll send your Solo Dev PDF, then one follow-up email with an offer. Unsubscribe anytime.</p>
     <div class="om-extra" id="om-extra" hidden>
-      <p class="om-hint" id="om-hint">Every detail you share makes the forecasts a little more accurate. Each of these three is optional, but every one you add tightens the numbers.</p>
-      <div class="om-field"><label class="om-label" for="om-quarter">Release (optional)</label>
-        <select id="om-quarter" name="quarter"><option value="">Choose a quarter</option></select></div>
-      <div class="om-row">
-        <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
-          <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Enter your real count if you have it"></div>
-        <div class="om-field"><label class="om-label" for="om-pr">Planned price, USD (optional)</label>
-          <input id="om-pr" name="price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="19.99"></div>
-      </div>
+      <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
+        <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Enter your real count if you have it"></div>
     </div>
-    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="3" data-lenis-prevent placeholder="Tell me about your team, release plans or anything else that helps"></textarea></div>
+    <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="4" data-lenis-prevent></textarea></div>
 
     <label class="om-chk om-express" id="om-express" hidden><span class="om-express-copy"><span class="om-express-title">Express</span><span class="om-express-time" id="om-express-time"></span></span><span class="om-express-price" id="om-express-price"></span><input type="checkbox" role="switch" name="express" aria-label="Express delivery" disabled></label>
     <p class="om-total" id="om-total" hidden></p>
@@ -69,19 +62,6 @@
       window.zaraz.track(ev, d);
     } catch (err) { /* analytics must never break the order form */ }
   }
-  (function quarters() {                                  /* release quarters, from now up to two years ahead */
-    var sel = document.getElementById('om-quarter'), now = new Date(), y = now.getFullYear(), q = Math.floor(now.getMonth() / 3);
-    var out = document.createElement('option'); out.value = 'released'; out.textContent = 'Already released'; sel.appendChild(out);
-    var span = ['Jan to Mar', 'Apr to Jun', 'Jul to Sep', 'Oct to Dec'];
-    for (var i = 0; i <= 8; i++) {
-      var o = document.createElement('option');
-      o.value = y + '-Q' + (q + 1); o.textContent = 'Q' + (q + 1) + ' ' + y + ' (' + span[q] + ')';
-      sel.appendChild(o);
-      if (++q === 4) { q = 0; y++; }
-    }
-    var nd = document.createElement('option'); nd.value = 'undecided'; nd.textContent = 'Not decided yet';
-    sel.appendChild(nd);
-  })();
   /* ---- Prices and Express, shown for information. Stripe chooses the currency at checkout, so the modal lists
      all three. Express shows only when the order Worker says it is on and has an amount in every currency. ---- */
   var SYMBOL = { eur: '€', usd: '$', gbp: '£' }, ORDER = ['eur', 'usd', 'gbp'];
@@ -152,6 +132,10 @@
       .catch(function () { cfg = null; cfgState = 'failed'; })
       .then(renderOrder);
   }
+  var NOTE_HINT = {
+    standard: 'Optional. A few details make the forecasts more accurate: your planned release (a quarter is enough), your wishlists today and the planned price in USD. Your team or anything else that helps is welcome too.',
+    premium: 'Optional. A few details make the forecasts more accurate: your planned release (a quarter is enough) and the planned price in USD. Your team or anything else that helps is welcome too.'
+  };
   function pick(v) {
     if (!T[v]) v = 'free';
     form.elements.version.value = v;
@@ -159,18 +143,18 @@
     document.getElementById('om-title').textContent = T[v].title;
     document.getElementById('om-waiver').hidden = !paid;
     form.elements.waiver.required = paid;
-    /* Free: Steam link and email only. Standard: plus the optional release quarter, wishlist count and planned price,
-       and a free-text note. Premium: the same three optional fields, no note. */
+    /* Free: Steam link and email only. Standard: plus one optional free-text note. Premium: the same note and an
+       optional wishlist count. What used to be separate optional fields (release, wishlists, planned price) is now a
+       hint inside the note, so the form stays short. */
     var prem = (v === 'premium'), std = (v === 'standard');
-    document.getElementById('om-notes-wrap').hidden = !std;
+    document.getElementById('om-notes-wrap').hidden = !paid;
+    form.elements.notes.placeholder = NOTE_HINT[v] || '';
     document.getElementById('om-news').hidden = !paid;
     document.getElementById('om-follow').hidden = paid;
-    document.getElementById('om-extra').hidden = !(prem || std);
-    form.elements.notes.disabled = !std;
+    document.getElementById('om-extra').hidden = !prem;
+    form.elements.notes.disabled = !paid;
     form.elements.news.disabled = !paid;
-    form.elements.quarter.disabled = !(prem || std);
-    form.elements.wishlists.disabled = !(prem || std);
-    form.elements.price.disabled = !(prem || std);
+    form.elements.wishlists.disabled = !prem;
     form.elements.express.checked = false;
     renderOrder();
     if (paid) loadConfig();
@@ -436,10 +420,6 @@
     if (!wl.disabled && wl.value !== '' && !(Number(wl.value) >= 0 && Number.isInteger(Number(wl.value)))) {
       return fail('Enter your wishlist count as a whole number, or leave it empty.', wl);
     }
-    var pr = form.elements.price;
-    if (!pr.disabled && pr.value !== '' && !(Number(pr.value) > 0 && Number(pr.value) < 1000)) {
-      return fail('Enter the planned price like 19.99, or leave it empty.', pr);
-    }
     if (form.elements.waiver.required && !form.elements.waiver.checked) {
       return fail('Please confirm that I can start the work right away.', form.elements.waiver);
     }
@@ -461,9 +441,7 @@
         version: v,
         steam: el.steam.value.trim(),
         email: el.email.value.trim(),
-        quarter: el.quarter.disabled ? '' : el.quarter.value,
         wishlists: el.wishlists.disabled ? '' : el.wishlists.value,
-        price: el.price.disabled ? '' : el.price.value,
         notes: el.notes.disabled ? '' : el.notes.value.trim(),
         waiver: el.waiver.checked,
         news: !el.news.disabled && el.news.checked,

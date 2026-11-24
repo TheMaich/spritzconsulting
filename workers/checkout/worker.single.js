@@ -44,19 +44,6 @@
  */
 
 // ---- business-days.js ----------------------------------------------------------------
-/**
- * Business-day helper for delivery due dates.
- *
- * A business day is Monday to Friday and not an Italian public holiday.
- * The holiday list is hard-coded for 2026 and 2027 only. Outside those two
- * years the helper skips weekends only and reports approx: true, so a due date
- * is never silently wrong. Add the 2028 list before the end of 2027.
- *
- * Day 0 rule: an order paid on a business day up to 12:00 Europe/Rome counts
- * from that day (day 0). Paid after 12:00, or on a weekend or holiday, it counts
- * from the next business day (day 0). The due date is day 0 plus N business days.
- */
-
 const FIRST_YEAR = 2026;
 const LAST_YEAR = 2027;
 
@@ -665,7 +652,7 @@ async function handleOrder(request, env) {
     quarter,
     wishlists,
     price,
-    notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
+    notes: clip(body.notes, MAX_NOTES_LENGTH),   // Indie and Publisher both have the note; Solo Dev never reaches this endpoint
     news: body.news === true,
     waiver: true,
     page: clip(body.page, 500),

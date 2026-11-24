@@ -1051,6 +1051,7 @@ async function workerSuite(label, worker) {
     await p.hook();
     assert.equal(notifyCalls.length, 1);
     assert.equal(notifyCalls[0].body.subject, 'New Publisher order paid: app 4242');
+    assert.ok(notifyCalls[0].body.body.split('\n').includes('Notes: Line one Line two'), 'the Publisher note reaches the email');
   });
   await test(label + ' ' + 'notify: a second webhook for the same session sends no second email', async () => {
     resetNotify();

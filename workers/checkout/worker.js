@@ -570,7 +570,7 @@ async function handleOrder(request, env) {
     quarter,
     wishlists,
     price,
-    notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
+    notes: clip(body.notes, MAX_NOTES_LENGTH),   // Indie and Publisher both have the note; Solo Dev never reaches this endpoint
     news: body.news === true,
     waiver: true,
     page: clip(body.page, 500),

@@ -67,6 +67,27 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(note === 'Prices appear in euros, dollars and pounds. Stripe shows the matching currency at checkout.', 'note under the cards: ' + note);
   });
 
+  await session('order form fields', {}, async (p, posts) => {
+    const vis = (sel) => p.isVisible(sel);
+    const gone = () => p.evaluate(() => !document.querySelector('[name=quarter]') && !document.querySelector('[name=price]'));
+    await openModal(p, 'standard');
+    ok(await gone(), 'Indie: no release or planned price field');
+    ok(!(await vis('#om-wl')), 'Indie: no wishlist field either, only the note');
+    ok(await vis('#om-notes'), 'Indie: the note is there');
+    let ph = await p.getAttribute('#om-notes', 'placeholder');
+    ok(/release/.test(ph) && /wishlists/.test(ph) && /planned price/.test(ph), 'Indie: the note hints release, wishlists and planned price');
+    await p.keyboard.press('Escape'); await p.waitForTimeout(900);
+    await openModal(p, 'premium');
+    ok(await vis('#om-wl') && await vis('#om-notes'), 'Publisher: wishlist field and the note');
+    ph = await p.getAttribute('#om-notes', 'placeholder');
+    ok(/release/.test(ph) && /planned price/.test(ph) && !/wishlists/.test(ph), 'Publisher: the note hints release and planned price only');
+    ok(!(await p.evaluate(() => !!document.getElementById('om-hint'))), 'the old hint paragraph is gone');
+    await fill(p); await p.fill('#om-wl', '4200'); await p.fill('#om-notes', 'Q3 2027, 19.99 USD');
+    await Promise.all([p.waitForURL(/paid=1/), p.click('#om-go')]);
+    ok(posts.length === 1 && posts[0].version === 'premium' && posts[0].wishlists === '4200' && posts[0].notes === 'Q3 2027, 19.99 USD', 'Publisher POST carries wishlists and the note: ' + JSON.stringify(posts[0]));
+    ok(!('quarter' in posts[0]) && !('price' in posts[0]), 'the POST has no quarter or price keys');
+  });
+
   await session('modal prices, Express and totals', {}, async (p, posts) => {
     for (const tier of ['standard', 'premium']) {
       await openModal(p, tier);
