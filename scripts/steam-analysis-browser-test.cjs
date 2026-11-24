@@ -67,6 +67,13 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(note === 'Prices appear in euros, dollars and pounds. Stripe shows the matching currency at checkout.', 'note under the cards: ' + note);
   });
 
+  await session('order total is rounded', { config: { enabled: true, currencies: ['eur', 'usd', 'gbp'], amounts: { standard: { eur: 0.1, usd: 1.1, gbp: 2.2 }, premium: { eur: 299, usd: 329, gbp: 249 } }, express: { standard: { eur: 0.2, usd: 2.2, gbp: 1.1 }, premium: { eur: 99, usd: 99, gbp: 99 } } } }, async (p) => {
+    await openModal(p, 'standard');
+    ok(await text(p, '#om-price') === '€0.10 / $1.10 / £2.20. Stripe shows the price in your currency at checkout.', 'amounts are shown to the cent: ' + await text(p, '#om-price'));
+    await p.click('#om-express');
+    ok(await text(p, '#om-total') === 'Total with Express: €0.30 / $3.30 / £3.30', 'the total is rounded: ' + await text(p, '#om-total'));
+  });
+
   await session('order form fields', {}, async (p, posts) => {
     const vis = (sel) => p.isVisible(sel);
     const gone = () => p.evaluate(() => !document.querySelector('[name=quarter]') && !document.querySelector('[name=price]'));

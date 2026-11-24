@@ -63,7 +63,10 @@
      all three. Express shows only when the order Worker says it is on and has an amount in every currency. ---- */
   var SYMBOL = { eur: '€', usd: '$', gbp: '£' }, ORDER = ['eur', 'usd', 'gbp'];
   var cfg = null, cfgState = 'idle';                      /* idle | loading | ok | failed */
-  function list(a) { return ORDER.map(function (c) { return SYMBOL[c] + a[c]; }).join(' / '); }
+  /* Amounts are shown to the cent: whole numbers stay whole (€99), anything else gets two decimals (€3.98).
+     Sums such as 1.99 + 1.99 or a discounted price would otherwise print as 3.9800000000000004. */
+  function money(n) { var r = Math.round(Number(n) * 100) / 100; return Number.isInteger(r) ? String(r) : r.toFixed(2); }
+  function list(a) { return ORDER.map(function (c) { return SYMBOL[c] + money(a[c]); }).join(' / '); }
   function baseAmounts(v) {
     var a = cfg && cfg.amounts && cfg.amounts[v];
     return a && ORDER.every(function (c) { return Number(a[c]) > 0; }) ? a : BASE[v];
