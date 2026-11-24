@@ -57,7 +57,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
   }
   const openModal = async (p, v) => { await p.evaluate((o) => { const w = document.querySelector('.sd-wrap'); if (w && w.dataset.layout === 'deck') { const i = ['free', 'standard', 'premium'].indexOf(o); const d = w.querySelectorAll('.sd-dot')[i]; if (d) d.click(); } }, v); await p.waitForTimeout(400); await p.click('[data-order="' + v + '"]'); await p.waitForSelector('#order-modal[open]'); await p.waitForTimeout(1300); await p.addStyleTag({ content: KILL }); await p.waitForTimeout(300); };
   const text = (p, sel) => p.evaluate((s) => document.querySelector(s).textContent.trim().replace(/\s+/g, ' '), sel);
-  const fill = async (p) => { await p.fill('#om-steam', 'https://store.steampowered.com/app/123/x/'); await p.fill('#om-email', 'a@b.co'); await p.check('input[name=waiver]'); };
+  const fill = async (p) => { await p.fill('#om-steam', 'https://store.steampowered.com/app/123/x/'); await p.fill('#om-email', 'a@b.co'); };
 
   await session('cards are informative', {}, async (p) => {
     ok(await p.evaluate(() => document.querySelectorAll('.sa-cur, [name^="cur-"], input[type=radio]').length) === 0, 'no currency selector anywhere on the page');
@@ -82,7 +82,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ph = await p.getAttribute('#om-notes', 'placeholder');
     ok(/release/.test(ph) && /planned price/.test(ph) && !/wishlists/.test(ph), 'Publisher: the note hints release and planned price only');
     ok(!(await p.evaluate(() => !!document.getElementById('om-hint'))), 'the old hint paragraph is gone');
-    ok(await text(p, '#om-waiver') === 'I ask you to start the work right away and understand I cannot withdraw once the analysis is requested.', 'waiver text: ' + await text(p, '#om-waiver'));
+    ok(await p.evaluate(() => !document.getElementById('om-waiver') && !document.querySelector('[name=waiver]')), 'no withdrawal checkbox in the order form');
     ok(await p.evaluate(() => { const t = document.getElementById('order-form').textContent; return !/invoice|hello@spritzconsulting|By paying|delete them after 30 days/i.test(t); }), 'the invoice line and the Terms and privacy line are gone from the order form');
     await fill(p); await p.fill('#om-wl', '4200'); await p.fill('#om-notes', 'Q3 2027, 19.99 USD');
     await Promise.all([p.waitForURL(/paid=1/), p.click('#om-go')]);

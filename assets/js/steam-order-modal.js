@@ -29,7 +29,6 @@
     <label class="om-chk om-express" id="om-express" hidden><span class="om-express-copy"><span class="om-express-title">Express</span><span class="om-express-time" id="om-express-time"></span></span><span class="om-express-price" id="om-express-price"></span><input type="checkbox" role="switch" name="express" aria-label="Express delivery" disabled></label>
     <p class="om-total" id="om-total" hidden></p>
 
-    <label class="om-chk" id="om-waiver" hidden><input type="checkbox" name="waiver"><span>I ask you to start the work right away and understand I cannot withdraw once the analysis is requested.</span></label>
     <label class="om-chk" id="om-news"><input type="checkbox" name="news"><span>Send me occasional news from Spritz Consulting (optional).</span></label>
 
     <p class="om-err" id="om-err" role="alert" hidden></p>
@@ -139,8 +138,6 @@
     form.elements.version.value = v;
     var paid = (v !== 'free');
     document.getElementById('om-title').textContent = T[v].title;
-    document.getElementById('om-waiver').hidden = !paid;
-    form.elements.waiver.required = paid;
     /* Free: Steam link and email only. Standard: plus one optional free-text note. Premium: the same note and an
        optional wishlist count. What used to be separate optional fields (release, wishlists, planned price) is now a
        hint inside the note, so the form stays short. */
@@ -418,9 +415,6 @@
     if (!wl.disabled && wl.value !== '' && !(Number(wl.value) >= 0 && Number.isInteger(Number(wl.value)))) {
       return fail('Enter your wishlist count as a whole number, or leave it empty.', wl);
     }
-    if (form.elements.waiver.required && !form.elements.waiver.checked) {
-      return fail('Please confirm that I can start the work right away.', form.elements.waiver);
-    }
     document.getElementById('om-err').hidden = true;
     var v = form.elements.version.value, el = form.elements;
     var express = !el.express.disabled && el.express.checked;
@@ -441,7 +435,6 @@
         email: el.email.value.trim(),
         wishlists: el.wishlists.disabled ? '' : el.wishlists.value,
         notes: el.notes.disabled ? '' : el.notes.value.trim(),
-        waiver: el.waiver.checked,
         news: !el.news.disabled && el.news.checked,
         express: express,
         promo: promoFor(v) ? promoFor(v).code : '',

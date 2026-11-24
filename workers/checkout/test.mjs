@@ -266,9 +266,6 @@ async function workerSuite(label, worker) {
   await test(label + ' ' + 'Solo Dev is not handled here', async () => {
     assert.equal((await post(order({ version: 'free' }))).status, 422);
   });
-  await test(label + ' ' + 'missing waiver is rejected', async () => {
-    assert.equal((await post(order({ waiver: false }))).status, 422);
-  });
   await test(label + ' ' + 'bad Steam link and bad email are rejected', async () => {
     assert.equal((await post(order({ steam: 'https://example.com/x' }))).status, 422);
     assert.equal((await post(order({ email: 'nope' }))).status, 422);
@@ -1039,7 +1036,7 @@ async function workerSuite(label, worker) {
     const c = notifyCalls[0];
     assert.deepEqual([c.body.replyTo, c.body.subject], ['buyer@studio.co', 'New Indie order paid: app 4242 + Express']);
     const text = c.body.body, lines = text.split('\n');
-    for (const l of ['Tier: Indie', 'Express: Yes', 'Quarter: 2027-Q2', 'Wishlists: 5000', 'Planned price: 19.99', 'Notes: Line one Line two', 'Newsletter consent: Yes', 'Waiver: Yes', 'Promo code: -',
+    for (const l of ['Tier: Indie', 'Express: Yes', 'Quarter: 2027-Q2', 'Wishlists: 5000', 'Planned price: 19.99', 'Notes: Line one Line two', 'Newsletter consent: Yes', 'Promo code: -',
       'Amount paid: 148.00 EUR', 'Currency: EUR', 'Expected total: 148.00 EUR', 'Matches expected total: Yes', 'Due date: 2026-11-18', 'Stripe session id: cs_nt_1', 'App id: 4242']) assert.ok(lines.includes(l), l);
     assert.ok(lines.includes('Steam link:') && lines.includes('https://store.steampowered.com/app/4242/'));
     assert.equal(/1\.2\.3\./.test(text), false, 'no IP address');
@@ -1052,6 +1049,12 @@ async function workerSuite(label, worker) {
     assert.equal(notifyCalls.length, 1);
     assert.equal(notifyCalls[0].body.subject, 'New Publisher order paid: app 4242');
     assert.ok(notifyCalls[0].body.body.split('\n').includes('Notes: Line one Line two'), 'the Publisher note reaches the email');
+  });
+  await test(label + ' ' + 'no waiver is asked for: an order without one goes through and none is stored', async () => {
+    resetNotify();
+    const r = await post(order({ waiver: undefined }), notifyEnv);
+    assert.equal(r.status, 200);
+    assert.equal('waiver' in lastRecord().rec, false);
   });
   await test(label + ' ' + 'notify: a second webhook for the same session sends no second email', async () => {
     resetNotify();
