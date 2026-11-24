@@ -82,6 +82,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ph = await p.getAttribute('#om-notes', 'placeholder');
     ok(/release/.test(ph) && /planned price/.test(ph) && !/wishlists/.test(ph), 'Publisher: the note hints release and planned price only');
     ok(!(await p.evaluate(() => !!document.getElementById('om-hint'))), 'the old hint paragraph is gone');
+    ok(await p.evaluate(() => { const t = document.getElementById('order-form').textContent; return !/invoice|hello@spritzconsulting|By paying|delete them after 30 days/i.test(t); }), 'the invoice line and the Terms and privacy line are gone from the order form');
     await fill(p); await p.fill('#om-wl', '4200'); await p.fill('#om-notes', 'Q3 2027, 19.99 USD');
     await Promise.all([p.waitForURL(/paid=1/), p.click('#om-go')]);
     ok(posts.length === 1 && posts[0].version === 'premium' && posts[0].wishlists === '4200' && posts[0].notes === 'Q3 2027, 19.99 USD', 'Publisher POST carries wishlists and the note: ' + JSON.stringify(posts[0]));
