@@ -350,7 +350,7 @@ Shadows appear in three places only: (a) hero-right panel and primary button get
 - **Hover and focus:** the card scales to 1.03 over 350ms, the border mixes 35% clay and a clay glow appears. The feature list blurs to 6% opacity and the "Made for" panel (`.sa-for`) fades in over it. Keyboard focus inside the card does the same.
 - **Touch screens** (`hover: none`): the panel is always visible above the list and the list does not blur.
 - **Solo Dev:** `.sa-tier.free` keeps a constant soft clay glow, and `.sa-limit` shows the cap of three analyses.
-- **Button** (`.sa-buy`): clay outline. On hover and focus it fills with clay, lifts 2px and glows. `:active` returns it to the baseline.
+- **Button** (`.sa-buy`): clay outline. On hover and focus it fills with clay, lifts 2px and glows. `:active` returns it to the baseline. On touch screens (`hover: none`) there is no hover, so it is filled with clay by default.
 - **Order:** the button carries `data-order="free|standard|premium"` and opens the Order modal below, on any page that loads the modal files. The `href` is the fallback when the script does not run. On the homepage it points to `/steam-analysis/?tier=free|standard|premium`.
 - **Reveal:** the card sits inside an element with `data-reveal`, so it fades up on scroll like every other section.
 - **Reduced motion:** the scale, the fades and the button lift are removed. The panel still shows on hover and focus.

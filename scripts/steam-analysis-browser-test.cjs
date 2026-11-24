@@ -326,6 +326,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     let s = await st(); const short = s.h;
     ok(s.list.every((x) => !x) && s.forOn, 'phone: Made for is always shown, the feature lists start closed');
     ok(s.hint.join() === 'false,false,false', 'phone: every card has a hint row');
+    ok(await p.evaluate(() => [...document.querySelectorAll('.sa-buy')].every((b) => getComputedStyle(b).backgroundColor !== 'rgba(0, 0, 0, 0)' && getComputedStyle(b).backgroundColor === getComputedStyle(b).borderTopColor)), 'phone: the buy buttons are filled with clay without a hover');
     const fb = await (await p.$('.sa-tier.is-front .sa-for p')).boundingBox();
     await p.touchscreen.tap(fb.x + 20, fb.y + 10); await p.waitForTimeout(500);
     s = await st(); ok(s.open[0] && s.list[0] && s.hint[0] === 'true' && s.h > short, 'phone: a tap on the card body opens the list and the deck grows');
@@ -339,6 +340,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
   await session('tier cards wide', { ctx: { viewport: { width: 1280, height: 900 } } }, async (p) => {
     const d = await p.evaluate(() => ({ layout: document.querySelector('.sd-wrap').dataset.layout, pos: [...document.querySelectorAll('.sa-tier')].map((c) => getComputedStyle(c).position), inert: [...document.querySelectorAll('.sa-tier')].some((c) => c.inert), tops: [...document.querySelectorAll('.sa-tier')].map((c) => Math.round(c.getBoundingClientRect().top)), ctl: getComputedStyle(document.querySelector('.sd-controls')).display }));
     ok(d.layout === 'grid' && d.pos.every((x) => x === 'relative') && !d.inert && d.ctl === 'none', 'wide: three plain cards, no arrows');
+    ok(await p.evaluate(() => [...document.querySelectorAll('.sa-buy')].every((x) => getComputedStyle(x).backgroundColor === 'rgba(0, 0, 0, 0)')), 'wide: the buy buttons stay outlined until hover');
     ok(await p.evaluate(() => [...document.querySelectorAll('.sa-more')].every((m) => getComputedStyle(m).display === 'none') && [...document.querySelectorAll('.sa-body > ul')].every((u) => !u.hidden)), 'wide: no hint row, every feature list shown');
     ok(d.tops[0] === d.tops[1] && d.tops[1] === d.tops[2], 'wide: the cards sit side by side');
   });
