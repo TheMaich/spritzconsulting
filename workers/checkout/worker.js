@@ -35,7 +35,11 @@
  *   are free:email:<sha256 of the lowercased email>, free:app:<app id> and free:day:<YYYY-MM-DD>. The raw email is never
  *   part of a counter key. Delivery is manual: read the orders from KV (status "free_new").
  * - No tax settings are sent to Stripe: tax behaviour stays as configured on the prices.
- * - No notification email yet; read orders from KV (see README).
+ * - Notification email: one plain text email per order, sent with a POST to a Google Apps Script web app (NOTIFY_URL, with
+ *   NOTIFY_SECRET in the body and NOTIFY_TO as the recipient; see README). A Solo Dev order sends it once the order is stored.
+ *   A paid order sends it only from the webhook, once per Checkout session (the order:paid: key), never when it is only
+ *   started. The send runs in ctx.waitUntil, catches every error and logs only a status code, so it can never fail or delay
+ *   an order. With a variable missing it is skipped and logged once. The IP address is not part of the email.
  */
 
 import { dueDate } from './business-days.js';
@@ -594,6 +598,94 @@ async function handleOrder(request, env) {
   }
 }
 
+// ---- Notification email (Google Apps Script web app) ---------------------------------------
+
+let notifySkipLogged = false;
+
+// One value for the email body: empty becomes "-", and line breaks become spaces so every field stays on one line.
+function mailValue(value) {
+  const text = value == null ? '' : String(value).replace(/\s*[\r\n]+\s*/g, ' ').trim();
+  return text === '' ? '-' : text;
+}
+
+function mailAmount(cents, currency) {
+  return typeof cents === 'number' ? (cents / 100).toFixed(2) + ' ' + String(currency || '').toUpperCase() : '-';
+}
+
+function yesNo(value) {
+  return value === true ? 'Yes' : value === false ? 'No' : '-';
+}
+
+// Sends the notice. Never throws and never waits for the caller: the work runs in ctx.waitUntil, every error is caught,
+// and the log carries only a status code, never the URL or the secret.
+function notifyOrder(env, ctx, replyTo, subject, lines) {
+  if (!env.NOTIFY_URL || !env.NOTIFY_SECRET || !env.NOTIFY_TO) {
+    if (!notifySkipLogged) {
+      notifySkipLogged = true;
+      console.log('notification email skipped: NOTIFY_URL, NOTIFY_SECRET or NOTIFY_TO is not set');
+    }
+    return;
+  }
+  const job = (async () => {
+    try {
+      const response = await fetch(env.NOTIFY_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: env.NOTIFY_SECRET, to: env.NOTIFY_TO, replyTo, subject, body: lines.join('\n') }),
+      });
+      if (!response.ok) console.log('notification email failed: status ' + response.status);
+    } catch (err) {
+      console.log('notification email failed: no response');
+    }
+  })();
+  if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(job);
+}
+
+// The fields every notice starts with. The Steam link has its own line.
+function mailHead(order, appId) {
+  return [
+    'Order id: ' + mailValue(order.id),
+    'Created: ' + mailValue(order.createdAt),
+    'Customer email: ' + mailValue(order.email),
+    'Steam link:',
+    mailValue(order.steam),
+    'App id: ' + mailValue(appId),
+    'Page: ' + mailValue(order.page),
+    'Referrer: ' + mailValue(order.referrer),
+    'Country: ' + mailValue(order.country),
+  ];
+}
+
+function notifyFreeOrder(env, ctx, order) {
+  notifyOrder(env, ctx, order.email, 'New Solo Dev order: app ' + order.appId, mailHead(order, order.appId));
+}
+
+function notifyPaidOrder(env, ctx, order) {
+  const appId = steamAppId(order.steam || '');
+  const names = { standard: 'Indie', premium: 'Publisher' };
+  const tier = names[order.tier] || order.tier || 'unknown';
+  const subject = 'New ' + tier + ' order paid: app ' + (appId || 'unknown') + (order.express ? ' + Express' : '');
+  const lines = mailHead(order, appId).concat([
+    'Tier: ' + mailValue(tier),
+    'Express: ' + yesNo(!!order.express),
+    'Quarter: ' + mailValue(order.quarter),
+    'Wishlists: ' + mailValue(order.wishlists),
+    'Planned price: ' + mailValue(order.price),
+    'Notes: ' + mailValue(order.notes),
+    'Newsletter consent: ' + yesNo(order.news === true),
+    'Waiver: ' + yesNo(order.waiver === true),
+    'Promo code: ' + mailValue(order.promo),
+    'Amount paid: ' + mailAmount(order.amountTotal, order.paidCurrency),
+    'Currency: ' + mailValue(String(order.paidCurrency || '').toUpperCase()),
+    'Expected total: ' + mailAmount(order.expectedTotal, order.paidCurrency),
+    'Matches expected total: ' + yesNo(order.amountMatches),
+    'Due date: ' + mailValue(order.due_date),
+    'Stripe session id: ' + mailValue(order.stripeSessionId),
+  ]);
+  notifyOrder(env, ctx, order.email, subject, lines);
+}
+
 // The numeric app id of a Steam link of the form /app/<id>/, or '' when the link has none.
 function steamAppId(link) {
   let url;
@@ -614,7 +706,7 @@ async function readCount(env, key) {
 
 // POST /api/order/free: Solo Dev. Order of checks: validation, per-IP limit, email limit, game limit, daily limit.
 // The counters go up only after the order is stored.
-async function handleFreeOrder(request, env) {
+async function handleFreeOrder(request, env, ctx) {
   const origin = request.headers.get('Origin') || '';
   if (origin && !ALLOWED_ORIGINS.includes(origin)) {
     return json(403, { ok: false, error: 'origin_not_allowed' }, origin);
@@ -662,6 +754,7 @@ async function handleFreeOrder(request, env) {
   await env.CONTACT_SUBMISSIONS.put(emailKey, String(emailCount + 1), { expirationTtl: FREE_COUNTER_TTL_SECONDS });
   await env.CONTACT_SUBMISSIONS.put(appKey, String(appCount + 1), { expirationTtl: FREE_COUNTER_TTL_SECONDS });
   await env.CONTACT_SUBMISSIONS.put(dayKey, String(dayCount + 1), { expirationTtl: FREE_DAY_TTL_SECONDS });
+  notifyFreeOrder(env, ctx, order);
   return json(200, { ok: true }, origin);
 }
 
@@ -680,7 +773,7 @@ async function handlePromo(request, env) {
   return json(200, { valid: true, tier: promo.tier, amounts: cut, listAmounts: promo.amounts, percentOff: pct }, origin);
 }
 
-async function handleWebhook(request, env) {
+async function handleWebhook(request, env, ctx) {
   const raw = await request.text();
   const valid = await verifyStripeSignature(raw, request.headers.get('Stripe-Signature'), env.STRIPE_WEBHOOK_SECRET, Math.floor(Date.now() / 1000));
   if (!valid) return json(400, { ok: false, error: 'bad_signature' }, '');
@@ -762,6 +855,8 @@ async function handleWebhook(request, env) {
 
   await env.CONTACT_SUBMISSIONS.put(key, JSON.stringify(order), { expirationTtl: ORDER_TTL_SECONDS });
   await env.CONTACT_SUBMISSIONS.put(paidKey, paidAt.toISOString(), { expirationTtl: ORDER_TTL_SECONDS });
+  // The order is paid and marked as processed: one notice per Checkout session.
+  notifyPaidOrder(env, ctx, order);
 
   // Global discount cleanup, after the record is safe. An INDIE- code is not redeemed by Stripe in this mode (the order
   // coupon carried the discount), so it is switched off here. The order coupon is deleted; the discount already applied stays.
@@ -773,7 +868,7 @@ async function handleWebhook(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, '');
     const origin = request.headers.get('Origin') || '';
@@ -784,7 +879,7 @@ export default {
 
     if (path === '/api/order/webhook') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
-      return handleWebhook(request, env);
+      return handleWebhook(request, env, ctx);
     }
     if (path === '/api/order/config') {
       if (request.method !== 'GET') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
@@ -797,7 +892,7 @@ export default {
     }
     if (path === '/api/order/free') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);
-      return handleFreeOrder(request, env);
+      return handleFreeOrder(request, env, ctx);
     }
     if (path === '/api/order') {
       if (request.method !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' }, origin);

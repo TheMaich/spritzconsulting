@@ -107,8 +107,18 @@ async function workerSuite(label, worker) {
   let stripeCalls = [];
   const stripePromoCodes = new Map();   // code -> Stripe promotion code object
   let promoLookupStatus = 200;
+  // Mocked notification script (NOTIFY_URL): every call is recorded here, apart from the Stripe calls.
+  const NOTIFY_URL = 'https://script.google.com/macros/s/TESTSCRIPTID/exec';
+  const NOTIFY_SECRET = 'SECRET-notify-12345';
+  let notifyCalls = [];
+  let notifyMode = 200;   // an HTTP status, or 'throw' for a network failure
   globalThis.fetch = async (url, init = {}) => {
     const href = String(url);
+    if (href.startsWith(NOTIFY_URL)) {
+      notifyCalls.push({ url: href, init, body: JSON.parse(init.body) });
+      if (notifyMode === 'throw') throw new Error('network down ' + NOTIFY_URL + ' ' + NOTIFY_SECRET);
+      return new Response('ok', { status: notifyMode });
+    }
     stripeCalls.push({ url: href, method: init.method || 'GET', auth: (init.headers || {}).Authorization, params: new URLSearchParams(init.body || '') });
     if (href.startsWith('https://api.stripe.com/v1/promotion_codes')) {
       if (promoLookupStatus !== 200) return new Response(JSON.stringify({ error: { type: 'invalid_request_error', message: 'x' } }), { status: promoLookupStatus });
@@ -128,7 +138,13 @@ async function workerSuite(label, worker) {
   let couponSeq = 0;
   const lookups = () => stripeCalls.filter((c) => c.url.startsWith('https://api.stripe.com/v1/promotion_codes'));
   const checkoutCall = () => stripeCalls.filter((c) => c.url === 'https://api.stripe.com/v1/checkout/sessions').pop();
-  const call = (path, init, env = baseEnv) => worker.fetch(new Request('https://spritzconsulting.com' + path, init), env);
+  // The context collects what the Worker hands to waitUntil, and every call waits for it, like the runtime does.
+  const call = async (path, init, env = baseEnv) => {
+    const pending = [];
+    const res = await worker.fetch(new Request('https://spritzconsulting.com' + path, init), env, { waitUntil: (p) => pending.push(p) });
+    await Promise.all(pending);
+    return res;
+  };
   let ipSeq = 0;   // a fresh IP per order, so the order rate limit (5 per 10 minutes per IP) never gets in the way
   const post = (body, env) => call('/api/order', {
     method: 'POST',
@@ -877,11 +893,11 @@ async function workerSuite(label, worker) {
   // ---- Solo Dev (free): POST /api/order/free ---------------------------------------------
   const resetFree = () => { for (const k of [...kv.keys()]) if (k.startsWith('free:') || k.startsWith('order:rlf:') || k.startsWith('order:')) { kv.delete(k); kvTtl.delete(k); } stripeCalls = []; };
   let freeIp = 0;
-  const freePost = (body, ip) => call('/api/order/free', {
+  const freePost = (body, ip, env) => call('/api/order/free', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Origin: 'https://spritzconsulting.com', 'CF-Connecting-IP': ip || ('7.7.' + (freeIp >> 8) + '.' + (freeIp++ & 255)) },
     body: JSON.stringify(body),
-  });
+  }, env);
   const free = (n, extra) => ({ steam: 'https://store.steampowered.com/app/' + n + '/', email: 'dev' + n + '@studio.co', page: '/steam-analysis/', referrer: '', ...extra });
   const freeKeys = () => [...kv.keys()].filter((k) => k.startsWith('free:'));
   const freeRecords = () => [...kv.entries()].filter(([k]) => k.startsWith('order:') && !k.startsWith('order:rl') && !k.startsWith('order:paid:')).map(([, v]) => JSON.parse(v));
@@ -979,6 +995,118 @@ async function workerSuite(label, worker) {
     const r = await post(order({ version: 'free' }));
     assert.deepEqual([r.status, (await r.json()).error], [422, 'invalid_tier']);
     assert.deepEqual([freeKeys(), stripeCalls], [[], []]);
+  });
+
+  // ---- Notification email through the Apps Script web app --------------------------------
+  const notifyEnv = { ...baseEnv, NOTIFY_URL, NOTIFY_SECRET, NOTIFY_TO: 'owner@example.com' };
+  const logsDuring = async (fn) => {
+    const saved = console.log; const out = [];
+    console.log = (...a) => out.push(a.join(' '));
+    try { await fn(); } finally { console.log = saved; }
+    return out;
+  };
+  const resetNotify = () => { resetFree(); notifyCalls = []; notifyMode = 200; };
+  // Starts a paid order and prepares its paid webhook. hook() delivers it.
+  async function paidWith(env, extra = {}, sid = 'cs_nt_1', total = 14800, cur = 'eur') {
+    const r = await post(order({ steam: 'https://store.steampowered.com/app/4242/', email: 'buyer@studio.co', quarter: '2027-Q2', wishlists: 5000, price: 19.99, notes: 'Line one\nLine two', news: true, waiver: true, page: '/steam-analysis/', ...extra }), env);
+    assert.equal(r.status, 200);
+    const id = lastRecord().id;
+    const body = JSON.stringify({ type: 'checkout.session.completed', created, data: { object: { id: sid, payment_status: 'paid', metadata: { order_id: id, tier: extra.version || 'standard', express: String(extra.express === true) }, amount_total: total, currency: cur } } });
+    return { id, sid, body, hook: (e = env) => call('/api/order/webhook', { method: 'POST', headers: signed(body), body }, e) };
+  }
+
+  await test(label + ' ' + 'notify: a free order sends one email with replyTo and the Steam link, and no IP address', async () => {
+    resetNotify();
+    const r = await freePost(free(1234, { email: 'dev@studio.co', referrer: '' }), '5.6.7.8', notifyEnv);
+    assert.equal(r.status, 200);
+    assert.equal(notifyCalls.length, 1);
+    const c = notifyCalls[0];
+    assert.deepEqual([c.url, c.init.method, c.init.redirect], [NOTIFY_URL, 'POST', 'follow']);
+    assert.deepEqual([c.body.secret, c.body.to, c.body.replyTo, c.body.subject], [NOTIFY_SECRET, 'owner@example.com', 'dev@studio.co', 'New Solo Dev order: app 1234']);
+    const lines = c.body.body.split('\n');
+    assert.ok(lines.includes('Steam link:') && lines.includes('https://store.steampowered.com/app/1234/'), 'the Steam link has its own line');
+    assert.ok(lines.includes('App id: 1234') && lines.includes('Customer email: dev@studio.co') && lines.includes('Referrer: -') && lines.includes('Page: /steam-analysis/'));
+    assert.equal(c.body.body.includes('5.6.7.8'), false, 'no IP address');
+    assert.equal(c.body.body.includes('Order id: ' + freeRecords()[0].id), true);
+    assert.deepEqual(stripeCalls, [], 'no Stripe call');
+  });
+  await test(label + ' ' + 'notify: a paid order sends one email from the webhook, with amount and notes, and none when it is only started', async () => {
+    resetNotify();
+    const p = await paidWith(notifyEnv, { express: true });
+    assert.equal(notifyCalls.length, 0, 'no email when the order is only started');
+    assert.equal((await p.hook()).status, 200);
+    assert.equal(notifyCalls.length, 1);
+    const c = notifyCalls[0];
+    assert.deepEqual([c.body.replyTo, c.body.subject], ['buyer@studio.co', 'New Indie order paid: app 4242 + Express']);
+    const text = c.body.body, lines = text.split('\n');
+    for (const l of ['Tier: Indie', 'Express: Yes', 'Quarter: 2027-Q2', 'Wishlists: 5000', 'Planned price: 19.99', 'Notes: Line one Line two', 'Newsletter consent: Yes', 'Waiver: Yes', 'Promo code: -',
+      'Amount paid: 148.00 EUR', 'Currency: EUR', 'Expected total: 148.00 EUR', 'Matches expected total: Yes', 'Due date: 2026-11-18', 'Stripe session id: cs_nt_1', 'App id: 4242']) assert.ok(lines.includes(l), l);
+    assert.ok(lines.includes('Steam link:') && lines.includes('https://store.steampowered.com/app/4242/'));
+    assert.equal(/1\.2\.3\./.test(text), false, 'no IP address');
+    assert.deepEqual(stripeCalls.filter((x) => x.url.startsWith(NOTIFY_URL)), [], 'the notice is not a Stripe call');
+  });
+  await test(label + ' ' + 'notify: the Publisher subject has no Express suffix when Express is off', async () => {
+    resetNotify();
+    const p = await paidWith(notifyEnv, { version: 'premium' }, 'cs_nt_2', 29900);
+    await p.hook();
+    assert.equal(notifyCalls.length, 1);
+    assert.equal(notifyCalls[0].body.subject, 'New Publisher order paid: app 4242');
+  });
+  await test(label + ' ' + 'notify: a second webhook for the same session sends no second email', async () => {
+    resetNotify();
+    const p = await paidWith(notifyEnv, {}, 'cs_nt_3', 9900);
+    await p.hook();
+    const again = await p.hook();
+    assert.equal((await again.json()).duplicate, true);
+    assert.equal(notifyCalls.length, 1);
+  });
+  await test(label + ' ' + 'notify: missing variables send nothing, log once at most, and the order still succeeds', async () => {
+    resetNotify();
+    let skipLogs = 0, n = 0;
+    for (const missing of ['NOTIFY_URL', 'NOTIFY_SECRET', 'NOTIFY_TO']) {
+      const env = { ...notifyEnv, [missing]: undefined };
+      const logs = await logsDuring(async () => {
+        const f = await freePost(free(9100 + n), undefined, env);
+        assert.deepEqual([f.status, (await f.json()).ok], [200, true], missing);
+        const p = await paidWith(env, {}, 'cs_nt_m' + n, 9900);
+        assert.equal((await p.hook()).status, 200);
+        assert.equal(JSON.parse(kv.get('order:' + p.id)).status, 'paid');
+      });
+      n++;
+      skipLogs += logs.filter((l) => l.startsWith('notification email skipped')).length;
+    }
+    assert.equal(notifyCalls.length, 0);
+    assert.ok(skipLogs <= 1, 'logged at most once, got ' + skipLogs);
+  });
+  await test(label + ' ' + 'notify: a 500 or a network error from the script changes nothing in the responses, and the log has no URL or secret', async () => {
+    resetNotify();
+    const all = [];
+    for (const mode of [500, 'throw']) {
+      notifyMode = mode;
+      const k = mode === 500 ? 0 : 1;
+      all.push(...await logsDuring(async () => {
+        const f = await freePost(free(9200 + k), undefined, notifyEnv);
+        assert.deepEqual([f.status, await f.json()], [200, { ok: true }], String(mode));
+        const p = await paidWith(notifyEnv, {}, 'cs_nt_e' + k, 9900);
+        const h = await p.hook();
+        assert.deepEqual([h.status, (await h.json()).ok], [200, true], String(mode));
+        assert.equal(JSON.parse(kv.get('order:' + p.id)).status, 'paid');
+      }));
+    }
+    assert.ok(notifyCalls.length >= 4, 'each order tried to send');
+    assert.ok(all.some((l) => l === 'notification email failed: status 500'), 'the status code is logged');
+    for (const l of all) {
+      assert.equal(l.includes(NOTIFY_SECRET) || l.includes('TESTSCRIPTID') || l.includes('script.google.com') || l.includes('owner@example.com'), false, l);
+    }
+  });
+  await test(label + ' ' + 'notify: a free order refused by a limit sends no email', async () => {
+    resetNotify();
+    await freePost(free(9300), undefined, notifyEnv);
+    notifyCalls = [];
+    const r = await freePost(free(9300, { email: 'other@studio.co' }), undefined, notifyEnv);
+    assert.equal(r.status, 409);
+    assert.equal(notifyCalls.length, 0);
+    resetFree();
   });
 
 }

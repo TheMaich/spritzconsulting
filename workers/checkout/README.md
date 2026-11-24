@@ -74,7 +74,53 @@ npx wrangler kv key list --binding CONTACT_SUBMISSIONS --prefix order: --remote
 npx wrangler kv key get "order:<uuid>" --binding CONTACT_SUBMISSIONS --remote
 ```
 
-There is **no notification email yet**. Check KV for `status: "paid"` records (and `status: "free_new"` for Solo Dev) until the mail service exists.
+Each order also sends one notification email (see "Notification email"). KV stays the record: read `status: "paid"` orders and `status: "free_new"` Solo Dev orders there if an email goes missing.
+
+## Notification email
+
+The Worker sends one plain text email per order by posting to a Google Apps Script web app. The script mails you with `MailApp`.
+
+- Solo Dev: sent right after `order:<uuid>` is stored in `POST /api/order/free`. Subject `New Solo Dev order: app <appId>`.
+- Indie and Publisher: sent only from the webhook, when `checkout.session.completed` marks the order paid, and once per Checkout session (the `order:paid:<session id>` key stops a repeated delivery). Nothing is sent when an order is only started. Subject `New <Indie|Publisher> order paid: app <appId>`, plus ` + Express` when it applies.
+- The body has one field per line. Empty fields show `-`. The Steam link has its own line. The IP address is not included. The customer's address is the `replyTo`, so replying to the email writes to the customer.
+- The send runs in `ctx.waitUntil` and catches every error, so a failing script never changes the order response. The log carries only the status code (`notification email failed: status 500`), never the URL or the secret.
+
+Variables (all three are needed; if one is missing the Worker skips the email and logs `notification email skipped` once):
+
+| Name | Kind | What it is |
+| --- | --- | --- |
+| `NOTIFY_URL` | secret | The web app URL that ends in `/exec`. Anyone with it can call the script, so keep it secret. |
+| `NOTIFY_SECRET` | secret | A long random string. The Worker sends it in the body and the script compares it. |
+| `NOTIFY_TO` | variable or secret | The address that receives the notices. |
+
+```
+npx wrangler secret put NOTIFY_URL
+npx wrangler secret put NOTIFY_SECRET
+npx wrangler secret put NOTIFY_TO
+```
+
+In the dashboard: Workers & Pages > checkout > Settings > Variables and secrets.
+
+Apps Script setup: script.google.com > New project > paste the code below > set `SECRET` and `TO` > Deploy > New deployment > type Web app > Execute as **Me**, Who has access **Anyone** > copy the `/exec` URL into `NOTIFY_URL`. After every code change create a **new version** of the deployment (Deploy > Manage deployments > edit > New version), because `/exec` runs the saved version. The first run asks you to authorise sending email.
+
+```js
+// Google Apps Script web app: mails the order notices the checkout Worker posts.
+const SECRET = 'PASTE_THE_SAME_VALUE_AS_NOTIFY_SECRET';
+const TO = 'PASTE_THE_SAME_ADDRESS_AS_NOTIFY_TO';
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    if (!data.secret || data.secret !== SECRET || data.to !== TO) return ContentService.createTextOutput('forbidden');
+    MailApp.sendEmail({ to: TO, replyTo: data.replyTo, subject: data.subject, body: data.body });
+    return ContentService.createTextOutput('ok');
+  } catch (err) {
+    return ContentService.createTextOutput('error');
+  }
+}
+```
+
+Apps Script answers 200 even for `forbidden` and `error`, so the Worker log cannot see a rejected secret. If emails stop arriving, open the script's Executions page. A free Google account sends about 100 emails a day through `MailApp`.
 
 ## Solo Dev (free) orders
 
@@ -94,7 +140,7 @@ Keys in `CONTACT_SUBMISSIONS`:
 - `free:day:<YYYY-MM-DD>`: counter for that UTC day, 2 day expiry.
 - `order:rlf:<ip>`: per-IP limit, 600 second expiry.
 
-The counters go up only after the order is stored. Each new order resets the 365 day expiry of its email and game counters, so the one-way codes live for 12 months after the last free order. The privacy page says the same. Delivery is manual: list the `order:` keys, read the ones with `status: "free_new"`, send the PDF within 1 day.
+The counters go up only after the order is stored. Each new order resets the 365 day expiry of its email and game counters, so the one-way codes live for 12 months after the last free order. The privacy page says the same. Delivery is manual: the notification email tells you about each order, and the `order:` keys with `status: "free_new"` hold the same data. Send the PDF within 1 day.
 
 To compute an email code by hand: `printf '%s' 'name@example.com' | sha256sum`.
 
@@ -160,7 +206,7 @@ Publisher 3 (2 with Express). The list ends with 2027: after that the helper ski
 `node build-single.mjs` writes `worker.single.js`: `worker.js` and `business-days.js` in one file, with no imports.
 Paste it into the dashboard editor. The dashboard does not read `wrangler.toml`, so there you also set by hand:
 the KV binding `CONTACT_SUBMISSIONS`, the variables `EXPRESS_ENABLED`, `PRICES`, `EXPRESS_PRICES`, `PRICE_AMOUNTS`, `EXPRESS_AMOUNTS`
-and `PROMOS` (all but `EXPRESS_ENABLED` as JSON), the plain text variable `INDIE_PUBLISHER_COUPON_ID`, the two secrets, and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
+and `PROMOS` (all but `EXPRESS_ENABLED` as JSON), the plain text variable `INDIE_PUBLISHER_COUPON_ID`, the two Stripe secrets, the three notification variables (`NOTIFY_URL`, `NOTIFY_SECRET`, `NOTIFY_TO`), and the two routes. Edit `worker.js` or `business-days.js`, never the single file.
 
 ## Tests
 

@@ -15,6 +15,8 @@ binding = "CONTACT_SUBMISSIONS"
 id = "151a51cc4d7b4e0c827dce67a3b15813"
 
 [vars]
+# Notification email (see README, "Notification email"): NOTIFY_URL, NOTIFY_SECRET and NOTIFY_TO are not kept here.
+# Set them as secrets (npx wrangler secret put NAME) or in the dashboard. Without all three the Worker sends no email.
 # MOVING TO LIVE: three things change, nothing else in this file.
 #   1. PRICES                the two tier price ids (live products, not the sandbox ids below).
 #   2. EXPRESS_PRICES        the two Express price ids from the live Express products (repeat them under eur, usd, gbp).
