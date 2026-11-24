@@ -31,7 +31,7 @@
  *   currency, because Stripe Checkout takes one discount per session. The coupon lives 25 hours; the webhook deletes it
  *   after payment and switches an INDIE- code off (Stripe does not count that redemption in this mode). Above 50 it needs a
  *   test key or ALLOW_DEEP_DISCOUNT=true. With 0 the Worker behaves as described above and makes no coupon.
- * - Solo Dev (free) uses POST /api/order/free. It has no Stripe call, no waiver and no price. Limits: 3 orders per email,
+ * - Solo Dev (free) uses POST /api/order/free. It has no Stripe call and no price. Limits: 3 orders per email,
  *   1 per Steam app id, 5 per UTC day in total, and 5 per IP per 10 minutes (own counter, prefix order:rlf:). The counters
  *   are free:email:<sha256 of the lowercased email>, free:app:<app id> and free:day:<YYYY-MM-DD>. The raw email is never
  *   part of a counter key. Delivery is manual: read the orders from KV (status "free_new").
@@ -44,19 +44,6 @@
  */
 
 // ---- business-days.js ----------------------------------------------------------------
-/**
- * Business-day helper for delivery due dates.
- *
- * A business day is Monday to Friday and not an Italian public holiday.
- * The holiday list is hard-coded for 2026 and 2027 only. Outside those two
- * years the helper skips weekends only and reports approx: true, so a due date
- * is never silently wrong. Add the 2028 list before the end of 2027.
- *
- * Day 0 rule: an order paid on a business day up to 12:00 Europe/Rome counts
- * from that day (day 0). Paid after 12:00, or on a weekend or holiday, it counts
- * from the next business day (day 0). The due date is day 0 plus N business days.
- */
-
 const FIRST_YEAR = 2026;
 const LAST_YEAR = 2027;
 
@@ -602,7 +589,6 @@ async function handleOrder(request, env) {
   if (!STEAM_RE.test(steam)) return json(422, { ok: false, error: 'invalid_steam_link' }, origin);
   const email = clip(body.email, MAX_FIELD_LENGTH);
   if (!EMAIL_RE.test(email)) return json(422, { ok: false, error: 'invalid_email' }, origin);
-  if (body.waiver !== true) return json(422, { ok: false, error: 'waiver_required' }, origin);
 
   const quarter = clip(body.quarter, 20);
   if (quarter && !QUARTER_RE.test(quarter)) return json(422, { ok: false, error: 'invalid_quarter' }, origin);
@@ -665,9 +651,8 @@ async function handleOrder(request, env) {
     quarter,
     wishlists,
     price,
-    notes: tier === 'standard' ? clip(body.notes, MAX_NOTES_LENGTH) : '',
+    notes: clip(body.notes, MAX_NOTES_LENGTH),   // Indie and Publisher both have the note; Solo Dev never reaches this endpoint
     news: body.news === true,
-    waiver: true,
     page: clip(body.page, 500),
     referrer: clip(body.referrer, 500),
     ip,
@@ -769,7 +754,6 @@ function notifyPaidOrder(env, ctx, order) {
     'Planned price: ' + mailValue(order.price),
     'Notes: ' + mailValue(order.notes),
     'Newsletter consent: ' + yesNo(order.news === true),
-    'Waiver: ' + yesNo(order.waiver === true),
     'Promo code: ' + mailValue(order.promo),
     'Amount paid: ' + mailAmount(order.amountTotal, order.paidCurrency),
     'Currency: ' + mailValue(String(order.paidCurrency || '').toUpperCase()),
