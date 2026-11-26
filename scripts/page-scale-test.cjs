@@ -1,6 +1,6 @@
 /* Checks that /steam-analysis/ gets the same page scale as the homepage (assets/js/page-scale.js against
    assets/js/frame-fit.js) at a set of window sizes, and that the scaled page stays inside the window.
-   Run it after changing the homepage hero, then regenerate the table if it fails:
+   The table has one cell per 64px of width and 80px of height, so near a point where the homepage hero text wraps the two scales can differ by up to 0.03 (3%). Run it after changing the homepage hero, then regenerate the table if it fails:
      node scripts/page-scale-test.cjs
      node scripts/measure-home-scale.cjs */
 const { chromium } = require('playwright');
@@ -27,7 +27,7 @@ const SIZES = [[1024, 768], [1191, 909], [1251, 912], [1280, 720], [1366, 768], 
     await home.waitForTimeout(2800); await steam.waitForTimeout(1200);
     const kh = await home.evaluate(() => window.__frameFit && window.__frameFit.k);
     const ks = await steam.evaluate(() => window.__pageScale && window.__pageScale.k);
-    ok(typeof kh === 'number' && typeof ks === 'number' && Math.abs(kh - ks) <= 0.02, w + 'x' + h + ': homepage scale ' + kh + ', Steam page scale ' + ks);
+    ok(typeof kh === 'number' && typeof ks === 'number' && Math.abs(kh - ks) <= 0.03, w + 'x' + h + ': homepage scale ' + kh + ', Steam page scale ' + ks);
     const m = await steam.evaluate(() => ({ wide: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1, hdr: Math.round(document.getElementById('site-header').getBoundingClientRect().height), shown: !document.documentElement.classList.contains('ff-wait') }));
     const hh = await home.evaluate(() => Math.round(document.getElementById('site-header').getBoundingClientRect().height));
     ok(!m.wide && m.shown, w + 'x' + h + ': the Steam page does not scroll sideways and is shown');
