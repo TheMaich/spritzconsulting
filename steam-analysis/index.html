@@ -987,7 +987,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         "url": "https://spritzconsulting.com/about/"
       },
       "areaServed": "Worldwide",
-      "description": "A Steam analysis built from public data: followers, wishlist scenarios or sales so far, estimated sales and revenue, four competitors and recommendations, delivered as a PDF. Works before and after launch.",
+      "description": "A Steam analysis built from public data: followers, wishlist scenarios or sales so far, estimated sales and maximum gross revenue, comparable games and next steps, delivered as a PDF. The paid tiers add a scored Steam page review and market visibility. Works before and after launch.",
       "url": "https://spritzconsulting.com/steam-analysis/",
       "offers": [
         {
@@ -1027,7 +1027,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "Is the Solo Dev Tier really free?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with five slides, no Steam page review and no market visibility section. Each game gets one Solo Dev analysis."
+            "text": "The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with six slides, the last of them a closing slide. It has no Steam page review and no market visibility section. Each game gets one Solo Dev analysis."
           }
         },
         {
@@ -1043,7 +1043,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "How do you estimate wishlists, and how accurate is it?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "From your page’s own history: how fast followers have grown, and what that pace implies up to your launch date. If you give me your real wishlist count (for your own game), I start from it. The result is an estimate, shown as a cautious, central and optimistic outcome, with every assumption listed so you can see what would change it."
+            "text": "Before launch, the estimate comes from your page’s own history: its followers, how fast they have grown, and what that pace implies up to your launch date. In the paid tiers, if you share your real wishlist count (for your own game), I start from it. The result is an estimate, shown as a cautious, central and optimistic outcome, and the paid tiers write down the assumptions so you can see what would change it. After launch, the number of outstanding wishlists is not public, so the analysis does not estimate it."
           }
         },
         {
@@ -1051,7 +1051,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "What are the sources of the projections? How reliable are they?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page’s own growth trend. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate. It is a grounded estimate that tells you reliably where the game stands and how it compares with similar games. It is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most."
+            "text": "The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page’s own growth trend. The paid tiers also check copies of released games against third-party model estimates shown on SteamDB, so those copies usually appear as a range. Gross revenue is an estimated maximum at list price, before discounts, regional prices and Steam’s cut. Nothing private is needed. In the paid tiers, if you share your real wishlist count, I use it in place of the estimate. It is a grounded estimate that tells you reliably where the game stands and how it compares with similar games. It is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, and the paid tiers write down the assumptions behind them. Your real wishlist number tightens them the most."
           }
         },
         {
@@ -1059,7 +1059,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           "name": "Is my analysis private?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Each analysis is made for the person who orders it and is not shared. It uses only public data, so you can order one for any game."
+            "text": "Each analysis is made for the person who orders it and is not shared. It needs only public data, so you can order one for any game."
           }
         },
         {
@@ -1323,7 +1323,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
       <p>A confirmation arrives from Stripe.</p>
     </div>
     <h1 class="hero-h1 blur-reveal" style="animation-delay: 0.15s" id="hero-h1">Steam Game Sales Analysis &amp; <em>Revenue Forecast</em> for Developers and Publishers</h1>
-    <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me any Steam page, yours or a competitor&rsquo;s, and I turn its public data into an analysis of where the game stands today, delivered as a PDF. Before launch, it shows <b>how many followers and wishlists the page has</b> and how fast they are growing, <b>how four comparable games have sold</b>, and <b>the wishlists, copies and gross revenue the game could reach</b> under two release dates. After launch, it shows <b>how the game has sold so far</b>, how its sales hold up over time and how it compares with similar games. With it you know whether the game is on track, how it measures up against its genre, and what to do next. Built for solo developers and indie studios, and for publishing teams who scout games or size up a competitor.</p>
+    <p class="hero-intro blur-reveal" style="animation-delay: 0.3s">Send me any Steam page, yours or a competitor&rsquo;s, and I turn its public data into an analysis of where the game stands today, delivered as a PDF. Before launch, it shows <b>how many followers and wishlists the page has</b> and how fast it is growing, <b>how comparable games have sold</b>, and <b>the wishlists, copies and maximum gross revenue the game could reach</b> by launch. After launch, it shows <b>how the game has sold so far</b>, how its sales hold up over time and how it compares with similar games. With it you know whether the game is on track, how it measures up against its genre, and what to do next. Built for solo developers and indie studios, and for publishing teams who scout games or size up a competitor.</p>
   </section>
 
   <section class="section wrap" id="versions" aria-labelledby="versions-h">
@@ -1342,10 +1342,10 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>A short PDF snapshot of a game&rsquo;s current situation</span></li>
-            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
-            <li><span class="ic" aria-hidden="true">🎮</span><span>Competitors: headline only</span></li>
+            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and pre-launch wishlist estimate</span></li>
+            <li><span class="ic" aria-hidden="true">🎮</span><span>Three comparable games, headline numbers only</span></li>
             <li><span class="ic" aria-hidden="true">📈</span><span>One launch scenario, or your sales so far, in summary</span></li>
-            <li><span class="ic" aria-hidden="true">🧭</span><span>Next steps</span></li>
+            <li><span class="ic" aria-hidden="true">🧭</span><span>Three next steps and the biggest warning</span></li>
             <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
             <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No market visibility section</span></li>
             <li><span class="ic" aria-hidden="true">⚡</span><span>Delivered within 1 day</span></li>
@@ -1364,12 +1364,12 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>A complete PDF analysis of the game&rsquo;s current situation</span></li>
-            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists</span></li>
-            <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games with estimated sales</span></li>
-            <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates with wishlists, sales and gross revenue, or your sales so far if the game is out</span></li>
+            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and pre-launch wishlist estimate</span></li>
+            <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games: estimated copies and maximum gross</span></li>
+            <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates with wishlists, sales and maximum gross, or sales history and long tail if the game is out</span></li>
+            <li><span class="ic" aria-hidden="true">✅</span><span>Scored Steam page review, from capsule and trailer to community</span></li>
+            <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility slide: channels with priority and timing</span></li>
             <li><span class="ic" aria-hidden="true">🧭</span><span>Six recommendations, in priority order</span></li>
-            <li class="no"><span class="ic" aria-hidden="true">❌</span><span>No Steam page review</span></li>
-            <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility within the recommendations</span></li>
             <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 2 business days of payment</span></li>
           </ul>
           <div class="sa-for">
@@ -1385,17 +1385,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
         <div class="sa-body">
           <ul>
             <li><span class="ic" aria-hidden="true">📄</span><span>An in-depth analysis of the game&rsquo;s current situation</span></li>
-            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age and estimated wishlists, with recent momentum</span></li>
+            <li><span class="ic" aria-hidden="true">📍</span><span>Followers, page age, momentum and pre-launch wishlist estimate</span></li>
             <li><span class="ic" aria-hidden="true">🎮</span><span>Four comparable games, with a written reason for each</span></li>
-            <li><span class="ic" aria-hidden="true">📈</span><span>Two release dates with wishlists, sales and gross revenue, plus a range of outcomes</span></li>
-            <li><span class="ic" aria-hidden="true">✅</span><span>Steam page review with scores: capsule, trailer, screenshots, tags, demo</span></li>
-            <li><span class="ic" aria-hidden="true">📣</span><span>Market visibility in its own section: events calendar, press and creators</span></li>
+            <li><span class="ic" aria-hidden="true">📈</span><span>One or two release dates: wishlists, sales, maximum gross, range of outcomes</span></li>
+            <li><span class="ic" aria-hidden="true">🕹️</span><span>After launch: sales history, long tail, DLC, port and discount answers</span></li>
+            <li><span class="ic" aria-hidden="true">✅</span><span>Scored Steam page review, from capsule and trailer to community</span></li>
+            <li><span class="ic" aria-hidden="true">📣</span><span>Events, press, creators, similar games and bundle partners</span></li>
             <li><span class="ic" aria-hidden="true">🧭</span><span>Action plan with priorities and timing, and the three biggest threats</span></li>
             <li><span class="ic" aria-hidden="true">📬</span><span>Delivered within 3 business days of payment</span></li>
           </ul>
           <div class="sa-for">
             <span class="lbl">Made for</span>
-            <p><span class="hl">A publisher or a studio</span> steering a game needs facts before it commits real money. Before launch, the analysis compares two launch dates. After launch, it reads the sales and a discount plan. Both bring a scored page review, the biggest threats and <span class="hl">how real a competitor&rsquo;s threat is</span>.</p>
+            <p><span class="hl">A publisher or a studio</span> steering a game needs facts before it commits real money. Before launch, the analysis tests the release date. After launch, it reads the sales and weighs new content, a console port and discounts. Both bring a scored page review, the biggest threats and <span class="hl">how real a competitor&rsquo;s threat is</span>.</p>
           </div>
         </div>
         <a class="btn sa-buy" href="/#contact" data-order="premium"><span>Get Publisher Analysis</span></a>
@@ -1473,7 +1474,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-2" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-2" hidden>
-          <p>The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with five slides, no Steam page review and no market visibility section. Each game gets one Solo Dev analysis.</p>
+          <p>The Solo Dev Tier is free. Each email gets a maximum of 3 analyses, and each one is a lighter version with six slides, the last of them a closing slide. It has no Steam page review and no market visibility section. Each game gets one Solo Dev analysis.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1491,7 +1492,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-4" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-4" hidden>
-          <p>From your page&rsquo;s own history: how fast followers have grown, and what that pace implies up to your launch date. If you give me your real wishlist count (for your own game), I start from it. The result is an estimate, shown as a cautious, central and optimistic outcome, with every assumption listed so you can see what would change it.</p>
+          <p>Before launch, the estimate comes from your page&rsquo;s own history: its followers, how fast they have grown, and what that pace implies up to your launch date. In the paid tiers, if you share your real wishlist count (for your own game), I start from it. The result is an estimate, shown as a cautious, central and optimistic outcome, and the paid tiers write down the assumptions so you can see what would change it. After launch, the number of outstanding wishlists is not public, so the analysis does not estimate it.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1500,8 +1501,8 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-5" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-5" hidden>
-          <p>The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page&rsquo;s own growth trend. Nothing private is needed. If you share your real wishlist count, I use it in place of the estimate.</p>
-          <p>It is a grounded estimate that tells you reliably where the game stands and how it compares with similar games. It is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, with the assumptions behind them written down. Your real wishlist number tightens them the most.</p>
+          <p>The sources are public: your Steam store page, its follower count and growth history, public trackers such as SteamDB, and the review counts of comparable games. The methods are the ones widely used across the industry: the Boxleiter method, which estimates sales from review counts, and follower-to-wishlist ratios applied to your page&rsquo;s own growth trend. The paid tiers also check copies of released games against third-party model estimates shown on SteamDB, so those copies usually appear as a range. Gross revenue is an estimated maximum at list price, before discounts, regional prices and Steam&rsquo;s cut. Nothing private is needed. In the paid tiers, if you share your real wishlist count, I use it in place of the estimate.</p>
+          <p>It is a grounded estimate that tells you reliably where the game stands and how it compares with similar games. It is less exact on sales: marketing, timing and the game itself can move the result well beyond any model. That is why the forecast comes as scenarios, cautious, middle and optimistic, and the paid tiers write down the assumptions behind them. Your real wishlist number tightens them the most.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1510,7 +1511,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
           <button class="faq-toggle" type="button" aria-expanded="false" aria-controls="faq-answer-6" aria-label="Show answer"><span class="toggle-icon">+</span></button>
         </div>
         <div class="faq-answer" id="faq-answer-6" hidden>
-          <p>Each analysis is made for the person who orders it and is not shared. It uses only public data, so you can order one for any game.</p>
+          <p>Each analysis is made for the person who orders it and is not shared. It needs only public data, so you can order one for any game.</p>
         </div>
       </div>
       <div class="faq-item">
