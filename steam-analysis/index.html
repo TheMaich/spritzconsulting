@@ -38,6 +38,21 @@
 <link rel="preload" href="/assets/fonts/lato-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/fonts.css?v=20261016">
 <link rel="stylesheet" href="/assets/css/bg-shader.css">
+<link rel="stylesheet" href="/assets/css/page-scale.css?v=20261126">
+<!-- Desktop: keep the page hidden until page-scale.js has set the page scale (same as the homepage), so the
+     first frame shown is already at the right size. Safety net: the page shows after 2.5 s whatever happens. -->
+<script>
+  (function(){
+    try {
+      var html = document.documentElement;
+      if (!matchMedia('(min-width: 901px) and (min-height: 560px)').matches || /[?&]fit=off/.test(location.search)) return;
+      html.classList.add('ff-wait');
+      setTimeout(function(){ html.classList.remove('ff-wait'); }, 2500);
+    } catch (e) {}
+  })();
+</script>
+<script src="/assets/js/page-scale-table.js?v=20261126" defer></script>
+<script src="/assets/js/page-scale.js?v=20261126" defer></script>
 <link rel="stylesheet" href="/assets/css/breadcrumbs.css?v=20261014">
 <script src="/assets/js/bg-shader.js" defer></script>
 

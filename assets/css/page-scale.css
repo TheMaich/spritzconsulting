@@ -1,0 +1,10 @@
+/* Page scale for pages other than the homepage (assets/js/page-scale.js).
+   First paint: on desktop an inline script in <head> sets html.ff-wait, which keeps the page hidden until
+   page-scale.js has set the scale, so the wrong scale never shows (the background stays visible). The reveal
+   animations wait too. Same rules as the homepage (assets/css/frame-fit.css). */
+html.ff-wait #site-header, html.ff-wait main, html.ff-wait .site-footer{ opacity: 0; }
+html.ff-wait .blur-reveal{ animation-play-state: paused !important; }
+html.ff-wait [data-reveal].is-in{ opacity: 0 !important; transform: translateY(18px) !important; }
+/* Guard: nothing inside the scaled page may widen it past the window. clip (unlike hidden) creates no scroll
+   container, so the sticky header keeps working. */
+html.ps-on body{ overflow-x: clip; }

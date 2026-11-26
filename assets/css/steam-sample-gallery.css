@@ -30,7 +30,7 @@
 /* Desktop: the tilted fan. The list item stays still and receives the hover; the slide inside it lifts, straightens and
    grows. A moving slide therefore never leaves the pointer, so the effect cannot flicker. --hs is how much a slide grows. --sx shifts a slide at either end of the fan back inside the gallery. */
 @media (min-width: 768px){
-  .sa-gallery{ --k: calc(1 + 0.2 * (var(--n) - 1)); --w: clamp(9rem, calc(88vw / var(--k)), min(22rem, calc(1150px / var(--k)))); --hs: 1.9; padding: 0; container-type: inline-size; }
+  .sa-gallery{ --k: calc(1 + 0.2 * (var(--n) - 1)); --w: clamp(9rem, calc(88vw / var(--kz, 1) / var(--k)), min(22rem, calc(1150px / var(--k))));   /* --kz: the page scale (assets/js/page-scale.js); vw is scaled by it too */ --hs: 1.9; padding: 0; container-type: inline-size; }
   .sa-track{ justify-content: center; align-items: flex-end; height: calc(var(--w) * 0.5625 * (0.5 + var(--hs) / 2) + 130px + 56px); }
   .sa-reel{ overflow: visible; scroll-snap-type: none; gap: 0; padding: 0 0 40px; align-items: flex-end; }
   .sa-slide-item{ width: var(--w); scroll-snap-align: none; position: relative; z-index: calc(40 - var(--i)); --y: calc(var(--lift) * -1); --s: 1; --ry: 0deg; --tx: 0px; --c: calc(var(--i) - (var(--n) - 1) / 2); --cx: calc(var(--c) * 0.2 * var(--w)); --half: calc(var(--w) * var(--hs) / 2); --sx: calc(min(0px, 50cqw - 8px - var(--half) - var(--cx)) + max(0px, var(--half) - 50cqw + 8px - var(--cx))); transform-style: preserve-3d; transform: perspective(5000px) rotateY(-45deg); }
