@@ -28,16 +28,21 @@
     });
   }
 
-  // Bilinear lookup in the table; outside the measured grid the nearest edge is used.
+  // The table holds K per window size. K is roughly the window height divided by the height of header + hero, and that
+  // height changes slowly with the window while K jumps when the hero text wraps, so the lookup blends the heights
+  // (T = height / K) of the four nearest table cells, then turns the result back into K.
+  var CLAMP_MIN = 0.85, CLAMP_MAX = 1.6;
   function lookup(w, h) {
-    var gx = Math.min(Math.max((w - T.w0) / T.wStep, 0), T.k[0].length - 1);
-    var gy = Math.min(Math.max((h - T.h0) / T.hStep, 0), T.k.length - 1);
-    var x0 = Math.floor(gx), y0 = Math.floor(gy), x1 = Math.min(x0 + 1, T.k[0].length - 1), y1 = Math.min(y0 + 1, T.k.length - 1);
+    var cols = T.k[0].length, rows = T.k.length;
+    var gx = Math.min(Math.max((w - T.w0) / T.wStep, 0), cols - 1);
+    var gy = Math.min(Math.max((h - T.h0) / T.hStep, 0), rows - 1);
+    var x0 = Math.floor(gx), y0 = Math.floor(gy), x1 = Math.min(x0 + 1, cols - 1), y1 = Math.min(y0 + 1, rows - 1);
     var fx = gx - x0, fy = gy - y0;
     // A column narrower than MIN_W is not scaled on the homepage (K = 1); it must not pull the values above it.
     if (T.w0 + x0 * T.wStep < MIN_W) { x0 = x1; fx = 0; }
-    var a = T.k[y0][x0] * (1 - fx) + T.k[y0][x1] * fx, b = T.k[y1][x0] * (1 - fx) + T.k[y1][x1] * fx;
-    return a * (1 - fy) + b * fy;
+    function t(y, x) { return (T.h0 + y * T.hStep) / T.k[y][x]; }
+    var a = t(y0, x0) * (1 - fx) + t(y0, x1) * fx, b = t(y1, x0) * (1 - fx) + t(y1, x1) * fx;
+    return Math.min(Math.max(h / (a * (1 - fy) + b * fy), CLAMP_MIN), CLAMP_MAX);
   }
 
   function setK(k) {
