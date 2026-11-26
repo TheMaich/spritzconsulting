@@ -34,6 +34,8 @@
     var gy = Math.min(Math.max((h - T.h0) / T.hStep, 0), T.k.length - 1);
     var x0 = Math.floor(gx), y0 = Math.floor(gy), x1 = Math.min(x0 + 1, T.k[0].length - 1), y1 = Math.min(y0 + 1, T.k.length - 1);
     var fx = gx - x0, fy = gy - y0;
+    // A column narrower than MIN_W is not scaled on the homepage (K = 1); it must not pull the values above it.
+    if (T.w0 + x0 * T.wStep < MIN_W) { x0 = x1; fx = 0; }
     var a = T.k[y0][x0] * (1 - fx) + T.k[y0][x1] * fx, b = T.k[y1][x0] * (1 - fx) + T.k[y1][x1] * fx;
     return a * (1 - fy) + b * fy;
   }
