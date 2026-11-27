@@ -42,6 +42,8 @@
     transition: transform var(--sd-dur) var(--ease), opacity var(--sd-dur) var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
     transform: var(--sd-pose);
   }
+  /* Phone: every card gets the clay border the Solo Dev card has on wide screens */
+  .sd-wrap[data-layout="deck"] .sa-tier{ border-color: color-mix(in srgb, var(--clay) 40%, var(--rule)); }
   .sd-wrap[data-layout="deck"] .sa-tier:hover{ scale: 1; }
   .sd-wrap[data-layout="deck"] .sa-tier:not(.is-front){ pointer-events: none; }
   .sd-wrap[data-layout="deck"] .sa-tier.is-out{ transition-duration: calc(var(--sd-dur) * .6); }

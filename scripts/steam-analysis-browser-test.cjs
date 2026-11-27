@@ -322,6 +322,7 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     ok(s.layout === 'deck', 'phone: the tier cards are a deck');
     ok(s.h.every((h) => h === s.h[0]), 'phone: the three cards share one height');
     ok(s.inert.join() === 'false,true,true' && !s.wide, 'phone: only the front card is active, no sideways scroll');
+    ok(await p.evaluate(() => { const c = [...document.querySelectorAll('.sa-tier')].map((x) => getComputedStyle(x).borderTopColor); return c.every((x) => x === c[0]); }), 'phone: all three cards have the same clay border');
     ok((await front()).join() === 'true,false,false', 'phone: Solo Dev is in front');
     await p.click('[data-sd-next]'); await p.waitForTimeout(500);
     ok((await front()).join() === 'false,true,false', 'phone: next arrow brings Indie to the front');

@@ -23,6 +23,8 @@
 .sa-for .hl{ color: var(--clay); font-weight: 650; }
 .sa-for .lbl{ font-family: var(--mono); font-size: 12px; letter-spacing: 0.065em; text-transform: uppercase; color: var(--clay); }
 .sa-for p{ margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(21px, 1.8vw, 26px); font-variation-settings: "opsz" 48; letter-spacing: -0.03em; line-height: 1.25; color: var(--ink); }
+/* Publisher: the longest "Made for" text, sized so it fills the card body instead of half of it on narrower desktop windows */
+.sa-tier.pro .sa-for p{ font-size: clamp(24px, 1vw + 12px, 26px); }
 .sa-tier:hover .sa-for, .sa-tier:focus-within .sa-for{ opacity: 1; transform: none; }
 .sa-tier:hover .sa-body > ul, .sa-tier:focus-within .sa-body > ul{ opacity: .06; filter: blur(2px); }
 @media (hover: none){
