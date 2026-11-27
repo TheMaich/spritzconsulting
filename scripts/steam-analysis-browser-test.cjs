@@ -79,6 +79,8 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     const gone = () => p.evaluate(() => !document.querySelector('[name=quarter]') && !document.querySelector('[name=price]'));
     await openModal(p, 'standard');
     ok(await gone(), 'Indie: no release or planned price field');
+    ok(!(await p.evaluate(() => !!document.getElementById('om-hint'))), 'no separate paragraph: the message lives in the field hints');
+    ok(/swing a lot/.test(await p.getAttribute('#om-notes', 'placeholder')), 'Indie: the note hint says estimates swing and real data helps');
     ok(!(await vis('#om-wl')), 'Indie: no wishlist field either, only the note');
     ok(await vis('#om-notes'), 'Indie: the note is there');
     let ph = await p.getAttribute('#om-notes', 'placeholder');
@@ -86,9 +88,10 @@ const ok = (cond, msg) => { console.log((cond ? 'ok   ' : 'FAIL ') + msg); if (!
     await p.keyboard.press('Escape'); await p.waitForTimeout(900);
     await openModal(p, 'premium');
     ok(await vis('#om-wl') && await vis('#om-notes'), 'Publisher: wishlist field and the note');
+    ok(await p.evaluate(() => getComputedStyle(document.getElementById('om-wl')).appearance === 'textfield' && getComputedStyle(document.getElementById('om-wl'), '::-webkit-inner-spin-button').webkitAppearance !== 'inner-spin-button'), 'Publisher: the wishlist field has no spin arrows');
+    ok(/swing a lot/.test(await p.getAttribute('#om-wl', 'placeholder')) && /\(optional\)/.test(await text(p, 'label[for=om-wl]')), 'Publisher: the wishlist field hint says estimates swing and the label just says optional');
     ph = await p.getAttribute('#om-notes', 'placeholder');
     ok(/release/.test(ph) && /planned price/.test(ph) && !/wishlists/.test(ph), 'Publisher: the note hints release and planned price only');
-    ok(!(await p.evaluate(() => !!document.getElementById('om-hint'))), 'the old hint paragraph is gone');
     ok(await p.evaluate(() => !document.getElementById('om-waiver') && !document.querySelector('[name=waiver]')), 'no withdrawal checkbox in the order form');
     ok(await p.evaluate(() => { const t = document.getElementById('order-form').textContent; return !/invoice|hello@spritzconsulting|By paying|delete them after 30 days/i.test(t); }), 'the invoice line and the Terms and privacy line are gone from the order form');
     await fill(p); await p.fill('#om-wl', '4200'); await p.fill('#om-notes', 'Q3 2027, 19.99 USD');

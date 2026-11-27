@@ -22,7 +22,7 @@
     <p class="om-fine om-follow" id="om-follow" hidden>We’ll send your Solo Dev PDF, then one follow-up email with an offer. Unsubscribe anytime.</p>
     <div class="om-extra" id="om-extra" hidden>
       <div class="om-field"><label class="om-label" for="om-wl">Wishlists today (optional)</label>
-        <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Enter your real count if you have it"></div>
+        <input id="om-wl" name="wishlists" type="number" inputmode="numeric" min="0" step="1" placeholder="Estimates swing a lot: your real count really helps"></div>
     </div>
     <div class="om-field" id="om-notes-wrap"><label class="om-label" for="om-notes">Anything I should know (optional)</label><textarea id="om-notes" name="notes" rows="4" data-lenis-prevent></textarea></div>
 
@@ -133,8 +133,8 @@
       .then(renderOrder);
   }
   var NOTE_HINT = {
-    standard: 'Optional. A few details make the forecasts more accurate: your planned release (a quarter is enough), your wishlists today and the planned price in USD. Your team or anything else that helps is welcome too.',
-    premium: 'Optional. A few details make the forecasts more accurate: your planned release (a quarter is enough) and the planned price in USD. Your team or anything else that helps is welcome too.'
+    standard: 'Wishlist estimates swing a lot, so your real data really helps: wishlists today, planned release (a quarter is enough) and planned price in USD. Your team or anything else helps too.',
+    premium: 'Planned release (a quarter is enough), planned price in USD, your team or anything else.'
   };
   function pick(v) {
     if (!T[v]) v = 'free';
