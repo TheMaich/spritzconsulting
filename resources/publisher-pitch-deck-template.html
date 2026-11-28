@@ -1270,11 +1270,18 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="deck-cols">
     <div class="deck-col-slides">
       <div class="deck-preview">
-        <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcset="/assets/pitch-deck-template/deck-preview-still.webp">
-          <img src="/assets/pitch-deck-template/deck-preview.webp" alt="Preview of the pitch deck template, slide by slide" width="800" height="450" loading="eager" decoding="async" fetchpriority="high" draggable="false">
-        </picture>
+        <img src="/assets/pitch-deck-template/deck-preview-still.webp" data-animated="/assets/pitch-deck-template/deck-preview.webp" alt="Preview of the pitch deck template, slide by slide" width="800" height="450" loading="eager" decoding="async" fetchpriority="high" draggable="false">
       </div>
+      <script>
+        /* The still frame paints first; the animation loads after the page, and not at all with reduced motion. */
+        window.addEventListener('load', function () {
+          var img = document.querySelector('.deck-preview img[data-animated]');
+          if (!img || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          var anim = new Image();
+          anim.onload = function () { img.src = anim.src; };
+          anim.src = img.getAttribute('data-animated');
+        });
+      </script>
     </div>
 
     <aside class="deck-col-side">
@@ -1338,7 +1345,7 @@ html[data-theme="light"] .bg-aurora .blob{ opacity: 0.35; }
   <div class="context-cta-shell">
     <div class="context-cta">
       <span class="cta-spotlight" aria-hidden="true"></span>
-      <img width="1024" height="1024" class="context-cta-figure" src="/assets/miki-transparent.png" alt="Michele Di Nardo">
+      <img width="400" height="400" class="context-cta-figure" src="/assets/miki-transparent.webp" alt="Michele Di Nardo" loading="lazy" decoding="async">
       <span class="context-cta-photo-mobile">
         <img src="/assets/miki-portrait.webp" alt="Michele Di Nardo" width="60" height="60" loading="lazy">
       </span>
